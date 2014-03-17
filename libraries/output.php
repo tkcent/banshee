@@ -29,7 +29,8 @@
 		private $disabled = false;
 		private $mobile = false;
 		private $add_layout_data = true;
-		private $hiawatha_cache = false;
+		private $hiawatha_cache_time = null;
+		private $http_status = 200;
 
 		/* Constructor
 		 *
@@ -46,9 +47,9 @@
 				$this->mode = "xml";
 				$this->add_layout_data = false;
 			} else if (isset($_GET["output"])) {
-				$this->mode = $_GET["output"];
-				if (in_array($this->mode, array("restxml", "restjson"))) {
-					$this->mode = substr($this->mode, 4);
+				if (($this->mode = $_GET["output"]) == "raw") {
+					$this->mode = "xml";
+				} else {
 					$this->add_layout_data = false;
 				}
 			}
@@ -106,6 +107,7 @@
 				case "disabled": return $this->disabled;
 				case "mobile": return $this->mobile;
 				case "add_layout_data": return $this->add_layout_data;
+				case "http_status": return $this->http_status;
 			}
 
 			return parent::__get($key);
@@ -126,6 +128,8 @@
 				case "title": $this->title = $value; break;
 				case "inline_css": $this->inline_css = $value; break;
 				case "content_type": $this->content_type = $value; break;
+				case "add_layout_data": $this->add_layout_data = $value; break;
+				case "http_status": $this->http_status = $value; break;
 				default: trigger_error("Unknown output variable: ".$key);
 			}
 		}
@@ -147,28 +151,50 @@
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function allow_hiawatha_cache() {
+		public function allow_hiawatha_cache($time = null) {
+			if ($time === null) {
+				$this->hiawatha_cache_time = $this->settings->hiawatha_cache_default_time;
+			} else if ((int)$time > 0) {
+				$this->hiawatha_cache_time = (int)$time;
+			}
+		}
+
+		/* Determines whether the Hiawatha cache should be enabled or not
+		 *
+		 * INPUT:  -
+		 * OUTPUT: boolean activate Hiawatha cache
+		 * ERROR:  -
+		 */
+		private function activate_hiawatha_cache() {
+			static $result = true;
+
+			if ($result == false) {
+				return false;
+			}
+
 			list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
 
 			if ($webserver != "Hiawatha") {
-				return;
-			} else if ($this->settings->hiawatha_cache_time <= 0) {
-				return;
+				$result = false;
+			} else if ($this->settings->hiawatha_cache_enabled == false) {
+				$result = false;
+			} else if ($this->hiawatha_cache_time === null) {
+				$result = false;
 			} else if (isset($_SESSION["user_switch"])) {	
-				return;
+				$result = false;
 			} else if (is_true(DEBUG_MODE)) {
-				return;
+				$result = false;
 			} else if ($_SERVER["REQUEST_METHOD"] != "GET") {
-				return;
+				$result = false;
 			} else if (count($this->system_messages) > 0) {
-				return;
+				$result = false;
 			} else if (count($this->system_warnings) > 0) {
-				return;
+				$result = false;
 			} else if (count($this->messages) > 0) {
-				return;
+				$result = false;
 			}
 
-			$this->hiawatha_cache = true;
+			return $result;
 		}
 
 		/* Add CSS link to output
@@ -280,8 +306,6 @@
 			$format = array_shift($args);
 
 			array_push($this->system_messages, vsprintf($format, $args));
-
-			$this->hiawatha_cache = false;
 		}
 
 		/* Add system warning to output
@@ -299,8 +323,6 @@
 			$format = array_shift($args);
 
 			array_push($this->system_warnings, vsprintf($format, $args));
-
-			$this->hiawatha_cache = false;
 		}
 
 		/* Add message to message buffer
@@ -318,8 +340,6 @@
 			$format = array_shift($args);
 
 			array_push($this->messages, vsprintf($format, $args));
-
-			$this->hiawatha_cache = false;
 		}
 
 		/* Close XML tag
@@ -485,7 +505,7 @@
 				return false;
 			} else if (($encodings = $_SERVER["HTTP_ACCEPT_ENCODING"]) === null) {
 				return false;
-			} else if ($this->hiawatha_cache) {
+			} else if ($this->activate_hiawatha_cache()) {
 				return false;
 			}
 
@@ -508,6 +528,10 @@
 		public function generate() {
 			if ($this->disabled) {
 				return;
+			}
+
+			if ((headers_sent() == false) && ($this->http_status != 200)) {
+				header(sprintf("Status: %d", $this->http_status));
 			}
 
 			switch ($this->mode) {
@@ -538,8 +562,8 @@
 					/* Print headers
 					 */
 					if (headers_sent() == false) {
-						if ($this->hiawatha_cache) {
-							header("X-Hiawatha-Cache: ".$this->settings->hiawatha_cache_time);
+						if ($this->activate_hiawatha_cache()) {
+							header("X-Hiawatha-Cache: ".$this->hiawatha_cache_time);
 						}
 						header("Content-Type: ".$this->content_type);
 						header("Content-Language: ".$this->language);

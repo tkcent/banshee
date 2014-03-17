@@ -52,7 +52,7 @@
 				$http = new HTTP($_SERVER["HTTP_HOST"]);
 			}
 
-			/* Determine URl path
+			/* Determine URL path
 			 */
 			$url = $data["url"];
 			if (strpos($url, "?") === false) {

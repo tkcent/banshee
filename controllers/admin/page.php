@@ -108,7 +108,7 @@
 							$this->user->log_action("page %s updated", $name);
 
 							list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
-							if (($this->settings->hiawatha_cache_time > 0) && ($webserver == "Hiawatha")) {
+							if ($this->settings->hiawatha_cache_enabled && ($webserver == "Hiawatha")) {
 								if ($_POST["url"] == "/".$this->settings->start_page) {
 									header("X-Hiawatha-Cache-Remove: all");
 								} else {

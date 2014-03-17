@@ -6,6 +6,7 @@
 				"Roles"         => array("admin/role", "roles.png"),
 				"Organisations" => array("admin/organisation", "organisations.png"),
 				"Access"        => array("admin/access", "access.png"),
+				"Flags"         => array("admin/flag", "flags.png"),
 				"User switch"   => array("admin/switch", "switch.png")),
 			"Content" => array(
 				"Agenda"        => array("admin/agenda", "agenda.png"),
@@ -47,12 +48,16 @@
 				$this->output->add_system_warning("Website is running in debug mode. Set DEBUG_MODE in settings/website.conf to 'no'.");
 			}
 
+			if ($this->page->pathinfo[1] != null) {	
+				$this->output->add_system_warning("The administration module '%s' does not exist.", $this->page->pathinfo[1]);
+			}
+
 			if (is_false(MULTILINGUAL)) {
 				unset($this->menu["Content"]["Languages"]);
 			}
 
 			$access_list = page_access_list($this->db, $this->user);
-			$private_pages = private_pages();
+			$private_pages = config_file("private_pages");
 
 			$this->output->open_tag("menu");
 

@@ -35,6 +35,13 @@
 			if ($this->settings->secret_website_code != "CHANGE_ME_INTO_A_RANDOM_STRING") {
 				array_push($this->hidden_keys, "secret_website_code");
 			}
+
+			if (is_true(DEBUG_MODE) == false) {
+				$this->elements["key"]["readonly"] = true;
+				$this->elements["type"]["readonly"] = true;
+				$this->allow_create = false;
+				$this->allow_delete = false;
+			}
 		}
 
 		public function count_items() {
@@ -98,6 +105,10 @@
 		}
 
 		public function delete_oke($item_id) {
+			if (parent::delete_oke($item_id) == false) {
+				return false;
+			}
+
 			if (($item = $this->db->entry("settings", $item_id)) == false) {
 				return false;
 			}

@@ -1,12 +1,12 @@
 <?php
 	class XXX_controller extends controller {
 		private function show_overview() {
-			if (($xxx_count = $this->model->count_xxxs()) === false) {
+			if (($XXX_count = $this->model->count_XXXs()) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
 			}
 
-			$paging = new pagination($this->output, "xxxs", $this->settings->admin_page_size, $xxx_count);
+			$paging = new pagination($this->output, "XXXs", $this->settings->admin_page_size, $XXX_count);
 
 			if (($XXXs = $this->model->get_XXXs($paging->offset, $paging->size)) === false) {
 				$this->output->add_tag("result", "Database error.");

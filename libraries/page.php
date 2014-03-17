@@ -21,7 +21,6 @@
 		private $pathinfo = array();
 		private $parameters = array();
 		private $ajax_request = false;
-		private $write_access = true;
 
 		/* Constructor
 		 *
@@ -43,7 +42,7 @@
 			/* Select module
 			 */
 			if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
-				$page = "offline";
+				$this->module = "banshee/offline";
 			} else if ($this->db->connected == false) {
 				$this->module = ERROR_MODULE;
 				$this->http_code = 500;
@@ -63,18 +62,6 @@
 
 			if ($this->module === null) {
 				$this->select_module($page);
-			}
-
-			/* Write access
-			 */
-			if (in_array($this->module, private_rorw_pages())) {
-				$query = "select count(*) as count from users u, user_role l, roles r ".
-						 "where u.id=%d and u.id=l.user_id and l.role_id=r.id and %S=%d";
-				if (($result = $db->execute($query, $this->user->id, $this->module, ACCESS_YES)) !== false) {
-					if ($result[0]["count"] == 0) {
-						$this->write_access = false;
-					}
-				}
 			}
 		}
 
@@ -106,7 +93,6 @@
 				case "parameters": return $this->parameters;
 				case "http_code": return $this->http_code;
 				case "ajax_request": return $this->ajax_request;
-				case "write_access": return $this->write_access;
 				case "is_public": return $this->is_public;
 				case "is_private": return $this->is_public == false;
 			}
@@ -191,7 +177,7 @@
 
 			/* Public page
 			 */
-			if (($this->module = $this->page_on_disk($page, public_pages())) !== null) {
+			if (($this->module = $this->page_on_disk($page, config_file("public_pages"))) !== null) {
 				$module_count = substr_count($this->module, "/") + 1;
 				$this->parameters = array_slice($this->pathinfo, $module_count);
 				return;
@@ -210,7 +196,7 @@
 
 			/* Private page
 			 */
-			if (($this->module = $this->page_on_disk($page, private_pages())) === null) {
+			if (($this->module = $this->page_on_disk($page, config_file("private_pages"))) === null) {
 				$this->module = $this->page_in_database($page, YES);
 			}
 

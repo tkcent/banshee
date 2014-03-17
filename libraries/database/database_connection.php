@@ -359,7 +359,6 @@
 
 				if (is_array($result)) {
 					if (count($result) > 1) {
-						$timeout = defined(CACHE_TIMEOUT) ? CACHE_TIMEOUT : 3600;
 						$cache->$hash = $result;
 					}
 				}

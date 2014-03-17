@@ -81,16 +81,16 @@
 
 		private function role_value($value) {
 			if ($value === null) {
-				return ACCESS_NO;
+				return NO;
 			}
 
 			if ($value === "on") {
-				return ACCESS_YES;
+				return YES;
 			}
 
 			$value = (int)$value;
 			if (($value < 0) || ($value > 2)) {
-				return ACCESS_NO;
+				return NO;
 			}
 
 			return $value;

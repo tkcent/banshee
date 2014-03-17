@@ -41,32 +41,14 @@
 
 <xsl:for-each select="pages/page">
 	<div class="role">
-		<xsl:if test="@type='checkbox'">
-			<input type="checkbox" name="{.}" class="role">
-				<xsl:if test="@value!='0'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="../../role/@editable='no'">
-					<xsl:attribute name="disabled">disabled</xsl:attribute>
-				</xsl:if>
-			</input>
-		</xsl:if>
-		<xsl:if test="@type='select'">
-			<select name="{.}" class="role">
-				<xsl:if test="../../role/@editable='no'">
-					<xsl:attribute name="disabled">disabled</xsl:attribute>
-				</xsl:if>
-				<xsl:variable name="value" select="@value" />
-				<xsl:for-each select="../../readwrite/value">
-					<option value="{@value}">
-						<xsl:if test="@value=$value">
-							<xsl:attribute name="selected">selected</xsl:attribute>
-						</xsl:if>
-						<xsl:value-of select="." />
-					</option>
-				</xsl:for-each>
-			</select>
-		</xsl:if>
+		<input type="checkbox" name="{.}" class="role">
+			<xsl:if test="@value!='0'">
+				<xsl:attribute name="checked">checked</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="../../role/@editable='no'">
+				<xsl:attribute name="disabled">disabled</xsl:attribute>
+			</xsl:if>
+		</input>
 		<xsl:value-of select="." />
 	</div>
 </xsl:for-each>

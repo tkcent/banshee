@@ -4,9 +4,7 @@ You are allowed to use the Banshee PHP framework under the following conditions:
 
 	1) You must leave the copyright messages inside the files which are part of
 	   the Banshee PHP framework unchanged.
-	2) You must leave the generator meta HTML tag unchanged. This tag must be
-	   present in every HTML output.
-	3) If you use (parts of) the Banshee PHP framework to build a website which
+	2) If you use (parts of) the Banshee PHP framework to build a website which
 	   you sell or rent to other people or organisations, you must inform them
 	   that "you built the website upon (parts of) the Banshee PHP framework,
 	   which is a free and open source framework".

@@ -35,7 +35,7 @@
 
 			/* Set page options
 			 */
-			$modules = page_to_module(array_merge(public_pages(), private_pages()));
+			$modules = page_to_module(array_merge(config_file("public_pages"), config_file("private_pages")));
 			sort($modules);
 			array_unshift($modules, "*");
 			$modules = array_combine($modules, $modules);

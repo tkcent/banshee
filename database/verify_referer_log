@@ -77,6 +77,8 @@
 		}
 	}
 
+	error_reporting(E_ALL & ~E_NOTICE);
+
 	/* Connect to database
 	 */
 	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);

@@ -11,11 +11,11 @@
 <xsl:template match="overview">
 <table class="list">
 <tr>
-<th>xxx</th>
+<th>...</th>
 </tr>
 <xsl:for-each select="XXXs/XXX">
 <tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
-<td><xsl:value-of select="xxx" /></td>
+<td><xsl:value-of select="XXX" /></td>
 </tr>
 </xsl:for-each>
 </table>
@@ -37,7 +37,7 @@
 </xsl:if>
 
 <table class="edit">
-<tr><td>xxx:</td><td><input type="text" name="xxx" value="{XXX/xxx}" class="text" /></td></tr>
+<tr><td>...:</td><td><input type="text" name="XXX" value="{XXX/...}" class="text" /></td></tr>
 </table>
 
 <input type="submit" name="submit_button" value="Save XXX" class="button" />

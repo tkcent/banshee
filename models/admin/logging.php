@@ -28,14 +28,14 @@
 		}
 
 		public function get_visits($limit) {
-			$query = "select date,count from log_visits order by date desc limit %d";
+			$query = "select date, count from log_visits order by date desc limit %d";
 
 			$result = $this->db->execute($query, $limit);
 			return $this->arrange_data($result);
 		}
 
 		public function get_page_views($limit) {
-			$query = "select date,sum(%S) as %S from log_page_views group by date order by date desc limit %d";
+			$query = "select date, sum(%S) as %S from log_page_views group by date order by date desc limit %d";
 
 			$result = $this->db->execute($query, "count", "count", $limit);
 			return $this->arrange_data($result);
@@ -68,11 +68,14 @@
 		}
 
 		public function get_top_pages($limit, $day = null) {
-			$query = "select page,sum(count) as count from log_page_views";
+			$query = "select page, sum(count) as count from log_page_views";
 			$args = array();
 			if ($day !== null) {
 				$query .= " where date=%s";
 				array_push($args, $day);
+			} else {
+				$query .= " where date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".LOG_DAYS." days")));
 			}
 			$query .= " group by page order by count desc limit %d";
 			array_push($args, $limit);
@@ -81,11 +84,14 @@
 		}
 
 		public function get_search_queries($limit, $day = null) {
-			$query = "select query,sum(count) as count from log_search_queries";
+			$query = "select query, sum(count) as count from log_search_queries";
 			$args = array();
 			if ($day !== null) {
 				$query .= " where date=%s";
 				array_push($args, $day);
+			} else {
+				$query .= " where date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".LOG_DAYS." days")));
 			}
 			$query .= " group by query order by count desc limit %d";
 			array_push($args, $limit);
@@ -99,6 +105,9 @@
 			if ($day !== null) {
 				$query .= " and date=%s";
 				array_push($args, $day);
+			} else {
+				$query .= " and date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".LOG_DAYS." days")));
 			}
 			$query .= " group by hostname order by count desc";
 
@@ -108,9 +117,11 @@
 
 			$referers = array();
 
-			$query = "select url,sum(count) as count from log_referers where verified=%d";
+			$query = "select url, sum(count) as count from log_referers where verified=%d";
 			if ($day !== null) {
 				$query .= " and date=%s";
+			} else {
+				$query .= " and date>%s";
 			}
 			$query .= " and hostname=%s group by url order by count desc";
 			foreach ($hosts as $host) {

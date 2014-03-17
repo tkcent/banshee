@@ -55,8 +55,12 @@
 	 */
 	$now = time();
 	foreach ($users as $user) {
-		$last_login = date("j F Y, H:i:s", $user["last_login"]);
-		$days_ago = ($now - $user["last_login"]) / 86400;
-		printf("%s (%s): %s (%0.1f days ago)\n", $user["fullname"], $user["username"], $last_login, $days_ago);
+		if ($user["last_login"] == null) {
+			printf("%s (%s): never logged in\n", $user["fullname"], $user["username"]);
+		} else {
+			$last_login = date("j F Y, H:i:s", $user["last_login"]);
+			$days_ago = ($now - $user["last_login"]) / 86400;
+			printf("%s (%s): %s (%0.1f days ago)\n", $user["fullname"], $user["username"], $last_login, $days_ago);
+		}
 	}
 ?>

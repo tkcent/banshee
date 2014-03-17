@@ -37,6 +37,10 @@
 		"faq" => array(
 			"pages"     => array("faq", "admin/faq"),
 			"tables"    => array("faqs", "faq_sections")),
+		"flag" => array(
+			"pages"     => array("admin/flag"),
+			"libraries" => array("flags"),
+			"tables"    => array("flags")),
 		"forum" => array(
 			"pages"     => array("forum", "admin/forum"),
 			"tables"    => array("forum_last_view", "forum_messages", "forum_topics", "forums"),

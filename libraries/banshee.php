@@ -8,16 +8,13 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "4.0");
+	define("BANSHEE_VERSION", "4.1");
 	define("ADMIN_ROLE_ID", 1);
 	define("YES", 1);
 	define("NO", 0);
 	define("USER_STATUS_DISABLED", 0);
 	define("USER_STATUS_CHANGEPWD", 1);
 	define("USER_STATUS_ACTIVE", 2);
-	define("ACCESS_NO", 0);
-	define("ACCESS_YES", 1);
-	define("ACCESS_READONLY", 2);
 	define("PASSWORD_HASH", "sha256");
 	define("SESSION_NAME", "WebsiteSessionID");
 	define("DAY", 86400);
@@ -92,54 +89,6 @@
 		return (is_true($bool) ? "yes" : "no");
 	}
 
-	/* Return all public pages
-	 *
-	 * INPUT:  -
-	 * OUTPUT: array public pages
-	 * ERROR:  -
-	 */
-	function public_pages() {
-		return config_file("public_pages");
-	}
-
-	/* Return all private pages
-	 *
-	 * INPUT:  -
-	 * OUTPUT: array private pages
-	 * ERROR:  -
-	 */
-	function private_pages() {
-		$config = config_file("private_pages");
-
-		$pages = array();
-		foreach ($config as $line) {
-			list($page) = explode(":", $line, 2);
-			array_push($pages, $page);
-		}
-
-		return $pages;
-	}
-
-	/* Return all pages with optional readonly access rights
-	 *
-	 * INPUT:  -
-	 * OUTPUT: array readonly/readwrite pages
-	 * ERROR:  -
-	 */
-	function private_rorw_pages() {
-		$config = config_file("private_pages");
-
-		$pages = array();
-		foreach ($config as $line) {
-			list($page, $type) = explode(":", $line, 2);
-			if ($type == "rorw") {
-				array_push($pages, $page);
-			}
-		}
-
-		return $pages;
-	}
-
 	/* Convert a page path to a module path
 	 *
 	 * INPUT:  array / string page path
@@ -185,9 +134,9 @@
 	 * ERROR:  -
 	 */
 	function module_exists($module) {
-		if (in_array($module, public_pages())) {
+		if (in_array($module, config_file("public_pages"))) {
 			return true;
-		} else if (in_array($module, private_pages())) {
+		} else if (in_array($module, config_file("private_pages"))) {
 			return true;
 		}
 
@@ -306,19 +255,19 @@
 
 	/* Load configuration file
 	 *
-	 * INPUT:  string configuration[, bool remove comments]
+	 * INPUT:  string configuration file[, bool remove comments]
 	 * OUTPUT: array( key => value[, ...] )
 	 * ERROR:  -
 	 */
-	function config_file($file, $remove_comments = true) {
+	function config_file($config_file, $remove_comments = true) {
 		static $cache = array();
 
-		if (isset($cache[$file])) {
-			return $cache[$file];
+		if (isset($cache[$config_file])) {
+			return $cache[$config_file];
 		}
 
-		if ($config_file[0] != "/") {
-			$config_file = "../settings/".$file.".conf";
+		if (substr($config_file, 0, 1) != "/") {
+			$config_file = "../settings/".$config_file.".conf";
 		}
 		if (file_exists($config_file) == false) {
 			return array();
@@ -335,7 +284,7 @@
 			}
 		}
 
-		$cache[$file] = $config;
+		$cache[$config_file] = $config;
 
 		return $config;
 	}

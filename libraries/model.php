@@ -37,7 +37,10 @@
 		 */
 		public function borrow($module) {
 			if (file_exists($file = "../models/".$module.".php") == false) {
-				return null;
+				header("Content-Type: text/plain");
+				printf("Can't borrow model '%s'.\n", $module);
+				print error_backtrace();
+				exit();
 			}
 
 			require_once($file);
@@ -46,6 +49,7 @@
 			if (class_exists($model_class) == false) {
 				return null;
 			} else if (is_subclass_of($model_class, "model") == false) {
+				exit;
 				return null;
 			}
 

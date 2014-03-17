@@ -42,7 +42,7 @@
 			}
 
 			if (isset($_SESSION["user_id"])) {
-				if (time() - $_SESSION["last_private_visit"] >= SESSION_TIMEOUT) {
+				if (time() - $_SESSION["last_private_visit"] >= $this->settings->session_timeout) {
 					$this->logout();
 				} else if (($_SESSION["binded_ip"] === NO) || ($_SESSION["binded_ip"] === $_SERVER["REMOTE_ADDR"])) {
 					$this->load_user_record($_SESSION["user_id"]);
@@ -225,9 +225,18 @@
 				return true;
 			}
 
-			/* Public page
+			/* Public module
 			 */
-			if (in_array($page, page_to_module(public_pages()))) {
+			if (in_array($page, page_to_module(config_file("public_pages")))) {
+				return true;
+			}
+
+			/* Public page in database
+			*/
+			$query = "select count(*) as count from pages where url=%s and private=%d";
+			if (($result = $this->db->execute($query, "/".$page, NO)) == false) {
+				return false;
+			} else if ($result[0]["count"] > 0) {
 				return true;
 			}
 
@@ -245,7 +254,7 @@
 
 			/* Check access
 			 */
-			if (in_array($page, page_to_module(private_pages()))) {
+			if (in_array($page, page_to_module(config_file("private_pages")))) {
 				/* Pages on disk (modules)
 				 */
 				$conditions = $rids = array();

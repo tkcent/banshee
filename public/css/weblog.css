@@ -41,6 +41,7 @@ div.weblog div.timestamp {
 	float:right;
 	position:relative;
 	top:-18px;
+	height:0;
 	font-size:10px;
 	width:150px;
 }
@@ -57,7 +58,7 @@ div.weblog div.content > p:first-child:first-letter {
 	float:left;
 	margin-right:4px;
 }
-div.weblog div.comment_count {
+div.weblog div.comment_count a {
 	float:right;
 	font-size:11px;
 }

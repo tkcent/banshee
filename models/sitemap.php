@@ -5,7 +5,7 @@
 			 */
 			$exclude = array("captcha.png", "login", "logout", "offline", "password", "sitemap.xml");
 
-			$urls = array_diff(public_pages(), $exclude);
+			$urls = array_diff(config_file("public_pages"), $exclude);
 
 			/* Pages from database
 			 */

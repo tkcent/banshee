@@ -16,7 +16,7 @@
 	var l_text =        '<span class="text label">Text:</span>';
 	var l_link =        '<span class="link label">Link:</span>';
 	var new_node =      '<li>' + l_text + '<input type="text" class="text">' + l_link + '<input type="text" class="text"></li>';
-	var h_insert_node = '<input type="button" value="insert" class="insert button">';
+	var h_insert_node = '<input type="button" value="Insert" class="insert button">';
 	var h_add_node =    '<input type="button" value="+" class="add_node button">';
 	var h_delete_node = '<input type="button" value="-" class="delete_node button">';
 	var h_add_branch =  '<input type="button" value="&gt;" class="add_branch button">';

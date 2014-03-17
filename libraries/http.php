@@ -15,8 +15,11 @@
 		protected $connect_host = null;
 		protected $connect_port = null;
 		protected $default_port = 80;
-		protected $protocol = "";
+		protected $protocol = "tcp";
 		protected $timeout = 5;
+		protected $username = null;
+		protected $password = null;
+		protected $authorization = null;
 
 		/* Constructor
 		 *
@@ -93,6 +96,9 @@
 			if (function_exists("gzdecode")) {
 				$this->add_header("Accept-Encoding", "gzip");
 			}
+			if ($this->authorization !== null) {
+				$this->add_header("Authorization", $this->authorization);
+			}
 
 			/* Add cookies
 			 */
@@ -108,6 +114,16 @@
 			 */
 			if (($result = $this->perform_request($method, $uri, $body)) !== false) {
 				$result = $this->parse_request_result($result);
+			}
+
+			/* Apply authentication
+			 */
+			if ($result["status"] == 401) {
+				if ($this->apply_authentication($method, $uri, $result)) {
+					if (($result = $this->perform_request($method, $uri, $body)) !== false) {
+						$result = $this->parse_request_result($result);
+					}
+				}
 			}
 
 			$this->headers = array();
@@ -126,6 +142,18 @@
 			$this->connect_port = $port;
 			$this->protocol = $ssl ? "tls://" : "";
 			$this->via_proxy = true;
+		}
+
+		/* Set credentials for HTTP authentication
+		 *
+		 * INPUT:  string username, string password
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function set_credentials($username, $password) {
+			$this->username = $username;
+			$this->password = $password;
+			$this->authorization = null;
 		}
 
 		/* Add HTTP header
@@ -160,6 +188,17 @@
 			$this->add_header("X-Requested-With", "XMLHttpRequest");
 		}
 
+		/* Connect to server
+		 *
+		 * INPUT:  -
+		 * OUTPUT: resource socket
+		 * ERROR:  false connection failed
+		 */
+		protected function connect_to_server() {
+			$remote = sprintf("%s://%s:%s", $this->protocol, $this->connect_host, $this->connect_port);
+			return stream_socket_client($remote, $errno, $errstr, $this->timeout);
+		}
+
 		/* Perform HTTP request
 		 *
 		 * INPUT:  string method, string uri[, string request body]
@@ -167,7 +206,7 @@
 		 * ERROR:  false
 		 */
 		protected function perform_request($method, $url, $body = "") {
-			if (($sock = @fsockopen($this->protocol.$this->connect_host, $this->connect_port, $errno, $errstr, $this->timeout)) == false) {
+			if (($sock = $this->connect_to_server()) == false) {
 				return false;
 			}
 
@@ -267,12 +306,96 @@
 
 			return $result;
 		}
+
+		/* Apply authentication to request
+		 *
+		 * INPUT:  string HTTP method, string URI, array request result
+		 * OUTPUT: true
+		 * ERROR:  false
+		 */
+		private function apply_authentication($method, $uri, $result) {
+			if (($this->username == null) || ($this->password == null)) {
+				return false;
+			}
+
+			if (($www_auth = $result["headers"]["WWW-Authenticate"]) == null) {
+				return false;
+			}
+			list($type, $parameters) = explode(" ", $www_auth, 2);
+
+			if ($type == "Basic") {
+				/* Basic HTTP authentication
+				 */
+				$auth = base64_encode($this->username.":".$this->password);
+				$this->authorization = "Basic ".$auth;
+			} else if ($type == "Digest") {
+				/* Digest HTTP authentication
+				 */
+				$digest = array();
+				$parameters = explode(",", $parameters);
+				foreach ($parameters as $parameter) {
+					list($key, $value) = explode("=", $parameter, 2);
+					$digest[trim($key)] = trim(trim($value), '"');
+				}
+
+				$ha1 = md5($this->username.":".$digest["realm"].":".$this->password);
+				$ha2 = md5($method.":".$uri);
+				$response = md5($ha1.":".$digest["nonce"].":".$ha2);
+
+				$format = 'username="%s",realm="%s",nonce="%s",uri="%s",response="%s",opaque="%s"';
+				$auth = sprintf($format, $this->username, $digest["realm"], $digest["nonce"], $uri, $response, $digest["opaque"]);
+				$this->authorization = "Digest ".$auth;
+			} else {
+				return false;
+			}
+
+			$this->add_header("Authorization", $this->authorization);
+
+			return true;
+		}
 	}
 
 	/* Encrypted HTTP
 	 */
 	class HTTPS extends HTTP {
 		protected $default_port = 443;
-		protected $protocol = "tls://";
+		protected $protocol = "tls";
+		protected $cert_validate_callback = null;
+
+		/* Set certificate validation callback
+		 *
+		 * INPUT:  function certificate validation callback
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function cert_validation_callback($callback) {
+			$this->cert_validate_callback = $callback;
+		}
+
+		/* Connect to server
+		 *
+		 * INPUT:  -
+		 * OUTPUT: resource socket
+		 * ERROR:  false connection failed
+		 */
+		protected function connect_to_server() {
+			$remote = sprintf("%s://%s:%s", $this->protocol, $this->connect_host, $this->connect_port);
+
+			$context = stream_context_create(array("ssl" => array("capture_peer_cert" => true)));
+			if (($sock = stream_socket_client($remote, $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $context)) == false) {
+				return false;
+			}
+
+			if ($this->cert_validate_callback !== null) {
+				$params = stream_context_get_params($context);
+				$peer_cert = openssl_x509_parse($params["options"]["ssl"]["peer_certificate"]);
+				if (call_user_func($this->cert_validate_callback, $peer_cert) == false) {
+					fclose($sock);
+					return false;
+				}
+			}
+
+			return $sock;
+		}
 	}
 ?>

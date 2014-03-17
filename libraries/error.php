@@ -21,6 +21,26 @@
 		return true;
 	}
 
+	/* Generate backtrace
+	 *
+	 * INPUT:  -
+	 * OUTPUT: -
+	 * ERROR:  -
+	 */
+	function error_backtrace() {
+		$trace = debug_backtrace();
+		array_shift($trace);
+
+		$path_offset = strlen(__FILE__) - 19;
+
+		$result = "\nBacktrace:\n";
+		foreach ($trace as $step) {
+			$result .= sprintf("- %s() at line %d in %s.\n", $step["function"], $step["line"], substr($step["file"], $path_offset));
+		}
+
+		return $result;
+	}
+
 	/* Website error handler class
 	 */
 	final class website_error_handler {
@@ -104,6 +124,7 @@
 	/* Error handling settings
 	 */
 	error_reporting(E_ALL & ~E_NOTICE);
+	ini_set("display_errors", 1);
 	set_exception_handler("exception_handler");
 	set_error_handler("error_handler", E_ALL & ~E_NOTICE);
 ?>

@@ -1,5 +1,6 @@
 table.list {
 	width:100%;
+	table-layout:fixed;
 }
 table.list th.filename {
 	width:300px;
@@ -9,6 +10,11 @@ table.list th.size {
 }
 table.list th.delete {
 	width:100px;
+}
+table.list td {
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 }
 table.list input.button {
 	border:1px solid #000000;

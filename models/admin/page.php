@@ -49,7 +49,7 @@
 			while (($line = fgets($fp)) !== false) {
 				if (strpos($line, "apply-templates") !== false) {
 					list(, $layout) = explode('"', $line);
-					array_push($result, $layout);
+					array_push($result, substr($layout, 7));
 				}
 			}
 
@@ -94,8 +94,8 @@
 			}
 
 			$module = ltrim($page["url"], "/");
-			$public_pages = page_to_module(public_pages());
-			$private_pages = page_to_module(private_pages());
+			$public_pages = page_to_module(config_file("public_pages"));
+			$private_pages = page_to_module(config_file("private_pages"));
 			if (in_array($module, $public_pages) || in_array($module, $private_pages)) {
 				$this->output->add_message("URL belongs to a module.");
 				$result = false;
@@ -147,7 +147,11 @@
 			$page["visible"] = is_true($page["visible"]) ? 1 : 0;
 			$page["back"] = is_true($page["back"]) ? 1 : 0;
 
-			if ($page["style"] == $this->default_layout) {
+			if ($page["layout"] == $this->default_layout) {
+				$page["layout"] = null;
+			}
+
+			if ($page["style"] == "") {
 				$page["style"] = null;
 			}
 
@@ -172,7 +176,11 @@
 			$page["visible"] = is_true($page["visible"]) ? 1 : 0;
 			$page["back"] = is_true($page["back"]) ? 1 : 0;
 
-			if ($page["style"] == $this->default_layout) {
+			if ($page["layout"] == $this->default_layout) {
+				$page["layout"] = null;
+			}
+
+			if ($page["style"] == "") {
 				$page["style"] = null;
 			}
 

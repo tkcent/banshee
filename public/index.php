@@ -23,8 +23,8 @@
 	/* Create core objects
 	 */
 	$_database = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
-	$_session  = new session($_database);
 	$_settings = new settings($_database);
+	$_session  = new session($_database, $_settings);
 	$_user     = new user($_database, $_settings, $_session);
 	$_page     = new page($_database, $_settings, $_user);
 	$_output   = new output($_database, $_settings, $_page);
@@ -54,8 +54,20 @@
 	 */
 	if (file_exists($file = "../models/".$_page->module.".php")) {
 		include($file);
+
+		/* Set output type for API modules
+		 */
+		$model_class = str_replace("/", "_", $_page->module)."_model";
+		if (class_exists($model_class)) {
+			if (is_subclass_of($model_class, "api_model")) {
+				$_output->mode = API_OUTPUT_TYPE;
+				$_output->add_layout_data = false;
+			}
+		}
 	}
 
+	/* Add layout data to output XML
+	 */
 	if ($_output->add_layout_data) {
 		$_output->open_tag("output", array("url" => $_page->url));
 
@@ -65,9 +77,10 @@
 		/* Page information
 		 */
 		$_output->add_tag("page", $_page->page, array(
-			"url"    => $_page->url,
-			"module" => $_page->module,
-			"type"   => $_page->type));
+			"url"      => $_page->url,
+			"module"   => $_page->module,
+			"type"     => $_page->type,
+			"readonly" => show_boolean($_page->readonly)));
 
 		/* User information
 		 */
@@ -93,7 +106,7 @@
 				$_output->record(array("link" => "/admin", "text" => "CMS"), "item");
 				$_output->record(array("link" => "/logout", "text" => "Logout"), "item");
 				$_output->close_tag();
-			} else if ($_output->fetch_from_cache("menu") == false) {
+			} else {
 				/* Normal menu
 				 */
 				$menu = new menu($_database, $_output);

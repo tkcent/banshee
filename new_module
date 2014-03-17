@@ -8,7 +8,7 @@
 	function help_exit() {
 		global $argv;
 
-		printf("Usage: %s public|private <module name> [tm|sf|db]\n", $argv[0]);
+		printf("Usage: %s public|private <module name> [tm|sf|db|api]\n", $argv[0]);
 		exit;
 	}
 
@@ -113,6 +113,8 @@
 		$type = "splitform";
 	} else if ($type == "db") {
 		$type = "crud";
+	} else if ($type == "api") {
+		$type = "api";
 	} else {
 		exit("Invalid module type.\n");
 	}
@@ -121,10 +123,10 @@
 	 */
 	chdir(dirname($argv[0])."/settings");
 
-	if (in_array($view, public_pages())) {
+	if (in_array($view, config_file("public_pages"))) {
 		printf("Module '%s' is already a public module.\n", $module);
 		exit;
-	} else if (in_array($view, private_pages())) {
+	} else if (in_array($view, config_file("private_pages"))) {
 		printf("Module '%s' is already a private module.\n", $module);
 		exit;
 	}
@@ -152,9 +154,11 @@
 	printf("Creating controller, model, view and stylesheet.\n");
 	safe_copy("templates/".$type."_controller.php", "controllers/".$module.".php");
 	safe_copy("templates/".$type."_model.php", "models/".$module.".php");
-	safe_copy("templates/".$type."_view.xslt", "views/".$view.".xslt");
-	safe_copy("templates/".$type."_style.css", "public/css/".$module.".css");
-	touch("public/css/".$module.".css");
+	if ($type != "api") {
+		safe_copy("templates/".$type."_view.xslt", "views/".$view.".xslt");
+		safe_copy("templates/".$type."_style.css", "public/css/".$module.".css");
+		touch("public/css/".$module.".css");
+	}
 
 	/* Set class names
 	 */
@@ -164,8 +168,10 @@
 
 	/* Fix include path in XSLT
 	 */
-	printf("Fixing include paths in view.\n");
-	fix_view_include_path($module);
+	if ($type != "api") {
+		printf("Fixing include paths in view.\n");
+		fix_view_include_path($module);
+	}
 
 	/* Add to configuration file
 	 */

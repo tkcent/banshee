@@ -1,5 +1,12 @@
 <?php
-	class apns {
+	/* libraries/apns.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	class APNS {
 		private $host = "gateway.push.apple.com";
 		private $port = 2195;
 		private $certificate = null;
@@ -31,8 +38,16 @@
 		 * OUTPUT: boolean successful
 		 * ERROR:  -
 		 */
-		public function send_notification($tokens, $content) {
-			$content = json_encode(array("aps" => $content));
+		public function send_notification($tokens, $content, $sound = null, $badge = 0) {
+			$content = array("aps" => array("alert" => (string)$content));
+			if ($sound !== null) {
+				$content["aps"]["sound"] = (string)$sound;
+			}
+			if ($badge > 0) {
+				$content["aps"]["badge"] = (int)$badge;
+			}
+			$content = json_encode($content);
+
 			if (($conlen = strlen($content)) > 256) {
 				print "APNS: content too long.\n";
 				return false;
@@ -51,6 +66,7 @@
 				$notification = chr(0).
 					chr(0).chr(32).pack("H*", $token).
 					chr(0).chr($conlen).$content;
+
 				array_push($this->notifications, $notification);
 			}
 
@@ -74,7 +90,7 @@
 				return;
 			}
 
-			$uri = "ssl://".$this->host.":".$this->port;
+			$uri = sprintf("ssl://%s:%d", $this->host, $this->port);
 			if (($socket = stream_socket_client($uri, $errno, $error, 3, STREAM_CLIENT_CONNECT, $context)) == false) {
 				print "APNS: error creating socket.\n";
 				return;

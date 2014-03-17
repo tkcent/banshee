@@ -18,11 +18,11 @@
 		 * ERROR:  -
 		 */
 		public function __construct($crypto_key, $iv = null) {
-			$this->crypto_key = $crypto_key;
-
 			if (($this->resource = mcrypt_module_open(MCRYPT_RIJNDAEL_256, "", "cbc", "")) == false) {
 				return;
 			}
+
+			$this->crypto_key = substr($crypto_key, 0, mcrypt_enc_get_key_size($this->resource));
 
 			$iv_size = mcrypt_enc_get_iv_size($this->resource);
 			if ($iv === null) {

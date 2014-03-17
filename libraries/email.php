@@ -223,7 +223,7 @@
 		/* Add inline image
 		 *
 		 * INPUT:  string filename
-		 * OUTPUT: true
+		 * OUTPUT: string content ID
 		 * ERROR:  false
 		 */
 		public function add_image($filename) {

@@ -11,14 +11,7 @@ function ajax() {
 	var obj = this;
 	var no_support = "Your browser does not support XMLHTTP.";
 
-	this.state_change = state_change;
-	this.get = get;
-	this.post = post;
-	this.hasValue = hasValue;
-	this.getValue = getValue;
-	this.getRecords = getRecords;
-
-	function url_encode(plaintext) {
+	this.url_encode = function(plaintext) {
 		var hex = "0123456789ABCDEF";
 
 		var encoded = "";
@@ -39,80 +32,85 @@ function ajax() {
 		return encoded;
 	}
 
-	function state_change() {
-		if (xmlhttp.readyState == 4) {
-			if (xmlhttp.status == 200) {
-				if (result_handler != null) {
-					result_handler(obj);
-				}
-			} else {
-				alert("Problem retrieving XML data:" + xmlhttp.statusText)
-			}
+	this.state_change = function() {
+		if (xmlhttp.readyState != 4) {
+			return;
+		}
+
+		if (xmlhttp.status != 200) {
+			alert("Problem retrieving XML data:" + xmlhttp.statusText)
+			return;
+		}
+
+		if (result_handler != null) {
+			result_handler(obj);
 		}
 	}
 
-	function get(page, data, handler) {
-		if (xmlhttp != null) {
-			if (data == null) {
-				data = "";
-			} else if (data != "") {
-				data = "?" + data;
-			}
-
-			result_handler = handler;
-			xmlhttp.open("GET", "/" + page + data, true);
-			xmlhttp.onreadystatechange = (result_handler != null) ? state_change : null;
-			xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-			xmlhttp.send(null);
-		} else {
+	this.get = function(page, data, handler) {
+		if (xmlhttp == null) {
 			alert(no_support);
+			return;
 		}
+
+		if (data == null) {
+			data = "";
+		} else if (data != "") {
+			data = "?" + data;
+		}
+
+		result_handler = handler;
+		xmlhttp.open("GET", "/" + page + data, true);
+		xmlhttp.onreadystatechange = (result_handler != null) ? this.state_change : null;
+		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		xmlhttp.send(null);
 	}
 
-	function post(page, form_id, handler) {
-		if (xmlhttp != null) {
-			var form_obj = document.getElementById(form_id);
-			var post_data = new Array();
-			var p = 0;
-			
-			for (i = 0; i < form_obj.elements.length; i++) {
-				if (form_obj.elements[i].name != "") {
-					name = url_encode(form_obj.elements[i].name);
-					value = url_encode(form_obj.elements[i].value);
+	this.post = function(page, form_id, handler) {
+		if (xmlhttp == null) {
+			alert(no_support);
+			return;
+		}
 
-					switch (form_obj.elements[i].type) {
-						case "submit":
-							if (form_obj.elements[i].clicked) {
-								form_obj.elements[i].clicked = false;
-								post_data[p++] = name + "=" + value;
-							}
-							break;
-						case "checkbox":
-							post_data[p++] = name + "=" + (form_obj.elements[i].checked ? "on" : "");
-							break;
-						case "radio":
-							if (form_obj.elements[i].checked) {
-								post_data[p++] = name + "=" + value;
-							}
-							break;
-						default:
+		var form_obj = document.getElementById(form_id);
+		var post_data = new Array();
+		var p = 0;
+		
+		for (i = 0; i < form_obj.elements.length; i++) {
+			if (form_obj.elements[i].name != "") {
+				name = this.url_encode(form_obj.elements[i].name);
+				value = this.url_encode(form_obj.elements[i].value);
+
+				switch (form_obj.elements[i].type) {
+					case "submit":
+						if (form_obj.elements[i].clicked) {
+							form_obj.elements[i].clicked = false;
 							post_data[p++] = name + "=" + value;
-					}
+						}
+						break;
+					case "checkbox":
+						post_data[p++] = name + "=" + (form_obj.elements[i].checked ? "on" : "");
+						break;
+					case "radio":
+						if (form_obj.elements[i].checked) {
+							post_data[p++] = name + "=" + value;
+						}
+						break;
+					default:
+						post_data[p++] = name + "=" + value;
 				}
 			}
-
-			result_handler = handler;
-			xmlhttp.open("POST", "/" + page, true);
-			xmlhttp.onreadystatechange = (result_handler != null) ? state_change : null;
-			xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-			xmlhttp.send(post_data.join("&"));
-		} else {
-			alert(no_support);
 		}
+
+		result_handler = handler;
+		xmlhttp.open("POST", "/" + page, true);
+		xmlhttp.onreadystatechange = (result_handler != null) ? this.state_change : null;
+		xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		xmlhttp.send(post_data.join("&"));
 	}
 
-	function hasValue(key) {
+	this.hasValue = function(key) {
 		elem = xmlhttp.responseXML.getElementsByTagName(key);
 		if (elem.length == 0) {	
 			return false;
@@ -121,7 +119,7 @@ function ajax() {
 		return typeof(elem[0]) != "undefined";
 	}
 
-	function getValue(key) {
+	this.getValue = function(key) {
 		elem = xmlhttp.responseXML.getElementsByTagName(key);
 
 		if (elem.length == 0) {
@@ -133,7 +131,7 @@ function ajax() {
 		return elem[0].firstChild.nodeValue;
 	}
 
-	function tag_to_array(tag) {
+	this.tag_to_array = function(tag) {
 		var result = new Array();
 
 		for (var i = 0; i < tag.childNodes.length; i++) {
@@ -151,9 +149,9 @@ function ajax() {
 			if (elem.childNodes.length == 0) {
 				result[key][idx] = elem.nodeValue;
 			} else if (elem.childNodes.length > 1) {
-				result[key][idx] = tag_to_array(elem);
+				result[key][idx] = this.tag_to_array(elem);
 			} else if (elem.childNodes[0].nodeValue == null) {
-				result[key][idx] = tag_to_array(elem);
+				result[key][idx] = this.tag_to_array(elem);
 			} else {
 				result[key][idx] = elem.childNodes[0].nodeValue;
 			}
@@ -166,16 +164,16 @@ function ajax() {
 		return result;
 	}
 
-	function getRecords() {
+	this.getRecords = function() {
 		if (xmlhttp != null) {
-			var result = tag_to_array(xmlhttp.responseXML);
+			var result = this.tag_to_array(xmlhttp.responseXML);
 			return result["output"][0];
 		} else {
 			return null;
 		}
 	}
 
-	function mouse_click(e) {
+	this.mouse_click = function(e) {
 		if (!e) {
 			if (window.event.srcElement.type == "submit") {
 				window.event.srcElement.clicked = true;
@@ -190,100 +188,8 @@ function ajax() {
 	} else if (window.ActiveXObject) {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	} else {
-		xmlhttp = null;
-	}
-
-	if (xmlhttp == null) {
 		alert(no_support);
 	}
 
-	document.onmousedown = mouse_click;
-}
-
-function ajax_clear(name) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.innerHTML = "";
-	}
-}
-
-function ajax_print(name, data) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.innerHTML += data;
-	}
-}
-
-function ajax_getvalue(name) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) == null) {
-		return null;
-	}
-
-	return elem.value;
-}
-
-function ajax_setvalue(name, data) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.value = data;
-	}
-}
-
-function ajax_focus(name) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.focus();
-	}
-}
-
-function ajax_hide(name) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.style.display = "none";
-	}
-}
-
-function ajax_show(name) {
-	var elem;
-
-	if ((elem = document.getElementById(name)) != null) {
-		elem.style.display = "inline";
-	}
-}
-
-function ajax_formvalue(formname, name, data) {
-	var elem;
-
-	if ((elem = document.getElementById(formname)) == null) {
-		return;
-	}
-
-	for (var i = 0; i < elem.elements.length; i++) {
-		if (elem.elements[i].name == name) {
-			elem.elements[i].value = data;
-		}
-	}
-}
-
-function ajax_formget(formname, name) {
-	var elem;
-
-	if ((elem = document.getElementById(formname)) == null) {
-		return null;
-	}
-
-	for (var i = 0; i < elem.elements.length; i++) {
-		if (elem.elements[i].name == name) {
-			return elem.elements[i].value;
-		}
-	}
-
-	return null;
+	document.onmousedown = this.mouse_click;
 }

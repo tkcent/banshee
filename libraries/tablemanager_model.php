@@ -14,6 +14,9 @@
 		protected $desc_order = false;
 		protected $elements = null;
 		protected $alphabetize_column = null;
+		protected $allow_create = true;
+		protected $allow_update = true;
+		protected $allow_delete = true;
 
 		/* Constructor
 		 *
@@ -62,6 +65,9 @@
 			switch ($key) {
 				case "table": return $this->table;
 				case "elements": return $this->elements;
+				case "allow_create": return $this->allow_create;
+				case "allow_update": return $this->allow_update;
+				case "allow_delete": return $this->allow_delete;
 			}
 
 			return null;
@@ -167,7 +173,17 @@
 		 * ERROR:  false
 		 */
 		public function get_item($item_id) {
-			return $this->db->entry($this->table, $item_id);
+			static $cache = array();
+
+			if (isset($cache[$item_id]) == false) {
+				if (($item = $this->db->entry($this->table, $item_id)) === false) {
+					return false;
+				}
+
+				$cache[$item_id] = $item;
+			}
+
+			return $cache[$item_id];
 		}
 
 		/* Validate user input for saving
@@ -178,6 +194,18 @@
 		 */
 		public function save_oke($item) {
 			$result = true;
+
+			if (isset($item["id"]) == false) {
+				if ($this->allow_create == false) {	
+					$this->output->add_message("You are not allowed to create an item.");
+					return false;
+				}
+			} else {
+				if ($this->allow_update == false) {	
+					$this->output->add_message("You are not allowed to update an item.");
+					return false;
+				}
+			}
 
 			foreach ($this->elements as $name => $element) {
 				if (($name == "id") || $element["readonly"]) {
@@ -237,6 +265,11 @@
 		 * ERROR:  false
 		 */
 		public function delete_oke($item_id) {
+			if ($this->allow_delete == false) {	
+				$this->output->add_message("You are not allowed to delete items.");
+				return false;
+			}
+
 			if (valid_input($item_id, VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
 				$this->output->add_message("Invalid item id.");
 				return false;

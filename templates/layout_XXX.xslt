@@ -6,6 +6,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="{language}" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="author" content="AUTHOR" />
 <meta name="publisher" content="PUBLISHER" />
 <meta name="copyright" content="COPYRIGHT" />

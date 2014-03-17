@@ -15,7 +15,7 @@ Enter your username and e-mail address to reset your password.
 <tr><td>E-mail:</td><td><input type="text" name="email" class="text" /></td></tr>
 </table>
 <input type="submit" name="submit_button" value="Reset password" class="button" />
-<a href="/login" class="button">Cancel</a>
+<a href="/" class="button">Cancel</a>
 </form>
 </xsl:template>
 

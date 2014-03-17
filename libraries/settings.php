@@ -37,7 +37,7 @@
 			}
 			unset($cache);
 
-			if (isset($_SESSION["menu_cache"]) == false) {
+			if (isset($_SESSION["settings_cache"]) == false) {
 				$_SESSION["settings_cache"] = array();
 			}
 			$this->cache = &$_SESSION["settings_cache"];

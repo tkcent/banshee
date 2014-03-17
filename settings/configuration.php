@@ -1,12 +1,17 @@
 <?php
 	$allowed_uploads = array("jpg", "jpeg", "gif", "png", "pdf", "doc", "docx", "xls", "xlsx", "txt", "rtf");
 	$supported_languages = array(
-		"en" => "English");
+		"en" => "English",
+		"nl" => "Nederlands");
 
 	$months_of_year = array("january", "february", "march", "april", "may", "june",
 		"july", "august", "september", "october", "november", "december");
 	$days_of_week = array("monday", "tuesday", "wednesday", "thursday", "friday",
 		"saturday", "sunday");
+
+	$module_flags = array(
+		"foo"         => array("bar"),
+		"demos/flags" => array("test", "demo"));
 
 	/* SINGLE SIGN-ON
 	 *

@@ -2,6 +2,10 @@ table.list {
 	width:100%;
 }
 
+td:first-child {
+	width:35px;
+}
+
 table.list th.key {
 	width:200px;
 }

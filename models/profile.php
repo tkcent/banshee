@@ -41,6 +41,11 @@
 			if (valid_email($profile["email"]) == false) {
 				$this->output->add_message("Invalid e-mail address.");
 				$result = false;
+			} else if (($check = $this->db->entry("users", $profile["email"], "email")) != false) {
+				if ($check["id"] != $this->user->id) {
+					$this->output->add_message("E-mail address already exists.");
+					$result = false;
+				}
 			}
 
 			$password_set = $profile["password"] != "";

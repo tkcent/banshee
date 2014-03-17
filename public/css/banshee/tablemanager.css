@@ -1,5 +1,9 @@
 /* Overview
  */
+div.list {
+	clear:both;
+}
+
 table.list {
 	margin-bottom:15px;
 }

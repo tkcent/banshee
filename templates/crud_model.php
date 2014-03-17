@@ -27,7 +27,7 @@
 		}
 
 		public function create_XXX($XXX) {
-			$keys = array("id", "xxx");
+			$keys = array("id", "...");
 
 			$XXX["id"] = null;
 
@@ -35,7 +35,7 @@
 		}
 
 		public function update_XXX($XXX) {
-			$keys = array("xxx");
+			$keys = array("...");
 
 			return $this->db->update("XXXs", $XXX["id"], $XXX, $keys);
 		}

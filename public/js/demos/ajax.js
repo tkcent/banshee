@@ -1,5 +1,38 @@
 var FB_timerID = null;
 var DT_timerID = null;
+var ajax = new ajax();
+
+function ajax_clear(name) {
+	var elem;
+
+	if ((elem = document.getElementById(name)) != null) {
+		elem.innerHTML = "";
+	}
+}
+
+function ajax_print(name, data) {
+	var elem;
+
+	if ((elem = document.getElementById(name)) != null) {
+		elem.innerHTML += data;
+	}
+}
+
+function ajax_setvalue(name, data) {
+	var elem;
+
+	if ((elem = document.getElementById(name)) != null) {
+		elem.value = data;
+	}
+}
+
+function ajax_focus(name) {
+	var elem;
+
+	if ((elem = document.getElementById(name)) != null) {
+		elem.focus();
+	}
+}
 
 function show_answer(result) {
 	answer = result.getValue("result");
@@ -12,7 +45,7 @@ function show_answer(result) {
 	if (FB_timerID != null) {
 		clearTimeout(FB_timerID);
 	}
-	FB_timerID = setTimeout("document.getElementById('feedback').innerHTML = ''; FB_timerID = null;", 1500);
+	FB_timerID = setTimeout("ajax_clear('feedback'); FB_timerID = null;", 1500);
 }
 
 function show_records(result) {
@@ -35,7 +68,7 @@ function show_records(result) {
 	if (DT_timerID != null) {
 		clearTimeout(DT_timerID);
 	}
-	DT_timerID = setTimeout("document.getElementById('data').innerHTML = ''; DT_timerID = null;", 2500);
+	DT_timerID = setTimeout("ajax_clear('data'); DT_timerID = null;", 2500);
 }
 
 function show_text(result) {
@@ -47,5 +80,3 @@ function show_text(result) {
 function set_focus() {
 	ajax_focus("answer");
 }
-
-ajax = new ajax();

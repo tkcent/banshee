@@ -61,7 +61,10 @@
 					}
 			}
 
-			$this->output->open_tag("overview", array("class" => $this->table_class));
+			$params = array(
+				"class"        => $this->table_class,
+				"allow_create" => show_boolean($this->model->allow_create));
+			$this->output->open_tag("overview", $params);
 
 			/* Labels
 			 */
@@ -136,12 +139,24 @@
 			$calendar_initialized = false;
 			$ckeditor_initialized = false;
 
-			$this->output->open_tag("edit");
+			$args = array(
+				"name"         => strtolower($this->name),
+				"allow_delete" => show_boolean($this->model->allow_delete));
 
-			$args = array("name" => strtolower($this->name));
-			if (isset($item["id"])) {
+			if (isset($item["id"]) == false) {
+				if ($this->model->allow_create == false) {	
+					$this->show_overview();
+					return;
+				}
+			} else {
 				$args["id"] = $item["id"];
+				if ($this->model->allow_update == false) {	
+					$this->show_overview();
+					return;
+				}
 			}
+
+			$this->output->open_tag("edit");
 
 			$this->output->open_tag("form", $args);
 			foreach ($this->model->elements as $name => $element) {

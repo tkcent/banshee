@@ -127,6 +127,10 @@
 	 * ERROR:  -
 	 */
 	function valid_date($date) {
+		if ($date == "0000-00-00") {
+			return false;
+		}
+
 		return preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date) === 1;
 	}
 
@@ -195,16 +199,16 @@
 
 		/* Public pages on disk
 		 */
-		$public = page_to_module(public_pages());
+		$public = page_to_module(config_file("public_pages"));
 		foreach ($public as $page) {
 			$access_rights[$page] = 1;
 		}
 
 		/* Private pages on disk
 		 */
-		$private_pages = page_to_module(private_pages());
+		$private_pages = page_to_module(config_file("private_pages"));
 		foreach ($private_pages as $page) {
-			$access_rights[$page] = $user->is_admin ? ACCESS_YES : ACCESS_NO;
+			$access_rights[$page] = $user->is_admin ? YES : NO;
 		}
 
 		if ($user->logged_in && ($user->is_admin == false)) {
@@ -217,8 +221,8 @@
 				$role = array_slice($role, 2);
 				foreach ($role as $page => $level) {
 					$level = (int)$level;
-					if ($user->is_admin && ($level == ACCESS_NO)) {
-						$level = ACCESS_YES;
+					if ($user->is_admin && ($level == NO)) {
+						$level = YES;
 					}
 					if (isset($access_rights[$page]) == false) {
 						$access_rights[$page] = $level;
@@ -235,7 +239,7 @@
 			return false;
 		}
 		foreach ($pages as $page) {
-			$access_rights[ltrim($page["url"], "/")] = is_false($page["private"]) || $user->is_admin ? ACCESS_YES : ACCESS_NO;
+			$access_rights[ltrim($page["url"], "/")] = is_false($page["private"]) || $user->is_admin ? YES : NO;
 		}
 
 		if ($user->logged_in && ($user->is_admin == false)) {

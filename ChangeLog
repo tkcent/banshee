@@ -1,3 +1,16 @@
+banshee (4.1) stable; urgency=low
+
+  * Flags administration module and library added.
+  * Removed optional read-only access rights feature.
+  * Improved settings administration module.
+  * CKEditor updated to 4.2.
+  * jQuery updated to 2.0.3, jQuery UI updated to 1.10.3.
+  * Included scripts to upgrade CKEditor, jQuery and jQuery UI. These
+    scripts can be found in the directory extra.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 26 Aug 2013 17:43:57 +0200
+
 banshee (4.0) stable; urgency=low
 
   * Support for login via client SSL certificate.

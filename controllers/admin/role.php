@@ -34,20 +34,6 @@
 
 			$this->output->open_tag("edit");
 
-			/* Read-Write
-			 */
-			$access = array(
-				ACCESS_NO       => "--",
-				ACCESS_READONLY => "ro",
-				ACCESS_YES      => "rw");
-			$this->output->open_tag("readwrite");
-			foreach ($access as $value => $label) {
-				$this->output->add_tag("value", $label, array("value" => $value));
-			}
-			$this->output->close_tag();
-
-			$rorw_pages = private_rorw_pages();
-
 			/* Roles
 			 */
 			$this->output->add_tag("role", $role["name"], $params);
@@ -56,9 +42,9 @@
 				if (($value = $role[$page]) == null) {
 					$value = 0;
 				}
-				$this->output->add_tag("page", $page, array(
-					"type"  => in_array($page, $rorw_pages) ? "select" : "checkbox",
-					"value" => $value));
+				$params = array(
+					"value" => $value);
+				$this->output->add_tag("page", $page, $params);
 			}
 			$this->output->close_tag();
 

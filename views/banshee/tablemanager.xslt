@@ -33,7 +33,9 @@
 <xsl:apply-templates select="pagination" />
 </div>
 
+<xsl:if test="@allow_create='yes'">
 <a href="/{/output/page}/new" class="button">New <xsl:value-of select="labels/@name" /></a>
+</xsl:if>
 <xsl:if test="../back">
 <a href="/{../back}" class="button">Back</a>
 </xsl:if>
@@ -57,7 +59,7 @@
 <xsl:choose>
 	<!-- Boolean -->
 	<xsl:when test="@type='boolean'">
-		<input type="checkbox" name="{@name}"><xsl:if test="value='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
+		<input type="checkbox" id="{@name}" name="{@name}"><xsl:if test="value='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
 	</xsl:when>
 	<!-- Date and time -->
 	<xsl:when test="@type='datetime'">
@@ -65,7 +67,7 @@
 	</xsl:when>
 	<!-- Enumerate -->
 	<xsl:when test="@type='enum' or @type='foreignkey'">
-		<select name="{@name}" class="text">
+		<select id="{@name}" name="{@name}" class="text">
 		<xsl:for-each select="options/option">
 		<option value="{@value}">
 			<xsl:if test="@value=../../value"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>
@@ -76,7 +78,7 @@
 	</xsl:when>
 	<!-- Text -->
 	<xsl:when test="@type='text' or @type='ckeditor'">
-		<textarea name="{@name}" class="text">
+		<textarea id="{@name}" name="{@name}" class="text">
 			<xsl:if test="@type='ckeditor'">
 				<xsl:attribute name="id">editor</xsl:attribute>
 			</xsl:if>
@@ -85,11 +87,11 @@
 	</xsl:when>
 	<!-- Blob -->
 	<xsl:when test="@type='blob'">
-		<input type="file" name="{@name}" />
+		<input type="file" id="{@name}" name="{@name}" />
 	</xsl:when>
 	<!-- Other -->
 	<xsl:otherwise>
-		<input type="text" name="{@name}" value="{value}" class="text other" />
+		<input type="text" id="{@name}" name="{@name}" value="{value}" class="text" />
 	</xsl:otherwise>
 </xsl:choose>
 </td></tr>
@@ -113,7 +115,7 @@
 
 <input type="submit" name="submit_button" value="Save {form/@name}" class="button" />
 <a href="/{/output/page}" class="button">Cancel</a>
-<xsl:if test="form/@id">
+<xsl:if test="form/@id and form/@allow_delete='yes'">
 <input type="submit" name="submit_button" value="Delete {form/@name}" class="delete button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
 <xsl:if test="form/element[@type='ckeditor']">
