@@ -12,7 +12,7 @@
 <table class="list">
 <tr><th class="question">Question</th><th class="date">Begin</th><th class="date">End</th></tr>
 <xsl:for-each select="polls/poll[@edit='yes']">
-<tr class="click" onClick="javascript:document.location='/admin/poll/{@id}'">
+<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/poll/{@id}'">
 <td><xsl:value-of select="question" /></td>
 <td><xsl:value-of select="begin" /></td>
 <td><xsl:value-of select="end" /></td>
@@ -20,8 +20,8 @@
 </xsl:for-each>
 </table>
 
-<a href="/admin/poll/new" class="button">New poll</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/poll/new" class="button">New poll</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 
 <h3 class="spacer">Active and previous polls</h3>
 <table class="list">
@@ -44,7 +44,7 @@
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
 
-<form action="/admin/poll" method="post">
+<form action="/{/output/banshee/cms_directory}/poll" method="post">
 <xsl:if test="poll/@id">
 <input type="hidden" name="id" value="{poll/@id}" />
 </xsl:if>
@@ -59,7 +59,7 @@
 </xsl:for-each>
 </table>
 <input type="submit" name="submit_button" value="Save poll" class="button" />
-<a href="/admin/poll" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/poll" class="button">Cancel</a>
 <xsl:if test="poll/@id">
 <input type="submit" name="submit_button" value="Delete poll" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

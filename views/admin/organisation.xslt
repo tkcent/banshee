@@ -11,7 +11,7 @@
 <table class="list">
 <tr><th>Name</th><th>E-mail address</th></tr>
 <xsl:for-each select="tablemanager/users/user">
-<tr onClick="javascript:location='/admin/user/{@id}'" class="click">
+<tr onClick="javascript:location='/{/output/banshee/cms_directory}/user/{@id}'" class="click">
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
 </tr>

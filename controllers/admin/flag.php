@@ -2,7 +2,7 @@
 	class admin_flag_controller extends tablemanager_controller {
 		protected $name = "Flag";
 		protected $pathinfo_offset = 2;
-		protected $back = "admin";
+		protected $back = CMS_DIRECTORY;
 		protected $icon = "flags.png";
 		protected $page_size = 25;
 		protected $pagination_links = 7;
@@ -12,7 +12,7 @@
 
 		protected function show_item_form($item) {
 			$this->output->add_javascript("jquery/jquery.js");
-			$this->output->add_javascript("admin/flag.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/flag.js");
 
 			parent::show_item_form($item);
 		}
@@ -36,7 +36,7 @@
 				$this->send_flags();
 			} else if (count($module_flags) == 0) {
 				$this->output->open_tag("tablemanager");
-				$this->output->add_tag("result", "No flags are available.", array("url" => "admin"));
+				$this->output->add_tag("result", "No flags are available.", array("url" => CMS_DIRECTORY));
 				$this->output->close_tag();
 			} else {
 				parent::execute();

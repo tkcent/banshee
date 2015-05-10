@@ -170,6 +170,20 @@
 			return $this->message;
 		}
 
+		/* Add URL BBcodes to links
+		 *
+		 * INPUT:  -
+		 * OUTPUT: string message
+		 * ERROR:  -
+		 */
+		public function bbcode_for_links() {
+			$this->message = preg_replace('/(http:\/\/[a-zA-Z0-9\.\/\-_\?&=\+%]*)/', '[url]$1[/url]', $this->message);
+			$this->message = str_replace("[url][url]", "[url]", $this->message);
+			$this->message = str_replace("[/url][/url]", "[/url]", $this->message);
+
+			return $this->message;
+		}
+
 		/* Translate single BBcode to HTML tag
 		 *
 		 * INPUT:  string BBcode, string HTML, string message
@@ -228,14 +242,15 @@
 				$replacement = $html;
 
 				$pos = 0;
+				while (($pos = strpos($replacement, '"##"', $pos)) !== false) {
+					$replacement = substr($replacement, 0, $pos + 1) . $param . substr($replacement, $pos + 3);
+					$pos += $param_len;
+				}
+
+				$pos = 0;
 				while (($pos = strpos($replacement, "##", $pos)) !== false) {
-					if (substr($html, $pos - 1, 4) == '"##"') {
-						$replacement = substr($replacement, 0, $pos) . $param . substr($replacement, $pos + 2);
-						$pos += $param_len;
-					} else {
-						$replacement = substr($replacement, 0, $pos) . $value . substr($replacement, $pos + 2);
-						$pos += $value_len;
-					}
+					$replacement = substr($replacement, 0, $pos) . $value . substr($replacement, $pos + 2);
+					$pos += $value_len;
 				}
 
 				$tail_start = ($close !== false) ? $close + $bblen + 3 : $open_end + 1;

@@ -14,13 +14,13 @@
 	<table class="list">
 	<tr><th>Question</th></tr>
 	<xsl:for-each select="../../faqs/faq[section_id=$section_id]">
-		<tr class="click" onClick="javascript:document.location='/admin/faq/{@id}'"><td><xsl:value-of select="question" /></td></tr>
+		<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/faq/{@id}'"><td><xsl:value-of select="question" /></td></tr>
 	</xsl:for-each>
 	</table>
 </xsl:for-each>
 
-<a href="/admin/faq/new" class="button">New FAQ</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/faq/new" class="button">New FAQ</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -30,7 +30,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/faq" method="post">
+<form action="/{/output/banshee/cms_directory}/faq" method="post">
 <xsl:if test="faq/@id">
 <input type="hidden" name="id" value="{faq/@id}" />
 </xsl:if>
@@ -57,7 +57,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save FAQ" class="button" />
-<a href="/admin/faq" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/faq" class="button">Back</a>
 <xsl:if test="faq/@id">
 <input type="submit" name="submit_button" value="Delete FAQ" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

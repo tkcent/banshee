@@ -1,0 +1,51 @@
+div.graph fieldset {
+	border:1px solid #e0e0e0;
+	background-color:#f0f0f0;
+	border-radius:5px;
+	padding:10px 20px 20px 10px;
+}
+
+div.graph fieldset legend {
+	background-color:#e0e0e0;
+	padding:2px 20px;
+	margin-left:20px;
+}
+
+div.graph div.info {
+	height:20px;
+}
+
+div.graph div.info span.label {
+	float:right;
+	width:200px;
+	text-align:right;
+}
+
+div.graph div.maxy {
+	text-align:right;
+	float:left;
+}
+
+div.graph div.bars {
+	letter-spacing:0;
+	border:1px solid #e0e0e0;
+	background-color:#ffffff;
+	padding:10px;
+}
+
+div.graph div.column {
+	float:left;
+	margin-right:2px;
+	vertical-align:bottom;
+	position:relative;
+}
+
+div.graph div.column:last-child {
+	margin-right:0;
+}
+
+div.graph div.column div.bar {
+	background-color:#ff0000;
+	position:absolute;
+	bottom:0;
+}

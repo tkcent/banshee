@@ -115,7 +115,7 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key, string value
+		 * INPUT:  string key, mixed value
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
@@ -273,7 +273,7 @@
 		public function set_layout($layout = null) {
 			if ($layout === null) {
 				$inherit_layout = array(LOGOUT_MODULE, "password");
-				if (substr($this->page->url, 0, 6) == "/admin") {
+				if (substr($this->page->url, 0, 6) == "/".CMS_DIRECTORY) {
 					$this->layout = LAYOUT_CMS;
 				} else if (in_array($this->page->module, $inherit_layout)) {
 					if ($_SESSION["previous_layout"] == LAYOUT_CMS) {
@@ -293,7 +293,7 @@
 
 		/* Add system message to output
 		 *
-		 * INPUT:  string format[, string arg,...]
+		 * INPUT:  string format[, string arg, ...]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
@@ -562,6 +562,7 @@
 					/* Print headers
 					 */
 					if (headers_sent() == false) {
+						header("X-Frame-Options: sameorigin");
 						if ($this->activate_hiawatha_cache()) {
 							header("X-Hiawatha-Cache: ".$this->hiawatha_cache_time);
 						}

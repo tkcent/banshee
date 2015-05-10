@@ -17,8 +17,8 @@
 <div class="ip_address"><xsl:value-of select="ip_address" /></div>
 <div class="action">
 	<a href="/forum/topic/{topic_id}#{@id}" class="small button">view</a>
-	<a href="/admin/forum/{@id}" class="small button">edit</a>
-	<form action="/admin/forum" method="post">
+	<a href="/{/output/banshee/cms_directory}/forum/{@id}" class="small button">edit</a>
+	<form action="/{/output/banshee/cms_directory}/forum" method="post">
 	<input type="hidden" name="message_id" value="{@id}" />
 	<input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 	</form>
@@ -31,8 +31,8 @@
 </xsl:for-each>
 <xsl:apply-templates select="pagination" />
 
-<a href="/admin" class="button">Back</a>
-<a href="/admin/forum/section" class="button">Forum sections</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/forum/section" class="button">Forum sections</a>
 </xsl:template>
 
 <!--
@@ -42,11 +42,11 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/forum" method="post">
+<form action="/{/output/banshee/cms_directory}/forum" method="post">
 <input type="hidden" name="id" value="{message/@id}" />
 <p><textarea name="content" class="text"><xsl:value-of select="message/content" /></textarea></p>
 <input type="submit" name="submit_button" value="Save message" class="button" />
-<a href="/admin/forum" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/forum" class="button">Cancel</a>
 </form>
 </xsl:template>
 

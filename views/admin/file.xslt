@@ -20,7 +20,7 @@
 <td><a href="{link}">[ <xsl:value-of select="name" /> ]</a></td>
 <td></td>
 <td></td>
-<td><xsl:if test="delete='yes'"><form action="/admin/file{../@dir}" method="post">
+<td><xsl:if test="delete='yes'"><form action="/{/output/banshee/cms_directory}/file{../@dir}" method="post">
 <input type="hidden" name="filename" value="{name}" />
 <input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </form></xsl:if></td>
@@ -32,7 +32,7 @@
 <td><xsl:value-of select="name" /></td>
 <td><a href="{link}" target="_blank"><xsl:value-of select="link" /></a></td>
 <td><xsl:value-of select="size" /></td>
-<td><xsl:if test="delete='yes'"><form action="/admin/file{../@dir}" method="post">
+<td><xsl:if test="delete='yes'"><form action="/{/output/banshee/cms_directory}/file{../@dir}" method="post">
 <input type="hidden" name="filename" value="{name}" />
 <input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </form></xsl:if></td>
@@ -45,23 +45,23 @@
 
 <fieldset class="upload">
 <legend>Upload new file</legend>
-<form action="/admin/file{@dir}" method="post" enctype="multipart/form-data">
-<input type="file" name="file" class="text" />
-<input type="submit" name="submit_button" value="Upload file" class="small button" />
+<form action="/{/output/banshee/cms_directory}/file{@dir}" method="post" enctype="multipart/form-data">
+<input type="file" name="file" class="text upload" />
+<input type="submit" name="submit_button" value="Upload file" class="button" />
 </form>
 </fieldset>
 
 <fieldset class="create">
 <legend>Create directory</legend>
-<form action="/admin/file{@dir}" method="post">
+<form action="/{/output/banshee/cms_directory}/file{@dir}" method="post">
 <input type="text" name="create" value="{../create}" class="text" />
-<input type="submit" name="submit_button" value="Create directory" class="small button" />
+<input type="submit" name="submit_button" value="Create directory" class="button" />
 </form>
 </fieldset>
 
 <br clear="both" />
 
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--

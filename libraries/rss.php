@@ -38,9 +38,9 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key
-		 * OUTPUT: mixed value
-		 * ERROR:  null
+		 * INPUT:  string key, mixed value
+		 * OUTPUT: -
+		 * ERROR:  -
 		 */
 		public function __set($key, $value) {
 			switch ($key) {

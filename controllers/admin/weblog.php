@@ -21,6 +21,7 @@
 
 			$this->output->open_tag("weblogs");
 			foreach ($weblogs as $weblog) {
+				$weblog["visible"] = show_boolean($weblog["visible"]);
 				$weblog["timestamp"] = date("j F Y, H:i", $weblog["timestamp"]);
 				$this->output->record($weblog, "weblog");
 			}

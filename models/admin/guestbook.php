@@ -10,11 +10,11 @@
 			return $result[0]["count"];
 		}
 
-		public function get_messages($offset, $count) {
+		public function get_messages($order, $offset, $count) {
 			$query = "select *, UNIX_TIMESTAMP(timestamp) as timestamp ".
-					 "from guestbook order by timestamp desc limit %d,%d";
+					 "from guestbook order by %S,%S desc limit %d,%d";
 
-			return $this->db->execute($query, $offset, $count);
+			return $this->db->execute($query, $order, $offset, $count);
 		}
 
 		public function delete_message($message_id) {

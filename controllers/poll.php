@@ -1,5 +1,15 @@
 <?php
 	class poll_controller extends controller {
+		public function show_active_poll() {
+			$poll = new poll($this->db, $this->output);
+
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$poll->vote($_POST["vote"]);
+			}
+
+			$poll->to_output();
+		}
+
 		public function execute() {
 			$this->output->description = "Poll";
 			$this->output->keywords = "poll";
@@ -31,6 +41,8 @@
 					$this->output->close_tag();
 				}
 			} else {
+				$this->show_active_poll();
+
 				/* Poll overview
 				 */
 				$this->output->title = "Poll";

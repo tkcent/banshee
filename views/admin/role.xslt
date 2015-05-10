@@ -11,15 +11,15 @@
 <table class="list roles">
 <tr><th class="role">Role</th><th class="users">Users with this role</th></tr>
 <xsl:for-each select="roles/role">
-	<tr class="click" onClick="javascript:document.location='/admin/role/{@id}'">
+	<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/role/{@id}'">
 	<td><xsl:value-of select="." /></td>
 	<td class="users"><xsl:value-of select="@users" /></td>
 	</tr>
 </xsl:for-each>
 </table>
 
-<a href="/admin/role/new" class="button">New role</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/role/new" class="button">New role</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -29,7 +29,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/role" method="post">
+<form action="/{/output/banshee/cms_directory}/role" method="post">
 <xsl:if test="role/@id">
 <input type="hidden" name="id" value="{role/@id}" />
 </xsl:if>
@@ -57,7 +57,7 @@
 <xsl:if test="role/@editable='yes'">
 <input type="submit" name="submit_button" value="Save role" class="button" />
 </xsl:if>
-<a href="/admin/role" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/role" class="button">Cancel</a>
 <xsl:if test="role/@id and role/@editable='yes'">
 <input type="submit" name="submit_button" value="Delete role" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
@@ -69,7 +69,7 @@
 <table class="list">
 <tr><th>Name</th><th>E-mail address</th></tr>
 <xsl:for-each select="members/member">
-<tr onClick="javascript:location='/admin/user/{@id}'" class="click">
+<tr onClick="javascript:location='/{/output/banshee/cms_directory}/user/{@id}'" class="click">
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
 </tr>

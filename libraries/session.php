@@ -172,7 +172,7 @@
 			/* Place session id in cookie
 			 */
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
-			setcookie(SESSION_NAME, $this->session_id, $timeout, "/");
+			setcookie(SESSION_NAME, $this->session_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
 			$_COOKIE[SESSION_NAME] = $this->session_id;
 
 			return true;

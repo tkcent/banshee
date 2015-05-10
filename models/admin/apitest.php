@@ -98,7 +98,7 @@
 
 			/* Decode JSON result
 			 */
-			if ($result["headers"]["Content-Type"] == "application/json") {
+			if ($result["headers"]["content-type"] == "application/json") {
 				$result["body"] = $this->indent_json($result["body"]);
 			}
 

@@ -38,19 +38,24 @@ p.deselect {
 	height:0;
 }
 
+/* Tables
+ */
+div.table {
+	margin-bottom:20px;
+}
+
+div.table div.cell {
+	background-color:#f0f0f0;
+	border-bottom:1px solid #e0e0e0;
+	padding:1px 5px;
+	margin-bottom:1px;
+}
+
 /* Top pages
  */
 div.pages {
 	width:410px;
 	float:left;
-	margin-bottom:20px;
-}
-
-div.pages div.toppage {
-	background-color:#f0f0f0;
-	border-bottom:1px solid #e0e0e0;
-	padding:1px 5px;
-	margin-bottom:1px;
 }
 
 /* Search queries
@@ -60,26 +65,31 @@ div.search {
 	width:410px;
 }
 
-div.search div.query {
-	background-color:#f0f0f0;
-	border-bottom:1px solid #e0e0e0;
-	padding:1px 5px;
-	margin-bottom:1px;
+/* Client info
+ */
+div.client div.table {
+	width:266px;
+	float:left;
+	margin-right:20px;
+}
+
+div.client div.table div.cell {
+	padding-left:2px;
+}
+
+div.client div.table div.percentage {
+	padding-left:3px;
+	background-color:#ff8080;
+	height:15px;
+	white-space:nowrap;
+}
+
+div.client div.table:last-child {
+	margin-right:0;
 }
 
 /* Referers
  */
-div.referers {
-	margin-bottom:20px;
-}
-
-div.referers div.host {
-	background-color:#f0f0f0;
-	border-bottom:1px solid #e0e0e0;
-	padding:1px 5px;
-	margin-bottom:1px;
-}
-
 div.referers div.referer form {
 	text-align:right;
 	position:relative;

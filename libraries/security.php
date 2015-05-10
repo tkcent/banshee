@@ -43,7 +43,11 @@
 			return false;
 		}
 
-		if (isset($_SERVER["HTTP_REFERER"]) == false) {
+		if (isset($_SERVER["HTTP_ORIGIN"]) != false) {
+			$referer = $_SERVER["HTTP_ORIGIN"];
+		} else if (isset($_SERVER["HTTP_REFERER"]) != false) {
+			$referer = $_SERVER["HTTP_REFERER"];
+		} else {
 			if ($_SESSION["csrf_warning_shown"] == false) {
 				$output->add_system_warning("Your browser hides the referrer HTTP header line. You are therefor vulnerable for CSRF attacks via this website!");
 				$_SESSION["csrf_warning_shown"] = true;
@@ -51,7 +55,7 @@
 			return false;
 		}
 
-		list($protocol,, $referer_host) = explode("/", $_SERVER["HTTP_REFERER"], 4);
+		list($protocol,, $referer_host) = explode("/", $referer, 4);
 		list($referer_host) = explode(":", $referer_host);
 		if (($protocol != "http:") && ($protocol == "https:")) {
 			return false;
@@ -131,7 +135,7 @@
 			return false;
 		}
 
-		return preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date) === 1;
+		return preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $date) === 1;
 	}
 
 	/* Validate a time string

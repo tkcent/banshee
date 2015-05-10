@@ -15,12 +15,12 @@
 <td><xsl:value-of select="username" /></td>
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
-<td><form action="/admin/switch" method="post"><input type="hidden" name="user_id" value="{@id}" /><input type="submit" value="switch" class="switch button" /></form></td>
+<td><form action="/{/output/banshee/cms_directory}/switch" method="post"><input type="hidden" name="user_id" value="{@id}" /><input type="submit" value="switch" class="switch button" /></form></td>
 </tr>
 </xsl:for-each>
 </table>
 
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--

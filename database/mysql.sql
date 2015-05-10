@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.32, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: banshee_dev
 -- ------------------------------------------------------
--- Server version	5.5.32-0ubuntu0.12.04.1
+-- Server version	5.5.38-0ubuntu0.12.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -343,6 +343,15 @@ CREATE TABLE `guestbook` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `guestbook`
+--
+
+LOCK TABLES `guestbook` WRITE;
+/*!40000 ALTER TABLE `guestbook` DISABLE KEYS */;
+/*!40000 ALTER TABLE `guestbook` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `languages`
 --
 
@@ -379,7 +388,7 @@ DROP TABLE IF EXISTS `links`;
 CREATE TABLE `links` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `text` varchar(100) NOT NULL,
-  `link` varchar(100) NOT NULL,
+  `link` tinytext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -393,6 +402,23 @@ LOCK TABLES `links` WRITE;
 INSERT INTO `links` VALUES (1,'Hiawatha webserver','http://www.hiawatha-webserver.org/'),(2,'Banshee PHP framework','http://www.banshee-php.org/');
 /*!40000 ALTER TABLE `links` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `log_clients`
+--
+
+DROP TABLE IF EXISTS `log_clients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `log_clients` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `os` tinytext NOT NULL,
+  `browser` tinytext NOT NULL,
+  `date` date NOT NULL,
+  `count` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `log_page_views`
@@ -628,7 +654,7 @@ CREATE TABLE `pages` (
 
 LOCK TABLES `pages` WRITE;
 /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
-INSERT INTO `pages` VALUES (1,'/homepage','en',NULL,0,'img.logo {\r\n  float:right;\r\n  margin-left:20px;\r\n}','Welcome to Banshee, the secure PHP framework','','','<p>Banshee is a PHP website framework, which aims at to be secure, fast and easy to use. It uses the Model-View-Control architecture with XSLT for the View. Although it was designed to use MySQL as the database, other database applications can be used as well with only little effort. For more information about Banshee, visit the <a href=\"http://www.banshee-php.org/\">Banshee website</a>.</p>\r\n\r\n<img src=\"http://www.banshee-php.org/logo.php\" class=\"logo\" alt=\"Banshee logo\">\r\n\r\n<p>In this default installation, there are two users available: \'admin\' and \'user\'. Both have the password \'banshee\'.</p>\r\n\r\n<p>If security is a high priority for your website, you should take a look at the <a href=\"http://www.hiawatha-webserver.org\">Hiawatha webserver</a>.</p>',1,0),(2,'/modules','en',NULL,0,NULL,'Banshee modules','Modules in Banshee','modules','<ul>\r\n<li><a href=\"/agenda\">Agenda</a></li>\r\n<li><a href=\"/contact\">Contact form</a></li>\r\n<li><a href=\"/dictionary\">Dictionary</a></li>\r\n<li><a href=\"/faq\">F.A.Q.</a></li>\r\n<li><a href=\"/forum\">Forum</a></li>\r\n<li><a href=\"/guestbook\">Guestbook</a></li>\r\n<li><a href=\"/links\">Links</a></li>\r\n<li><a href=\"/mailbox\">Mailbox</a></li>\r\n<li><a href=\"/news\">News</a></li>\r\n<li><a href=\"/newsletter\">Newsletter</a></li>\r\n<li><a href=\"/photo\">Photo album</a></li>\r\n<li><a href=\"/collection\">Photo album collections</a></li>\r\n<li><a href=\"/poll\">Poll</a></li>\r\n<li><a href=\"/profile\">Profile manager</a></li>\r\n<li><a href=\"/search\">Search</a></li>\r\n<li><a href=\"/session\">Session manager</a></li>\r\n<li><a href=\"/weblog\">Weblog</a></li>\r\n</ul>',1,0),(3,'/demos','en',NULL,0,NULL,'Banshee functionality demos','Banshee demos','banshee, demos','<ul>\r\n<li>Support for <a href=\"/demos/ajax\">AJAX</a>.</li>\r\n<li>A <a href=\"/demos/calendar\">calendar</a> webform object.</li>\r\n<li>The <a href=\"/demos/captcha\">captcha</a> library.</li>\r\n<li>This page shows an <a href=\"/demos/errors\">error message</a>.</li>\r\n<li>An <a href=\"/invisible\">invisible</a> page, a <a href=\"/private\">private</a> page and a <a href=\"/void\">non-existing</a> page.</li>\r\n<li>The WYSIWYG <a href=\"/demos/ckeditor\">CKEditor</a>.</li>\r\n<li><a href=\"/demos/googlemaps\">GoogleMaps static map</a> demo.</a></li>\r\n<li><a href=\"/demos/openstreetmap\">OpenStreetMap static map</a> demo.</a></li>\r\n<li>Browse the available and ready-to-use <a href=\"/demos/layout\">layouts</a>.</li>\r\n<li>A <a href=\"/demos/pagination\">pagination</a> library.</li>\r\n<li>An <a href=\"/demos/alphabetize\">alphabetize</a> library.</li>\r\n<li>The <a href=\"/demos/pdf\">FPDF</a> library.</li>\r\n<li>A <a href=\"/demos/poll\">poll</a> module.</li>\r\n<li>The <a href=\"/demos/posting\">posting</a> library.</li>\r\n<li>The <a href=\"/demos/tablemanager\">tablemanager</a> library.</li>\r\n<li>The <a href=\"/demos/splitform\">splitform</a> library.</li>\r\n<li><a href=\"/demos/utf8\">UTF-8</a> character encoding.</li>\r\n<li>A library for <a href=\"/demos/banshee_website\">remote connection</a> to another Banshee based website.</li>\r\n<li>A library for <a href=\"/demos/validation\">input validation</a>.</li>\r\n<li><a href=\"/demos/system_message\">System message</a> functionality.</li>\r\n<li><a href=\"/demos/readonly\">Read-only</a> access rights.</li>\r\n</ul>\r\n',1,0),(4,'/private','en',NULL,1,NULL,'Private page','','','<p>This is a private page.</p>\r\n\r\n<input type=\"button\" value=\"Back\" class=\"button\" onClick=\"javascript:document.location=\'/demos\'\" />',1,0),(5,'/invisible','en',NULL,0,NULL,'Invisible page','','','<p>This page is invisible to normal users and visitors. Only users with access to the page administration page can view this page.</p>\r\n<p>Page administrators can use this feature to verify a page before making it available to visitors.</p>\r\n\r\n<input type=\"button\" value=\"Back\" class=\"button\" onClick=\"javascript:document.location=\'/demos\'\" />',0,0),(6,'/demos/utf8','en',NULL,0,NULL,'UTF-8 demo','','','<p>這是一個測試頁，以顯示漢字。</p>',1,1);
+INSERT INTO `pages` VALUES (1,'/homepage','en',NULL,0,'img.logo {\r\n  float:right;\r\n  margin-left:20px;\r\n}','Welcome to Banshee, the secure PHP framework','','','<p>Banshee is a PHP website framework, which aims at to be secure, fast and easy to use. It uses the Model-View-Control architecture with XSLT for the View. Although it was designed to use MySQL as the database, other database applications can be used as well with only little effort. For more information about Banshee, visit the <a href=\"http://www.banshee-php.org/\">Banshee website</a>.</p>\r\n\r\n<img src=\"http://www.banshee-php.org/logo.php\" class=\"logo\" alt=\"Banshee logo\">\r\n\r\n<p>In this default installation, there are two users available: \'admin\' and \'user\'. Both have the password \'banshee\'.</p>\r\n\r\n<p>If security is a high priority for your website, you should take a look at the <a href=\"http://www.hiawatha-webserver.org\">Hiawatha webserver</a>.</p>',1,0),(2,'/modules','en',NULL,0,NULL,'Banshee modules','Modules in Banshee','modules','<ul>\r\n<li><a href=\"/agenda\">Agenda</a></li>\r\n<li><a href=\"/contact\">Contact form</a></li>\r\n<li><a href=\"/dictionary\">Dictionary</a></li>\r\n<li><a href=\"/faq\">F.A.Q.</a></li>\r\n<li><a href=\"/forum\">Forum</a></li>\r\n<li><a href=\"/guestbook\">Guestbook</a></li>\r\n<li><a href=\"/links\">Links</a></li>\r\n<li><a href=\"/mailbox\">Mailbox</a></li>\r\n<li><a href=\"/news\">News</a></li>\r\n<li><a href=\"/newsletter\">Newsletter</a></li>\r\n<li><a href=\"/photo\">Photo album</a></li>\r\n<li><a href=\"/collection\">Photo album collections</a></li>\r\n<li><a href=\"/poll\">Poll</a></li>\r\n<li><a href=\"/profile\">Profile manager</a></li>\r\n<li><a href=\"/search\">Search</a></li>\r\n<li><a href=\"/session\">Session manager</a></li>\r\n<li><a href=\"/weblog\">Weblog</a></li>\r\n</ul>',1,0),(3,'/demos','en',NULL,0,NULL,'Banshee functionality demos','Banshee demos','banshee, demos','<ul>\r\n<li>Support for <a href=\"/demos/ajax\">AJAX</a>.</li>\r\n<li>A <a href=\"/demos/calendar\">calendar</a> webform object.</li>\r\n<li>The <a href=\"/demos/captcha\">captcha</a> library.</li>\r\n<li>This page shows an <a href=\"/demos/errors\">error message</a>.</li>\r\n<li>An <a href=\"/invisible\">invisible</a> page, a <a href=\"/private\">private</a> page and a <a href=\"/void\">non-existing</a> page.</li>\r\n<li>The WYSIWYG <a href=\"/demos/ckeditor\">CKEditor</a>.</li>\r\n<li><a href=\"/demos/googlemaps\">GoogleMaps static map</a> demo.</a></li>\r\n<li><a href=\"/demos/openstreetmap\">OpenStreetMap static map</a> demo.</a></li>\r\n<li>Browse the available and ready-to-use <a href=\"/demos/layout\">layouts</a>.</li>\r\n<li>A <a href=\"/demos/pagination\">pagination</a> library.</li>\r\n<li>An <a href=\"/demos/alphabetize\">alphabetize</a> library.</li>\r\n<li>The <a href=\"/demos/pdf\">FPDF</a> library.</li>\r\n<li>A <a href=\"/demos/graph\">graph</a> library.</li>\r\n<li>A <a href=\"/demos/poll\">poll</a> module.</li>\r\n<li>The <a href=\"/demos/posting\">posting</a> library.</li>\r\n<li>The <a href=\"/demos/tablemanager\">tablemanager</a> library.</li>\r\n<li>The <a href=\"/demos/splitform\">splitform</a> library.</li>\r\n<li><a href=\"/demos/utf8\">UTF-8</a> character encoding.</li>\r\n<li>A library for <a href=\"/demos/banshee_website\">remote connection</a> to another Banshee based website.</li>\r\n<li>A library for <a href=\"/demos/validation\">input validation</a>.</li>\r\n<li><a href=\"/demos/system_message\">System message</a> functionality.</li>\r\n</ul>\r\n',1,0),(4,'/private','en',NULL,1,NULL,'Private page','','','<p>This is a private page.</p>\r\n\r\n<input type=\"button\" value=\"Back\" class=\"button\" onClick=\"javascript:document.location=\'/demos\'\" />',1,0),(5,'/invisible','en',NULL,0,NULL,'Invisible page','','','<p>This page is invisible to normal users and visitors. Only users with access to the page administration page can view this page.</p>\r\n<p>Page administrators can use this feature to verify a page before making it available to visitors.</p>\r\n\r\n<input type=\"button\" value=\"Back\" class=\"button\" onClick=\"javascript:document.location=\'/demos\'\" />',0,0),(6,'/demos/utf8','en',NULL,0,NULL,'UTF-8 demo','','','<p>這是一個測試頁，以顯示漢字。</p>',1,1);
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -697,7 +723,7 @@ DROP TABLE IF EXISTS `poll_answers`;
 CREATE TABLE `poll_answers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `poll_id` int(11) unsigned NOT NULL,
-  `answer` varchar(50) NOT NULL,
+  `answer` varchar(100) NOT NULL,
   `votes` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `poll_id` (`poll_id`),
@@ -711,7 +737,7 @@ CREATE TABLE `poll_answers` (
 
 LOCK TABLES `poll_answers` WRITE;
 /*!40000 ALTER TABLE `poll_answers` DISABLE KEYS */;
-INSERT INTO `poll_answers` VALUES (1,1,'Lorum',2),(2,1,'Ipsum',4),(3,1,'Dolor',1),(4,2,'Hiawatha',0),(5,2,'Apache',0),(6,2,'Cherokee',0),(7,2,'Nginx',0),(8,2,'Lighttpd',0);
+INSERT INTO `poll_answers` VALUES (1,1,'Lorum',2),(2,1,'Ipsum',4),(3,1,'Dolor',1),(4,2,'Hiawatha',1),(5,2,'Apache',0),(6,2,'Cherokee',0),(7,2,'Nginx',0),(8,2,'Lighttpd',0);
 /*!40000 ALTER TABLE `poll_answers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -845,7 +871,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(31,'photo_page_size','integer','10'),(5,'default_language','string','en'),(32,'photo_thumbnail_height','integer','100'),(9,'start_page','string','homepage'),(10,'webmaster_email','string','info@banshee-php.org'),(30,'forum_page_size','string','25'),(12,'forum_maintainers','string','Moderator'),(13,'guestbook_page_size','integer','10'),(14,'guestbook_maintainers','string','Publisher'),(15,'news_page_size','integer','5'),(16,'news_rss_pa\nge_size','string','30'),(17,'newsletter_bcc_size','integer','100'),(18,'newsletter_code_timeout','string','15 minutes'),(19,'newsletter_email','string','info@banshee-php.org'),(20,'newsletter_name','string','Hugo Leisink'),(36,'contact_email','string','info@banshee-php.org'),(22,'poll_max_answers','integer','10'),(44,'poll_bans','string\n',''),(24,'weblog_page_size','string','5'),(25,'weblog_rss_page_size','integer','30'),(26,'head_title','string','Banshee'),(27,'head_description','string','Secure PHP framework'),(28,'head_keywords','string','banshee, secure, php, framework'),(33,'photo_image_height','integer','450'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(37,'photo_thumbnail_width','integer','100'),(38,'photo_image_width','integer','700'),(39,'hiawatha_cache_default_time','integer','3600'),(40,'photo_album_size','integer','18'),(41,'hiawatha_cache_enabled','boolean','true'),(42,'session_timeout','integer','1200'),(43,'session_persistent','boolean','false');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(31,'photo_page_size','integer','10'),(5,'default_language','string','en'),(32,'photo_thumbnail_height','integer','100'),(9,'start_page','string','homepage'),(10,'webmaster_email','string','void@banshee-php.org'),(30,'forum_page_size','string','25'),(12,'forum_maintainers','string','Moderator'),(13,'guestbook_page_size','integer','10'),(14,'guestbook_maintainers','string','Publisher'),(15,'news_page_size','integer','5'),(16,'news_rss_page_size','string','30'),(17,'newsletter_bcc_size','integer','100'),(18,'newsletter_code_timeout','string','15 minutes'),(19,'newsletter_email','string','void@banshee-php.org'),(20,'newsletter_name','string','Hugo Leisink'),(36,'contact_email','string','void@banshee-php.org'),(22,'poll_max_answers','integer','10'),(44,'poll_bans','string\n',''),(24,'weblog_page_size','string','5'),(25,'weblog_rss_page_size','integer','30'),(26,'head_title','string','Banshee'),(27,'head_description','string','Secure PHP framework'),(28,'head_keywords','string','banshee, secure, php, framework'),(33,'photo_image_height','integer','450'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(37,'photo_thumbnail_width','integer','100'),(38,'photo_image_width','integer','700'),(39,'hiawatha_cache_default_time','integer','3600'),(40,'photo_album_size','integer','18'),(41,'hiawatha_cache_enabled','boolean','true'),(42,'session_timeout','integer','3600'),(43,'session_persistent','boolean','false'),(45,'login_force_ssl','boolean','false');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1047,4 +1073,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-26 17:35:36
+-- Dump completed on 2014-08-14 16:53:22

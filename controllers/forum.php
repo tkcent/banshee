@@ -71,7 +71,7 @@
 		}
 
 		private function show_topic($topic_id, $response = null) {
-			$moderate = $this->user->access_allowed("admin/forum");
+			$moderate = $this->user->access_allowed(CMS_DIRECTORY."/forum");
 
 			if (($topic = $this->model->get_topic($topic_id)) == false) {
 				$this->output->add_tag("result", "Topic not found.", $this->url);

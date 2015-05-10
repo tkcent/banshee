@@ -34,7 +34,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Submit" class="button" />
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </form>
 </xsl:template>
 

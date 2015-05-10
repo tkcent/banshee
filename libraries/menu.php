@@ -113,8 +113,12 @@
 		 * ERROR:  -
 		 */
 		private function show_menu($menu) {
-			 $this->output->open_tag("menu", array("id" => $menu["id"]));
-			 foreach ($menu["items"] as $item) {
+			if (count($menu) == 0) {
+				return;
+			}
+
+			$this->output->open_tag("menu", array("id" => $menu["id"]));
+			foreach ($menu["items"] as $item) {
 				$args = array("id" => $item["id"]);
 				if (isset($item["current"])) {
 					$args["current"] = $item["current"];
@@ -127,8 +131,8 @@
 					$this->show_menu($item["submenu"]);
 				}
 				$this->output->close_tag();
-			 }
-			 $this->output->close_tag();
+			}
+			$this->output->close_tag();
 		}
 
 		/* Appent menu to XML output

@@ -1,0 +1,143 @@
+#!/usr/bin/php
+<?php
+	chdir(dirname($argv[0]));
+	require("libraries/banshee.php");
+	require("libraries/security.php");
+
+	/* Show help and exit
+	 */
+	function help_exit() {
+		global $argv;
+
+		printf("Usage: %s <layout name>\n", $argv[0]);
+		exit;
+	}
+
+	/* Copy file, but don't overwrite
+	*/
+	function safe_copy($source, $dest) {
+		if (file_exists($source) == false) {
+			return false;
+		} else if (file_exists($dest)) {
+			printf("Warning, destination file already exists: %s\n", $dest);
+			return false;
+		}
+
+		copy($source, $dest);
+
+		return true;
+	}
+
+	/* Set layout name inside file
+	 */
+	function set_layout_name($name) {
+		$filename = "views/banshee/layout_".$name.".xslt";
+
+		if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		foreach ($file as $i => $line) {
+			$file[$i] = str_replace("layout_XXX", "layout_".$name, $line);
+		}
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		fputs($fp, implode("", $file));
+		fclose($fp);
+
+		return true;
+	}
+
+	/* Add layout to website
+	 */
+	function add_layout_to_website($name) {
+		$filename = "views/banshee/main.xslt";
+
+		if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		$include = false;
+		foreach ($file as $i => $line) {
+			$text = chop($line);
+
+			if (substr($text, 0, 12) == "<xsl:include") {
+				$include = true;
+			} else if (($text == "") && $include) {
+				fputs($fp, "<xsl:include href=\"layout_".$name.".xslt\" />\n");
+				$include = false;
+			} else if ($text == "</xsl:template>") {
+				fputs($fp, "<xsl:apply-templates select=\"layout_".$name."\" />\n");
+			}
+
+			fputs($fp, $line);
+		}
+
+		fclose($fp);
+
+		return true;
+	}
+
+	/* Activate new layout
+	 */
+	function activate_layout($name) {
+		$filename = "settings/website.conf";
+
+		if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		foreach ($file as $i => $line) {
+			if (substr($line, 0, 11) == "LAYOUT_SITE") {	
+				$file[$i] = "LAYOUT_SITE = ".$name."\n";
+			}
+		}
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		fputs($fp, implode("", $file));
+		fclose($fp);
+	}
+
+	/* Start
+	 */
+	error_reporting(E_ALL & ~E_NOTICE);
+
+	if (count($argv) < 2) {
+		help_exit();
+	}
+
+	if (is_dir("settings") == false) {
+		exit("Not inside a Banshee website directory.\n");
+	}
+
+	$name = $argv[1];
+
+	$layout_characters = VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."/_";
+	if (valid_input($name, $layout_characters) == false) {
+		exit("Invalid module name.\n");
+	}
+
+	printf("Creating new layout.\n");
+	safe_copy("templates/layout_XXX.xslt", "views/banshee/layout_".$name.".xslt");
+
+	printf("Setting layout name.\n");
+	set_layout_name($name);
+
+	printf("Adding layout to website.\n");
+	add_layout_to_website($name);
+
+	printf("Activating new layout.\n");
+	activate_layout($name);
+
+	print "Done.\n";
+?>

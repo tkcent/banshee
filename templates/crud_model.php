@@ -1,7 +1,7 @@
 <?php
 	class XXX_model extends model {
 		public function count_XXXs() {
-			$query = "select count(*) as count from XXXs order by id";
+			$query = "select count(*) as count from XXXs";
 
 			if (($result = $this->db->execute($query)) == false) {
 				return false;

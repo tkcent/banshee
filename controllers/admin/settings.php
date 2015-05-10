@@ -17,7 +17,7 @@
 				}
 
 				$this->output->add_javascript("jquery/jquery.js");
-				$this->output->add_javascript("admin/settings.js");
+				$this->output->add_javascript(CMS_DIRECTORY."/settings.js");
 
 				$this->output->open_tag("label");
 				$this->output->add_tag("key", $current["key"]);

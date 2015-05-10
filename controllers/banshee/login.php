@@ -1,6 +1,7 @@
 <?php
 	class banshee_login_controller extends controller {
 		public function execute() {
+
 			$this->output->description = "Login";
 			$this->output->keywords = "login";
 			$this->output->title = "Login";
@@ -10,7 +11,12 @@
 			$this->output->run_javascript("set_focus(); hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("login");
-			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
+
+			$url = $_SERVER["REQUEST_URI"];
+			if (($_SERVER["HTTP_SCHEME"] == "http") && $this->settings->login_force_ssl) {
+				$url = "https://".$_SERVER["HTTP_HOST"].$url;
+			}
+			$this->output->add_tag("url", $url);
 
 			if ($_SERVER["REQUEST_METHOD"] != "POST") {
 				$this->output->add_tag("bind");

@@ -1,41 +1,41 @@
 <?php
 	class admin_controller extends controller {
-		private $menu = array(
-			"Authentication & authorization" => array(
-				"Users"         => array("admin/user", "users.png"),
-				"Roles"         => array("admin/role", "roles.png"),
-				"Organisations" => array("admin/organisation", "organisations.png"),
-				"Access"        => array("admin/access", "access.png"),
-				"Flags"         => array("admin/flag", "flags.png"),
-				"User switch"   => array("admin/switch", "switch.png")),
-			"Content" => array(
-				"Agenda"        => array("admin/agenda", "agenda.png"),
-				"Dictionary"    => array("admin/dictionary", "dictionary.png"),
-				"F.A.Q."        => array("admin/faq", "faq.png"),
-				"Files"         => array("admin/file", "files.png"),
-				"Forum"         => array("admin/forum", "forum.png"),
-				"Guestbook"     => array("admin/guestbook", "guestbook.png"),
-				"Languages"     => array("admin/languages", "languages.png"),
-				"Links"         => array("admin/links", "links.png"),
-				"Menu"          => array("admin/menu", "menu.png"),
-				"News"          => array("admin/news", "news.png"),
-				"Pages"         => array("admin/page", "page.png"),
-				"Polls"         => array("admin/poll", "poll.png"),
-				"Weblog"        => array("admin/weblog", "weblog.png")),
-			"Photo album" => array(
-				"Albums"        => array("admin/albums", "albums.png"),
-				"Collections"   => array("admin/collection", "collection.png"),
-				"Photos"        => array("admin/photos", "photos.png")),
-			"Newsletter" => array(
-				"Newsletter"    => array("admin/newsletter", "newsletter.png"),
-				"Subscriptions" => array("admin/subscriptions", "subscriptions.png")),
-			"System" => array(
-				"Logging"       => array("admin/logging", "logging.png"),
-				"Action log"    => array("admin/action", "action.png"),
-				"Settings"      => array("admin/settings", "settings.png"),
-				"API test"      => array("admin/apitest", "apitest.png")));
-
 		public function execute() {
+			$menu = array(
+				"Authentication & authorization" => array(
+					"Users"         => array(CMS_DIRECTORY."/user", "users.png"),
+					"Roles"         => array(CMS_DIRECTORY."/role", "roles.png"),
+					"Organisations" => array(CMS_DIRECTORY."/organisation", "organisations.png"),
+					"Access"        => array(CMS_DIRECTORY."/access", "access.png"),
+					"Flags"         => array(CMS_DIRECTORY."/flag", "flags.png"),
+					"User switch"   => array(CMS_DIRECTORY."/switch", "switch.png")),
+				"Content" => array(
+					"Agenda"        => array(CMS_DIRECTORY."/agenda", "agenda.png"),
+					"Dictionary"    => array(CMS_DIRECTORY."/dictionary", "dictionary.png"),
+					"F.A.Q."        => array(CMS_DIRECTORY."/faq", "faq.png"),
+					"Files"         => array(CMS_DIRECTORY."/file", "files.png"),
+					"Forum"         => array(CMS_DIRECTORY."/forum", "forum.png"),
+					"Guestbook"     => array(CMS_DIRECTORY."/guestbook", "guestbook.png"),
+					"Languages"     => array(CMS_DIRECTORY."/languages", "languages.png"),
+					"Links"         => array(CMS_DIRECTORY."/links", "links.png"),
+					"Menu"          => array(CMS_DIRECTORY."/menu", "menu.png"),
+					"News"          => array(CMS_DIRECTORY."/news", "news.png"),
+					"Pages"         => array(CMS_DIRECTORY."/page", "page.png"),
+					"Polls"         => array(CMS_DIRECTORY."/poll", "poll.png"),
+					"Weblog"        => array(CMS_DIRECTORY."/weblog", "weblog.png")),
+				"Photo album" => array(
+					"Albums"        => array(CMS_DIRECTORY."/albums", "albums.png"),
+					"Collections"   => array(CMS_DIRECTORY."/collection", "collection.png"),
+					"Photos"        => array(CMS_DIRECTORY."/photos", "photos.png")),
+				"Newsletter" => array(
+					"Newsletter"    => array(CMS_DIRECTORY."/newsletter", "newsletter.png"),
+					"Subscriptions" => array(CMS_DIRECTORY."/subscriptions", "subscriptions.png")),
+				"System" => array(
+					"Logging"       => array(CMS_DIRECTORY."/logging", "logging.png"),
+					"Action log"    => array(CMS_DIRECTORY."/action", "action.png"),
+					"Settings"      => array(CMS_DIRECTORY."/settings", "settings.png"),
+					"API test"      => array(CMS_DIRECTORY."/apitest", "apitest.png")));
+
 			if (($this->user->id == 1) && ($this->user->password == "c10b391ff5e75af6ee8469539e6a5428f09eff7e693d6a8c4de0e5525cd9b287")) {
 				$this->output->add_system_warning("Don't forget to change the password of the admin account!");
 			}
@@ -53,7 +53,7 @@
 			}
 
 			if (is_false(MULTILINGUAL)) {
-				unset($this->menu["Content"]["Languages"]);
+				unset($menu["Content"]["Languages"]);
 			}
 
 			$access_list = page_access_list($this->db, $this->user);
@@ -61,7 +61,7 @@
 
 			$this->output->open_tag("menu");
 
-			foreach ($this->menu as $text => $section) {
+			foreach ($menu as $text => $section) {
 
 				$this->output->open_tag("section", array(
 					"text"  => $text,

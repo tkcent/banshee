@@ -23,7 +23,7 @@
 			$this->output->add_javascript("banshee/calendar.js");
 			$this->output->add_javascript("banshee/calendar-en.js");
 			$this->output->add_javascript("banshee/calendar-setup.js");
-			$this->output->add_javascript("admin/agenda.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/agenda.js");
 
 			$appointment = $this->model->appointment_db_to_form($appointment);
 			$this->output->record($appointment, "edit");

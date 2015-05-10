@@ -4,7 +4,7 @@
 <xsl:template match="active_poll">
 <div class="active_poll">
 <h3><xsl:value-of select="question" /></h3>
-<form action="{/output/@url}" method="post">
+<form action="{/output/page/@url}" method="post">
 <ul class="answers">
 <xsl:for-each select="answers/answer">
 	<li>
@@ -28,6 +28,8 @@
 <input type="submit" name="submit_button" value="Vote" class="button" />
 </xsl:if>
 </form>
+
+<p class="enddate">Poll ending at <xsl:value-of select="end_date" />.</p>
 </div>
 </xsl:template>
 

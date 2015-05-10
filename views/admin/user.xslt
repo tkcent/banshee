@@ -10,14 +10,21 @@
 //-->
 <xsl:template match="overview">
 <table class="list">
-<tr><th class="username">Username</th><th class="name">Name</th><th class="email">E-mail address</th><th class="status">Account status</th></tr>
+<tr>
+<th class="username"><a href="?order=username">Username</a></th>
+<th class="id"><a href="?order=id">ID</a></th>
+<th class="name"><a href="?order=fullname">Name</a></th>
+<th class="email"><a href="?order=email">E-mail address</a></th>
+<th class="status"><a href="?order=status">Account status</a></th>
+</tr>
 <xsl:for-each select="users/user">
 <tr class="disabled">
 <xsl:if test="/output/user/@admin='yes' or @admin='no'">
 <xsl:attribute name="class">click</xsl:attribute>
-<xsl:attribute name="onClick">javascript:document.location='/admin/user/<xsl:value-of select="@id" />'</xsl:attribute>
+<xsl:attribute name="onClick">javascript:document.location='/<xsl:value-of select="/output/banshee/cms_directory" />/user/<xsl:value-of select="@id" />'</xsl:attribute>
 </xsl:if>
 <td><xsl:value-of select="username" /></td>
+<td><xsl:value-of select="@id" /></td>
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
 <td><xsl:value-of select="status" /></td>
@@ -26,8 +33,8 @@
 </table>
 <xsl:apply-templates select="pagination" />
 
-<a href="/admin/user/new" class="button">New user</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/user/new" class="button">New user</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -37,7 +44,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/user" method="post" onSubmit="javascript:hash_passwords(); return true;">
+<form action="/{/output/banshee/cms_directory}/user" method="post" onSubmit="javascript:hash_passwords(); return true;">
 <xsl:if test="user/@id">
 <input type="hidden" name="id" value="{user/@id}" />
 </xsl:if>
@@ -96,7 +103,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save user" class="button" />
-<a href="/admin/user" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/user" class="button">Cancel</a>
 <xsl:if test="user/@id and not(user/@id=/output/user/@id)">
 <input type="submit" name="submit_button" value="Delete user" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

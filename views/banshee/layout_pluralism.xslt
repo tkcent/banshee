@@ -12,7 +12,7 @@
 <meta name="copyright" content="Copyright (C) by Hugo Leisink. All rights reserved. Protected by the Copyright laws of the Netherlands and international treaties." />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
-<meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (http://www.banshee-php.org/)" />
+<meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (http://www.banshee-php.org/)" />
 <link rel="apple-touch-icon" href="/images/iphone.png" />
 <title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
@@ -59,7 +59,7 @@
 		<xsl:apply-templates select="/output/content" />
 	</div>
 	<div class="footer">
-		<span>Built upon the <a href="http://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee_version" /></span>
+		<span>Built upon the <a href="http://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
 		<span>Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></span>
 	</div>
 </div>

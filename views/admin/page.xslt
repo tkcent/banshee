@@ -12,7 +12,7 @@
 <table class="list">
 <tr><th class="url">URL</th><th class="title">Title</th><th class="visible">Visible</th></tr>
 <xsl:for-each select="pages/page[private=0]">
-	<tr class="click" onClick="javascript:document.location='/admin/page/{@id}'">
+	<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/page/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
 	<td><xsl:value-of select="visible" /></td>
@@ -24,7 +24,7 @@
 <table class="list">
 <tr><th class="url">URL</th><th class="title">Title</th><th class="visible">Visible</th></tr>
 <xsl:for-each select="pages/page[private=1]">
-	<tr class="click" onClick="javascript:document.location='/admin/page/{@id}'">
+	<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/page/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
 	<td><xsl:value-of select="visible" /></td>
@@ -32,8 +32,8 @@
 </xsl:for-each>
 </table>
 
-<a href="/admin/page/new" class="button">New page</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/page/new" class="button">New page</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 <xsl:if test="@hiawatha='yes'">
 <form action="/{/output/page}" method="post" class="clear">
 <input type="submit" name="submit_button" value="Clear Hiawatha cache" class="button" onClick="javascript:return confirm('CLEAR: Are you sure?')" />
@@ -48,7 +48,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/page" method="post">
+<form action="/{/output/banshee/cms_directory}/page" method="post">
 <xsl:if test="page/@id">
 <input type="hidden" name="id" value="{page/@id}" />
 </xsl:if>
@@ -115,7 +115,7 @@
 <textarea id="editor" name="content" class="text content"><xsl:value-of select="page/content" /></textarea>
 
 <input type="submit" name="submit_button" value="Save page" class="button" />
-<a href="/admin/page" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/page" class="button">Cancel</a>
 <xsl:if test="page/@id">
 <input type="submit" name="submit_button" value="Delete page" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

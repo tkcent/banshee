@@ -33,7 +33,7 @@
 			$this->output->add_javascript("banshee/calendar.js");
 			$this->output->add_javascript("banshee/calendar-en.js");
 			$this->output->add_javascript("banshee/calendar-setup.js");
-			$this->output->add_javascript("admin/poll.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/poll.js");
 			$this->output->run_javascript("setup_calendars()");
 
 			$this->output->open_tag("edit");

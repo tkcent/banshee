@@ -10,25 +10,29 @@
 //-->
 <xsl:template match="overview">
 <table class="list">
-<tr><th class="content">Title</th>
+<tr>
+<th class="content">Title</th>
 <xsl:if test="/output/user/@admin='yes'">
 <th class="author">Author</th>
 </xsl:if>
-<th class="timestamp">Timestamp</th></tr>
+<th class="visible">Visible</th>
+<th class="timestamp">Timestamp</th>
+</tr>
 <xsl:for-each select="weblogs/weblog">
-<tr class="click" onClick="javascript:document.location='/admin/weblog/{@id}'">
+<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/weblog/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <xsl:if test="/output/user/@admin='yes'">
 <td><xsl:value-of select="author" /></td>
 </xsl:if>
+<td><xsl:value-of select="visible" /></td>
 <td><xsl:value-of select="timestamp" /></td>
 </tr>
 </xsl:for-each>
 </table>
 <xsl:apply-templates select="pagination" />
 
-<a href="/admin/weblog/new" class="button">New weblog</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/weblog/new" class="button">New weblog</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -38,7 +42,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/weblog" method="post">
+<form action="/{/output/banshee/cms_directory}/weblog" method="post">
 <xsl:if test="weblog/@id">
 <input type="hidden" name="id" value="{weblog/@id}" />
 </xsl:if>
@@ -66,7 +70,7 @@ Title: <input type="text" name="title" value="{weblog/title}" class="text" />
 
 <!-- Buttons -->
 <input type="submit" name="submit_button" value="Save weblog" class="button" />
-<a href="/admin/weblog" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/weblog" class="button">Cancel</a>
 <xsl:if test="weblog/@id">
 <input type="submit" name="submit_button" value="Delete weblog" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

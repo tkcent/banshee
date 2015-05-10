@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "4.1";
+	$written_for = "4.2";
 
 	/* Auditor class
 	 */
@@ -179,15 +179,14 @@
 		private $continue_var = null;
 		protected $verified = array(
 			"libraries/database/mssql_connection.php"      => array(13),
-			"libraries/database/mysql_connection.php"      => array(14),
 			"libraries/database/mysqli_connection.php"     => array(36),
 			"libraries/database/postgresql_connection.php" => array(14),
 			"libraries/database/sqlite_connection.php"     => array(14),
 			"libraries/menu.php"                           => array(42),
-			"libraries/security.php"                       => array(254),
+			"libraries/security.php"                       => array(258),
 			"libraries/settings.php"                       => array(41),
 			"libraries/tablemanager_controller.php"        => array(197),
-			"libraries/tablemanager_model.php"             => array(166),
+			"libraries/tablemanager_model.php"             => array(185),
 			"libraries/user.php"                           => array(267),
 			"models/admin/user.php"                        => array(8),
 			"models/search.php"                            => array(135));
@@ -257,7 +256,7 @@
 						print "include in query string\n";
 					}
 				} else {
-					/* weird query string
+					/* Weird query string
 					 */
 					print "suspicious query string\n";
 				}

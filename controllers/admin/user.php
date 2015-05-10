@@ -6,9 +6,10 @@
 				return;
 			}
 
+			handle_table_sort("adminuser_order", array("id", "username", "fullname", "email", "status"), array("username", "id"));
 			$paging = new pagination($this->output, "admin_users", $this->settings->admin_page_size, $user_count);
 
-			$users = $this->model->get_users($paging->offset, $paging->size);
+			$users = $this->model->get_users($_SESSION["adminuser_order"], $paging->offset, $paging->size);
 			$roles = $this->model->get_roles();
 			if (($users === false) || ($roles === false)) {
 				$this->output->add_tag("result", "Database error.");
@@ -66,7 +67,7 @@
 			}
 
 			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
-			$this->output->add_javascript("admin/user.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/user.js");
 			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");

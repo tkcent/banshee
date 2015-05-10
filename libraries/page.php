@@ -41,7 +41,11 @@
 
 			/* Select module
 			 */
-			if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
+			if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
+				header(sprintf("Location: https://%s%s", $_SERVER["HTTP_HOST"], $_SERVER["REQUEST_URI"]));
+				$this->module = ERROR_MODULE;
+				$this->http_code = 403;
+			} else if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
 				$this->module = "banshee/offline";
 			} else if ($this->db->connected == false) {
 				$this->module = ERROR_MODULE;
@@ -147,7 +151,7 @@
 			}
 
 			if ($result[0]["visible"] == NO) {
-				if ($this->user->access_allowed("admin/page") == false) {
+				if ($this->user->access_allowed(CMS_DIRECTORY."/page") == false) {
 					return null;
 				}
 			}

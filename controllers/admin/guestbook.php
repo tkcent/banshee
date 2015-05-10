@@ -11,14 +11,10 @@
 				}
 			}
 
-			if (($message_count = $this->model->count_messages()) === false) {
-				$this->output->add_tag("result", "Database error.");
-				return;
-			}
-
+			handle_table_sort("adminguestbook_order", array("author", "message", "timestamp", "ip_address"), array("timestamp", "author"));
 			$paging = new pagination($this->output, "admin_guestbook", $this->settings->admin_page_size, $message_count);
 
-			if (($guestbook = $this->model->get_messages($paging->offset, $paging->size)) === false) {
+			if (($guestbook = $this->model->get_messages($_SESSION["adminguestbook_order"], $paging->offset, $paging->size)) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
 			}

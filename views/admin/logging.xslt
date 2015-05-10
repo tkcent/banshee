@@ -40,10 +40,10 @@
 //
 //-->
 <xsl:template match="pages">
-<div class="pages">
+<div class="table pages">
 <h2>Top pages</h2>
 <xsl:for-each select="page">
-<div class="toppage"><xsl:value-of select="page" /> (<xsl:value-of select="count" />)</div>
+<div class="cell"><xsl:value-of select="page" /> (<xsl:value-of select="count" />)</div>
 </xsl:for-each>
 </div>
 </xsl:template>
@@ -54,11 +54,36 @@
 //
 //-->
 <xsl:template match="search">
-<div class="search">
+<div class="table search">
 <h2>Search queries</h2>
 <xsl:for-each select="query">
-<div class="query"><xsl:value-of select="query" /> (<xsl:value-of select="count" />)</div>
+<div class="cell"><xsl:value-of select="query" /> (<xsl:value-of select="count" />)</div>
 </xsl:for-each>
+</div>
+</xsl:template>
+
+<!--
+//
+//  Info template
+//
+//-->
+<xsl:template match="info">
+<div class="table">
+<xsl:for-each select="item">
+<div class="cell"><div class="percentage" style="width:{percentage}%"><xsl:value-of select="item" />: <xsl:value-of select="percentage" />% (<xsl:value-of select="count" />)</div></div>
+</xsl:for-each>
+</div>
+</xsl:template>
+
+<!--
+//
+//  Client template
+//
+//-->
+<xsl:template match="client">
+<div class="client">
+<h2>Client information</h2>
+<xsl:apply-templates select="info" />
 </div>
 </xsl:template>
 
@@ -68,11 +93,11 @@
 //
 //-->
 <xsl:template match="referers">
-<div class="referers">
+<div class="table referers">
 <h2>Referers</h2>
 <xsl:for-each select="host">
 <xsl:variable name="id" select="position()" />
-<div class="host" onClick="javascript:$('.ref{$id}').slideToggle('normal')">
+<div class="cell" onClick="javascript:$('.ref{$id}').slideToggle('normal')">
 	<xsl:value-of select="@hostname" /> (<xsl:value-of select="@total" /> / <xsl:value-of select="@count" />)
 </div>
 <div class="referer ref{$id}"><ul>
@@ -101,9 +126,11 @@
 <xsl:apply-templates select="pages" />
 <xsl:apply-templates select="search" />
 <div style="clear:both"></div>
+<xsl:apply-templates select="client" />
+<div style="clear:both"></div>
 <xsl:apply-templates select="referers" />
 <xsl:apply-templates select="result" />
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 </xsl:stylesheet>

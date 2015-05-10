@@ -124,6 +124,7 @@
 		private function fix_key_type($item) {
 			switch ($item["type"]) {
 				case "boolean": $item["value"] = is_true($item["value"]) ? "true" : "false"; break;
+				case "float": $item["value"] = (float)$item["value"]; break;
 				case "integer": $item["value"] = (int)$item["value"]; break;
 			}
 

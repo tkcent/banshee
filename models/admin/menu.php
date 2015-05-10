@@ -31,17 +31,17 @@
 		public function menu_oke($menu) {
 			$result = true;
 
-			if (is_array($menu)) {
-				foreach ($menu as $item) {
-					if ((trim($item["text"]) == "") || (trim($item["link"]) == "")) {
-						$this->output->add_message("The text or link of a menu item can't be empty.");
-						$result = false;
-					}
+			if (is_array($menu) == false) {
+				$result = true;
+			} else foreach ($menu as $item) {
+				if ((trim($item["text"]) == "") || (trim($item["link"]) == "")) {
+					$this->output->add_message("The text or link of a menu item can't be empty.");
+					$result = false;
+				}
 
-					if (isset($item["submenu"])) {
-						if ($this->menu_oke($item["submenu"]) == false) {
-							$result = false;
-						}
+				if (isset($item["submenu"])) {
+					if ($this->menu_oke($item["submenu"]) == false) {
+						$result = false;
 					}
 				}
 			}

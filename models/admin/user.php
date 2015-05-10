@@ -12,15 +12,15 @@
 			return $result[0]["count"];
 		}
 
-		public function get_users($offset, $limit) {
+		public function get_users($order, $offset, $limit) {
 			$query = "select * from users ";
 			$args = array();
 			if ($this->user->is_admin == false) {
 				$query .= "where organisation_id=%d ";
 				array_push($args, $this->user->organisation_id);
 			}
-			$query .= "order by username limit %d,%d";
-			array_push($args, $offset, $limit);
+			$query .= "order by %S,%S limit %d,%d";
+			array_push($args, $order, $offset, $limit);
 
 			if (($users = $this->db->execute($query, $args)) === false) {
 				return false;

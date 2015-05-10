@@ -68,7 +68,7 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key, string value
+		 * INPUT:  string key, mixed value
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */

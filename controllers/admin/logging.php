@@ -24,6 +24,24 @@
 			$this->output->close_tag();
 		}
 
+		private function show_client_info($record) {
+			$highest = 0;
+			$total;
+			foreach ($record as $item) {
+				if ($item["count"] > $highest) {
+					$highest = $item["count"];
+				}
+				$total += $item["count"];
+			}
+
+			$this->output->open_tag("info");
+			foreach ($record as $item) {
+				$item["percentage"] = sprintf("%0.1f", $item["count"] * 100 / $total);
+				$this->output->record($item, "item");
+			}
+			$this->output->close_tag();
+		}
+
 		public function execute() {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$this->model->delete_referers($_POST);
@@ -33,7 +51,7 @@
 			$this->output->add_tag("height", $this->height);
 
 			$this->output->add_javascript("jquery/jquery.js");
-			$this->output->add_javascript("admin/logging.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/logging.js");
 
 			$day = valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS."-", VALIDATE_NONEMPTY) ? $this->page->pathinfo[2] : null;
 
@@ -79,6 +97,26 @@
 			foreach ($queries as $query) {
 				$this->output->record($query, "query");
 			}
+			$this->output->close_tag();
+
+			/* Client information
+			 */
+			if (($browsers = $this->model->get_web_browsers($this->list_limit, $day)) === false) {
+				return false;
+			}
+
+			if (($oses = $this->model->get_operating_systems($this->list_limit, $day)) === false) {
+				return false;
+			}
+
+			if (($wb_os = $this->model->get_wb_os($this->list_limit, $day)) === false) {
+				return false;
+			}
+
+			$this->output->open_tag("client");
+			$this->show_client_info($browsers);
+			$this->show_client_info($oses);
+			$this->show_client_info($wb_os);
 			$this->output->close_tag();
 
 			/* Referers

@@ -1,13 +1,5 @@
 #!/bin/bash
 
-function remove_min {
-	dir=$1
-	for file in `ls ${dir}/*.min.*`; do
-		new=`echo ${file} | sed "s/\.min\./\./"`
-		mv ${file} ${new}
-	done
-}
-
 cd `dirname $0`/../public/js/jquery
 
 if [ "$1" = "" ]; then
@@ -28,22 +20,17 @@ fi
 
 echo "Installing new jQuery UI."
 unzip jquery-ui.zip > /dev/null
-rm -f jquery-ui.js
-rm -f jquery.ui.*.js
-rm -rf i18n
-mv -f jquery-ui-${version}/ui/minified/* .
-remove_min .
-remove_min i18n
+mv jquery-ui-${version}/jquery-ui.min.js jquery-ui.js
 
 rm -f ../../css/jquery/*
-mv -f jquery-ui-${version}/themes/base/minified/*.css ../../css/jquery
-for file in `ls ../../css/jquery/*.min.*`; do
-	new=`echo ${file} | sed "s/\.min\./\./"`
-	cat ${file} | sed "s/url(images/url(\/images\/jquery/g" > ${new}
+for file in `ls jquery-ui-${version}/*.min.css`; do
+	new=`echo ${file} | sed 's/\.min\./\./'`
+	new=`basename ${new}`
+	cat ${file} | sed 's/url("images/url("\/images\/jquery/g' > ../../css/jquery/${new}
 done
 
 rm -f ../../images/jquery/*
-mv -f jquery-ui-${version}/themes/base/minified/images/* ../../images/jquery
+mv -f jquery-ui-${version}/images/* ../../images/jquery
 
 echo "Cleaning up."
 rm -rf jquery-ui-${version}

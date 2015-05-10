@@ -53,9 +53,9 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key
-		 * OUTPUT: mixed value
-		 * ERROR:  null
+		 * INPUT:  string key, mixed value
+		 * OUTPUT: -
+		 * ERROR:  -
 		 */
 		public function __set($key, $value) {
 			switch ($key) {
@@ -221,7 +221,7 @@
 					return false;
 				}
 
-				$content_type = $result["headers"]["Content-Type"];
+				$content_type = $result["headers"]["content-type"];
 				$image_data = $result["body"];
 
 				$this->cache->$key = array($content_type, base64_encode($image_data));

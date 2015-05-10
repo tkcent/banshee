@@ -5,10 +5,13 @@ table.list {
 	margin-bottom:15px;
 }
 table.list th.author {
-	width:170px;
+	width:150px;
+}
+table.list th.visible {
+	width:70px;
 }
 table.list th.timestamp {
-	width:180px;
+	width:170px;
 }
 
 /* Edit

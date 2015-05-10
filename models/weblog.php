@@ -180,7 +180,7 @@
 
 			$weblog_url = "http://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/".$weblog_id;
 
-			$cms_url = "http://".$_SERVER["SERVER_NAME"]."/admin/weblog/".$weblog_id;
+			$cms_url = "http://".$_SERVER["SERVER_NAME"]."/".CMS_DIRECTORY."/weblog/".$weblog_id;
 			if (($key = one_time_key($this->db, $author["id"])) !== false) {
 				$cms_url .= "?login=".$key;
 			}

@@ -14,7 +14,7 @@
 <thead>
 <tr>
 <xsl:for-each select="labels/label">
-	<th class="{@name}"><xsl:value-of select="." /></th>
+	<th class="{@name}"><a href="?order={@name}"><xsl:value-of select="." /></a></th>
 </xsl:for-each>
 </tr>
 </thead>
@@ -130,7 +130,7 @@
 //
 //-->
 <xsl:template match="tablemanager">
-<h1><xsl:if test="icon"><img src="/images/icons/{icon}" class="title_icon" /></xsl:if><xsl:value-of select="name" /> administration</h1>
+<xsl:if test="icon"><img src="/images/icons/{icon}" class="title_icon" /></xsl:if><h1><xsl:value-of select="name" /> administration</h1>
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="edit" />
 <xsl:apply-templates select="result" />

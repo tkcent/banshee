@@ -26,7 +26,6 @@
 	$sso_websites = array(
 /*
 		array(
-			"ipaddr"   => "IP address of other webserver",
 			"server"   => "www.banshee_based_website.net",
 			"username" => "user with access to ${server}/system/sso",
 			"password" => "password",

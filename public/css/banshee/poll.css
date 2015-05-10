@@ -7,6 +7,7 @@ div.active_poll {
 	border:1px dashed #4040c0;
 	background-color:#f0f0ff;
 	padding:10px;
+	margin-left:20px;
 }
 div.active_poll h3 {
 	margin:0;
@@ -21,6 +22,12 @@ div.active_poll ul li {
 }
 div.active_poll ul li input {
 	margin-right:5px;
+}
+div.active_poll p {
+	margin-bottom:5px;
+}
+div.active_poll p.enddate {
+	font-size:10px;
 }
 /* Results
  */

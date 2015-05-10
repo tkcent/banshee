@@ -23,8 +23,13 @@ table.list input.button {
 fieldset.upload {
 	margin-top:25px;
 	margin-bottom:15px;
-	width:330px;
+	width:370px;
 	float:left;
+	height:40px;
+}
+
+fieldset.upload input.upload {
+	width:240px;
 }
 
 fieldset.create {
@@ -32,12 +37,9 @@ fieldset.create {
 	margin-bottom:15px;
 	width:410px;
 	float:right;
+	height:40px;
 }
 
 fieldset.create input.text {
 	width:250px;
-}
-
-input.small {
-	padding:0 5px;
 }

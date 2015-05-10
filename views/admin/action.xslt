@@ -23,7 +23,7 @@
 </table>
 <xsl:apply-templates select="pagination" />
 
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--

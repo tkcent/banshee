@@ -6,11 +6,13 @@
 
 	class verify_referer_log {
 		private $db = null;
+		private $all = null;
 
 		/* Constructor
 		 */
-		public function __construct($db) {
+		public function __construct($db, $all) {
 			$this->db = $db;
+			$this->verified = $all ? YES : NO;
 		}
 
 		/* Delete a referer log
@@ -24,7 +26,7 @@
 		 */
 		private function approve_referer_log($referer) {
 			$query = "update log_referers set verified=%d where url=%s";
-			$this->db->query($query, 1, $referer["url"]);
+			$this->db->query($query, YES, $referer["url"]);
 		}
 
 		/* Verify referer logs
@@ -33,7 +35,7 @@
 			/* Fetch referer logs
 			 */
 			$query = "select * from log_referers where verified=%d";
-			if (($referers = $this->db->execute($query, 0)) == false) {
+			if (($referers = $this->db->execute($query, $this->verified)) == false) {
 				return;
 			}
 
@@ -86,6 +88,6 @@
 		exit("Internal error: database not available.\n");
 	}
 
-	$verify = new verify_referer_log($db);
+	$verify = new verify_referer_log($db, $argv[1] == "all");
 	$verify->execute();
 ?>

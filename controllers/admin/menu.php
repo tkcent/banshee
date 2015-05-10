@@ -1,6 +1,10 @@
 <?php
 	class admin_menu_controller extends controller {
 		private function show_menu($menu) {
+			if (is_array($menu) == false) {
+				$menu = array();
+			}
+
 			$this->output->open_tag("branch");
 			foreach ($menu as $item) {
 				$this->output->open_tag("item");
@@ -18,7 +22,7 @@
 			$this->output->add_javascript("jquery/jquery.js");
 			$this->output->add_javascript("jquery/jquery-ui.js");
 			$this->output->add_javascript("banshee/jquery.menueditor.js");
-			$this->output->add_javascript("admin/menu.js");
+			$this->output->add_javascript(CMS_DIRECTORY."/menu.js");
 
 			$this->output->add_css("banshee/menueditor.css");
 

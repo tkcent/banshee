@@ -12,7 +12,7 @@
 <table class="list">
 <tr><th class="word">Word</th><th>Short description</th></tr>
 <xsl:for-each select="words/word">
-	<tr class="click" onClick="javascript:document.location='/admin/dictionary/{@id}'">
+	<tr class="click" onClick="javascript:document.location='/{/output/banshee/cms_directory}/dictionary/{@id}'">
 	<td><xsl:value-of select="word" /></td>
 	<td><xsl:value-of select="short_description" /></td>
 	</tr>
@@ -20,8 +20,8 @@
 </table>
 <xsl:apply-templates select="pagination" />
 
-<a href="/admin/dictionary/new" class="button">New word</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/dictionary/new" class="button">New word</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -31,7 +31,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/dictionary" method="post">
+<form action="/{/output/banshee/cms_directory}/dictionary" method="post">
 <xsl:if test="@id">
 <input type="hidden" name="id" value="{@id}" />
 </xsl:if>
@@ -42,7 +42,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save word" class="button" />
-<a href="/admin/dictionary" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/dictionary" class="button">Cancel</a>
 <xsl:if test="@id">
 <input type="submit" name="submit_button" value="Delete word" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

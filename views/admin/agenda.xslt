@@ -15,7 +15,7 @@
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>
 <xsl:for-each select="appointments/appointment[begin&gt;$now]">
 <xsl:sort select="begin" order="ascending" />
-<tr class="click" onclick="javascript:document.location='/admin/agenda/{@id}'">
+<tr class="click" onclick="javascript:document.location='/{/output/banshee/cms_directory}/agenda/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <td><xsl:value-of select="begin_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="begin_time" /></xsl:if></td>
 <td><xsl:value-of select="end_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if></td>
@@ -28,7 +28,7 @@
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>
 <xsl:for-each select="appointments/appointment[begin&lt;$now]">
 <xsl:sort select="begin" order="descending" />
-<tr class="click" onclick="javascript:document.location='/admin/agenda/{@id}'">
+<tr class="click" onclick="javascript:document.location='/{/output/banshee/cms_directory}/agenda/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <td><xsl:value-of select="begin_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="begin_time" /></xsl:if></td>
 <td><xsl:value-of select="end_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if></td>
@@ -36,8 +36,8 @@
 </xsl:for-each>
 </table>
 
-<a href="/admin/agenda/new" class="button">New appointment</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/agenda/new" class="button">New appointment</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -47,7 +47,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/admin/agenda" method="post">
+<form action="/{/output/banshee/cms_directory}/agenda" method="post">
 <xsl:if test="@id">
 <input type="hidden" name="id" value="{@id}" />
 </xsl:if>
@@ -61,7 +61,7 @@
 
 <div class="knoppenbalk">
 <input type="submit" name="submit_button" value="Save appointment" class="button" />
-<a href="/admin/agenda" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/agenda" class="button">Cancel</a>
 <xsl:if test="@id">
 <input type="submit" name="submit_button" value="Delete appointment" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

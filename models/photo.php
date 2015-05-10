@@ -51,7 +51,8 @@
 		}
 
 		public function get_photo_info($album_id, $offset, $limit) {
-			$query = "select * from photos where photo_album_id=%d limit %d,%d";
+			$query = "select * from photos where photo_album_id=%d ".
+			         "order by title limit %d,%d";
 
 			return $this->db->execute($query, $album_id, $offset, $limit);
 		}

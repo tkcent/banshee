@@ -9,12 +9,12 @@
 //-->
 <xsl:template match="newsletter">
 <xsl:call-template name="show_messages" />
-<form action="/admin/newsletter" method="post">
+<form action="/{/output/banshee/cms_directory}/newsletter" method="post">
 <p>Title: <input type="text" name="title" value="{title}" class="text" /></p>
 <textarea name="content" class="text"><xsl:value-of select="content" /></textarea>
 <input type="submit" name="submit_button" value="Send newsletter" class="button" onClick="javascript:return confirm('SEND: Are you sure?')" />
 <input type="submit" name="submit_button" value="Preview newsletter" class="button" />
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </form>
 </xsl:template>
 

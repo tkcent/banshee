@@ -10,7 +10,7 @@
 
 			$this->output->add_tag("message", "Login successful.");
 
-			if (($result = $website->GET("/admin/user/1")) == false) {
+			if (($result = $website->GET("/".CMS_DIRECTORY."/user/1")) == false) {
 				$this->output->add_tag("message", "Error fetching webpage.");
 				return;
 			}

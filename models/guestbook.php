@@ -67,7 +67,7 @@
 			$email = new email("Guestbook message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
-				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/admin/guestbook";
+				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/".CMS_DIRECTORY."/guestbook";
 				if (($key = one_time_key($this->db, $maintainer["id"])) !== false) {
 					$cms_url .= "?login=".$key;
 				}

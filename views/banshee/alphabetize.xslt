@@ -9,7 +9,7 @@
 		<li class="nolink current"><xsl:value-of select="." /></li>
 	</xsl:when>
 	<xsl:otherwise>
-		<li class="link"><a href="{/output/@url}?char={@link}"><xsl:value-of select="." /></a></li>
+		<li class="link"><a href="{/output/page/@url}?char={@link}"><xsl:value-of select="." /></a></li>
 	</xsl:otherwise>
 </xsl:choose>
 </xsl:for-each>

@@ -69,9 +69,12 @@
 	/* Add layout data to output XML
 	 */
 	if ($_output->add_layout_data) {
-		$_output->open_tag("output", array("url" => $_page->url));
+		$_output->open_tag("output");
 
-		$_output->add_tag("banshee_version", BANSHEE_VERSION);
+		$_output->open_tag("banshee");
+		$_output->add_tag("version", BANSHEE_VERSION);
+		$_output->add_tag("cms_directory", CMS_DIRECTORY);
+		$_output->close_tag();
 		$_output->add_tag("website_url", $_SERVER["SERVER_NAME"]);
 
 		/* Page information
@@ -98,12 +101,12 @@
 		/* Main menu
 		 */
 		if (is_true(WEBSITE_ONLINE)) {
-			if (substr($_page->url, 0, 6) == "/admin") {
+			if (substr($_page->url, 0, strlen(CMS_DIRECTORY) + 1) == "/".CMS_DIRECTORY) {
 				/* CMS menu
 				 */
 				$_output->open_tag("menu");
 				$_output->record(array("link" => "/", "text" => "Website"), "item");
-				$_output->record(array("link" => "/admin", "text" => "CMS"), "item");
+				$_output->record(array("link" => "/".CMS_DIRECTORY, "text" => "CMS"), "item");
 				$_output->record(array("link" => "/logout", "text" => "Logout"), "item");
 				$_output->close_tag();
 			} else {
@@ -156,6 +159,11 @@
 			if ($_output->disabled) {
 				print ob_get_clean();
 				exit;
+			}
+
+			while ($_output->depth > 2) {
+				print "System error: controller didn't close an open tag.";
+				$_output->close_tag();
 			}
 		}
 	}

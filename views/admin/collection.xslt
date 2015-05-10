@@ -17,8 +17,8 @@
 </xsl:for-each>
 </table>
 
-<a href="/admin/collection/new" class="button">New collection</a>
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}/collection/new" class="button">New collection</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -44,7 +44,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save collection" class="button" />
-<a href="/admin/collection" class="button">Cancel</a>
+<a href="/{/output/banshee/cms_directory}/collection" class="button">Cancel</a>
 
 <xsl:if test="collection/@id">
 <input type="submit" name="submit_button" value="Delete collection" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />

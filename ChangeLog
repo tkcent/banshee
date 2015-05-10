@@ -1,3 +1,16 @@
+banshee (4.2) stable; urgency=low
+
+  * Notify My Android library added.
+  * Prowl library added.
+  * Added SOCKS support to HTTP library.
+  * Added support for Origin HTTP header to prevent CSRF.
+  * Added Graph library.
+  * CKEditor updated to 4.4.3.
+  * jQuery updated to 2.1.1, jQuery UI updated to 1.11.0.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu, 14 Aug 2014 16:50:09 +0200
+
 banshee (4.1) stable; urgency=low
 
   * Flags administration module and library added.
@@ -19,7 +32,7 @@ banshee (4.0) stable; urgency=low
   * API test module added.
   * Improved menu administration and menu library.
   * Converted smilies, BBcodes and spam detection helpers to library
-      and improved BBcode rewriting.
+    and improved BBcode rewriting.
   * Converted CSV helper to CSV library.
   * CKEditor updated to 4.1.
   * jQuery updated to 1.9.1, jQuery UI updated to 1.10.2.

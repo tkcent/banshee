@@ -99,6 +99,54 @@
 			return $this->db->execute($query, $args);
 		}
 
+		public function get_web_browsers($limit, $day = null) {
+			$query = "select browser as item, sum(count) as count from log_clients";
+			$args = array();
+			if ($day !== null) {
+				$query .= " where date=%s";
+				array_push($args, $day);
+			} else {
+				$query .= " where date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".$this->default_period)));
+			}
+			$query .= " group by item order by count desc, item limit %d";
+			array_push($args, $limit);
+
+			return $this->db->execute($query, $args);
+		}
+
+		public function get_operating_systems($limit, $day = null) {
+			$query = "select os as item, sum(count) as count from log_clients";
+			$args = array();
+			if ($day !== null) {
+				$query .= " where date=%s";
+				array_push($args, $day);
+			} else {
+				$query .= " where date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".$this->default_period)));
+			}
+			$query .= " group by item order by count desc, item limit %d";
+			array_push($args, $limit);
+
+			return $this->db->execute($query, $args);
+		}
+
+		public function get_wb_os($limit, $day = null) {
+			$query = "select concat(browser, %s, os) as item, sum(count) as count from log_clients";
+			$args = array(" on ");
+			if ($day !== null) {
+				$query .= " where date=%s";
+				array_push($args, $day);
+			} else {
+				$query .= " where date>%s";
+				array_push($args, date("Y-m-d", strtotime("-".$this->default_period)));
+			}
+			$query .= " group by item order by count desc, item limit %d";
+			array_push($args, $limit);
+
+			return $this->db->execute($query, $args);
+		}
+
 		public function get_referers($day = null) {
 			$query = "select hostname, sum(count) as count from log_referers where verified=%d";
 			$args = array(1);

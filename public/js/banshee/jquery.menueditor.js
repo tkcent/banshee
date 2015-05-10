@@ -111,7 +111,6 @@
 	 */
 	var delete_node = function(item) {
 		li = $(item).parent().parent();
-		console.log(li.prop("tagName"));
 		ul = li.parent();
 
 		if (li.find("ul").size() > 0) {
@@ -181,7 +180,6 @@
 			$(this).find("input:nth-child(2)").prop("name", "menu" + current + pos + "[text]");
 			$(this).find("input:nth-child(4)").prop("name", "menu" + current + pos + "[link]");
 			$(this).children("ul").each(function(){
-				console.log("submenu");
 				give_name($(this), current + pos + "[submenu]");
 			});
 			i++;

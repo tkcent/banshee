@@ -14,7 +14,7 @@
 		}
 
 		public function get_weblogs($offset, $count, $user_id = null) {
-			$query = "select w.id, w.user_id, w.title, UNIX_TIMESTAMP(w.timestamp) as timestamp, u.fullname as author ".
+			$query = "select w.id, w.user_id, w.title, w.visible, UNIX_TIMESTAMP(w.timestamp) as timestamp, u.fullname as author ".
 					 "from weblogs w, users u where w.user_id=u.id";
 			$args = array();
 

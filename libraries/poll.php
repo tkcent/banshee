@@ -141,6 +141,7 @@
 
 			$this->output->open_tag("active_poll", array("can_vote" => show_boolean($poll_open)));
 			$this->output->add_tag("question", $poll["question"]);
+			$this->output->add_tag("end_date", date_string("d F", $poll["end"]));
 
 			$query = "select * from poll_answers where poll_id=%d order by answer";
 			if (($answers = $this->db->execute($query, $poll["id"])) != false) {

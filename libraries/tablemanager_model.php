@@ -28,6 +28,25 @@
 			$arguments = func_get_args();
 			call_user_func_array(array(parent, "__construct"), $arguments);
 
+			/* Table order
+			 */
+			$key = "tablemanager_order_".$this->table;
+			if (isset($_SESSION[$key]) == false) {
+				$_SESSION[$key] = $this->order;
+				$_SESSION[$key."_desc"] = $this->desc_order;
+            }
+			$this->order = &$_SESSION[$key];
+			$this->desc_order = &$_SESSION[$key."_desc"];
+
+			if (in_array($_GET["order"], array_keys($this->elements))) {
+				if ($_SESSION[$key] == $_GET["order"]) {
+					$this->desc_order = $this->desc_order == false;
+				} else {
+					$this->order = $_GET["order"];
+					$this->desc_order = false;
+				}
+			}
+
 			/* Determine alphabetizing column
 			 */
 			if ($this->alphabetize_column === null) {
@@ -218,25 +237,28 @@
 						$result = false;
 					}
 				}
-				switch ($element["type"]) {
-					case "datetime":
-						if (valid_timestamp($item[$name]) == false) {
-							$this->output->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
-							$result = false;
-						}
-						break;
-					case "enum":
-						if (in_array($item[$name], array_keys($element["options"])) == false) {
-							$this->output->add_message("The field ".$element["label"]." doesn't contain a valid value.");
-							$result = false;
-						}
-						break;
-					case "integer":
-						if (is_numeric($item[$name]) == false) {
-							$this->output->add_message("The field ".$element["label"]." should be numerical.");
-							$result = false;
-						}
-						break;
+
+				if (trim($item[$name]) != "") {
+					switch ($element["type"]) {
+						case "datetime":
+							if (valid_timestamp($item[$name]) == false) {
+								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
+								$result = false;
+							}
+							break;
+						case "enum":
+							if (in_array($item[$name], array_keys($element["options"])) == false) {
+								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid value.");
+								$result = false;
+							}
+							break;
+						case "integer":
+							if (is_numeric($item[$name]) == false) {
+								$this->output->add_message("The field ".$element["label"]." should be numerical.");
+								$result = false;
+							}
+							break;
+					}
 				}
 
 				if ($element["unique"]) {

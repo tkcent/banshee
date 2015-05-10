@@ -3,6 +3,6 @@
 		protected $name = "Link";
 		protected $pathinfo_offset = 2;
 		protected $back = "admin";
-		protected $icon = "link.png";
+		protected $icon = "links.png";
 	}
 ?>

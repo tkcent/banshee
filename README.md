@@ -24,7 +24,6 @@ Banshee needs PHP's MySQL and XSL module. Use the following PHP settings:
 
 	allow_url_include = Off
 	cgi.fix_pathinfo = 0 (when using FastCGI PHP), 1 (otherwise)
-	cgi.rfc2616_headers = 1 (when using Hiawatha), 0 (when using Apache)
 	date.timezone = <your timezone>
 	magic_quotes_gpc = Off
 	register_globals = Off

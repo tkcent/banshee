@@ -63,7 +63,7 @@
 	</div>
 	<div class="date"><xsl:value-of select="timestamp" /></div>
 	<xsl:if test="@moderate='yes'">
-	<div class="moderate"><a href="/admin/forum/{@id}">edit</a></div>
+	<div class="moderate"><a href="/{/output/banshee/cms_directory}/forum/{@id}">edit</a></div>
 	</xsl:if>
 	<xsl:value-of disable-output-escaping="yes" select="content" />
 	</div>

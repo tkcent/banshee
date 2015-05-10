@@ -9,6 +9,8 @@
 			"mailbox"    => "Mailbox",
 			"news"       => "News",
 			"pages"      => "Pages",
+			"photos"     => "Photos",
+			"polls"      => "Polls",
 			"weblog"     => "Weblog");
 
 		/* Log the search query
@@ -76,6 +78,7 @@
 							"section" => $section,
 							"label"   => $this->sections[$section]));
 						foreach ($hits as $hit) {
+							$hit["text"] = strip_tags($hit["text"]);
 							$hit["content"] = strip_tags($hit["content"]);
 							$hit["content"] = preg_replace('/\[.*?\]/', "", $hit["content"]);
 							$hit["content"] = truncate_text($hit["content"], 400);

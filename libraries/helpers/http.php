@@ -13,9 +13,9 @@
 			list($protocol,, $hostname, $path) = explode("/", $url, 4);
 
 			if ($protocol == "http:") {
-				$http = new http($hostname);
+				$http = new HTTP($hostname);
 			} else if ($protocol == "https:") {
-				$http = new https($hostname);
+				$http = new HTTPS($hostname);
 			} else {
 				break;
 			}
@@ -32,7 +32,7 @@
 				break;
 			} else if (($result["status"] != 301) && ($result["status"] != 302)) {
 				break;
-			} else if (($url = $result["headers"]["Location"]) == "") {
+			} else if (($url = $result["headers"]["location"]) == "") {
 				break;
 			}
 		}

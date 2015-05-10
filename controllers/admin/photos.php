@@ -2,7 +2,7 @@
 	class admin_photos_controller extends tablemanager_controller {
 		protected $name = "Photo";
 		protected $pathinfo_offset = 2;
-		protected $back = "admin";
+		protected $back = CMS_DIRECTORY;
 		protected $icon = "photos.png";
 		protected $page_size = null;
 		protected $pagination_links = 7;
@@ -75,7 +75,7 @@
 			} else if ($album_count == 0) {
 				$this->output->open_tag("tablemanager");
 				$this->output->add_tag("name", $this->name);
-				$this->output->add_tag("result", "No albums have been created. Click <a href=\"/admin/albums\">here</a> to create a new photo album.");
+				$this->output->add_tag("result", "No albums have been created. Click <a href=\"/".CMS_DIRECTORY."/albums\">here</a> to create a new photo album.");
 				$this->output->close_tag();
 			} else {
 				parent::execute();

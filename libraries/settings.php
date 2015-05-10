@@ -12,7 +12,7 @@
 		private $db = null;
 		private $max_value_len = 256;
 		private $cache = null;
-		private $types = array("boolean", "integer", "string");
+		private $types = array("boolean", "float", "integer", "string");
 
 		/* Constructor
 		 *
@@ -72,6 +72,7 @@
 			$value = $setting[0]["value"];
 			switch ($setting[0]["type"]) {
 				case "boolean": $value = is_true($value); break;
+				case "float": $value = (float)$value; break;
 				case "integer": $value = (int)$value; break;
 			}
 
@@ -98,6 +99,8 @@
 				}
 			} else if (is_int($value)) {
 				$this->store($key, "integer", (string)$value);
+			} else if (is_float($value)) {
+				$this->store($key, "float", (float)$value);
 			} else if (is_bool($value)) {
 				$this->store($key, "boolean", show_boolean($value));
 			} else if (is_string($value)) {

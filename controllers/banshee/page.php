@@ -27,13 +27,16 @@
 			/* Page content
 			 */
 			$this->output->open_tag("page");
+
 			$this->output->add_tag("title", $page["title"]);
 			$this->output->add_tag("content", $page["content"]);
+
 			if (is_true($page["back"])) {
 				$parts = explode("/", $this->page->page);
 				array_pop($parts);
 				$this->output->add_tag("back", implode("/", $parts));
 			}
+
 			$this->output->close_tag();
 		}
 	}

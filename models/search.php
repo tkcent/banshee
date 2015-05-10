@@ -1,6 +1,7 @@
 <?php
 	class search_model extends model {
 		private $text = null;
+		private $add_or = null;
 
 		public function __call($name, $args) {
 			return false;
@@ -9,8 +10,13 @@
 		/* Add selection to query
 		 */
 		private function add_selection($column, &$query, &$args) {
+			if ($this->add_or) {
+				$query .= " or ";
+			}
 			$query .= "(".$column. " like %s)";
 			array_push($args, "%".$this->text."%");
+
+			$this->add_or = true;
 		}
 
 		/* Search agenda
@@ -19,7 +25,6 @@
 			$query = "select concat(%s, id) as url, title as text, content from agenda where (";
 			$args = array("/agenda/");
 			$this->add_selection("title", $query, $args);
-			$query .= " or ";
 			$this->add_selection("content", $query, $args);
 			$query .= ") order by begin desc, end";
 
@@ -33,7 +38,6 @@
 			         "from dictionary where ";
 			$args = array("/dictionary/");
 			$this->add_selection("word", $query, $args);
-			$query .= " or ";
 			$this->add_selection("long_description", $query, $args);
 
 			return $this->db->execute($query, $args);
@@ -42,14 +46,13 @@
 		/* Search forum
 		 */
 		private function search_forum() {
-			$query = "select distinct concat(%s, t.id, %s, m.id) as url, concat(f.title, %s, t.subject) as text, m.content ".
+			$query = "select distinct concat(%s, t.id, %s, m.id) as url, ".
+			                         "concat(f.title, %s, t.subject) as text, m.content ".
 			         "from forums f, forum_topics t, forum_messages m ".
 			         "where f.id=t.forum_id and t.id=m.topic_id and (";
 			$args = array("/forum/topic/", "/#", " :: ");
 			$this->add_selection("t.subject", $query, $args);
-			$query .= " or ";
 			$this->add_selection("m.content", $query, $args);
-			$query .= " or ";
 			$this->add_selection("m.username", $query, $args);
 			$query .= ") order by m.timestamp desc";
 
@@ -67,7 +70,6 @@
 			         "where to_user_id=%d and (deleted_by is null or deleted_by!=to_user_id) and (";
 			$args = array("/mailbox/", $this->user->id);
 			$this->add_selection("subject", $query, $args);
-			$query .= " or ";
 			$this->add_selection("message", $query, $args);
 			$query .= ")";
 
@@ -80,7 +82,6 @@
 			$query = "select concat(%s, id) as url, title as text, content from news where (";
 			$args = array("/news/");
 			$this->add_selection("title", $query, $args);
-			$query .= " or ";
 			$this->add_selection("content", $query, $args);
 			$query .= ") order by timestamp desc";
 
@@ -100,7 +101,6 @@
 			}
 			$query .= "(";
 			$this->add_selection("title", $query, $args);
-			$query .= " or ";
 			$this->add_selection("content", $query, $args);
 			$query .= ") and visible=%d";
 
@@ -124,11 +124,11 @@
 
 			/* Private pages
 			 */
+			$this->add_or = false;
 			$args = array();
 			$query = "select url, title as text from pages p, page_access a ".
 			         "where p.id=a.page_id and p.private=%d and a.role_id in (".$pages.") and (";
 			$this->add_selection("p.title", $query, $args);
-			$query .= " or ";
 			$this->add_selection("p.content", $query, $args);
 			$query .= ") and p.visible=%d";
 
@@ -139,6 +139,50 @@
 			return array_merge($public, $private);
 		}
 
+		/* Search polls
+		 */
+		private function search_polls() {
+			$query = "select distinct concat(%s, p.id) as url, p.question as text ".
+			         "from polls p, poll_answers a ".
+			         "where p.id=a.poll_id and now()>=end and (";
+			$args = array("/poll/");
+			$this->add_selection("p.question", $query, $args);
+			$this->add_selection("a.answer", $query, $args);
+			$query .= ") order by begin desc";
+
+			return $this->db->execute($query, $args);
+		}
+
+		/* Search photos
+		 */
+		private function search_photos() {
+			/* Albums
+			 */
+			$query = "select concat(%s, id) as url, name as text, description as content ".
+			         "from photo_albums where (";
+			$args = array("/photo/");
+			$this->add_selection("name", $query, $args);
+			$this->add_selection("description", $query, $args);
+			$query .= ") order by timestamp desc";
+			if (($albums = $this->db->execute($query, $args)) === false) {
+				return false;
+			}
+
+			/* Photos
+			 */
+			$this->add_or = false;
+			$query = "select concat(%s, a.id) as url, p. title as text, a.description as content ".
+			         "from photos p, photo_albums a where a.id=p.photo_album_id and ";
+			$args = array("/photo/");
+			$this->add_selection("title", $query, $args);
+			$query .= " order by title";
+			if (($photos = $this->db->execute($query, $args)) === false) {
+				return false;
+			}
+
+			return array_merge($albums, $photos);
+		}
+
 		/* Search weblog
 		 */
 		private function search_weblog() {
@@ -146,11 +190,8 @@
 			         "from weblogs w, weblog_comments c where w.id=c.weblog_id and (";
 			$args = array("/weblog/");
 			$this->add_selection("w.title", $query, $args);
-			$query .= " or ";
 			$this->add_selection("w.content", $query, $args);
-			$query .= " or ";
 			$this->add_selection("c.content", $query, $args);
-			$query .= " or ";
 			$this->add_selection("c.author", $query, $args);
 			$query .= ") order by w.timestamp desc";
 
@@ -165,6 +206,7 @@
 
 			foreach ($sections as $section => $label) {
 				if (is_true($post[$section])) {
+					$this->add_or = false;
 					$hits = call_user_func(array($this, "search_".$section));
 					if ($hits != false) {
 						$result[$section] = $hits;

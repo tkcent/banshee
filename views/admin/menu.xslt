@@ -24,10 +24,10 @@
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
 
-<form action="/admin/menu" method="post">
+<form action="/{/output/banshee/cms_directory}/menu" method="post">
 <xsl:apply-templates select="branch" />
 <input type="submit" name="submit_button" value="Update" class="button" />
-<a href="/admin" class="button">Back</a>
+<a href="/{/output/banshee/cms_directory}" class="button">Back</a>
 </form>
 </xsl:template>
 

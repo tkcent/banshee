@@ -8,7 +8,8 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "4.1");
+	define("BANSHEE_VERSION", "4.2");
+	define("CMS_DIRECTORY", "admin");
 	define("ADMIN_ROLE_ID", 1);
 	define("YES", 1);
 	define("NO", 0);
@@ -151,6 +152,37 @@
 	 */
 	function library_exists($library) {
 		return file_exists("../libraries/".$library.".php");
+	}
+
+	/* Handle table sort
+	 */
+	function handle_table_sort($key, $columns, $default) {
+		if (isset($_SESSION[$key]) == false) {
+			$_SESSION[$key] = $default;
+		}
+
+		if (isset($_GET["order"]) == false) {
+			return;
+		}
+
+		if (in_array($_GET["order"], $columns) == false) {
+			return;
+		}
+
+		if (is_array($default) == false) {
+			$_SESSION[$key] = $_GET["order"];
+			return;
+		}
+
+		$max = count($default) - 1;
+		for ($i = 0; $i < $max; $i++) {
+			if ($_SESSION[$key][$i] == $_GET["order"]) {
+				return;
+			}
+		}
+
+		array_pop($_SESSION[$key]);
+		array_unshift($_SESSION[$key], $_GET["order"]);
 	}
 
 	/* Log debug information
@@ -305,8 +337,4 @@
 	/* PHP settings
 	 */
 	ini_set("magic_quotes_runtime", 0);
-
-	if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-		$_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_X_FORWARDED_FOR"];
-	}
 ?>

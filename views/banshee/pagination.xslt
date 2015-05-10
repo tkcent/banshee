@@ -9,8 +9,8 @@
 		<li class="nolink">&lt;</li>
 	</xsl:when>
 	<xsl:otherwise>
-		<li class="link"><a href="{/output/@url}?offset=0">&lt;&lt;</a></li>
-		<li class="link"><a href="{/output/@url}?offset={@page - @step}">&lt;</a></li>
+		<li class="link"><a href="{/output/page/@url}?offset=0">&lt;&lt;</a></li>
+		<li class="link"><a href="{/output/page/@url}?offset={@page - @step}">&lt;</a></li>
 	</xsl:otherwise>
 </xsl:choose>
 
@@ -20,7 +20,7 @@
 		<li class="nolink current"><xsl:value-of select=". + 1" /></li>
 	</xsl:when>
 	<xsl:otherwise>
-		<li class="link"><a href="{/output/@url}?offset={.}"><xsl:value-of select=". + 1" /></a></li>
+		<li class="link"><a href="{/output/page/@url}?offset={.}"><xsl:value-of select=". + 1" /></a></li>
 	</xsl:otherwise>
 </xsl:choose>
 </xsl:for-each>
@@ -31,8 +31,8 @@
 		<li class="nolink">&gt;&gt;</li>
 	</xsl:when>
 	<xsl:otherwise>
-		<li class="link"><a href="{/output/@url}?offset={@page + @step}">&gt;</a></li>
-		<li class="link"><a href="{/output/@url}?offset={@max}">&gt;&gt;</a></li>
+		<li class="link"><a href="{/output/page/@url}?offset={@page + @step}">&gt;</a></li>
+		<li class="link"><a href="{/output/page/@url}?offset={@max}">&gt;&gt;</a></li>
 	</xsl:otherwise>
 </xsl:choose>
 </ul>
