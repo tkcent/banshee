@@ -17,7 +17,7 @@
 </div>
 <xsl:for-each select="item">
 <a href="/{/output/page}/{date}"><div class="column" style="width:{../../width}px; height:{../../height}px" onMouseOver="javascript:set_info('{../@id}', '{count}', '{day}')">
-<div class="bar" style="width:{../../width}px; height:{height}px"></div>
+<div class="bar weekend_{weekend}" style="width:{../../width}px; height:{height}px"></div>
 </div></a>
 </xsl:for-each>
 <div style="clear:both"></div>

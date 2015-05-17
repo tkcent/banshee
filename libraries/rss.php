@@ -102,7 +102,9 @@
 			if ($this->description !== null) {
 				$this->output->add_tag("description", $this->description);
 			}
-			$this->output->add_tag("url", $url);
+			if ($this->url !== null) {
+				$this->output->add_tag("url", $this->url);
+			}
 
 			$this->output->open_tag("items");
 			foreach ($this->items as $item) {

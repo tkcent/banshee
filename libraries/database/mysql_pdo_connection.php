@@ -15,7 +15,7 @@
 
 		public function __construct() {
 			$args = func_get_args();
-			call_user_func_array(array(parent, "__construct"), $args);
+			call_user_func_array(array("parent", "__construct"), $args);
 
 			if ($this->link !== null) {
 				$this->query("set names %s", "utf8");

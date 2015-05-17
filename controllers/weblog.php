@@ -84,8 +84,8 @@
 		}
 
 		public function execute() {
-			global $months_of_year;
-
+			$months_of_year = config_array(MONTHS_OF_YEAR);
+			
 			$this->output->title = "Weblog";
 			$this->output->description = "Weblog";
 			$this->output->keywords = "weblog";
@@ -197,7 +197,8 @@
 								$this->output->close_tag();
 							}
 							if ($i < $count) {
-								$this->output->open_tag("list", array("label" => $months_of_year[$weblogs[$i]["month"] - 1]." ".$this->page->pathinfo[2]));
+								$label = $months_of_year[$weblogs[$i]["month"] - 1]." ".$this->page->pathinfo[2];
+								$this->output->open_tag("list", array("label" => $label));
 							}
 						}
 						$this->output->record($weblogs[$i], "weblog");

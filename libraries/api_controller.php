@@ -17,11 +17,22 @@
 		public function execute() {
 			$function = strtolower($_SERVER["REQUEST_METHOD"]);
 			if (count($this->page->parameters) > 0) {
-				$uri_part = "_".implode("_", $this->page->parameters);
+				$params = $this->page->parameters;
+				foreach ($params as $i => $param) {
+					if (preg_match('/^[0-9]+$/', $param)) {
+						$params[$i] = "0";
+					}
+				}
+
+				$uri_part = "_".implode("_", $params);
 				$function .= $uri_part;
 			}
 
 			if (method_exists($this, $function)) {
+				if (($_SERVER["REQUEST_METHOD"] == "POST") && ($_SERVER["HTTP_CONTENT_TYPE"] == "application/octet-stream")) {
+					$_POST = file_get_contents("php://input");
+				}
+
 				call_user_func(array($this, $function));
 				return;
 			}
@@ -35,7 +46,7 @@
 			}
 
 			if (count($allowed) == 0) {
-				$this->set_error(405);
+				$this->set_error(404);
 			} else {
 				$this->set_error(405);
 				header("Allowed: ".implode(", ", $allowed));

@@ -2,6 +2,7 @@
 	class admin_flag_model extends tablemanager_model {
 		protected $table = "flags";
 		protected $order = array("role_id", "module", "flag");
+		protected $module_flags = array();
 		protected $elements = array(
 			"role_id" => array(
 				"label"    => "Role",
@@ -24,12 +25,15 @@
 				"required" => true));
 
 		public function __construct() {
-			global $module_flags;
+			$flags = config_array(MODULE_FLAGS);
+			foreach ($flags as $key => $value) {
+				$this->module_flags[$key] = explode(",", $value);
+			}
 
 			$arguments = func_get_args();
-			call_user_func_array(array(parent, "__construct"), $arguments);
+			call_user_func_array(array("parent", "__construct"), $arguments);
 
-			$modules = array_keys($module_flags);
+			$modules = array_keys($this->module_flags);
 			sort($modules);
 
 			foreach ($modules as $module) {
@@ -37,14 +41,20 @@
 			}
 		}
 
-		public function get_flags($module) {
-			global $module_flags;
+		public function __get($key) {
+			switch ($key) {
+				case "module_flags": return $this->module_flags;
+			}
 
-			if (isset($module_flags[$module]) == false) {
+			return parent::__get($key);
+		}
+
+		public function get_flags($module) {
+			if (isset($this->module_flags[$module]) == false) {
 				return false;
 			}
 
-			return $module_flags[$module];
+			return $this->module_flags[$module];
 		}
 
 		public function get_item($item_id) {
@@ -60,9 +70,7 @@
 		}
 
 		public function save_oke($item) {
-			global $module_flags;
-
-			$flags = $module_flags[$item["module"]];
+			$flags = $this->module_flags[$item["module"]];
 			foreach ($flags as $flag) {
 				$this->elements["flag"]["options"][$flag] = $flag;
 			}

@@ -1,24 +1,27 @@
 div.post {
 	padding-bottom:10px;
 }
+div.info {
+	background-color:#f8f8f8;
+	border-bottom:1px solid #c0c0c0;
+	height:18px;
+}
 div.subject {
 	width:310px;
 	float:left;
 	overflow:hidden;
 	padding-right:20px;
+	padding-top:2px;
 }
 div.timestamp {
 	width:200px;
 	float:left;
+	padding-top:2px;
 }
 div.ip_address {
-	width:140px;
+	width:130px;
 	float:left;
-}
-div.subject, div.timestamp, div.action {
-	background-color:#f8f8f8;
-	border-bottom:1px solid #c0c0c0;
-	height:18px;
+	padding-top:2px;
 }
 div.message {
 	margin-left:10px;
@@ -39,9 +42,10 @@ div.action a.small, div.action input.small {
 	float:left;
 	margin:2px 5px 0 5px;
 	width:45px;
+	border-radius:5px;
 }
 div.action input.small {
-	padding:2px 0 1px 0;
+	height:16px;
 }
 textarea.text {
 	width:100%;

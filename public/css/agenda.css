@@ -80,5 +80,7 @@ div.buttons a.button:hover {
 }
 h5 {
 	text-align:right;
-	margin-top:-15px;
+	position:relative;
+	top:-15px;
+	height:0;
 }

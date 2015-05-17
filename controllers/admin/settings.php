@@ -3,7 +3,7 @@
 		protected $name = "Setting";
 		protected $pathinfo_offset = 2;
 		protected $back = "admin";
-		protected $icon = null;
+		protected $icon = "settings.png";
 		protected $page_size = 25;
 		protected $pagination_links = 7;
 		protected $pagination_step = 1;

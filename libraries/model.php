@@ -16,7 +16,7 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object settings, object user, object page, object output[, object language]
+		 * INPUT: object database, object settings, object user, object page, object output[, object language]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */

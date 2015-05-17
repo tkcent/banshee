@@ -1,17 +1,16 @@
 <?php
-	class admin_photos_controller extends tablemanager_controller {
-		protected $name = "Photo";
-		protected $pathinfo_offset = 2;
-		protected $back = CMS_DIRECTORY;
-		protected $icon = "photos.png";
-		protected $page_size = null;
-		protected $pagination_links = 7;
-		protected $pagination_step = 1;
-		protected $foreign_null = "---";
-		protected $browsing = null;
+	class admin_photos_controller extends controller {
+		private $back = CMS_DIRECTORY;
 
-		protected function show_overview() {
-			$albums = $this->model->get_albums();
+		private function show_overview() {
+			if (($albums = $this->model->get_albums()) === false) {
+				return false;
+			}
+			if (($photos = $this->model->get_photos($_SESSION["photo_album"])) === false) {
+				return false;
+			}
+
+			$this->output->open_tag("overview");
 
 			$this->output->open_tag("albums", array("current" => $_SESSION["photo_album"]));
 			foreach ($albums as $album) {
@@ -20,19 +19,21 @@
 			}
 			$this->output->close_tag();
 
-			parent::show_overview();
+			$this->output->open_tag("photos");
+			foreach ($photos as $photo) {
+				$photo["overview"] = show_boolean($photo["overview"]);
+				$this->output->record($photo, "photo");
+			}
+			$this->output->close_tag();
+
+			$this->output->close_tag();
 		}
 
-		protected function show_item_form($item) {
-			if (isset($item["id"])) {
-				if (isset($item["extension"]) == false) {
-					if (($current = $this->model->get_item($item["id"])) != false) {
-						$item["extension"] = $current["extension"];
-					}
-				}
-				$this->output->add_tag("show_photo", $item["extension"], array("id" => $item["id"]));
-			}
-			parent::show_item_form($item);
+		private function show_edit_form($photo) {
+			$this->output->open_tag("edit");
+			$photo["overview"] = show_boolean($photo["overview"]);
+			$this->output->record($photo, "photo");
+			$this->output->close_tag();
 		}
 
 		public function execute() {
@@ -56,29 +57,66 @@
 
 			if (isset($_SESSION["photo_album"]) == false) {
 				if (($albums = $this->model->get_albums()) != false) {
-					$_SESSION["photo_album"] = $albums[0]["id"];
+					$_SESSION["photo_album"] = (int)$albums[0]["id"];
 				}
 			}
 
 			if (($_SERVER["REQUEST_METHOD"] == "POST") && ($_POST["submit_button"] == "album")) {
-				$_SESSION["photo_album"] = $_POST["album"];
-				$_SERVER["REQUEST_METHOD"] = "GET";
 			}
 
-			$this->model->set_photo_album($_SESSION["photo_album"]);
-
 			if (($album_count = $this->model->count_albums()) === false) {
-				$this->output->open_tag("tablemanager");
-				$this->output->add_tag("name", $this->name);
 				$this->output->add_tag("result", "Error counting albums");
-				$this->output->close_tag();
+				return;
 			} else if ($album_count == 0) {
-				$this->output->open_tag("tablemanager");
-				$this->output->add_tag("name", $this->name);
 				$this->output->add_tag("result", "No albums have been created. Click <a href=\"/".CMS_DIRECTORY."/albums\">here</a> to create a new photo album.");
-				$this->output->close_tag();
+				return;
+			}
+
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				if ($_POST["submit_button"] == "album") {
+					/* Select album
+					 */
+					$_SESSION["photo_album"] = (int)$_POST["album"];
+					$this->show_overview();
+				} else if ($_POST["submit_button"] == "Upload photos") {
+					/* Upload photos
+					 */
+					if ($this->model->upload_oke($_FILES["photos"]) == false) {
+						$this->show_overview();	
+					} else if ($this->model->create_photos($_FILES["photos"], $_POST) == false) {
+					} else {
+						$this->show_overview();
+					}
+				} else if ($_POST["submit_button"] == "Save photo") {
+					/* Save photo
+					 */
+					if ($this->model->edit_oke($_POST) == false) {
+						$this->show_edit_form($_POST);
+					} else if ($this->model->update_photo($_POST) == false) {
+						$this->show_edit_form($_POST);
+					} else {
+						$this->show_overview();
+					}
+				} else if ($_POST["submit_button"] == "Delete photo") {
+					/* Delete photo
+					 */
+					if ($this->model->delete_photo($_POST["id"]) == false) {
+						$this->output->add_message("Error while deleting photo.");
+						$this->show_edit_form($_POST);
+					} else {
+						$this->show_overview();
+					}
+				} else {
+					$this->show_overview();
+				}
+			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if (($photo = $this->model->get_photo($this->page->pathinfo[2])) != false) {
+					$this->show_edit_form($photo);
+				} else {
+					$this->output->add_tag("result", "Photo not found.");
+				}
 			} else {
-				parent::execute();
+				$this->show_overview();
 			}
 		}
 	}

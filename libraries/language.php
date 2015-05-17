@@ -21,13 +21,11 @@
 		 * ERROR:  -
 		 */
 		public function __construct($db, $page, $output) {
-			global $supported_languages;
-
 			$this->db = $db;
 			$this->page = $page;
 			$this->output = $output;
 
-			$this->supported = $supported_languages;
+			$this->supported = config_array(SUPPORTED_LANGUAGES);
 
 			$this->global_texts = $this->load_texts("*");
 			$this->page_texts = $this->load_texts($this->page->page);

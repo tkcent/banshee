@@ -54,13 +54,12 @@
 			<xsl:value-of disable-output-escaping="yes" select="/output/content/blocks/sidebar/content" />
 			</div>
 		</xsl:if>
-		<xsl:apply-templates select="/output/system_messages" />
 		<xsl:apply-templates select="/output/system_warnings" />
+		<xsl:apply-templates select="/output/system_messages" />
 		<xsl:apply-templates select="/output/content" />
 	</div>
 	<div class="footer">
 		<span>Built upon the <a href="http://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
-		<span>Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></span>
 	</div>
 </div>
 <xsl:apply-templates select="/output/internal_errors" />

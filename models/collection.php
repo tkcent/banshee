@@ -7,8 +7,6 @@
 		}
 
 		public function get_collection($id) {
-			global $photo_extensions;
-
 			$query = "select name from collections where id=%d";
 			if (($result = $this->db->execute($query, $id)) == false) {
 				return false;

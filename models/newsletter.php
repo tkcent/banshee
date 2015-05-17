@@ -1,7 +1,7 @@
 <?php
 	class newsletter_model extends model {
 		private function signature($data) {
-			return md5(implode("|", $data)."|".$this->settings->secret_website_code);
+			return sha1(implode("|", $data)."|".$this->settings->secret_website_code);
 		}
 
 		public function extract_data($data) {
@@ -78,9 +78,9 @@
 			$newsletter = new newsletter($subject, $this->settings->newsletter_email, $this->settings->newsletter_name);
 			$url = "http://".$_SERVER["SERVER_NAME"]."/newsletter/".$code;
 			$message  = "You recieve this e-mail because your e-mail address has been entered at the newsletter ".
-						"form on the ".$this->settings->head_title." website. Subscribing to or unsubscribing from this ".
-						"newsletter list requires confirmation. So, if you do want to ".$action." the ".$this->settings->head_title." ".
-						"newsletter list, confirm by following <a href=\"".$url."\">this link</a>. If that's not ".
+						"form at the ".$this->settings->head_title." website. Subscribing to or unsubscribing from this ".
+						"newsletter requires confirmation. So, if you do want to ".$action." the ".$this->settings->head_title." ".
+						"newsletter, confirm by following <a href=\"".$url."\">this link</a>. If that's not ".
 						"what you want, just ignore this e-mail.\n";
 			$newsletter->message($message);
 

@@ -118,7 +118,7 @@
 
 			$url = "/maps/api/directions/json?".implode("&", $parameters);
 
-			$key = md5($url);
+			$key = sha1($url);
 
 			if (($route_info = $this->cache->$key) === null) {
 				/* Fetch from website
@@ -212,7 +212,7 @@
 		public function show_static_map($size_x, $size_y = null) {
 			$path = $this->generate_path($size_x, $size_y);
 
-			$key = md5($path);
+			$key = sha1($path);
 			if (($data = $this->cache->$key) === null) {
 				/* Fetch from website
 				 */

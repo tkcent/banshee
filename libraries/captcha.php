@@ -60,6 +60,10 @@
 				return;
 			}
 
+			for ($i = 0; $i < 5; $i++) {
+				imageline($image, mt_rand(0, $width), mt_rand(0, $height), mt_rand(0, $width), mt_rand(0, $height), $dot_color);
+			}
+
 			$_SESSION["captcha_code"] = $this->code;
 			$this->image = $image;
 		}

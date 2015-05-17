@@ -1,21 +1,43 @@
 div.albums {
-	position:absolute;
-	left:450px;
-	top:40px;
+	position:relative;
+	left:300px;
+	top:-30px;
+	height:0;
+	width:450px;
 }
 
-table.list {
-	width:100%;
+div.photos {
+	margin-top:30px;
+}
+
+div.photos div {
+	float:left;
+	padding:0 20px 20px 0;
+}
+
+div.photos div p {
+	width:120px;
 }
 
 img.preview {
-	position:absolute;
-	top:55px;
-	right:220px;
-	border:1px solid #000000;
-	padding:1px;
+	padding:2px;
 }
 
-a.button {
-	margin-right:10px;
+img.overview_yes {
+	border:1px solid #000000;
+}
+
+img.overview_no {
+	border:1px dashed #000000;
+}
+
+img.preview_edit {
+	float:right;
+	border:1px solid #000000;
+	padding:2px;
+	margin-right:200px;
+}
+
+input.button, a.button {
+	margin:15px 10px 0 0;
 }

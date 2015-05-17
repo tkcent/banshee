@@ -24,10 +24,10 @@
 		if ($_user->login_one_time_key($_GET["login"])) {
 			$login_successful = true;
 		}
-	} else if (($_SERVER["HTTPS"] == "on") && isset($_SERVER[SSL_CERT_SERIAL_VAR])) {
+	} else if (($_SERVER["HTTPS"] == "on") && isset($_SERVER[TLS_CERT_SERIAL_VAR])) {
 		/* Login via client SSL certificate
 		 */
-		if ($_user->login_ssl_auth($_SERVER[SSL_CERT_SERIAL_VAR])) {
+		if ($_user->login_ssl_auth($_SERVER[TLS_CERT_SERIAL_VAR])) {
 			$login_successful = true;
 		}
 	} else if (isset($_SESSION["challenge"]) == false) {
@@ -51,14 +51,6 @@
 			if (file_exists($file = "../models/".$_page->module.".php")) {
 				include($file);
 			}
-		}
-
-		/* Single Sign-On includes
-		 */
-		if (($max = count($sso_websites)) > 0) {
-			$_output->add_javascript("banshee/ajax.js");
-			$_output->add_javascript("banshee/sso.js");
-			$_output->run_javascript("sso(".$max.");");
 		}
 
 		/* Show new mail notification

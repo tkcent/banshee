@@ -6,7 +6,6 @@
 	 * http://www.banshee-php.org/
 	 */
 
-
 	class XML {
 		private $xml_header = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 		private $xml_data = "";
@@ -24,6 +23,8 @@
 		 * ERROR:  -
 		 */
 		public function __construct($db = null) {
+			libxml_disable_entity_loader(false);
+
 			if ($db !== null) {
 				$this->cache = new cache($db, "xml");
 			}
@@ -68,6 +69,30 @@
 			$to   = array("&amp;", "&quot;", "&apos;", "&lt;", "&gt;");
 
 			return str_replace($from, $to, $str);
+		}
+
+		/* Remove unprintable characters from string
+		 *
+		 * INPUT:  string text[, string replacement character]
+		 * OUTPUT: string text
+		 * ERROR:  -
+		 */
+		public function secure_string($str, $replace = " ") {
+			$result = "";
+
+			$len = strlen($str);
+			for ($i = 0; $i < $len; $i++) {
+				$value = ord($str[$i]);
+				if (($value == 0x9) || ($value == 0xA) || ($value == 0xD) ||
+				   (($value >= 0x20) && ($value <= 0xD7FF)) || (($value >= 0xE000) && ($value <= 0xFFFD)) ||
+				   (($value >= 0x10000) && ($value <= 0x10FFFF))) {
+					$result .= $str[$i];
+				} else {
+					$result .= $replace;
+				}
+			}
+
+			return $result;
 		}
 
 		/* Add string to buffer

@@ -12,9 +12,16 @@ div.graph div.column {
 }
 
 div.graph div.bar {
-	background-color:#ff0000;
 	position:absolute;
 	bottom:0;
+}
+
+div.graph div.weekend_no {
+	background-color:#ff0000;
+}
+
+div.graph div.weekend_yes {
+	background-color:#c00000;
 }
 
 div.graph div.info {

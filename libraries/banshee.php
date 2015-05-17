@@ -8,7 +8,7 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "4.2");
+	define("BANSHEE_VERSION", "4.3");
 	define("CMS_DIRECTORY", "admin");
 	define("ADMIN_ROLE_ID", 1);
 	define("YES", 1);
@@ -25,7 +25,7 @@
 	define("LOGOUT_MODULE", "logout");
 	define("FPDF_FONT_PATH", "../extra/fpdf_fonts/");
 	define("PHOTO_PATH", "photos");
-	define("SSL_CERT_SERIAL_VAR", "SSL_CERT_SERIAL");
+	define("TLS_CERT_SERIAL_VAR", "TLS_CERT_SERIAL");
 
 	/* Auto class loader
 	 *
@@ -239,11 +239,12 @@
 	 * ERROR:  -
 	 */
 	function date_string($format, $timestamp = null) {
-		global $days_of_week, $months_of_year;
-
 		if ($timestamp === null) {
 			$timestamp = time();
 		}
+
+		$days_of_week = config_array(DAYS_OF_WEEK);
+		$months_of_year = config_array(MONTHS_OF_YEAR);
 
 		$format = strtr($format, "lDFM", "#$%&");
 		$result = date($format, $timestamp);
@@ -261,28 +262,6 @@
 		$result = str_replace("&", $month, $result);
 
 		return $result;
-	}
-
-	/* Decode a GZip encoded string
-	 *
-	 * INPUT:  string GZip data
-	 * OUTPUT: string data
-	 * ERROR:  -
-	 */
-	if (function_exists("gzdecode") == false) {
-
-	function gzdecode($data) {
-		$file = tempnam("/tmp", "gzip");
-
-		@file_put_contents($file, $data);
-		ob_start();
-		readgzfile($file);
-		$data = ob_get_clean();
-		unlink($file);
-
-		return $data;
-	}
-
 	}
 
 	/* Load configuration file
@@ -310,8 +289,17 @@
 			if ($remove_comments) {
 				$line = trim(preg_replace("/(^| )#.*/", "", $line));
 			}
+			$line = rtrim($line);
 
-			if ($line !== "") {
+			if ($line === "") {
+				continue;
+			}
+
+			if (($prev = count($config) - 1) == -1) {
+				array_push($config, $line);
+			} else if (substr($config[$prev], -1) == "\\") {
+				$config[$prev] = rtrim(substr($config[$prev], 0, strlen($config[$prev]) - 1)) . ltrim($line);
+			} else {
 				array_push($config, $line);
 			}
 		}
@@ -319,6 +307,28 @@
 		$cache[$config_file] = $config;
 
 		return $config;
+	}
+
+	/* Convert configuration line to array
+	 *
+	 * INPUT:  string config line
+	 * OUTPUT: array config line
+	 * ERROR:  -
+	 */
+	function config_array($line) {
+		$items = explode("|", $line);
+
+		$result = array();
+		foreach ($items as $item) {
+			list($key, $value) = explode(":", $item, 2);
+			if ($value === null) {
+				array_push($result, $key);
+			} else {
+				$result[$key] = $value;
+			}
+		}
+
+		return $result;
 	}
 
 	/* Website configuration

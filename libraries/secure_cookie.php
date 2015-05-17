@@ -41,10 +41,11 @@
 				return null;
 			}
 
-			if (substr($value, 0, 7) !== $this->validity_check) {
+			$vc_len = strlen($this->validity_check);
+			if (substr($value, 0, $vc_len) !== $this->validity_check) {
 				return null;
 			}
-			$value = substr($value, 7);
+			$value = substr($value, $vc_len);
 
 			return json_decode($value, true);
 		}

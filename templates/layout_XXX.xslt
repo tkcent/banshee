@@ -44,8 +44,8 @@
 	</ul>
 </div>
 <div class="page">
-	<xsl:apply-templates select="/output/system_messages" />
 	<xsl:apply-templates select="/output/system_warnings" />
+	<xsl:apply-templates select="/output/system_messages" />
 	<xsl:apply-templates select="/output/content" />
 </div>
 <xsl:apply-templates select="/output/internal_errors" />

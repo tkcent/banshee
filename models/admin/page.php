@@ -59,8 +59,6 @@
 		}
 
 		public function save_oke($page) {
-			global $supported_languages;
-
 			$result = true;
 
 			if (valid_input(trim($page["url"]), VALIDATE_URL, VALIDATE_NONEMPTY) == false) {
@@ -71,7 +69,7 @@
 				$result = false;
 			}
 
-			if (in_array($page["language"], array_keys($supported_languages)) == false) {
+			if (in_array($page["language"], array_keys(config_array(SUPPORTED_LANGUAGES))) == false) {
 				$this->output->add_message("Language not supported.");
 				$result = false;
 			}

@@ -12,6 +12,7 @@
 <br clear="right" />
 <xsl:for-each select="messages/message">
 <div class="post">
+<div class="info">
 <div class="subject"><xsl:value-of select="subject" /></div>
 <div class="timestamp"><xsl:value-of select="timestamp" /></div>
 <div class="ip_address"><xsl:value-of select="ip_address" /></div>
@@ -22,6 +23,7 @@
 	<input type="hidden" name="message_id" value="{@id}" />
 	<input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 	</form>
+</div>
 </div>
 <div class="message">
 <span class="author"><xsl:value-of select="author" />:</span>

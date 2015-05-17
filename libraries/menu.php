@@ -164,7 +164,7 @@
 			$cache = &$_SESSION["menu_cache"];
 
 			$username = ($this->user !== null) ? $this->user->username : "";
-			$index = md5(sprintf("%d-%d-%s-%s", $this->parent_id, $this->depth, $username, $current_url));
+			$index = sha1(sprintf("%d-%d-%s-%s", $this->parent_id, $this->depth, $username, $current_url));
 
 			if (isset($cache[$index]) == false) {
 				if (($menu = $this->get_menu($this->parent_id, $this->depth, $current_url)) === false) {

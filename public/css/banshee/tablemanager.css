@@ -2,6 +2,7 @@
  */
 div.list {
 	clear:both;
+	position:relative;
 }
 
 table.list {
@@ -11,6 +12,13 @@ table.list {
 table.list th a {
 	color:inherit;
 	text-decoration:none;
+}
+
+form.search {
+	display:block;
+	width:100px;
+	position:absolute;
+	right:25px;
 }
 
 ul.pagination, ul.alphabetize {

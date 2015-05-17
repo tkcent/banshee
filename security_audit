@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "4.2";
+	$written_for = "4.3";
 
 	/* Auditor class
 	 */
@@ -185,9 +185,9 @@
 			"libraries/menu.php"                           => array(42),
 			"libraries/security.php"                       => array(258),
 			"libraries/settings.php"                       => array(41),
-			"libraries/tablemanager_controller.php"        => array(197),
-			"libraries/tablemanager_model.php"             => array(185),
-			"libraries/user.php"                           => array(267),
+			"libraries/tablemanager_controller.php"        => array(202),
+			"libraries/tablemanager_model.php"             => array(265),
+			"libraries/user.php"                           => array(274),
 			"models/admin/user.php"                        => array(8),
 			"models/search.php"                            => array(135));
 

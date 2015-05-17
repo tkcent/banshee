@@ -2,6 +2,8 @@
 	class logout_controller extends controller {
 		public function execute() {
 			if ($this->user->logged_in) {
+				header("Status: 401");
+
 				$this->output->open_tag("logout");
 				if (isset($_SESSION["user_switch"]) == false) {
 					$this->user->logout();

@@ -192,6 +192,8 @@
 				$result = false;
 			} else if (count($this->messages) > 0) {
 				$result = false;
+			} else if ($this->page->http_code != 200) {
+				$result = false;
 			}
 
 			return $result;
@@ -499,9 +501,7 @@
 		 * ERROR:  -
 		 */
 		private function can_gzip_output($data) {
-			if (strlen($data) < 256) {
-				return false;
-			} else if (headers_sent()) {	
+			if (headers_sent()) {	
 				return false;
 			} else if (($encodings = $_SERVER["HTTP_ACCEPT_ENCODING"]) === null) {
 				return false;

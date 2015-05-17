@@ -22,6 +22,10 @@ div.albums div.thumbnail img {
 	padding:1px;
 }
 
+div.albums div.description {
+	margin-left:15px;
+}
+
 div.photos {
 	margin-bottom:15px;
 }

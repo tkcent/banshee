@@ -29,6 +29,12 @@
 </xsl:for-each>
 </tbody>
 </table>
+<xsl:if test="search">
+<form action="" method="post" class="search">
+<input type="text" name="search" value="{search}" />
+<input type="hidden" name="submit_button" value="Search" />
+</form>
+</xsl:if>
 <xsl:apply-templates select="alphabetize" />
 <xsl:apply-templates select="pagination" />
 </div>
@@ -87,7 +93,7 @@
 	</xsl:when>
 	<!-- Blob -->
 	<xsl:when test="@type='blob'">
-		<input type="file" id="{@name}" name="{@name}" />
+		<input type="file" id="{@name}" name="{@name}[]" multiple="multiple" />
 	</xsl:when>
 	<!-- Other -->
 	<xsl:otherwise>

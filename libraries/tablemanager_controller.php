@@ -17,6 +17,7 @@
 		protected $foreign_null = "---";
 		protected $log_column = null;
 		protected $browsing = "pagination";
+		protected $enable_search = false;
 		private   $table_class = "list";
 
 		/* Show overview
@@ -124,6 +125,10 @@
 				case "pagination":
 					$paging->show_browse_links($this->pagination_links, $this->pagination_step);
 					break;
+			}
+
+			if ($this->enable_search) {
+				$this->output->add_tag("search", $_SESSION["tablemanager_search_".$this->model->table]);
 			}
 
 			$this->output->close_tag();
@@ -308,6 +313,11 @@
 
 					$this->show_overview();
 				}
+			} else if ($_POST["submit_button"] == "Search") {
+				/* Search item
+				 */
+				$_SESSION["tablemanager_search_".$this->model->table] = $_POST["search"];
+				$this->show_overview();
 			} else {
 				$this->show_overview();
 			}

@@ -49,6 +49,11 @@
 
 				$page = follow_http_redirects($referer["url"]);
 
+				if ($page === false) {
+					$this->delete_referer_log($referer);
+					continue;
+				}
+
 				array_push($verified, $referer["url"]);
 
 				/* Delete upon wrong status code

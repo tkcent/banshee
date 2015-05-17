@@ -8,7 +8,7 @@
 
 	abstract class tablemanager_model extends model {
 		private $valid_types = array("integer", "varchar", "text", "ckeditor",
-			"boolean", "datetime", "enum", "foreignkey", "blob");
+			"boolean", "datetime", "enum", "foreignkey", "blob", "float");
 		protected $table = null;
 		protected $order = "id";
 		protected $desc_order = false;
@@ -26,7 +26,7 @@
 		 */
 		public function __construct() {
 			$arguments = func_get_args();
-			call_user_func_array(array(parent, "__construct"), $arguments);
+			call_user_func_array(array("parent", "__construct"), $arguments);
 
 			/* Table order
 			 */
@@ -58,7 +58,8 @@
 				}
 
 				if ($this->alphabetize_column === null) {
-					$this->alphabetize_column = array_shift(array_keys($this->elements));
+					$items = array_keys($this->elements);
+					$this->alphabetize_column = array_shift($items);
 				}
 			}
 
@@ -113,15 +114,85 @@
 			return $item;
 		}
 
+		/* Add tables with foreign key links to search query
+		 *
+		 * INPUT:  string query, array arguments
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		protected function add_search_tables(&$query, &$args) {
+			$tables = array($this->table);
+
+			foreach ($this->elements as $key => $element) {
+				if ($element["type"] == "foreignkey") {
+					if (in_array($element["table"], $tables) == false) {
+						$query .= " left join %S on %S.%S=%S.%S";
+						array_push($args, $element["table"], $this->table, $key, $element["table"], "id");
+					}
+				}
+			}
+		}
+
+		/* Get search filter
+		 *
+		 * INPUT:  string query, array arguments, string search
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		protected function add_search_filter(&$query, &$args, $search) {
+			$filter = array();
+			foreach ($this->elements as $key => $element) {
+				switch ($element["type"]) {
+					case "boolean":
+						if (in_array(strtolower($search), array("yes", "no"))) {
+							array_push($filter, "%S=%d");
+							array_push($args, $key, is_true($search) ? YES : NO);
+						}
+						break;
+					case "datetime":
+						array_push($filter, "DATE_FORMAT(%S.%S, %s) like %s");
+						array_push($args, $this->table, $key, "%W %d %M %Y %k:%i:%s", "%".$search."%");
+						break;
+					case "foreignkey":
+						if (is_array($element["column"]) == false) {
+							array_push($filter, "%S.%S like %s");
+							array_push($args, $element["table"], $element["column"], "%".$search."%");
+						} else {
+							$concat = array();
+							foreach ($element["column"] as $column) {
+								array_push($concat, "%S.%S");
+								array_push($args, $element["table"], $column);
+							}
+							array_push($filter, "concat(".implode(", ", $concat).") like %s");
+							array_push($args, "%".$search."%");
+						}
+						break;
+					default:
+						array_push($filter, "%S.%S like %s");
+						array_push($args, $this->table, $key, "%".$search."%");
+				}
+			}
+
+			$query .= " (".implode(" or ", $filter).")";
+		}
+
 		/* Count all items
+		 *
 		 * INPUT:  -
 		 * OUTPUT: int number of items
 		 * ERROR:  false;
 		 */
 		public function count_items() {
 			$query = "select count(*) as count from %S";
+			$args = array($this->table);
 
-			if (($result = $this->db->execute($query, $this->table)) == false) {
+			if (($search = $_SESSION["tablemanager_search_".$this->table]) != null) {
+				$this->add_search_tables($query, $args);
+				$query .= " where";
+				$this->add_search_filter($query, $args, $search);
+			}
+
+			if (($result = $this->db->execute($query, $args)) == false) {
 				return false;
 			}
 
@@ -135,20 +206,27 @@
 		 * ERROR:  false
 		 */
 		public function get_items() {
-			$order = $this->desc_order ? "%S desc" : "%S";
-			if (is_array($this->order)) {
-				$order = implode(", ", array_fill(0, count($this->order), $order));
+			if (is_array($this->order) == false) {
+				$order = $this->desc_order ? "%S desc" : "%S";
+			} else {
+				$order = implode(", ", array_fill(0, count($this->order), "%S"));
 			}
 
-			$args = array("id");
+			$args = array($this->table, "id");
 			foreach ($this->elements as $column => $element) {
 				if ($element["overview"]) {
-					array_push($args, $column);
+					array_push($args, $this->table, $column);
 				}
 			}
 
-			$query = "select ".implode(",", array_fill(0, count($args), "%S"))." from %S";
+			$query = "select ".implode(",", array_fill(0, count($args) / 2, "%S.%S"))." from %S";
 			array_push($args, $this->table);
+
+			if (($search = $_SESSION["tablemanager_search_".$this->table]) != null) {
+				$this->add_search_tables($query, $args);
+				$query .= " where";
+				$this->add_search_filter($query, $args, $search);
+			}
 
 			switch (func_num_args()) {
 				case 0:
@@ -162,11 +240,13 @@
 					 */
 					list($char) = func_get_args();
 
+					$query .= ($search == null) ? " where " : " and ";
+
 					if ($char == "0") {
-						$query .= " where ord(lower(substr(%S, 1, 1)))<ord(%s) or ord(lower(substr(%S, 1, 1)))>ord(%s)";
+						$query .= "(ord(lower(substr(%S, 1, 1)))<ord(%s) or ord(lower(substr(%S, 1, 1)))>ord(%s))";
 						array_push($args, $this->alphabetize_column, "a", $this->alphabetize_column, "z");
 					} else {
-						$query .= " where %S like %s";
+						$query .= "(%S like %s)";
 						array_push($args, $this->alphabetize_column, $char."%");
 					}
 					break;

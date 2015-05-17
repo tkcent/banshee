@@ -102,7 +102,7 @@
 			 */
 			foreach ($antispam["forbidden_user_agents"] as $agent) {
 				if ($_SERVER["HTTP_USER_AGENT"] == $agent) {
-					$this->log_spam("forbidden user agent (".$agent.")");
+					$this->log_spam("forbidden user agent: ".$agent);
 					return true;
 				}
 			}
@@ -111,7 +111,7 @@
 			 */
 			foreach ($antispam["forbidden_words"] as $word) {
 				if (stristr($this->message, $word) != false) {
-					$this->log_spam("forbidden word (".$word.")");
+					$this->log_spam("forbidden word: ".$word);
 					return true;
 				}
 			}
@@ -180,6 +180,8 @@
 			$this->message = preg_replace('/(http:\/\/[a-zA-Z0-9\.\/\-_\?&=\+%]*)/', '[url]$1[/url]', $this->message);
 			$this->message = str_replace("[url][url]", "[url]", $this->message);
 			$this->message = str_replace("[/url][/url]", "[/url]", $this->message);
+			$this->message = str_replace("[img][url]", "[img]", $this->message);
+			$this->message = str_replace("[/url][/img]", "[/img]", $this->message);
 
 			return $this->message;
 		}
@@ -212,27 +214,21 @@
 
 				if (($close = strpos($message, "[/".$bbcode."]", $open_end + 1)) !== false) {
 					$value = substr($message, $open_end + 1, $close - $open_end - 1);
+				} else if (strpos($html, "</".$bbcode.">") !== false) {
+					continue;
 				}
 
 				if (($param == "") && ($value != "")) {
 					$param = $value;
-				} else if (($param != "") && ($value == "")) {
-					$value = $param;
 				}
 
 				/* Security checks
 				 */
 				$param = str_replace('"', "&quot;", $param);
-				if (strpos($param, "javascript:") !== false) {
+				if (strpos(strtolower($param), "javascript:") !== false) {
 					$param = "#";
 				} else if (substr($param, 0, 5) == "data:") {
 					$param = "#";
-				} else if (($bbcode == "url") && ($value != "")) {
-					if (strpos($param, $value) === false) {
-						if (valid_input($value, VALIDATE_LETTERS.VALIDATE_NUMBERS." :\"'()&-+") == false) {
-							$value = $param;
-						}
-					}
 				}
 
 				/* Replace BBcode with HTML
@@ -242,8 +238,8 @@
 				$replacement = $html;
 
 				$pos = 0;
-				while (($pos = strpos($replacement, '"##"', $pos)) !== false) {
-					$replacement = substr($replacement, 0, $pos + 1) . $param . substr($replacement, $pos + 3);
+				while (($pos = strpos($replacement, '@@', $pos)) !== false) {
+					$replacement = substr($replacement, 0, $pos) . $param . substr($replacement, $pos + 2);
 					$pos += $param_len;
 				}
 
@@ -251,6 +247,13 @@
 				while (($pos = strpos($replacement, "##", $pos)) !== false) {
 					$replacement = substr($replacement, 0, $pos) . $value . substr($replacement, $pos + 2);
 					$pos += $value_len;
+				}
+
+				if (($bbcode == "url") && ($param != $value)) {
+					if (substr($param, 0, 4) == "http") {
+						list(,, $hostname) = explode("/", $param, 4);
+						$replacement .= " [".$hostname."]";
+					}
 				}
 
 				$tail_start = ($close !== false) ? $close + $bblen + 3 : $open_end + 1;

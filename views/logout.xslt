@@ -10,7 +10,7 @@
 <xsl:template match="logout">
 <p>You are now logged out.</p>
 <xsl:call-template name="redirect">
-<xsl:with-param name="url"></xsl:with-param>
+<xsl:with-param name="url">admin/switch</xsl:with-param>
 </xsl:call-template>
 </xsl:template>
 

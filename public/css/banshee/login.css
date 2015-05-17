@@ -1,6 +1,15 @@
+table.login {
+	border-spacing:0;
+}
+
+table.login td {
+	padding:2px 3px 2px 0;
+}
+
 input.text {
 	width:150px;
 }
+
 input.button {
 	margin-right:10px;
 }

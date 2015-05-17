@@ -1,43 +1,11 @@
 <?php
-	class admin_photos_model extends tablemanager_model {
+	class admin_photos_model extends model {
 		protected $table = "photos";
 		protected $order = "title";
 		protected $extensions = array(
 			"image/gif"  => "gif",
 			"image/jpeg" => "jpg",
 			"image/png"  => "png");
-		protected $elements = array(
-			"title" => array(
-				"label"    => "Title",
-				"type"     => "varchar",
-				"overview" => true,
-				"required" => true),
-			"photo_album_id" => array(
-				"label"    => "Photo album",
-				"type"     => "foreignkey",
-				"table"    => "photo_albums",
-				"column"   => "name",
-				"overview" => false,
-				"required" => true),
-			"image" => array(
-				"label"    => "Image",
-				"type"     => "blob",
-				"required" => true,
-				"virtual"  => true),
-			"extension" => array(
-				"label"    => "Extension",
-				"type"     => "varchar",
-				"overview" => false,
-				"readonly" => true),
-			"overview" => array(
-				"label"    => "Overview",
-				"type"     => "boolean",
-				"overview" => true,
-				"required" => true));
-
-		public function set_photo_album($id) {
-			$this->elements["photo_album_id"]["default"] = $id;
-		}
 
 		public function count_albums() {
 			$query = "select count(*) as count from photo_albums";
@@ -64,13 +32,32 @@
 			return $this->db->execute($query);
 		}
 
-		public function save_oke($item) {
-			$result = parent::save_oke($item);
+		public function get_photo($photo_id) {
+			return $this->db->entry("photos", $photo_id);
+		}
+
+		public function get_photos($album_id) {
+			$query = "select * from photos where photo_album_id=%d order by title";
+
+			return $this->db->execute($query, $album_id);
+		}
+
+		public function upload_oke($photos) {
+			if ($photos["error"][0] == 4) {
+				$this->output->add_message("No photos were uploaded.");
+				return false;
+			}
+
+			$result = true;
 
 			$allowed_types = array_keys($this->extensions);
-			if (isset($item["image"])) {
-				if (in_array($_FILES["image"]["type"], $allowed_types) == false) {
-					$this->output->add_message("Incorrect file type");
+			$count = count($photos["name"]);
+			for ($i = 0; $i < $count; $i++) {
+				if ($photos["error"][$i] != 0) {
+					$this->output->add_message("Error while uploading %s.", $photos["name"][$i]);
+					$result = false;
+				} else if (in_array($photos["type"][$i], $allowed_types) == false) {
+					$this->output->add_message("Incorrect file type for %s.", $photos["name"][$i]);
 					$result = false;
 				}
 			}
@@ -78,41 +65,32 @@
 			return $result;
 		}
 
-		public function count_items() {
-			$query = "select count(*) as count from photos where photo_album_id=%d";
+		public function edit_oke($photo) {
+			$result = true;
 
-			if (($result = $this->db->execute($query, $_SESSION["photo_album"])) === false) {
-				return false;
+			if (trim($photo["title"]) == "") {
+				$this->output->add_message("Enter a title.");
+				$result = false;
 			}
 
-			return $result[0]["count"];
+			return $result;
 		}
 
-		public function get_items() {
-			$query = "select * from photos where photo_album_id=%d order by %S";
-
-			return $this->db->execute($query, $_SESSION["photo_album"], $this->order);
-		}
-
-		private function save_image($item) {
-			if (isset($item["image"]) == false) {
-				return true;
-			}
-
-			switch ($item["extension"]) {
+		private function save_image($photo) {
+			switch ($photo["extension"]) {
 				case "gif": $image = new gif_image(); break;
 				case "jpg": $image = new jpeg_image(); break;
 				case "png": $image = new png_image(); break;
 				default: return false;
 			}
 
-			$image->from_string($item["image"]);
+			$image->load($photo["file"]);
 
 			if (($image->width > $this->settings->photo_image_height) || ($image->height > $this->settings->photo_image_width)) {
 				$image->resize($this->settings->photo_image_height, $this->settings->photo_image_width);
 			}
 
-			if ($image->save(PHOTO_PATH."/image_".$item["id"].".".$item["extension"]) == false) {
+			if ($image->save(PHOTO_PATH."/image_".$photo["id"].".".$photo["extension"]) == false) {
 				return false;
 			}
 			unset($image);
@@ -120,22 +98,18 @@
 			return true;
 		}
 
-		private function save_thumbnail(&$item) {
-			if (isset($item["image"]) == false) {
-				return true;
-			}
-
-			switch ($item["extension"]) {
+		private function save_thumbnail($photo) {
+			switch ($photo["extension"]) {
 				case "gif": $image = new gif_image(); break;
 				case "jpg": $image = new jpeg_image(); break;
 				case "png": $image = new png_image();	break;
 				default: return false;
 			}
 
-			$image->from_string($item["image"]);
+			$image->load($photo["file"]);
 			$image->resize($this->settings->photo_thumbnail_height, $this->settings->photo_thumbnail_width);
 
-			if ($image->save(PHOTO_PATH."/thumbnail_".$item["id"].".".$item["extension"]) == false) {
+			if ($image->save(PHOTO_PATH."/thumbnail_".$photo["id"].".".$photo["extension"]) == false) {
 				return false;
 			}
 			unset($image);
@@ -160,91 +134,77 @@
 			return true;
 		}
 
-		private function delete_photo_files($item_id, $extension) {
+		public function create_photos($photos, $settings) {
+			$count = count($photos["name"]);
+			$photo_nr = $this->count_photos_in_album($_SESSION["photo_album"]);
+
+			for ($i = 0; $i < $count; $i++) {
+				if ($photos["error"][$i] != 0) {
+					continue;
+				}
+
+				$extension = $this->extensions[$photos["type"][$i]];
+
+				$data = array(
+					"id"             => null,
+					"title"          => "Photo ".(++$photo_nr),
+					"photo_album_id" => $_SESSION["photo_album"],
+					"extension"      => $extension,
+					"overview"       => is_true($settings["overview"]) ? YES : NO);
+
+				$this->db->query("begin");
+
+				if ($this->db->insert("photos", $data) == false) {
+					$this->db->query("rollback");
+					continue;
+				}
+
+				$photo = array(
+					"id"        => $this->db->last_insert_id,
+					"file"      => $photos["tmp_name"][$i],
+					"extension" => $extension);
+
+				if ($this->save_image($photo) == false) {
+					$this->db->query("rollback");
+				} else if ($this->save_thumbnail($photo) == false) {
+					$this->db->query("rollback");
+					unlink(PHOTO_PATH."/image_".$photo["id"].".".$extension);
+				} else {
+					$this->db->query("commit");
+				}
+			}
+
+			return true;
+		}
+
+		public function update_photo($photo) {
+			$data = array(
+				"title"    => $photo["title"],
+				"overview" => is_true($photo["overview"]) ? YES : NO);
+
+			return $this->db->update("photos", $photo["id"], $data) !== false;
+		}
+
+		public function delete_photo($photo_id) {
+			if (($photo = $this->get_photo($photo_id)) == false) {
+				return false;
+			}
+			$extension = $photo["extension"];
+
+			if ($this->db->delete("photos", $photo_id) === false) {
+				return false;
+			}
+
 			$files = array(
-				PHOTO_PATH."/image_".$item_id.".".$extension,
-				PHOTO_PATH."/thumbnail_".$item_id.".".$extension);
+				PHOTO_PATH."/image_".$photo_id.".".$extension,
+				PHOTO_PATH."/thumbnail_".$photo_id.".".$extension);
 			foreach ($files as $file) {
 				if (file_exists($file)) {
 					unlink($file);
 				}
 			}
-		}
 
-		public function create_item($item) {
-			if ($this->db->query("begin") == false) {
-				return false;
-			}
-
-			$this->set_extension($item);
-			if (parent::create_item($item) === false) {
-				$this->db->query("rollback");
-				return false;
-			}
-			$item["id"] = $this->db->last_insert_id;
-
-			if ($this->save_image($item) == false) {
-				$this->db->query("rollback");
-				return false;
-			} else if ($this->save_thumbnail($item) == false) {
-				$this->db->query("rollback");
-				unlink(PHOTO_PATH."/image_".$item["id"].".".$item["extension"]);
-				return false;
-			}
-
-			return $this->db->query("commit") != false;
-		}
-
-		public function update_item($item) {
-			if (isset($item["image"])) {
-				if (($photo = $this->get_item($item["id"])) == false) {
-					return false;
-				}
-
-				$this->delete_photo_files($item["id"], $photo["extension"]);
-				$this->set_extension($item);
-				$this->elements["extension"]["readonly"] = false;
-			}
-
-			if ($this->db->query("begin") == false) {
-				return false;
-			}
-
-			$result = parent::update_item($item);
-			$this->elements["extension"]["readonly"] = true;
-			if ($result === false) {
-				$this->db->query("rollback");
-				return false;
-			}
-
-			if ($this->save_image($item) == false) {
-				$this->db->query("rollback");
-				return false;
-			} else if ($this->save_thumbnail($item) == false) {
-				$this->db->query("rollback");
-				return false;
-			}
-
-			return $this->db->query("commit") != false;
-		}
-
-		public function delete_item($item_id) {
-			if (($photo = $this->get_item($item_id)) == false) {
-				return false;
-			}
-
-			if ($this->db->query("begin") == false) {
-				return false;
-			}
-
-			if (parent::delete_item($item_id) == false) {
-				$this->db->query("rollback");
-				return false;
-			}
-
-			$this->delete_photo_files($item_id, $photo["extension"]);
-
-			return $this->db->query("commit") != false;
+			return true;
 		}
 	}
 ?>

@@ -12,7 +12,7 @@
 		protected $headers = array();
 		protected $cookies = array();
 		protected $proxy_type = null;
-		protected $proxy_ssl = false;
+		protected $proxy_tls = false;
 		protected $connect_host = null;
 		protected $connect_port = null;
 		protected $default_port = 80;
@@ -21,7 +21,6 @@
 		protected $username = null;
 		protected $password = null;
 		protected $authorization = null;
-		protected $cert_validate_callback = null;
 
 		/* Constructor
 		 *
@@ -75,10 +74,13 @@
 							$body[$key] = urlencode($key)."=".urlencode($value);
 						}
 						$body = implode("&", $body);
+
+						$this->add_header("Content-Type", "application/x-www-form-urlencoded");
+					} else {
+						$this->add_header("Content-Type", "application/octet-stream");
 					}
 
 					$this->add_header("Content-Length", strlen($body));
-					$this->add_header("Content-Type", "application/x-www-form-urlencoded");
 					break;
 				case "PUT":
 					if (is_array($body)) {
@@ -118,14 +120,14 @@
 			/* Perform request
 			 */
 			if (($result = $this->perform_request($method, $uri, $body)) !== false) {
-				$result = $this->parse_request_result($result);
-
-				/* Apply authentication
-				 */
-				if ($result["status"] == 401) {
-					if ($this->apply_authentication($method, $uri, $result)) {
-						if (($result = $this->perform_request($method, $uri, $body)) !== false) {
-							$result = $this->parse_request_result($result);
+				if (($result = $this->parse_request_result($result)) !== false) {
+					/* Apply authentication
+					 */
+					if ($result["status"] == 401) {
+						if ($this->apply_authentication($method, $uri, $result)) {
+							if (($result = $this->perform_request($method, $uri, $body)) !== false) {
+								$result = $this->parse_request_result($result);
+							}
 						}
 					}
 				}
@@ -138,30 +140,30 @@
 
 		/* Send request via HTTP proxy
 		 *
-		 * INPUT:  string host, int port[, bool ssl]
+		 * INPUT:  string host, int port[, bool tls]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function via_HTTP_proxy($host, $port, $ssl = false) {
+		public function via_HTTP_proxy($host, $port, $tls = false) {
 			$this->connect_host = $host;
 			$this->connect_port = $port;
-			$this->protocol = $ssl ? "tls" : "tcp";
+			$this->protocol = $tls ? "tls" : "tcp";
 			$this->proxy_type = "http";
-			$this->proxy_ssl = $ssl;
+			$this->proxy_tls = $tls;
 		}
 
 		/* Send request via SOCKS proxy
 		 *
-		 * INPUT:  string host, int port[, bool ssl]
+		 * INPUT:  string host, int port[, bool tls]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function via_SOCKS_proxy($host, $port, $ssl = false) {
+		public function via_SOCKS_proxy($host, $port, $tls = false) {
 			$this->connect_host = $host;
 			$this->connect_port = $port;
-			$this->protocol = $ssl ? "tls" : "tcp";
+			$this->protocol = $tls ? "tls" : "tcp";
 			$this->proxy_type = "socks";
-			$this->proxy_ssl = $ssl;
+			$this->proxy_tls = $tls;
 		}
 
 		/* Set credentials for HTTP authentication
@@ -208,16 +210,6 @@
 			$this->add_header("X-Requested-With", "XMLHttpRequest");
 		}
 
-		/* Set certificate validation callback
-		 *
-		 * INPUT:  function certificate validation callback
-		 * OUTPUT: -
-		 * ERROR:  -
-		 */
-		public function cert_validation_callback($callback) {
-			$this->cert_validate_callback = $callback;
-		}
-
 		/* Connect to server
 		 *
 		 * INPUT:  -
@@ -225,9 +217,19 @@
 		 * ERROR:  false connection failed
 		 */
 		protected function connect_to_server() {
-			$protocol = (($this->proxy_type == "socks") && $this->proxy_ssl) ? "tls" : "tcp";
+			$protocol = (($this->proxy_type == "socks") && $this->proxy_tls) ? "tls" : "tcp";
+
+			$context = stream_context_create();
+			if ($protocol == "tls") {
+				if (stream_context_set_option($context, "ssl", "verify_peer", true) == false) {
+					return false;
+				#} else if (stream_context_set_option($context, "ssl", "ca_file", "/etc/ssl/certs/ca-certificates.crt") == false) {
+				#	return false;
+				}
+			}
+
 			$remote = sprintf("%s://%s:%s", $protocol, $this->connect_host, $this->connect_port);
-			if (($sock = stream_socket_client($remote, $errno, $errstr, $this->timeout)) === false) {
+			if (($sock = stream_socket_client($remote, $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $context)) === false) {
 				return false;
 			}
 
@@ -255,13 +257,13 @@
 			/* Enable TLS encryption
 			 */
 			if ($this->default_port == 80) {
-				if (($this->proxy_type == "http") && $this->proxy_ssl) {
+				if (($this->proxy_type == "http") && $this->proxy_tls) {
 					$enable_crypto = true;
 				} else {
 					$enable_crypto = false;
 				}
 			} else {
-				if (($this->proxy_type == "http") && ($this->proxy_ssl == false)) {
+				if (($this->proxy_type == "http") && ($this->proxy_tls == false)) {
 					$enable_crypto = false;
 				} else {
 					$enable_crypto = true;
@@ -384,7 +386,9 @@
 			/* GZip content encoding
 			 */
 			if ($gzdecode) {
-				$result["body"] = gzdecode($result["body"]);
+				if (($result["body"] = @gzdecode($result["body"])) === false) {
+					return false;
+				}
 			}
 
 			return $result;

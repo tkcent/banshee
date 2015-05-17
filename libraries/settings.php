@@ -58,7 +58,9 @@
 				return $this->cache[$key];
 			}
 
-			if ($this->db->connected == false) {
+			if ($this->db === null) {
+				return null;
+			} else if ($this->db->connected == false) {
 				return null;
 			}
 
@@ -90,6 +92,12 @@
 		public function __set($key, $value) {
 			if ($this->valid_key($key) == false) {
 				return;
+			}
+
+			if ($this->db === null) {
+				return null;
+			} else if ($this->db->connected == false) {
+				return null;
 			}
 
 			if ($value === null) {

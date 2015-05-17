@@ -6,8 +6,6 @@
 		}
 
 		private function show_month($month, $year) {
-			global $days_of_week, $months_of_year;
-
 			if (($appointments = $this->model->get_appointments_for_month($month, $year)) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
@@ -17,6 +15,7 @@
 			$last_day = $this->model->sunday_after($month, $year);
 			$today = strtotime("today 00:00:00");
 
+			$months_of_year = config_array(MONTHS_OF_YEAR);
 			$this->output->open_tag("month", array("title" => $months_of_year[$month - 1]." ".$year));
 
 			/* Links
@@ -37,6 +36,7 @@
 
 			/* Days of week
 			 */
+			$days_of_week = config_array(DAYS_OF_WEEK);
 			$this->output->open_tag("days_of_week");
 			foreach ($days_of_week as $dow) {
 				$this->output->add_tag("day", $dow);
@@ -78,8 +78,6 @@
 		}
 
 		private function show_appointment($appointment_id) {
-			global $months_of_year;
-
 			if (($appointment = $this->model->get_appointment($appointment_id)) == false) {
 				$this->output->add_tag("result", "Unknown appointment.");
 				return;

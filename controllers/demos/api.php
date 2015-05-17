@@ -4,6 +4,10 @@
 			$this->output->add_tag("demo", "api");
 		}
 
+		public function get_0() {
+			$this->output->add_tag("demo", "test");
+		}
+
 		public function post() {
 		}
 	}

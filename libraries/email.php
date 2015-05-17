@@ -13,8 +13,7 @@
 		protected $from = null;
 		protected $reply_to = null;
 		protected $subject = null;
-		protected $text_message = null;
-		protected $html_message = null;
+		protected $message = null;
 		protected $attachments = array();
 		protected $images = array();
 		protected $sender_address = null;
@@ -28,8 +27,8 @@
 		 * ERROR:  -
 		 */
 		public function __construct($subject, $from_address = null, $from_name = null) {
-			$parts = explode("\n", $subject);
-			$this->subject = trim(array_shift($parts));
+			$subject = explode("\n", $subject);
+			$this->subject = trim(array_shift($subject));
 
 			if ($this->valid_address($from_address)) {
 				$this->from = $this->make_address($from_address, $from_name);
@@ -44,10 +43,17 @@
 		* ERROR:  -
 		*/
 		public static function valid_address($email) {
-			$forbidden = array("mailinator.com");
+			$forbidden = array("10minutemail.com", "burnthespam.info", "deadaddress.com", "e4ward.com",
+				"eyepaste.com", "armyspy.com", "cuvox.de", "dayrep.com", "einrot.com", "fleckens.hu",
+				"gustr.com", "jourrapide.com", "rhyta.com", "superrito.com", "teleworm.us", "filzmail.com",
+				"getairmail.com", "gishpuppy.com", "guerrillamail.com", "incognitomail.org", "jetable.org",
+				"mailcatch.com", "mailexpire.com", "mailinator.com", "mailmoat.com", "meltmail.com",
+				"trbvm.com", "temp-mail.org", "mt2014.com", "mytrashmail.com", "trashymail.com",
+				"no-spam.ws", "onewaymail.com", "shitmail.org", "crapmail.org", "spambox.us",
+				"spamgourmet.com", "tempemail.net", "yopmail.com");
 
 			list(, $domain) = explode("@", $email, 2);
-			if (in_array($domain, $forbidden)) {
+			if (in_array(strtolower($domain), $forbidden)) {
 				return false;
 			}
 
@@ -165,21 +171,7 @@
 				$message = "<html>\n".rtrim($message)."\n</html>";
 			}
 
-			/* Determine message mimetype
-			 */
-			if ((substr($message, 0, 6) == "<html>") && (substr(rtrim($message), -7) == "</html>")) {
-				$this->html_message = $message;
-				if ($this->text_message === null) {
-					$message = str_replace("\n", "", $message);
-					$message = str_replace("<br>", "<br>\n", $message);
-					$message = str_replace("</p>", "</p>\n\n", $message);
-					$message = str_replace("<div", "\n<div", $message);
-					$message = preg_replace('/<head>.*<\/head>/', "", $message);
-					$this->text_message = strip_tags($message);
-				}
-			} else {
-				$this->text_message = $message;
-			}
+			$this->message = $message;
 		}
 
 		/* Add e-mail attachment
@@ -203,10 +195,6 @@
 			}
 
 			if ($content_type == null) {
-				/* Determine content mimetype
-				 */
-				#$finfo = new finfo(FILEINFO_MIME);
-				#$content_type = $finfo->buffer($content);
 				$content_type = "application/octet-stream";
 			}
 
@@ -235,7 +223,7 @@
 			}
 
 			$content_type = mime_content_type($filename);
-			$content_id = md5($image["content"]);
+			$content_id = sha1($content);
 
 			/* Add attachment
 			 */
@@ -291,6 +279,21 @@
 		 */
 		private function message_block($boundary, $content_type, $message) {
 			$message = $this->populate_message_fields($message);
+
+			if ($content_type == "text/plain") {
+				$message = str_replace("\n", "", $message);
+				$message = str_replace("</th><th>", "</th> <th>", $message);
+				$message = str_replace("</td><td>", "</td> <td>", $message);
+				$message = str_replace("</tr>", "</tr>\n", $message);
+				$message = str_replace("</table>", "</table>\n", $message);
+				$message = str_replace("<br>", "<br>\n", $message);
+				$message = str_replace("</p>", "</p>\n\n", $message);
+				$message = str_replace("<div", "\n<div", $message);
+				$message = preg_replace('/<head>.*<\/head>/', "", $message);
+				$message = preg_replace('/<a href="(.*)"/', '[$1] <a href=""', $message);
+				$message = strip_tags($message);
+			}
+
 			$format =
 				"--%s\n".
 				"Content-Type: %s\n".
@@ -314,13 +317,13 @@
 			 */
 			if ($image_count > 0) {
 				$message .= "--".$boundary."\n";
-				$boundary = substr(md5($boundary), 0, 20);
+				$boundary = substr(sha1($boundary), 0, 20);
 				$message .= "Content-Type: multipart/related; boundary=".$boundary."\n\n";
 			}
 
 			/* Add HTML message
 			 */
-			$message .= $this->message_block($boundary, "text/html", $this->html_message);
+			$message .= $this->message_block($boundary, "text/html", $this->message);
 
 			/* Add inline images
 			 */
@@ -362,29 +365,32 @@
 				return false;
 			}
 
-			if (count($this->text_message) === null) {
+			if (count($this->message) === null) {
 				$this->message("");
 			}
 
 			$attachment_count = count($this->attachments);
-			$email_boundary = substr(md5(time()), 0, 20);
+			$email_boundary = substr(sha1(time()), 0, 20);
+
+			$message_contains_html = (substr($this->message, 0, 6) == "<html>") &&
+			                         (substr(rtrim($this->message), -7) == "</html>");
 
 			/* E-mail content
 			 */
 			if ($attachment_count == 0) {
 				/* No attachments
 				 */
-				if ($this->html_message === null) {
+				if ($message_contains_html == false) {
 					/* One message
 					 */
 					$headers = array("Content-Type: text/plain");
-					$message = $this->populate_message_fields($this->text_message);
+					$message = $this->populate_message_fields($this->message);
 				} else {
 					/* Multiple messages
 					 */
 					$headers = array("Content-Type: multipart/alternative; boundary=".$email_boundary);
 					$message = "This is a multi-part message in MIME format.\n";
-					$message .= $this->message_block($email_boundary, "text/plain", $this->text_message);
+					$message .= $this->message_block($email_boundary, "text/plain", $this->message);
 					$message .= $this->html_message($email_boundary);
 				}
 			} else {
@@ -393,17 +399,17 @@
 				$headers = array("Content-Type: multipart/mixed; boundary=".$email_boundary);
 				$message = "This is a multi-part message in MIME format.\n";
 
-				if ($this->html_message === null) {
+				if ($message_contains_html == false) {
 					/* One message
 					 */
-					$message .= $this->message_block($email_boundary, "text/plain", $this->text_message);
+					$message .= $this->message_block($email_boundary, "text/plain", $this->message);
 				} else {
 					/* Multiple messages
 					 */
-					$message_boundary = substr(md5($email_boundary), 0, 20);
+					$message_boundary = substr(sha1($email_boundary), 0, 20);
 					$message .= "--".$email_boundary."\n".
 						"Content-Type: multipart/alternative; boundary=".$message_boundary."\n\n";
-					$message .= $this->message_block($message_boundary, "text/plain", $this->text_message);
+					$message .= $this->message_block($message_boundary, "text/plain", $this->message);
 					$message .= $this->html_message($message_boundary);
 					$message .= "--".$message_boundary."--\n\n";
 				}
@@ -427,7 +433,7 @@
 				}
 			}
 
-			if (($this->html_message !== null) || ($attachment_count > 0)) {
+			if ($message_contains_html || ($attachment_count > 0)) {
 				$message .= "--".$email_boundary."--\n";
 			}
 

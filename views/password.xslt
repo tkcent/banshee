@@ -8,7 +8,7 @@
 //
 //-->
 <xsl:template match="request">
-Enter your username and e-mail address to reset your password.
+<p>Enter your username and e-mail address to reset your password.</p>
 <form action="/{/output/page}" method="post">
 <table>
 <tr><td>Username:</td><td><input type="text" name="username" class="text" /></td></tr>
@@ -35,7 +35,7 @@ Enter your username and e-mail address to reset your password.
 //
 //-->
 <xsl:template match="reset">
-Enter a new password for your account:
+<p>Enter a new password for your account:</p>
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" onSubmit="javascript:hash_passwords(); return true;">
 <input type="hidden" name="key" value="{key}" />

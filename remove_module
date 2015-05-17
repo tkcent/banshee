@@ -85,9 +85,6 @@
 			"settings"  => array("poll\_%")),
 		"search" => array(
 			"pages"     => array("search")),
-		"sso" => array(
-			"pages"     => array("system/sso"),
-			"libraries" => array("banshee_website")),
 		"weblog" => array(
 			"pages"     => array("weblog", "weblog.xml", CMS_DIRECTORY."/weblog"),
 			"tables"    => array("weblog_tagged", "weblog_tags", "weblog_comments", "weblogs"),

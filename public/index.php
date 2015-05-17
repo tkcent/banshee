@@ -12,7 +12,6 @@
 	require("../libraries/error.php");
 	require("../libraries/banshee.php");
 	require("../libraries/security.php");
-	require("../settings/configuration.php");
 
 	/* Abort on dangerous PHP settings
 	 */
@@ -68,9 +67,9 @@
 
 	/* Add layout data to output XML
 	 */
-	if ($_output->add_layout_data) {
-		$_output->open_tag("output");
+	$_output->open_tag("output");
 
+	if ($_output->add_layout_data) {
 		$_output->open_tag("banshee");
 		$_output->add_tag("version", BANSHEE_VERSION);
 		$_output->add_tag("cms_directory", CMS_DIRECTORY);
@@ -126,8 +125,6 @@
 		$_output->add_css($_page->module.".css");
 
 		$_output->open_tag("content", array("mobile" => show_boolean($_output->mobile)));
-	} else {
-		$_output->open_tag("output");
 	}
 
 	/* Include the controller
@@ -190,6 +187,11 @@
 	/* Output content
 	 */
 	$output = $_output->generate();
-	$last_errors = ob_get_clean();
-	print $output;
+	if (($last_errors = ob_get_clean()) != "") {
+		header("Content-Type: text/plain");
+		print "Fatal error:\n";
+		print $last_errors;
+	} else {
+		print $output;
+	}
 ?>

@@ -17,7 +17,7 @@
 		}
 
 		public function appointment_db_to_form($appointment) {
-			global $months_of_year;
+			$months_of_year = config_array(MONTHS_OF_YEAR);
 
 			list($date, $begin_time) = explode(" ", $appointment["begin"], 2);
 			list($year, $month, $day) = explode("-", $date);

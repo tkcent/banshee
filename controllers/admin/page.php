@@ -18,8 +18,6 @@
 		}
 
 		private function show_page_form($page) {
-			global $supported_languages;
-
 			$this->output->set_xslt_parameter("admin_role_id", ADMIN_ROLE_ID);
 
 			$page["private"] = show_boolean($page["private"]);
@@ -39,7 +37,7 @@
 			/* Languages
 			 */
 			$this->output->open_tag("languages");
-			foreach ($supported_languages as $code => $lang) {
+			foreach (config_array(SUPPORTED_LANGUAGES) as $code => $lang) {
 				$this->output->add_tag("language", $lang, array("code" => $code));
 			}
 			$this->output->close_tag();

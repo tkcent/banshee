@@ -30,11 +30,9 @@
 		}
 
 		public function execute() {
-			global $module_flags;
-
 			if ($this->page->ajax_request) {
 				$this->send_flags();
-			} else if (count($module_flags) == 0) {
+			} else if (count($this->model->module_flags) == 0) {
 				$this->output->open_tag("tablemanager");
 				$this->output->add_tag("result", "No flags are available.", array("url" => CMS_DIRECTORY));
 				$this->output->close_tag();

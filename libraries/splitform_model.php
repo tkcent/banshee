@@ -20,7 +20,7 @@
 		 */
 		public function __construct() {
 			$arguments = func_get_args();
-			call_user_func_array(array(parent, "__construct"), $arguments);
+			call_user_func_array(array("parent", "__construct"), $arguments);
 
 			$this->max = count($this->forms) - 1;
 

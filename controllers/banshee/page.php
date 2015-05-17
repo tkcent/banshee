@@ -29,6 +29,7 @@
 			$this->output->open_tag("page");
 
 			$this->output->add_tag("title", $page["title"]);
+			$page["content"] = $this->output->secure_string($page["content"]);
 			$this->output->add_tag("content", $page["content"]);
 
 			if (is_true($page["back"])) {

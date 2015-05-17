@@ -55,7 +55,6 @@ a.button, input.button {
 	margin:0;
 	vertical-align:top;
 	line-height:16px;
-	padding:2px 26px;
 	border-radius:4px;
 	border:1px solid #606060;
 	background-color:#e0e0e0;
@@ -67,6 +66,12 @@ a.button, input.button {
 	text-align:center;
 	text-decoration:none;
 	-webkit-appearance:none;
+}
+a.button {
+	padding:4px 26px 2px 26px;
+}
+input.button {
+	padding:2px 26px;
 }
 a.button:hover, input.button:hover {
 	text-decoration:none;

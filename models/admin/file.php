@@ -50,8 +50,6 @@
 		}
 
 		public function upload_oke($file, $directory) {
-			global $allowed_uploads;
-
 			if ($file["error"] !== 0) {
 				$this->output->add_message("Error while uploading file.");
 				return false;
@@ -65,7 +63,7 @@
 				$this->output->add_message("File has no extension.");
 				return false;
 			}
-			if (in_array(substr($ext, 1), $allowed_uploads) == false) {
+			if (in_array(substr($ext, 1), config_array(ALLOWED_UPLOADS)) == false) {
 				$this->output->add_message("Invalid file extension.");
 				return false;
 			}

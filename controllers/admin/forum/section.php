@@ -3,7 +3,7 @@
 		protected $name = "Forum section";
 		protected $pathinfo_offset = 3;
 		protected $back = "admin/forum";
-		protected $icon = null;
+		protected $icon = "forum.png";
 		protected $page_size = 25;
 		protected $pagination_links = 7;
 		protected $pagination_step = 1;

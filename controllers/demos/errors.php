@@ -6,6 +6,9 @@
 			print "These are error messages caused by PHP errors:\n";
 			$result = 1 / 0;
 			$result = substr();
+
+			$this->output->add_system_message("This is a system message.");
+			$this->output->add_system_warning("This is a system warning.");
 		}
 	}
 ?>

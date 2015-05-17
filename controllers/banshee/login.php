@@ -1,6 +1,7 @@
 <?php
 	class banshee_login_controller extends controller {
 		public function execute() {
+			header("Status: 401");
 
 			$this->output->description = "Login";
 			$this->output->keywords = "login";
@@ -33,6 +34,7 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if (strpos($_POST["username"], "'") !== false) {
 					$this->output->add_message("Sorry, this application does not support SQL injection.");
+					header("X-Hiawatha-Monitor: exploit_attempt");
 				} else {
 					$this->output->add_message("Login incorrect");
 				}

@@ -7,9 +7,7 @@
 	/* Show help and exit
 	 */
 	function help_exit() {
-		global $argv;
-
-		printf("Usage: %s <layout name>\n", $argv[0]);
+		printf("Usage: %s <layout name>\n", $GLOBALS["argv"][0]);
 		exit;
 	}
 

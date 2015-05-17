@@ -17,7 +17,10 @@
 				} else {
 					$item["height"] = 0;
 				}
-				$item["day"] = date("j F Y", strtotime($item["date"]));
+
+				$timestamp = strtotime($item["date"]);
+				$item["day"] = date("j F Y", $timestamp);
+				$item["weekend"] = show_boolean(date("N", $timestamp) >= 6);
 
 				$this->output->record($item, "item");
 			}

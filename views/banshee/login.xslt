@@ -9,11 +9,11 @@
 //-->
 <xsl:template match="login">
 <form action="{url}" method="post" autocomplete="off" onSubmit="javascript:hash_password(); return true;">
-<table>
+<table class="login">
 <tr><td>Username:</td><td><input type="text" autocapitalize="off" autocorrect="off" name="username" value="{username}" id="username" class="text" /></td></tr>
 <tr><td>Password:</td><td><input type="password" name="password" id="password" class="text" /></td></tr>
 </table>
-<p>Bind session to IP (<font style="font-size:10px"><xsl:value-of select="remote_addr" /></font>): <input type="checkbox" name="bind_ip">
+<p>Bind session to IP (<span style="font-size:10px"><xsl:value-of select="remote_addr" /></span>): <input type="checkbox" name="bind_ip">
 <xsl:if test="bind">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>

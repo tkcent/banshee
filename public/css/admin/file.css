@@ -30,6 +30,7 @@ fieldset.upload {
 
 fieldset.upload input.upload {
 	width:240px;
+	height:22px;
 }
 
 fieldset.create {
@@ -42,4 +43,5 @@ fieldset.create {
 
 fieldset.create input.text {
 	width:250px;
+	height:20px;
 }

@@ -348,7 +348,7 @@
 		public function execute_cached() {
 			$args = func_get_args();
 			$cache_db = array_unshift($args);
-			$hash = md5(json_encode($args));
+			$hash = sha1(json_encode($args));
 
 			$cache = new cache($cache_db, "database_cache");
 
@@ -486,8 +486,7 @@
 					array_push($values, $key);
 				} else {
 					array_push($format, "%S=".$this->type_to_format($data[$key]));
-					array_push($values, $key);
-					array_push($values, $data[$key]);
+					array_push($values, $key, $data[$key]);
 				}
 			}
 

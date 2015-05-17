@@ -1,3 +1,17 @@
+banshee (4.3) stable; urgency=low
+
+  * Search option added to Tablemanager.
+  * Improved photo administration module.
+  * Improved e-mail library.
+  * Content of configuration.php moved to website.conf.
+  * OpenStreetMap static map library removed.
+  * Dropped support for Single Sign-On.
+  * CKEditor updated to 4.4.7.
+  * jQuery updated to 2.1.4, jQuery UI updated to 1.11.4.
+  * Small bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 10 May 2015 09:47:41 +0200
+
 banshee (4.2) stable; urgency=low
 
   * Notify My Android library added.

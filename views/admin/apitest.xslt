@@ -44,7 +44,7 @@
 //
 //-->
 <xsl:template match="content">
-<h1>API test</h1>
+<h1><img src="/images/icons/apitest.png" class="title_icon" />API test</h1>
 <xsl:apply-templates select="result" />
 <xsl:apply-templates select="form" />
 </xsl:template>

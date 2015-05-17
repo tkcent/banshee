@@ -126,10 +126,13 @@
 		public function login_password($username, $password, $use_challenge_response_method) {
 			$query = "select * from users where username=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $username, USER_STATUS_DISABLED)) == false) {
+				header("X-Hiawatha-Monitor: failed_login");
 				sleep(1);
 				return false;
 			}
 			$user = $data[0];
+
+			usleep(rand(0, 10000));
 
 			if ($use_challenge_response_method) {
 				if (hash(PASSWORD_HASH, $_SESSION["challenge"].$user["password"]) === $password) {
@@ -142,6 +145,7 @@
 			}
 
 			if ($this->logged_in == false) {
+				header("X-Hiawatha-Monitor: failed_login");
 				sleep(1);
 			}
 
@@ -159,8 +163,11 @@
 				return false;
 			}
 
+			usleep(rand(0, 100000));
+
 			$query = "select * from users where one_time_key=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $key, USER_STATUS_DISABLED)) == false) {
+				header("X-Hiawatha-Monitor: failed_login");
 				sleep(1);
 				return false;
 			}
@@ -254,31 +261,25 @@
 
 			/* Check access
 			 */
+			$conditions = $rids = array();
+			foreach ($this->record["role_ids"] as $rid) {
+				array_push($conditions, "%d");
+				array_push($rids, $rid);
+			}
+
 			if (in_array($page, page_to_module(config_file("private_pages")))) {
 				/* Pages on disk (modules)
 				 */
-				$conditions = $rids = array();
-				foreach ($this->record["role_ids"] as $rid) {
-					array_push($conditions, "id=%d");
-					array_push($rids, $rid);
-				}
-
-				$query = "select %S from roles where ".implode(" or ", $conditions);
+				$query = "select %S from roles where id in (".implode(", ", $conditions).")";
 				if (($access = $this->db->execute($query, $page, $rids)) == false) {
 					return false;
 				}
 			} else {
 				/* Pages in database
 				 */
-				$conditions = $rids = array();
-				foreach ($this->record["role_ids"] as $rid) {
-					array_push($conditions, "a.role_id=%d");
-					array_push($rids, $rid);
-				}
-
 				$query = "select a.level from page_access a, pages p ".
 				         "where a.page_id=p.id and p.url=%s and a.level>0 ".
-				         "and (".implode(" or ", $conditions).")";
+				         "and a.role_id in (".implode(", ", $conditions).")";
 				if (($access = $this->db->execute($query, "/".$page, $rids)) == false) {
 					return false;
 				}
