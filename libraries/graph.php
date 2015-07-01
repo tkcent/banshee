@@ -80,7 +80,7 @@
 			foreach ($this->bars as $x => $y) {
 				$bar_y = sprintf("%0.2f", $y * $this->height / $max_y);
 				$params = array(
-					"label" => $x,
+					"text" => $x,
 					"value" => $y);
 				$this->output->add_tag("bar", $bar_y, $params);
 			}

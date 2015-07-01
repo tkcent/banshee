@@ -21,9 +21,9 @@
 				"label"    => "Boolean",
 				"type"     => "boolean",
 				"overview" => true),
-			"timestamp" => array(
-				"label"    => "Timestamp",
-				"type"     => "datetime",
+			"date" => array(
+				"label"    => "Date",
+				"type"     => "date",
 				"overview" => true),
 			"enum" => array(
 				"label"    => "Enum",

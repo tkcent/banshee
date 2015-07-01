@@ -10,15 +10,24 @@
 //-->
 <xsl:template match="content">
 <h1>Alphabetize demo</h1>
-<table class="list">
+<table class="table table-striped table-condensed">
+<thead>
 <tr><th>Words</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="words/word">
 <tr><td><xsl:value-of select="." /></td></tr>
 </xsl:for-each>
+</tbody>
 </table>
-<xsl:apply-templates select="alphabetize" />
 
-<a href="/demos" class="button">Back</a>
+<div class="right">
+<xsl:apply-templates select="alphabetize" />
+</div>
+
+<div class="btn-group left">
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

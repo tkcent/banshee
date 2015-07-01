@@ -1,39 +1,30 @@
 /* Vote
  */
 div.active_poll {
-	float:right;
-	width:150px;
+	width:200px;
 	min-height:200px;
-	border:1px dashed #4040c0;
-	background-color:#f0f0ff;
-	padding:10px;
-	margin-left:20px;
 }
-div.active_poll h3 {
-	margin:0;
-	border:0;
-}
+
 div.active_poll ul {
 	list-style:none;
-	margin:0 0 10px 0;
+	padding:0;
 }
-div.active_poll ul li {
-	padding-left:10px;
-}
+
 div.active_poll ul li input {
 	margin-right:5px;
 }
+
 div.active_poll p {
-	margin-bottom:5px;
-}
-div.active_poll p.enddate {
+	margin-top:10px;
 	font-size:10px;
 }
+
 /* Results
  */
 div.active_poll ul.answers li {
 	margin-top:5px;
 }
+
 div.active_poll ul.answers li div.percentage {
 	height:2px;
 	border:1px solid #6060ff;

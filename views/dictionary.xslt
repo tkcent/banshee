@@ -8,13 +8,15 @@
 //
 //-->
 <xsl:template match="letters">
-<div class="letters">
+<div class="right">
+<ul class="pagination">
 <xsl:for-each select="letter">
-	<a href="/{/output/page}/{.}">
-	<xsl:if test=".=../@selected"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
-	<xsl:value-of select="." />
-	</a>
+	<li>
+	<xsl:if test=".=../@selected"><xsl:attribute name="class">disabled</xsl:attribute></xsl:if>
+	<a href="/{/output/page}/{.}"><xsl:value-of select="." /></a>
+	</li>
 </xsl:for-each>
+</ul>
 </div>
 </xsl:template>
 
@@ -24,8 +26,11 @@
 //
 //-->
 <xsl:template match="overview">
-<xsl:apply-templates select="letters" />
-<table class="dictionary">
+<table class="table table-striped table-condensed">
+<thead>
+<tr><th>Word</th><th>Short description</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="words/word">
 	<tr><td class="word">
 	<xsl:choose>
@@ -38,7 +43,10 @@
 	</xsl:choose>
 	</td><td class="short"><xsl:value-of select="short_description" /></td></tr>
 </xsl:for-each>
+</tbody>
 </table>
+
+<xsl:apply-templates select="letters" />
 </xsl:template>
 
 <!--
@@ -47,11 +55,16 @@
 //
 //-->
 <xsl:template match="word">
-<xsl:apply-templates select="letters" />
-<h2><xsl:value-of select="word/word" /></h2>
-<p><xsl:value-of disable-output-escaping="yes" select="word/long_description" /></p>
+<div class="panel panel-default">
+<div class="panel-heading"><xsl:value-of select="word/word" /></div>
+<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="word/long_description" /></div>
+</div>
 
-<a href="/{/output/page}/{letters/@selected}" class="button">Back</a>
+<xsl:apply-templates select="letters" />
+
+<div class="btn-group left">
+<a href="/{/output/page}/{letters/@selected}" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 <!--

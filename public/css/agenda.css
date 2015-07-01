@@ -4,21 +4,26 @@ div.list {
 	width:600px;
 	margin-bottom:10px;
 }
+
 div.list div.summary {
 	cursor:pointer;
 	margin-top:5px;
 }
+
 div.list div.summary:hover div.title {
 	color:#ff5a00;
 }
+
 div.list div.title {
 	font-weight:bold;
 	float:left;
 	margin-right:5px;
 }
+
 div.list div.title:after {
 	content:",";
 }
+
 div.list div.content {
 	display:none;
 	background-color:#f0f0f0;
@@ -26,8 +31,22 @@ div.list div.content {
 	padding:0px 5px 5px 15px;
 	border:1px solid #e8e8e8;
 }
+
 /* Month view
  */
+div.row h2 {
+	margin:0;
+	display:inline-block;
+}
+
+div.row div.col-sm-6:nth-child(2) {
+	text-align:right;
+}
+
+div.row div.btn-group {
+	margin:5px 0 5px 0;
+}
+
 table.month {
 	width:100%;
 	border-spacing:0px;
@@ -35,25 +54,37 @@ table.month {
 	border-left:1px solid #000000;
 	margin-bottom:15px;
 }
+
 table.month th {
 	border-right:1px solid #000000;
 	border-bottom:3px double #000000;
 	background-color:#dbdfeb;
 }
+
 table.month tr.week {
 	height:70px;
 }
+
 table.month td.day {
 	width:14%;
 	border-right:1px solid #000000;
 	border-bottom:1px solid #000000;
+	vertical-align:top;
+	padding:0px 3px;
 }
+
+table.month td.day div {
+	margin-bottom:0;
+}
+
 table.month td.dow6, table.month td.dow7 {
 	background-color:#f0f0f0;
 }
+
 table.month td.today {
 	background-color:#ffe0a0;
 }
+
 table.month td.today div.nr {
 	font-weight:bold;
 }
@@ -63,24 +94,8 @@ table.month td.today div.nr {
 div.appointment {
 	margin-bottom:15px;
 }
-div.buttons {
-	float:right;
-}
-div.buttons a.button {
-	float:left;
-	border:1px solid #404040;
-	margin-right:0;
-	margin-left:10px;
-	font-size:10px;
-	border-radius:0;
-	padding:0 30px;
-}
-div.buttons a.button:hover {
-	background-color:#fff0d0;
-}
-h5 {
+
+h3 {
 	text-align:right;
-	position:relative;
-	top:-15px;
-	height:0;
+	margin-top:-28px;
 }

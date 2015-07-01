@@ -7,32 +7,32 @@
 //
 //-->
 <xsl:template match="splitforms">
+<xsl:call-template name="splitform_header" />
+<xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post">
 <xsl:apply-templates select="splitform/*" />
-<div class="messages">
-<xsl:call-template name="show_messages" />
-</div>
 <input type="hidden" name="splitform_current" value="{current}" />
 
-<div class="buttons">
-<div class="submit">
-<input type="submit" name="submit_button" value="{buttons/previous}" class="previous button">
+<div class="btn-group">
+<input type="submit" name="submit_button" value="{buttons/previous}" class="previous btn btn-default">
 <xsl:if test="current=0"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 </input>
+
 <xsl:choose>
 	<xsl:when test="current/@max>current">
-		<input type="submit" name="submit_button" value="{buttons/next}" class="next button" />
+		<input type="submit" name="submit_button" value="{buttons/next}" class="next btn btn-default" />
 	</xsl:when>
 	<xsl:otherwise>
-		<input type="submit" name="submit_button" value="{buttons/submit}" class="submit button" />
+		<input type="submit" name="submit_button" value="{buttons/submit}" class="submit btn btn-default" />
 	</xsl:otherwise>
 </xsl:choose>
-</div>
+
 <xsl:if test="buttons/back">
-<a href="/{buttons/back/@link}" class="button"><xsl:value-of select="buttons/back" /></a>
+<a href="/{buttons/back/@link}" class="btn btn-default"><xsl:value-of select="buttons/back" /></a>
 </xsl:if>
 </div>
 </form>
+<xsl:call-template name="splitform_footer" />
 </xsl:template>
 
 <!--

@@ -151,7 +151,7 @@
 			}
 
 			if ($result[0]["visible"] == NO) {
-				if ($this->user->access_allowed(CMS_DIRECTORY."/page") == false) {
+				if ($this->user->access_allowed("cms/page") == false) {
 					return null;
 				}
 			}

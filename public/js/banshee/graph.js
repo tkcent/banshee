@@ -1,11 +1,11 @@
-function show_info(graph_id, label, value) {
-	if ((label_div = document.getElementById('label_' + graph_id)) == undefined) {
+function show_info(graph_id, text, value) {
+	if ((text_div = document.getElementById('text_' + graph_id)) == undefined) {
 		return;
 	}
 	if ((value_div = document.getElementById('value_' + graph_id)) == undefined) {
 		return;
 	}
 
-	label_div.innerHTML = label;
+	text_div.innerHTML = text;
 	value_div.innerHTML = value;
 }

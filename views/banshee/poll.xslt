@@ -2,8 +2,9 @@
 <xsl:stylesheet	version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="active_poll">
-<div class="active_poll">
-<h3><xsl:value-of select="question" /></h3>
+<div class="active_poll panel panel-default">
+<div class="panel-heading"><xsl:value-of select="question" /></div>
+<div class="panel-body">
 <form action="{/output/page/@url}" method="post">
 <ul class="answers">
 <xsl:for-each select="answers/answer">
@@ -25,11 +26,12 @@
 </xsl:if>
 
 <xsl:if test="@can_vote='yes'">
-<input type="submit" name="submit_button" value="Vote" class="button" />
+<input type="submit" name="submit_button" value="Vote" class="btn btn-default" />
 </xsl:if>
 </form>
 
 <p class="enddate">Poll ending at <xsl:value-of select="end_date" />.</p>
+</div>
 </div>
 </xsl:template>
 

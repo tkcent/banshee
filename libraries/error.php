@@ -81,6 +81,7 @@
 				$result .= $error."<br />\n";
 			}
 
+			$this->output->add_css("banshee/internal_error.css"); 
 			$this->output->add_tag("internal_errors", $result);
 		}
 

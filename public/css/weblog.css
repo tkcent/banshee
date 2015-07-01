@@ -1,66 +1,35 @@
-/* RSS link
- */
 div.rsslink {
 	position:absolute;
-	right:270px;
 	top:40px;
-}
-div.rsslink img {
-	border:0;
-}
-
-/* Sidebar
- */
-div.weblog_sidebar {
-	float:right;
-	width:140px;
-	min-height:400px;
-	padding:15px 10px 70px 20px;
-	border-left:1px solid #f0f0f0;
-}
-div.weblog_sidebar ul {
-	list-style:square;
-	color:#8080b0;
-	margin-left:20px;
+	left:60%;
 }
 
 /* Weblog
  */
-div.weblog_main {
-	float:left;
-	width:600px;
-}
 div.weblog {
-	margin-top:80px;
+	margin-bottom:30px;
 }
-div.weblog:first-child {
-	margin-top:-15px;
+
+div.weblog > div.row {
+	border-bottom:1px solid #c0c0c0;
 }
-div.weblog div.timestamp {
+
+div.weblog > div.row h2 {
+	margin:0;
+	padding-bottom:2px;
+	display:inline-block;
+}
+
+div.weblog > div.row div:nth-child(2) {
+	margin-top:7px;
+}
+
+div.weblog div.row div:nth-child(2) {
 	text-align:right;
-	float:right;
-	position:relative;
-	top:-18px;
-	height:0;
-	font-size:10px;
-	width:150px;
 }
-div.weblog div.author {
-	text-align:right;
-	font-size:11px;
-}
-div.weblog div.content {
-	margin-top:5px;
-	margin-bottom:20px;
-}
-div.weblog div.content > p:first-child:first-letter {
-	font-size:44px;
-	float:left;
-	margin-right:4px;
-}
-div.weblog div.comment_count a {
-	float:right;
-	font-size:11px;
+
+div.weblog div.content img {
+	max-width:100%;
 }
 
 /* Tags
@@ -68,64 +37,56 @@ div.weblog div.comment_count a {
 div.tags {
 	float:left;
 	font-size:11px;
-	width:400px;
 }
+
 div.tags span {
 	font-style:italic;
 }
+
 div.tags span:after {
 	content:",";
 	margin-right:3px;
 	font-style:normal;
 }
+
 div.tags span:last-child:after {
 	content:"";
 }
 
-/* Comments
+/* Author and comments
  */
-div.comments {
-	margin-top:20px;
-}
-div.comments div.comment {
-	margin-top:15px;
-}
-div.comments div.comment div.author {
-	font-weight:bold;
-	border-bottom:1px solid #d0d0f0;
-	background-color:#f4f4fc;
-	padding-left:4px;
-}
-div.comments div.comment div.timestamp {
+div.weblog div.author {
 	text-align:right;
-	position:relative;
-	font-size:11px;
-	top:-18px;
-	height:4px;
+	font-size:12px;
 }
 
-/* New comment
- */
-form {
-	margin-top:20px;
-}
-form input.text {
-	width:250px;
-}
-form input.button {
-	margin-right:10px;
-}
-form textarea.text {
-	margin-top:5px;
-	margin-bottom:10px;
-	display:block;
-	width:600px;
-	height:150px;
+div.comment_count {
+	text-align:right;
+	font-size:12px;
 }
 
-/* Weblog list
+div.comments > div {
+	margin-top:10px;
+}
+
+div.comments div.panel-body {
+	overflow:hidden;
+}
+
+/* Sidebar
  */
-ul.tagged {
-	list-style:square;
-	margin-left:20px;
+div.sidebar {
+	border-left:1px solid #d0d0d0;
+	padding-left:20px;
+}
+
+div.sidebar ul {
+	list-style:square inside;
+	padding:0;
+}
+
+@media (max-width:767px) {
+	div.sidebar {
+		font-size:16px;
+	}
 }

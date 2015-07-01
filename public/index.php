@@ -72,7 +72,6 @@
 	if ($_output->add_layout_data) {
 		$_output->open_tag("banshee");
 		$_output->add_tag("version", BANSHEE_VERSION);
-		$_output->add_tag("cms_directory", CMS_DIRECTORY);
 		$_output->close_tag();
 		$_output->add_tag("website_url", $_SERVER["SERVER_NAME"]);
 
@@ -100,14 +99,16 @@
 		/* Main menu
 		 */
 		if (is_true(WEBSITE_ONLINE)) {
-			if (substr($_page->url, 0, strlen(CMS_DIRECTORY) + 1) == "/".CMS_DIRECTORY) {
+			if ((substr($_page->url, 0, 4) == "/cms") || ($_output->layout == LAYOUT_CMS)) {
 				/* CMS menu
 				 */
-				$_output->open_tag("menu");
-				$_output->record(array("link" => "/", "text" => "Website"), "item");
-				$_output->record(array("link" => "/".CMS_DIRECTORY, "text" => "CMS"), "item");
-				$_output->record(array("link" => "/logout", "text" => "Logout"), "item");
-				$_output->close_tag();
+				if (($_user->logged_in) && ($_page->page != "logout")) {
+					$_output->open_tag("menu");
+					$_output->record(array("link" => "/", "text" => "Website"), "item");
+					$_output->record(array("link" => "/cms", "text" => "CMS"), "item");
+					$_output->record(array("link" => "/logout", "text" => "Logout"), "item");
+					$_output->close_tag();
+				}
 			} else {
 				/* Normal menu
 				 */
@@ -121,8 +122,15 @@
 
 		/* Stylesheet
 		 */
-		$_output->add_css("banshee/banshee.css");
+		$_output->add_css("banshee/bootstrap.css");
+		$_output->add_css("banshee/bootstrap-theme.css");
+		$_output->add_css("banshee/layout_".$_output->layout.".css");
 		$_output->add_css($_page->module.".css");
+
+		/* Javascripts
+		 */
+		$_output->add_javascript("jquery/jquery.js");
+		$_output->add_javascript("banshee/bootstrap.js");
 
 		$_output->open_tag("content", array("mobile" => show_boolean($_output->mobile)));
 	}

@@ -1,31 +1,25 @@
-div.albums ul {
-	list-style:none;
-	margin-left:0;
-}
-
-div.albums ul li {
-	display:block;
-	float:left;
-	width:400px;
-	min-height:120px;
-}
-
-div.albums div.thumbnail {
-	float:left;
+/* Albums
+ */
+div.albums div.album {
 	margin-right:20px;
-	width:150px;
-	text-align:right;
+	width:350px;
+	height:120px;
+	float:left;
 }
 
-div.albums div.thumbnail img {
+div.albums div.row div:first-child {
+	width:120px;
+}
+
+div.albums img {
 	border:1px solid #000000;
+	border-radius:3px;
 	padding:1px;
+	margin:0;
 }
 
-div.albums div.description {
-	margin-left:15px;
-}
-
+/* Photos
+ */
 div.photos {
 	margin-bottom:15px;
 }

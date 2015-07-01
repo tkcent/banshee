@@ -27,7 +27,7 @@
 
 	/* Demo page files
 	 */
-    $dirs = array("views/demos", "controllers/demos", "models/demos", "public/js/demos", "public/css/demos");
+    $dirs = array("views/demos", "controllers/demos", "models/demos", "public/css/demos");
 	foreach ($dirs as $dir) {
 		$dir = "../".$dir."/";
 		if (($dp = opendir($dir)) != false) {
@@ -43,8 +43,8 @@
 
 	/* Demo content on disk
 	 */
-	truncate_directory("public/files");
-	truncate_directory("public/photos");
+	truncate_directory("public/".FILES_PATH);
+	truncate_directory("public/".PHOTO_PATH);
 
 	/* Demo content in database
 	 */

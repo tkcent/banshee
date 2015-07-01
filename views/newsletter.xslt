@@ -8,12 +8,16 @@
 //
 //-->
 <xsl:template match="subscribe">
-<xsl:call-template name="show_messages" />
 <p>Subscribe here to our newsletter.</p>
+<xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" class="newsletter">
-<p>E-mail address: <input type="text" name="email" id="email" class="text" /></p>
-<input type="submit" name="submit_button" value="Subscribe" class="button" />
-<input type="submit" name="submit_button" value="Unsubscribe" class="button" />
+<label for="email">E-mail address:</label>
+<input type="text" id="email" name="email" class="form-control" />
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Subscribe" class="btn btn-default" />
+<input type="submit" name="submit_button" value="Unsubscribe" class="btn btn-default" />
+</div>
 </form>
 </xsl:template>
 

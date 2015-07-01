@@ -18,7 +18,7 @@
 		protected $log_column = null;
 		protected $browsing = "pagination";
 		protected $enable_search = false;
-		private   $table_class = "list";
+		private   $table_class = "table table-striped table-hover table-condensed";
 
 		/* Show overview
 		 *
@@ -55,6 +55,7 @@
 					$this->output->run_javascript("$(document).ready(function(){ $('table.datatable').dataTable(); });");
 					$this->output->add_css("banshee/datatables.css");
 					$this->table_class = "datatable";
+					$this->enable_search = false;
 				default:
 					if (($items = $this->model->get_items()) === false) {
 						$this->output->add_tag("result", "Error while creating overview.");
@@ -92,8 +93,8 @@
 							case "boolean":
 								$value = show_boolean($value);
 								break;
-							case "datetime":
-								$value = date("j M Y, H:i:s", strtotime($value));
+							case "date":
+								$value = date("j F Y", strtotime($value));
 								break;
 							case "foreignkey":
 								if ($value === null) {
@@ -210,11 +211,10 @@
 					}
 				}
 
-				if (($element["type"] == "datetime") && ($calendar_initialized == false)) {
-					$this->output->add_css("banshee/calendar.css");
-					$this->output->add_javascript("banshee/calendar.js");
-					$this->output->add_javascript("banshee/calendar-en.js");
-					$this->output->add_javascript("banshee/calendar-setup.js");
+				if (($element["type"] == "date") && ($calendar_initialized == false)) {
+					$this->output->add_javascript("jquery/jquery-ui.js");
+					$this->output->add_javascript("banshee/datepicker.js");
+					$this->output->add_css("jquery/jquery-ui.css");
 					$calendar_initialized = true;
 				}
 
@@ -368,8 +368,8 @@
 				foreach ($this->model->elements as $name => $element) {
 					if (isset($element["default"])) {
 						$item[$name] = $element["default"];
-					} else if ($element["type"] == "datetime") {
-						$item[$name] = date("Y-m-d H:i:s");
+					} else if ($element["type"] == "date") {
+						$item[$name] = date("Y-m-d");
 					}
 				}
 				$this->show_item_form($item);

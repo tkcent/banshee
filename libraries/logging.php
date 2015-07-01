@@ -100,7 +100,7 @@
 		 * ERROR:  -
 		 */
 		private function log_referer($referer) {
-			list(,, $hostname) = explode("/", $referer, 4);
+			list(,, $hostname, $path) = explode("/", $referer, 4);
 			list($hostname) = explode(":", $hostname);
 
 			$dont_log = array(WEBSITE_DOMAIN, $_SERVER["HTTP_HOST"], $_SERVER["SERVER_NAME"], "localhost", "127.0.0.1", "");
@@ -135,8 +135,7 @@
 				"hostname" => $hostname,
 				"url"      => $referer,
 				"date"     => $this->today,
-				"count"    => 1,
-				"verified" => 0);
+				"count"    => 1);
 			$this->db->insert("log_referers", $data);
 		}
 
@@ -238,10 +237,10 @@
 
 			/* Don't log visits of admin and system pages
 			 */
-			$skip_pages = array(CMS_DIRECTORY, "banshee/browser");
+			$skip_pages = array("cms", "banshee/browser");
 			if (in_array($this->page->page, $skip_pages)) {
 				return;
-			} else if (substr($this->page->page, 0, 6) == CMS_DIRECTORY."/") {
+			} else if (substr($this->page->page, 0, 6) == "cms/") {
 				return;
 			}
 

@@ -13,11 +13,7 @@
 
 			$this->output->open_tag("login");
 
-			$url = $_SERVER["REQUEST_URI"];
-			if (($_SERVER["HTTP_SCHEME"] == "http") && $this->settings->login_force_ssl) {
-				$url = "https://".$_SERVER["HTTP_HOST"].$url;
-			}
-			$this->output->add_tag("url", $url);
+			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
 
 			if ($_SERVER["REQUEST_METHOD"] != "POST") {
 				$this->output->add_tag("bind");

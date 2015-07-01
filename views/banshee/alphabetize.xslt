@@ -2,14 +2,14 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="alphabetize">
-<ul class="alphabetize">
+<ul class="pagination pagination-sm">
 <xsl:for-each select="char">
 <xsl:choose>
     <xsl:when test="@link=../@char">
-		<li class="nolink current"><xsl:value-of select="." /></li>
+		<li class="disabled"><a href="#"><xsl:value-of select="." /></a></li>
 	</xsl:when>
 	<xsl:otherwise>
-		<li class="link"><a href="{/output/page/@url}?char={@link}"><xsl:value-of select="." /></a></li>
+		<li><a href="{/output/page/@url}?char={@link}"><xsl:value-of select="." /></a></li>
 	</xsl:otherwise>
 </xsl:choose>
 </xsl:for-each>

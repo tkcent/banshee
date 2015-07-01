@@ -12,7 +12,6 @@
 <script type="text/javascript" src="/js/ckeditor/ckeditor.js"></script>
 
 <textarea id="editor" name="editor"></textarea>
-
 <script type="text/javascript">
 &lt;!--
 	CKEDITOR.replace("editor", { skin : "office2003" });

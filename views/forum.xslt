@@ -12,8 +12,8 @@
 <div class="forums">
 <xsl:for-each select="forum">
 <div>
-<h4><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a> (<xsl:value-of select="topics" />)</h4>
-<xsl:value-of select="description" />
+<h3><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a> (<xsl:value-of select="topics" />)</h3>
+<p><xsl:value-of select="description" /></p>
 </div>
 </xsl:for-each>
 </div>
@@ -26,23 +26,34 @@
 //-->
 <xsl:template match="forum">
 <div class="forum">
-<h3><xsl:value-of select="title" /></h3>
+<h2><xsl:value-of select="title" /></h2>
+<table class="table table-striped table-condensed">
+<thead>
+<tr><th>Topic</th><th>Author</th><th>Messages</th><th>Timestamp</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="topics/topic">
-	<div class="title">
+	<tr>
+	<td>
 		<a href="/{/output/page}/topic/{@id}"><xsl:value-of select="subject" /></a>
 		<xsl:if test="unread='yes'"><span class="unread">*</span></xsl:if>
-	</div>
-	<div class="starter"><xsl:value-of select="starter" /></div>
-	<div class="messages"><xsl:value-of select="messages" /></div>
-	<div class="date"><xsl:value-of select="timestamp" /></div>
+	</td>
+	<td><xsl:value-of select="starter" /></td>
+	<td><xsl:value-of select="messages" /></td>
+	<td><xsl:value-of select="timestamp" /></td>
+	</tr>
 </xsl:for-each>
+</tbody>
+</table>
 </div>
 
+<div class="right">
 <xsl:apply-templates select="pagination" />
+</div>
 
-<div class="buttonbar">
-<a href="/{/output/page}/{@id}/new" class="button">New topic</a>
-<a href="/{/output/page}" class="button">Back</a>
+<div class="btn-group left">
+<a href="/{/output/page}/{@id}/new" class="btn btn-default">New topic</a>
+<a href="/{/output/page}" class="btn btn-default">Back</a>
 </div>
 </xsl:template>
 
@@ -53,19 +64,18 @@
 //-->
 <xsl:template match="topic">
 <div class="topic">
-<h3><xsl:value-of select="subject" /></h3>
+<h2><xsl:value-of select="subject" /></h2>
 <xsl:for-each select="message">
 	<a name="{@id}" />
-	<div class="message">
-	<div class="author {usertype}">
-		<xsl:value-of select="author" />
-		<xsl:if test="unread='yes'"><span class="unread">*</span></xsl:if>
+	<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="row">
+		<div class="col-xs-5"><xsl:value-of select="author" /><xsl:if test="unread='yes'"><span class="unread">*</span></xsl:if></div>
+		<div class="col-sm-2"><xsl:if test="@moderate='yes'"><a href="/cms/forum/{@id}">edit</a></xsl:if></div>
+		<div class="col-sm-5"><xsl:value-of select="timestamp" /></div>
+		</div>
 	</div>
-	<div class="date"><xsl:value-of select="timestamp" /></div>
-	<xsl:if test="@moderate='yes'">
-	<div class="moderate"><a href="/{/output/banshee/cms_directory}/forum/{@id}">edit</a></div>
-	</xsl:if>
-	<xsl:value-of disable-output-escaping="yes" select="content" />
+	<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
 	</div>
 </xsl:for-each>
 
@@ -74,13 +84,17 @@
 <form action="/{/output/page}#response" method="post" class="new_response">
 <input type="hidden" name="topic_id" value="{@id}" />
 <xsl:if test="not(/output/user)">
-<div class="username">Name: <input type="text" name="username" value="{response/username}" class="text" /></div>
+<label for="username">Name:</label>
+<input type="text" id="username" name="username" value="{response/username}" class="form-control" />
 </xsl:if>
-<textarea id="content" name="content" class="text"><xsl:value-of select="response/content" /></textarea>
+<label for="content">Message:</label>
+<textarea id="content" name="content" class="form-control"><xsl:value-of select="response/content" /></textarea>
 <xsl:call-template name="smilies" />
 
-<input type="submit" name="submit_button" value="Post response" class="button" />
-<a href="/{/output/page}/{@forum_id}" class="button">Back</a>
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Post response" class="btn btn-default" />
+<a href="/{/output/page}/{@forum_id}" class="btn btn-default">Back</a>
+</div>
 </form>
 </div>
 </xsl:template>
@@ -94,17 +108,20 @@
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" class="new_topic">
 <input type="hidden" name="forum_id" value="{forum_id}" />
-<table>
 <xsl:if test="not(/output/user)">
-<tr><td>Name:</td><td><input type="text" name="username" value="{username}" class="text" /></td></tr>
+<label for="username">Name:</label>
+<input type="text" id="username" name="username" value="{username}" class="form-control" />
 </xsl:if>
-<tr><td>Topic subject:</td><td><input type="text" name="subject" value="{subject}" class="text" /></td></tr>
-</table>
-<textarea id="content" name="content" class="text"><xsl:value-of select="content" /></textarea>
+<label for="subject">Topic subject:</label>
+<input type="text" id="subject" name="subject" value="{subject}" class="form-control" />
+<label for="content">Message:</label>
+<textarea id="content" name="content" class="form-control"><xsl:value-of select="content" /></textarea>
 <xsl:call-template name="smilies" />
 
-<input type="submit" name="submit_button" value="Create topic" class="button" />
-<a href="/{/output/page}/{forum_id}" class="button">Back</a>
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Create topic" class="btn btn-default" />
+<a href="/{/output/page}/{forum_id}" class="btn btn-default">Back</a>
+</div>
 </form>
 </xsl:template>
 

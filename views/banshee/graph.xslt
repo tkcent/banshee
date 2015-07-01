@@ -2,24 +2,24 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="graph">
-<div class="graph" style="width:{@width}px">
-<fieldset>
-<xsl:if test="title"><legend><xsl:value-of select="title" /></legend></xsl:if>
-<div class="info">
-	<span id="label_{@id}" class="label"></span>
-	<span id="value_{@id}" class="value" style="margin-left:{@maxy_width + 10}px"></span>
-</div>
-<div class="maxy" style="height:{@height}px ; width:{@maxy_width - 10}px">
-	<xsl:value-of select="@max_y" />
-</div>
-<div class="bars" style="height:{@height}px ; width:{@width}px ; margin-left:{@maxy_width}px">
-<xsl:for-each select="bar">
-<div class="column" style="height:{../@height}px ; width:{../@bar_width - 2}px" onMouseOver="javascript:show_info({../@id}, '{@label}', '{@value}')" onMouseOut="javascript:show_info({../@id}, '', '')">
-	<div class="bar" style="height:{.}px ; width:{../@bar_width - 2}px"></div>
-</div>
-</xsl:for-each>
-</div>
-</fieldset>
+<div class="graph panel panel-default" style="max-width:{@width}px">
+	<xsl:if test="title"><div class="panel-heading"><xsl:value-of select="title" /></div></xsl:if>
+	<div class="panel-body">
+		<div class="info">
+			<span id="text_{@id}" class="text"></span>
+			<span id="value_{@id}" class="value"></span>
+		</div>
+		<div class="maxy"><xsl:value-of select="@max_y" /></div>
+		<div class="bars">
+			<table style="height:{@height}px"><tr>
+				<xsl:for-each select="bar">
+				<td onMouseOver="javascript:show_info({../@id}, '{@text}', '{@value}')" onMouseOut="javascript:show_info({../@id}, '', '')">
+					<div style="height:{.}px"></div>
+				</td>
+				</xsl:for-each>
+			</tr></table>
+		</div>
+	</div>
 </div>
 </xsl:template>
 

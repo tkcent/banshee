@@ -10,10 +10,16 @@
 //-->
 <xsl:template match="guestbook">
 <xsl:for-each select="item">
-<div class="guestbook">
-<div class="author"><xsl:value-of select="author" /></div>
-<div class="timestamp"><xsl:value-of select="timestamp" /></div>
-<div class="message"><xsl:value-of disable-output-escaping="yes" select="message" /></div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<div class="row">
+<div class="col-sm-6"><xsl:value-of select="author" /></div>
+<div class="col-sm-6"><xsl:value-of select="timestamp" /></div>
+</div>
+</div>
+<div class="panel-body">
+<xsl:value-of disable-output-escaping="yes" select="message" />
+</div>
 </div>
 </xsl:for-each>
 <xsl:apply-templates select="pagination" />
@@ -23,9 +29,13 @@
 </xsl:if>
 <form action="/{/output/page}#sign" method="post">
 <xsl:call-template name="show_messages" />
-Name: <input type="input" name="author" value="{../author}" class="text" />
-<textarea name="message" class="text"><xsl:value-of select="../message" /></textarea>
-<input type="submit" name="submit_button" value="Sign guestbook" class="button" />
+<label for="name">Name:</label>
+<input type="input" id="name" name="author" value="{../author}" class="form-control" />
+<label for="message">Message:</label>
+<textarea id="message" name="message" class="form-control"><xsl:value-of select="../message" /></textarea>
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Sign guestbook" class="btn btn-default" />
+</div>
 </form>
 </xsl:template>
 

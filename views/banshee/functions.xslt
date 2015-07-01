@@ -7,10 +7,14 @@
 //
 //-->
 <xsl:template match="internal_errors">
-<fieldset id="internal_errors" class="internal_errors">
-<legend>Internal errors <img src="/images/cross.gif" title="Close message box" alt="Close" class="close" onClick="javascript:document.getElementById('internal_errors').style.display = 'none'" /></legend>
-<xsl:value-of disable-output-escaping="yes" select="/output/internal_errors" />
-</fieldset>
+<div id="internal_errors" class="panel panel-danger">
+<div class="panel-heading">
+	<h3 class="panel-title">Internal errors <span title="Close message box" alt="Close" class="close" onClick="javascript:document.getElementById('internal_errors').style.display = 'none'">x</span></h3>
+</div>
+<div class="panel-body">
+	<xsl:value-of disable-output-escaping="yes" select="/output/internal_errors" />
+</div>
+</div>
 </xsl:template>
 
 <!--
@@ -67,7 +71,7 @@
 //
 //-->
 <xsl:template match="system_messages">
-<div class="system_messages">
+<div class="alert alert-info" role="alert">
 <xsl:for-each select="message">
     <p>&#187; <xsl:value-of select="." /></p>
 </xsl:for-each>
@@ -80,7 +84,7 @@
 //
 //-->
 <xsl:template match="system_warnings">
-<div class="system_warnings">
+<div class="alert alert-danger" role="alert">
 <xsl:for-each select="warning">
     <p>&#187; <xsl:value-of select="." /></p>
 </xsl:for-each>
@@ -94,9 +98,9 @@
 //-->
 <xsl:template name="show_messages">
 <xsl:if test="/output/messages/message">
-<div class="warnings">
+<div class="alert alert-warning">
 <xsl:for-each select="/output/messages/message">
-	<div class="warning"><xsl:value-of select="." /></div>
+	<div><xsl:value-of select="." /></div>
 </xsl:for-each>
 </div>
 </xsl:if>

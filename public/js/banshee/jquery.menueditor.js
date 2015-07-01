@@ -13,13 +13,13 @@
 		max_depth: 3
 	};
 
-	var l_text =        '<span class="text label">Text:</span>';
+	var l_text =        '<span class="label">Text:</span>';
 	var l_link =        '<span class="link label">Link:</span>';
-	var new_node =      '<li>' + l_text + '<input type="text" class="text">' + l_link + '<input type="text" class="text"></li>';
-	var h_insert_node = '<input type="button" value="Insert" class="insert button">';
-	var h_add_node =    '<input type="button" value="+" class="add_node button">';
-	var h_delete_node = '<input type="button" value="-" class="delete_node button">';
-	var h_add_branch =  '<input type="button" value="&gt;" class="add_branch button">';
+	var new_node =      '<li>' + l_text + '<input type="text" class="form-control">' + l_link + '<input type="text" class="form-control"></li>';
+	var h_insert_node = '<input type="button" value="Insert" class="insert btn btn-default">';
+	var h_add_node =    '<input type="button" value="+" class="add_node">';
+	var h_delete_node = '<input type="button" value="-" class="delete_node">';
+	var h_add_branch =  '<input type="button" value="&gt;" class="add_branch">';
 
 	/* Constructor
 	 */

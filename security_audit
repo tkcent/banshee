@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "4.3";
+	$written_for = "5.0";
 
 	/* Auditor class
 	 */
@@ -188,7 +188,7 @@
 			"libraries/tablemanager_controller.php"        => array(202),
 			"libraries/tablemanager_model.php"             => array(265),
 			"libraries/user.php"                           => array(274),
-			"models/admin/user.php"                        => array(8),
+			"models/cms/user.php"                          => array(8),
 			"models/search.php"                            => array(135));
 
 		protected function scan_line($line) {
@@ -269,20 +269,20 @@
 	class output_auditor extends auditor {
 		protected $extension = "xslt";
 		protected $verified = array(
-			 "views/admin/photos.xslt"              => array(29),
-			 "views/agenda.xslt"                    => array(23, 82),
-			 "views/banshee/functions.xslt"         => array(12),
+			 "views/cms/photos.xslt"                => array(29),
+			 "views/agenda.xslt"                    => array(19, 79),
+			 "views/banshee/functions.xslt"         => array(15),
 			 "views/banshee/layout_pluralism.xslt"  => array(54),
 			 "views/banshee/page.xslt"              => array(12),
 			 "views/demos/googlemaps.xslt"          => array(14),
-			 "views/demos/posting.xslt"             => array(15),
-			 "views/dictionary.xslt"                => array(52),
-			 "views/faq.xslt"                       => array(16),
-			 "views/forum.xslt"                     => array(68),
-			 "views/guestbook.xslt"                 => array(16),
-			 "views/mailbox.xslt"                   => array(34),
-			 "views/news.xslt"                      => array(14),
-			 "views/weblog.xslt"                    => array(56, 78));
+			 "views/demos/posting.xslt"             => array(19),
+			 "views/dictionary.xslt"                => array(60),
+			 "views/faq.xslt"                       => array(18),
+			 "views/forum.xslt"                     => array(78),
+			 "views/guestbook.xslt"                 => array(21),
+			 "views/mailbox.xslt"                   => array(42),
+			 "views/news.xslt"                      => array(20),
+			 "views/weblog.xslt"                    => array(25, 51));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {

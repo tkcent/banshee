@@ -10,12 +10,15 @@
 <xsl:template match="request">
 <p>Enter your username and e-mail address to reset your password.</p>
 <form action="/{/output/page}" method="post">
-<table>
-<tr><td>Username:</td><td><input type="text" name="username" class="text" /></td></tr>
-<tr><td>E-mail:</td><td><input type="text" name="email" class="text" /></td></tr>
-</table>
-<input type="submit" name="submit_button" value="Reset password" class="button" />
-<a href="/" class="button">Cancel</a>
+<label for="username">Username:</label>
+<input type="text" id="username" name="username" class="form-control" />
+<label for="email">E-mail:</label>
+<input type="text" id="email" name="email" class="form-control" />
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Reset password" class="btn btn-default" />
+<a href="/" class="btn btn-default">Cancel</a>
+</div>
 </form>
 </xsl:template>
 
@@ -45,7 +48,10 @@
 <tr><td>Password:</td><td><input type="password" id="password" name="password" class="text" /></td></tr>
 <tr><td>Repeat:</td><td><input type="password" id="repeat" name="repeat" class="text" /></td></tr>
 </table>
-<input type="submit" name="submit_button" value="Save password" class="button" />
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Save password" class="btn btn-default" />
+</div>
 </form>
 </xsl:template>
 

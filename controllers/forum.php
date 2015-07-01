@@ -15,7 +15,6 @@
 		}
 
 		private function show_topic_form($topic) {
-			$this->output->add_javascript("jquery/jquery.js");
 			$this->output->add_javascript("forum.js");
 
 			$this->output->record($topic, "newtopic");
@@ -71,12 +70,11 @@
 		}
 
 		private function show_topic($topic_id, $response = null) {
-			$moderate = $this->user->access_allowed(CMS_DIRECTORY."/forum");
+			$moderate = $this->user->access_allowed("cms/forum");
 
 			if (($topic = $this->model->get_topic($topic_id)) == false) {
 				$this->output->add_tag("result", "Topic not found.", $this->url);
 			} else {
-				$this->output->add_javascript("jquery/jquery.js");
 				$this->output->add_javascript("forum.js");
 
 				$this->output->title = $topic["subject"]." - Forum";

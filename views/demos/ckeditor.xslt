@@ -10,8 +10,11 @@
 <xsl:template match="edit">
 <form method="post" action="/demos/ckeditor">
 <textarea id="editor" name="editor"></textarea>
-<input type="submit" name="save" value="Submit" class="button" />
-<a href="/demos" class="button">Back</a>
+
+<div class="btn-group">
+<input type="submit" name="save" value="Submit" class="btn btn-default" />
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </form>
 </xsl:template>
 
@@ -24,7 +27,9 @@
 <div style="border:1px solid #000000 ; width:600px ; height:300px"><xsl:value-of select="editor" /></div>
 <br />
 
-<a href="/demos/ckeditor" class="button">Back</a>
+<div class="btn-group">
+<a href="/demos/ckeditor" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 <!--

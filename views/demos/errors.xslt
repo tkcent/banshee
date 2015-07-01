@@ -6,7 +6,9 @@
 <h1>Error messages</h1>
 <p>This page demonstrates what (internal) errors and messages look like. Internal errors are only shown when the website is in debug mode. Otherwise, they are sent by e-mail to the webmaster.</p>
 
-<a href="/demos" class="button">Back</a>
+<div class="btn-group">
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

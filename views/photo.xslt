@@ -10,22 +10,26 @@
 //-->
 <xsl:template match="overview">
 <div class="albums">
-<ul>
 <xsl:for-each select="albums/album">
-<li>
-<xsl:if test="thumbnail">
-<div class="thumbnail"><a href="/{/output/page}/{@id}"><img src="/{/output/page}/thumbnail_{thumbnail}.{extension}" alt="thumbnail {thumbnail}" class="thumbnail" /></a></div>
-</xsl:if>
-<div class="name"><a href="/{/output/page}/{@id}"><xsl:value-of select="name" /></a></div>
-<div class="description"><xsl:value-of select="description" /></div>
-<br clear="both" />
-</li>
-</xsl:for-each>
-</ul>
+<div class="album row">
+	<div class="col-xs-6">
+		<xsl:if test="thumbnail">
+		<a href="/{/output/page}/{@id}"><img src="/{/output/page}/thumbnail_{thumbnail}.{extension}" alt="thumbnail {thumbnail}" /></a>
+		</xsl:if>
+	</div>
+	<div class="col-xs-6">
+		<div class="name"><a href="/{/output/page}/{@id}"><xsl:value-of select="name" /></a></div>
+		<div class="description"><xsl:value-of select="description" /></div>
+	</div>
 </div>
-<br clear="both" />
+</xsl:for-each>
+</div>
 
+<div class="clear"></div>
+
+<div class="right">
 <xsl:apply-templates select="pagination" />
+</div>
 </xsl:template>
 
 <!--
@@ -42,8 +46,13 @@
 </div>
 <br clear="both" />
 
+<div class="right">
 <xsl:apply-templates select="pagination" />
-<a href="/{/output/page}" class="button">Back</a>
+</div>
+<div class="btn-group left">
+<a href="/{/output/page}" class="btn btn-default">Back</a>
+</div>
+<div class="clear"></div>
 </xsl:template>
 
 <!--

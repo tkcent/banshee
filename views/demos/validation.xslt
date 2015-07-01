@@ -12,13 +12,18 @@
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post">
 <table class="edit">
-<tr><td>String:</td><td><input type="text" name="string" value="{string}" class="text" /></td></tr>
-<tr><td>Number:</td><td><input type="text" name="number" value="{number}" class="text" /></td></tr>
-<tr><td>Enum:</td><td><input type="text" name="enum" value="{enum}" class="text" /></td></tr>
+<label for="string">String:</label>
+<input type="text" id="string" name="string" value="{string}" class="form-control" />
+<label for="number">Number:</label>
+<input type="text" id="number" name="number" value="{number}" class="form-control" />
+<label for="enum">Enum:</label>
+<input type="text" id="name" name="enum" value="{enum}" class="form-control" />
 </table>
 
-<input type="submit" value="Validate data" class="button" />
-<a href="/demos" class="button">Back</a>
+<div class="btn-group">
+<input type="submit" value="Validate data" class="btn btn-default" />
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </form>
 </xsl:template>
 

@@ -4,39 +4,6 @@
 
 <!--
 //
-//  Sidebar template
-//
-//-->
-<xsl:template match="sidebar">
-<div class="weblog_sidebar">
-<p><a href="{/output/page}">All articles</a></p>
-
-All tags:
-<ul>
-<xsl:for-each select="tags/tag">
-<li><a href="/{/output/page}/tag/{@id}"><xsl:value-of select="." /></a></li>
-</xsl:for-each>
-</ul>
-
-Years:
-<ul>
-<xsl:for-each select="years/year">
-<li><a href="/{/output/page}/period/{.}"><xsl:value-of select="." /></a></li>
-</xsl:for-each>
-</ul>
-
-Periods:
-<ul>
-<xsl:for-each select="periods/period">
-<li><a href="/{/output/page}/period/{@link}"><xsl:value-of select="." /></a></li>
-</xsl:for-each>
-</ul>
-
-</div>
-</xsl:template>
-
-<!--
-//
 //  Weblogs template
 //
 //-->
@@ -51,8 +18,10 @@ Periods:
 //-->
 <xsl:template match="weblog">
 <div class="weblog">
-<h2><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a></h2>
-<div class="timestamp"><xsl:value-of select="timestamp" /></div>
+<div class="row">
+<div class="col-sm-8"><h2><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a></h2></div>
+<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
+</div>
 <div class="content"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
 
 <!-- Tags -->
@@ -72,10 +41,14 @@ Periods:
 <xsl:if test="comments">
 <div class="comments">
 <xsl:for-each select="comments/comment">
-<div class="comment">
-<div class="author"><xsl:value-of select="author" /></div>
-<div class="timestamp"><xsl:value-of select="timestamp" /></div>
-<xsl:value-of disable-output-escaping="yes" select="content" />
+<div class="panel panel-default">
+<div class="panel-heading">
+<div class="row">
+<div class="col-sm-8"><xsl:value-of select="author" /></div>
+<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
+</div>
+</div>
+<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
 </div>
 </xsl:for-each>
 
@@ -84,10 +57,15 @@ Periods:
 <form action="/{/output/page}#new_comment" method="post">
 <input type="hidden" name="weblog_id" value="{@id}" />
 <xsl:call-template name="show_messages" />
-Name: <input type="text" name="author" value="{../comment/author}" class="text" />
-<textarea name="content" class="text"><xsl:value-of select="../comment/content" /></textarea>
-<input type="submit" value="Save" class="button" />
-<a href="/{/output/page}" class="button">Back</a>
+<label for="author">Name:</label>
+<input type="text" id="author" name="author" value="{../comment/author}" class="form-control" />
+<label for="content">Comment:</label>
+<textarea id="content" name="content" class="form-control"><xsl:value-of select="../comment/content" /></textarea>
+
+<div class="btn-group">
+<input type="submit" value="Save" class="btn btn-default" />
+<a href="/{/output/page}" class="btn btn-default">Back</a>
+</div>
 </form>
 
 </div>
@@ -110,20 +88,57 @@ Name: <input type="text" name="author" value="{../comment/author}" class="text" 
 
 <!--
 //
+//  Sidebar template
+//
+//-->
+<xsl:template match="sidebar">
+<div class="sidebar">
+<p><a href="{/output/page}">All articles</a></p>
+
+All tags:
+<ul>
+<xsl:for-each select="tags/tag">
+<li><a href="/{/output/page}/tag/{@id}"><xsl:value-of select="." /></a></li>
+</xsl:for-each>
+</ul>
+
+Years:
+<ul>
+<xsl:for-each select="years/year">
+<li><a href="/{/output/page}/period/{.}"><xsl:value-of select="." /></a></li>
+</xsl:for-each>
+</ul>
+
+Periods:
+<ul>
+<xsl:for-each select="periods/period">
+<li><a href="/{/output/page}/period/{@link}"><xsl:value-of select="." /></a></li>
+</xsl:for-each>
+</ul>
+</div>
+</xsl:template>
+
+<!--
+//
 //  Content template
 //
 //-->
 <xsl:template match="content">
-<xsl:apply-templates select="sidebar" />
 <h1>Weblog</h1>
+<xsl:if test="not(result)">
 <div class="rsslink"><a href="/weblog.xml"><img src="/images/rss.png" alt="RSS" /></a></div>
-<div class="weblog_main">
+<div class="row">
+<div class="weblog col-sm-9">
 <xsl:apply-templates select="weblogs" />
 <xsl:apply-templates select="weblog" />
 <xsl:apply-templates select="list" />
-<xsl:apply-templates select="result" />
 </div>
-<div style="clear:both"></div>
+<div class="col-sm-2 col-sm-offset-1">
+<xsl:apply-templates select="sidebar" />
+</div>
+</div>
+</xsl:if>
+<xsl:apply-templates select="result" />
 </xsl:template>
 
 </xsl:stylesheet>

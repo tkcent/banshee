@@ -7,8 +7,8 @@
 <img src="/demos/googlemaps/image" alt="map" class="map" />
 
 <div class="route">
-<h2>Route from <xsl:value-of select="route/origin" /> to <xsl:value-of select="route/destination" /></h2>
 <div class="info">Travel distance: <xsl:value-of select="route/distance" /> in <xsl:value-of select="route/duration" /> hours</div>
+<h2>Route from <xsl:value-of select="route/origin" /> to <xsl:value-of select="route/destination" /></h2>
 <ul class="route">
 <xsl:for-each select="route/step">
 <li class="step"><xsl:value-of select="." disable-output-escaping="yes" /> (distance: <xsl:value-of select="@distance" />, duration: <xsl:value-of select="@duration" />)</li>
@@ -16,7 +16,9 @@
 </ul>
 </div>
 
-<a href="/demos" class="button">Back</a>
+<div class="btn-group">
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

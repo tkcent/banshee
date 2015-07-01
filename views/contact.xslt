@@ -9,15 +9,18 @@
 //-->
 <xsl:template match="contact">
 <xsl:call-template name="show_messages" />
-
 <form action="/{/output/page}" method="post">
-<table class="contact">
-<tr><td>Name:</td><td><input type="text" name="name" value="{name}" class="text" /></td></tr>
-<tr><td>E-mail address:</td><td><input type="text" name="email" value="{email}" class="text" /></td></tr>
-<tr><td>Telephone nr:</td><td><input type="text" name="telephone" value="{telephone}" class="text" /></td></tr>
-<tr><td>Comment:</td><td><textarea name="comment" class="text"><xsl:value-of select="comment" /></textarea></td></tr>
-</table>
-<input type="submit" name="submit_button" value="Submit" class="button" />
+<label for="name">Name:</label>
+<input type="text" id="name" name="name" value="{name}" class="form-control" />
+<label for="email">E-mail address:</label>
+<input type="text" id="email" name="email" value="{email}" class="form-control" />
+<label for="telephone">Telephone:</label>
+<input type="text" id="telephone" name="telephone" value="{telephone}" class="form-control" />
+<label for="comment">Comment:</label>
+<textarea name="comment" class="form-control"><xsl:value-of select="comment" /></textarea>
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Submit" class="btn btn-default" />
+</div>
 </form>
 </xsl:template>
 

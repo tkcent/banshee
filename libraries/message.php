@@ -210,6 +210,12 @@
 					break;
 				} else {
 					$param = substr($message, $open + $bblen + 2, $open_end - $open - $bblen - 2);
+					if (substr($param, 0, 6) == "&quot;") {
+						$param = substr($param, 6);
+					}
+					if (substr($param, -6) == "&quot;") {
+						$param = substr($param, 0, -6);
+					}
 				}
 
 				if (($close = strpos($message, "[/".$bbcode."]", $open_end + 1)) !== false) {

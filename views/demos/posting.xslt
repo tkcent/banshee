@@ -7,12 +7,16 @@
 <xsl:call-template name="show_messages" />
 
 <form action="/demos/posting" method="post" accept-charset="utf-8">
-<textarea name="input" class="text"><xsl:value-of select="input" /></textarea><br />
-<input type="submit" value="Submit text" class="button" />
-<a href="/demos" class="button">Back</a>
+<textarea name="input" class="form-control"><xsl:value-of select="input" /></textarea><br />
+
+<div class="btn-group">
+<input type="submit" value="Submit text" class="btn btn-default" />
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </form>
-<div class="output"><xsl:value-of select="output" /></div>
-<div class="output"><xsl:value-of disable-output-escaping="yes" select="output" /></div>
+
+<div class="well"><xsl:value-of select="output" /></div>
+<div class="well"><xsl:value-of disable-output-escaping="yes" select="output" /></div>
 </xsl:template>
 
 </xsl:stylesheet>

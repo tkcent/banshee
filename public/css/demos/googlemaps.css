@@ -3,20 +3,14 @@ img.map {
 	border:1px solid #000000;
 	margin-bottom:15px;
 	padding:3px;
+	max-width:100%;
 }
 
-div.route {
-	margin-bottom:15px;
+div.info {
+	text-align:right;
+	max-width:650px;
 }
 
-div.route ul.route {
-	margin-left:20px;
+ul.route {
+	padding-left:15px;
 }
-
-div.route div.info {
-	float:right;
-	position:relative;
-	top:-18px;
-}
-
-

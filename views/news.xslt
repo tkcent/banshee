@@ -9,9 +9,17 @@
 //
 //-->
 <xsl:template match="news">
-<h2><xsl:value-of select="title" /></h2>
-<div class="timestamp"><xsl:value-of select="timestamp" /></div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<div class="row">
+<div class="col-sm-6"><xsl:value-of select="title" /></div>
+<div class="col-sm-6"><xsl:value-of select="timestamp" /></div>
+</div>
+</div>
+<div class="panel-body">
 <xsl:value-of disable-output-escaping="yes" select="content" />
+</div>
+</div>
 </xsl:template>
 
 <!--

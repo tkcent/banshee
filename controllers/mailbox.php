@@ -6,7 +6,11 @@
 			$this->output->open_tag("mailbox", array("column" => $column));
 			foreach ($mails as $mail) {
 				$mail["subject"] = truncate_text($mail["subject"], 55);
-				$mail["timestamp"] = date_string("l, j F Y H:i:s", $mail["timestamp"]);
+				if ($this->mobile) {
+					$mail["timestamp"] = date_string("Y-m-d", $mail["timestamp"]);
+				} else {
+					$mail["timestamp"] = date_string("l, j F Y H:i:s", $mail["timestamp"]);
+				}
 				$mail["read"] = $mail["read"] == YES ? "read" : "unread";
 				$this->output->record($mail, "mail");
 			}

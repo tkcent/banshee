@@ -46,7 +46,6 @@
 			}
 
 			$this->output->add_css("banshee/js_pagination.css");
-			$this->output->add_javascript("jquery/jquery.js");
 			$this->output->add_javascript("banshee/pagination.js");
 			$this->output->add_javascript("search.js");
 			$this->output->run_javascript("document.getElementById('query').focus()");

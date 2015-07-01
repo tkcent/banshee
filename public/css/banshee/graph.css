@@ -1,51 +1,44 @@
-div.graph fieldset {
-	border:1px solid #e0e0e0;
-	background-color:#f0f0f0;
-	border-radius:5px;
-	padding:10px 20px 20px 10px;
-}
-
-div.graph fieldset legend {
-	background-color:#e0e0e0;
-	padding:2px 20px;
-	margin-left:20px;
+div.graph {
+	position:relative;
 }
 
 div.graph div.info {
 	height:20px;
+	margin-left:50px;
 }
 
-div.graph div.info span.label {
+div.graph div.info span.text {
 	float:right;
-	width:200px;
 	text-align:right;
 }
 
 div.graph div.maxy {
 	text-align:right;
-	float:left;
+	position:absolute;
+	top:75px;
+	left:20px;
 }
 
 div.graph div.bars {
-	letter-spacing:0;
+	margin-left:50px;
 	border:1px solid #e0e0e0;
+	padding:2px;
+}
+
+div.graph table {
 	background-color:#ffffff;
-	padding:10px;
+	width:100%;
 }
 
-div.graph div.column {
-	float:left;
-	margin-right:2px;
+div.graph table td {
 	vertical-align:bottom;
-	position:relative;
+	border:1px solid #ffffff;
 }
 
-div.graph div.column:last-child {
-	margin-right:0;
-}
-
-div.graph div.column div.bar {
+div.graph table td div {
 	background-color:#ff0000;
-	position:absolute;
-	bottom:0;
+}
+
+div.graph table.bars td:hover div {
+	background-color:#ffa000;
 }

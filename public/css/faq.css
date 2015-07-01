@@ -1,13 +1,7 @@
-div.question {
-	font-size:13px;
-	font-weight:bold;
+h3.list-group-item-heading {
 	cursor:pointer;
 }
-div.question:hover {
-	color:#ff5a00;
-}
 
-div.answer {
+div.list-group-item-text {
 	display:none;
-	margin-left:25px;
 }

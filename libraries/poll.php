@@ -79,6 +79,10 @@
 				return false;
 			}
 
+			if ($answer == null) {
+				return false;
+			}
+
 			$_SERVER["REQUEST_METHOD"] = "GET";
 
 			if (valid_input($answer, VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {

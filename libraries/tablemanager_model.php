@@ -8,7 +8,7 @@
 
 	abstract class tablemanager_model extends model {
 		private $valid_types = array("integer", "varchar", "text", "ckeditor",
-			"boolean", "datetime", "enum", "foreignkey", "blob", "float");
+			"boolean", "date", "enum", "foreignkey", "blob", "float");
 		protected $table = null;
 		protected $order = "id";
 		protected $desc_order = false;
@@ -149,9 +149,9 @@
 							array_push($args, $key, is_true($search) ? YES : NO);
 						}
 						break;
-					case "datetime":
+					case "date":
 						array_push($filter, "DATE_FORMAT(%S.%S, %s) like %s");
-						array_push($args, $this->table, $key, "%W %d %M %Y %k:%i:%s", "%".$search."%");
+						array_push($args, $this->table, $key, "%W %d %M %Y", "%".$search."%");
 						break;
 					case "foreignkey":
 						if (is_array($element["column"]) == false) {
@@ -320,8 +320,8 @@
 
 				if (trim($item[$name]) != "") {
 					switch ($element["type"]) {
-						case "datetime":
-							if (valid_timestamp($item[$name]) == false) {
+						case "date":
+							if (valid_date($item[$name]) == false) {
 								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
 								$result = false;
 							}

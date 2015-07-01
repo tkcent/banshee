@@ -8,8 +8,11 @@
 //
 //-->
 <xsl:template match="mailbox">
-<table class="list">
+<table class="table table-striped table-hover table-condensed">
+<thead>
 <tr><th class="subject">Subject</th><th class="from"><xsl:value-of select="@column" /></th><th class="date">Date</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="mail">
 <tr class="click {read}" onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="subject" /></td>
@@ -17,9 +20,13 @@
 <td><xsl:value-of select="timestamp" /></td>
 </tr>
 </xsl:for-each>
+</tbody>
 </table>
-<a href="/{/output/page}/new" class="button">New mail</a>
-<a href="/{/output/page}{../link/@url}" class="button"><xsl:value-of select="../link" /></a>
+
+<div class="btn-group">
+<a href="/{/output/page}/new" class="btn btn-default">New mail</a>
+<a href="/{/output/page}{../link/@url}" class="btn btn-default"><xsl:value-of select="../link" /></a>
+</div>
 </xsl:template>
 
 <!--
@@ -30,13 +37,18 @@
 <xsl:template match="mail">
 <form action="/{/output/page}" method="post">
 <input type="hidden" name="id" value="{@id}" />
-<div class="from">From: <xsl:value-of select="from_user" /></div>
-<div class="message"><xsl:value-of disable-output-escaping="yes" select="message" /></div>
+<div class="panel panel-default">
+<div class="panel-heading">From: <xsl:value-of select="from_user" /></div>
+<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="message" /></div>
+</div>
+
+<div class="btn-group">
 <xsl:if test="@actions='yes'">
-<a href="/{/output/page}/reply/{@id}" class="button">Reply</a>
+<a href="/{/output/page}/reply/{@id}" class="btn btn-default">Reply</a>
 </xsl:if>
-<input type="submit" name="submit_button" value="Delete mail" class="button" onClick="return confirm('DELETE: Are you sure?')" />
-<a href="/{/output/page}{@back}" class="button">Back</a>
+<input type="submit" name="submit_button" value="Delete mail" class="btn btn-default" onClick="return confirm('DELETE: Are you sure?')" />
+<a href="/{/output/page}{@back}" class="btn btn-default">Back</a>
+</div>
 </form>
 </xsl:template>
 
@@ -48,8 +60,8 @@
 <xsl:template match="write">
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post">
-<table class="edit">
-<tr><td>To:</td><td><select name="to_user_id" class="text">
+<label for="to">To:</label>
+<select name="to_user_id" class="form-control">
 <xsl:for-each select="recipients/recipient">
 <option value="{@id}">
 <xsl:if test="@id=../../mail/to_user_id">
@@ -57,12 +69,16 @@
 </xsl:if>
 <xsl:value-of select="." /></option>
 </xsl:for-each>
-</select></td></tr>
-<tr><td>Subject:</td><td><input type="text" name="subject" value="{mail/subject}" class="text" /></td></tr>
-</table>
-<textarea name="message" class="text"><xsl:value-of select="mail/message" /></textarea>
-<input type="submit" name="submit_button" value="Send mail" class="button" />
-<a href="/{/output/page}" class="button">Cancel</a>
+</select>
+<label for="subject">Subject:</label>
+<input type="text" id="subject" name="subject" value="{mail/subject}" class="form-control" />
+<label for="message">Message:</label>
+<textarea id="message" name="message" class="form-control"><xsl:value-of select="mail/message" /></textarea>
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Send mail" class="btn btn-default" />
+<a href="/{/output/page}" class="btn btn-default">Cancel</a>
+</div>
 </form>
 </xsl:template>
 

@@ -46,7 +46,7 @@
 				} else if ($this->model->update_profile($_POST) === false) {
 					$this->output->add_tag("result", "Error while updating profile.", array("url" => "profile"));
 				} else {
-					$this->output->add_tag("result", "Profile has been updated.", array("url" => $this->settings->page_after_login));
+					$this->output->add_tag("result", "Profile has been updated.", array("url" => $this->settings->start_page));
 					$this->user->log_action("profile updated");
 				}
 			} else {

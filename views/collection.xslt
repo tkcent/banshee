@@ -23,7 +23,7 @@
 <xsl:template match="collection">
 <xsl:for-each select="album">
 <div class="album">
-	<div class="thumbnail"><a href="/photo/{@id}"><img src="/photo/thumbnail_{photo_id}.{extension}" /></a></div>
+	<div class="image"><a href="/photo/{@id}"><img src="/photo/thumbnail_{photo_id}.{extension}" /></a></div>
 	<div class="name"><a href="/photo/{@id}"><xsl:value-of select="name" /></a></div>
 	<div class="description"><xsl:value-of select="description" /></div>
 </div>

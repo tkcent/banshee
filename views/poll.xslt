@@ -35,7 +35,9 @@
 <p>Number of votes: <xsl:value-of select="answers/@votes" /></p>
 </div>
 
-<a href="/{/output/page}" class="button">Back</a>
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 <!--
@@ -45,10 +47,16 @@
 //-->
 <xsl:template match="content">
 <h1>Polls</h1>
-<xsl:apply-templates select="active_poll" />
+<div class="row">
+<div class="col-sm-6">
 <xsl:apply-templates select="polls" />
 <xsl:apply-templates select="poll" />
 <xsl:apply-templates select="result" />
+</div>
+<div class="col-sm-6">
+<xsl:apply-templates select="active_poll" />
+</div>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

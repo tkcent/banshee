@@ -11,7 +11,10 @@
 <xsl:template match="content">
 <h1>Graph demo</h1>
 <xsl:apply-templates select="graph" />
-<a href="/demos" class="button">Back</a>
+
+<div class="btn-group">
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

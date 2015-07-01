@@ -67,7 +67,6 @@
 			$paging->show_browse_links();
 			$this->output->close_tag();
 
-			$this->output->add_javascript("jquery/jquery.js");
 			$this->output->add_javascript("banshee/jquery.prettyphoto.js");
 			$this->output->add_javascript("photo.js");
 

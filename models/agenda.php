@@ -2,7 +2,7 @@
 	class agenda_model extends model {
 		public function get_appointments_from_today() {
 			$query = "select *, UNIX_TIMESTAMP(begin) as begin, UNIX_TIMESTAMP(end) as end ".
-					 "from agenda where (begin>=%s) order by begin";
+			         "from agenda where (begin>=%s) order by begin";
 			$today = date("Y-m-d 00:00:00");
 
 			return $this->db->execute($query, $today);

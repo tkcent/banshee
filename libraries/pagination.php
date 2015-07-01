@@ -61,7 +61,7 @@
 				}
 			}
 
-			$this->output->add_css("banshee/pagination.css");
+			#$this->output->add_css("banshee/pagination.css");
 		}
 
 		/* Magic method get

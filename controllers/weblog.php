@@ -64,6 +64,7 @@
 				unset($comment["ip_address"]);
 				$message = new message($comment["content"]);
 				$message->unescaped_output();
+				$message->translate_bbcodes();
 				$message->translate_smilies();
 				$comment["content"] = $message->content;
 				unset($message);

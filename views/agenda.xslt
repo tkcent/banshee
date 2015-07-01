@@ -12,11 +12,7 @@
 <xsl:for-each select="appointment">
 <div class="summary" onClick="javascript:$('.content{@id}').slideToggle('normal')">
 <div class="title"><xsl:value-of select="title" /></div>
-<div class="date"><xsl:value-of select="begin_date" /><xsl:if test="all_day='no'">, <xsl:value-of select="begin_time" /></xsl:if>
-<xsl:if test="all_day='no' or begin_date!=end_date">
--
-<xsl:value-of select="end_date" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if>
-</xsl:if></div>
+<div class="date"><xsl:value-of select="begin" /> - <xsl:value-of select="end" /></div>
 </div>
 
 <div class="content content{@id}">
@@ -25,7 +21,9 @@
 </xsl:for-each>
 </div>
 
-<a href="/{/output/page}" class="button">Back</a>
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 <!--
@@ -34,21 +32,25 @@
 //
 //-->
 <xsl:template match="month">
-<div class="extbox">
-<div class="buttons">
-<a href="/{/output/page}/list" class="button">List view</a>
-<a href="/{/output/page}/{prev}" class="button">Previous month</a>
-<a href="/{/output/page}/current" class="button">Current month</a>
-<a href="/{/output/page}/{next}" class="button">Next month</a>
+<div class="row">
+<div class="col-sm-6"><h2><xsl:value-of select="@title" /></h2></div>
+<div class="col-sm-6"><div class="btn-group">
+	<a href="/{/output/page}/list" class="btn btn-xs btn-primary">List view</a>
+	<a href="/{/output/page}/{prev}" class="btn btn-xs btn-primary">Previous month</a>
+	<a href="/{/output/page}/current" class="btn btn-xs btn-primary">Current month</a>
+	<a href="/{/output/page}/{next}" class="btn btn-xs btn-primary">Next month</a>
+</div></div>
 </div>
 
-<h2><xsl:value-of select="@title" /></h2>
 <table class="month" cellspacing="0">
+<thead>
 <tr>
 <xsl:for-each select="days_of_week/day">
 <th><xsl:value-of select="." /></th>
 </xsl:for-each>
 </tr>
+</thead>
+<tbody>
 <xsl:for-each select="week">
 	<tr class="week">
 	<xsl:for-each select="day">
@@ -61,8 +63,8 @@
 	</xsl:for-each>
 	</tr>
 </xsl:for-each>
+</tbody>
 </table>
-</div>
 </xsl:template>
 
 <!--
@@ -73,16 +75,13 @@
 <xsl:template match="appointment">
 <div class="appointment">
 <h2><xsl:value-of select="title" /></h2>
-<h5><xsl:value-of select="begin_date" /><xsl:if test="all_day='no'">, <xsl:value-of select="begin_time" /></xsl:if>
-<xsl:if test="all_day='no' or begin_date!=end_date">
--
-<xsl:value-of select="end_date" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if>
-</xsl:if>
-</h5>
+<h3><xsl:value-of select="begin" /> - <xsl:value-of select="end" /></h3>
 <xsl:value-of disable-output-escaping="yes" select="content" />
 </div>
 
-<a href="/{/output/page}" class="button">Back</a>
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 <!--

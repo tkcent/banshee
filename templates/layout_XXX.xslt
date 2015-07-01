@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Language" content="{language}" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="author" content="AUTHOR" />
 <meta name="publisher" content="PUBLISHER" />
 <meta name="copyright" content="COPYRIGHT" />
@@ -18,7 +19,6 @@
 <xsl:for-each select="alternates/alternate">
 <link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
 </xsl:for-each>
-<link rel="stylesheet" type="text/css" href="/css/banshee/layout_XXX.css" />
 <xsl:for-each select="styles/style">
 <link rel="stylesheet" type="text/css" href="{.}" />
 </xsl:for-each>
@@ -36,14 +36,31 @@
 <xsl:if test="javascripts/@onload">
 	<xsl:attribute name="onLoad">javascript:<xsl:value-of select="javascripts/@onload" /></xsl:attribute>
 </xsl:if>
-<div class="menu">
-	<ul>
-	<xsl:for-each select="/output/menu/item">
-	<li><a href="{link}"><xsl:value-of select="text" /></a></li>
-	</xsl:for-each>
-	</ul>
-</div>
-<div class="page">
+<nav class="navbar navbar-inverse">
+	<div class="container">
+		<xsl:if test="count(/output/menu/item)>0">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/"><xsl:value-of select="title" /></a>
+		</div>
+		</xsl:if>
+
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+			<xsl:for-each select="/output/menu/item">
+			<li><a href="{link}"><xsl:value-of select="text" /></a></li>
+			</xsl:for-each>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="content container">
 	<xsl:apply-templates select="/output/system_warnings" />
 	<xsl:apply-templates select="/output/system_messages" />
 	<xsl:apply-templates select="/output/content" />

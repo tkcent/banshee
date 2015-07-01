@@ -13,7 +13,7 @@
 				return;
 			}
 
-			$this->output->add_javascript("jquery/jquery.js");
+			$this->output->add_javascript("faq.js");
 
 			$this->output->open_tag("overview");
 

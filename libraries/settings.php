@@ -68,6 +68,7 @@
 			if (($setting = $this->db->execute($query, "key", $key)) === false) {
 				return null;
 			} else if (count($setting) == 0) {
+				printf("Unknown setting: %s\n", $key);
 				return null;
 			}
 

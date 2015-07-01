@@ -1,10 +1,5 @@
 <?php
 	class agenda_controller extends controller {
-		private function fix_time($time) {
-			$parts = explode(":", $time);
-			return $parts[0].":".$parts[1];
-		}
-
 		private function show_month($month, $year) {
 			if (($appointments = $this->model->get_appointments_for_month($month, $year)) === false) {
 				$this->output->add_tag("result", "Database error.");
@@ -39,6 +34,9 @@
 			$days_of_week = config_array(DAYS_OF_WEEK);
 			$this->output->open_tag("days_of_week");
 			foreach ($days_of_week as $dow) {
+				if ($this->output->mobile) {
+					$dow = substr($dow, 0, 3);
+				}
 				$this->output->add_tag("day", $dow);
 			}
 			$this->output->close_tag();
@@ -56,21 +54,14 @@
 
 					foreach ($appointments as $appointment) {
 						if (($appointment["begin"] >= $day) && ($appointment["begin"] < $day + DAY)) {
-							$begin_time = date("H:i:s", $appointment["begin"]);
-							$end_time = date("H:i:s", $appointment["end"]);
-							if (($begin_time != "00:00:00") || ($end_time != "23:59:59")) {
-								$appointment["title"] = date("H:i ", $appointment["begin"]).$appointment["title"];
-							}
 							$this->output->add_tag("appointment", $appointment["title"], array("id" => $appointment["id"]));
 						} else if (($appointment["begin"] < $day) && ($appointment["end"] >= $day)) {
-							$begin_time = date("H:i:s", $appointment["begin"]);
-							$end_time = date("H:i:s", $appointment["end"]);
 							$this->output->add_tag("appointment", "... ".$appointment["title"], array("id" => $appointment["id"]));
 						}
 					}
 					$this->output->close_tag();
 
-					$day = strtotime(date("d-m-Y H:i:s", $day)." +1 day");
+					$day = strtotime(date("d-m-Y", $day)." +1 day");
 				}
 				$this->output->close_tag();
 			}
@@ -89,17 +80,8 @@
 		}
 
 		private function show_appointment_record($appointment) {
-			$appointment["begin_date"] = date("l j F Y", $appointment["begin"]);
-			$appointment["begin_time"] = date("H:i", $appointment["begin"]);
-			$begin_time = date("H:i:s", $appointment["begin"]);
-			unset($appointment["begin"]);
-
-			$appointment["end_date"] = date("l j F Y", $appointment["end"]);
-			$appointment["end_time"] = date("H:i", $appointment["end"]);
-			$end_time = date("H:i:s", $appointment["end"]);
-			unset($appointment["end"]);
-
-			$appointment["all_day"] = show_boolean(($begin_time == "00:00:00") && ($end_time == "23:59:59"));
+			$appointment["begin"] = date("l j F Y", $appointment["begin"]);
+			$appointment["end"] = date("l j F Y", $appointment["end"]);
 
 			$this->output->record($appointment, "appointment");
 		}
@@ -120,8 +102,6 @@
 				if (($appointments = $this->model->get_appointments_from_today()) === false) {
 					$this->output->add_tag("result", "Database error.");
 				} else {
-					$this->output->add_javascript("jquery/jquery.js");
-
 					$this->output->open_tag("list");
 					foreach ($appointments as $appointment) {
 						$this->show_appointment_record($appointment);

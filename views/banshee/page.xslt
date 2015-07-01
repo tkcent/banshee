@@ -11,7 +11,9 @@
 <h1><xsl:value-of select="title" /></h1>
 <xsl:value-of disable-output-escaping="yes" select="content" />
 <xsl:if test="back">
-<a href="/{back}" class="button">Back</a>
+<div class="btn-group">
+<a href="/{back}" class="btn btn-default">Back</a>
+</div>
 </xsl:if>
 </xsl:template>
 

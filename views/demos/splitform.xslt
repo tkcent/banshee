@@ -8,11 +8,12 @@
 //  Layout templates
 //
 //-->
-<xsl:template name="header">
+<xsl:template name="splitform_header">
 <h1>Splitform library demo</h1>
 </xsl:template>
-<xsl:template name="footer">
-<div>Progress: step <xsl:value-of select="../../current + 1" /> of <xsl:value-of select="../../current/@max + 1" /></div>
+
+<xsl:template name="splitform_footer">
+<div>Progress: step <xsl:value-of select="current + 1" /> of <xsl:value-of select="current/@max + 1" /></div>
 </xsl:template>
 
 <!--
@@ -21,12 +22,10 @@
 //
 //-->
 <xsl:template match="splitform/form_1">
-<xsl:call-template name="header" />
-<table>
-<tr><td>Name:</td><td><input type="text" name="name" value="{name}" class="text" /></td></tr>
-<tr><td>Number:</td><td><input type="text" name="number" value="{number}" class="text" /></td></tr>
-</table>
-<xsl:call-template name="footer" />
+<label for="name">Name:</label>
+<input type="text" id="name" name="name" value="{name}" class="form-control" />
+<label for="number">Number:</label>
+<input type="text" id="number" name="number" value="{number}" class="form-control" />
 </xsl:template>
 
 <!--
@@ -35,12 +34,10 @@
 //
 //-->
 <xsl:template match="splitform/form_2">
-<xsl:call-template name="header" />
-<table>
-<tr><td>Title:</td><td><input type="text" name="title" value="{title}" class="text" /></td></tr>
-<tr><td>Content:</td><td><textarea name="content" class="text"><xsl:value-of select="content" /></textarea></td></tr>
-</table>
-<xsl:call-template name="footer" />
+<label for="title">Title:</label>
+<input type="text" name="title" value="{title}" class="form-control" />
+<label for="content">Content:</label>
+<textarea id="content" name="content" class="form-control"><xsl:value-of select="content" /></textarea>
 </xsl:template>
 
 <!--
@@ -49,9 +46,8 @@
 //
 //-->
 <xsl:template match="splitform/form_3">
-<xsl:call-template name="header" />
-Remark: <input type="text" name="remark" value="{remark}" class="text" />
-<xsl:call-template name="footer" />
+<label for="remark">Remark:</label>
+<input type="text" id="remark" name="remark" value="{remark}" class="form-control" />
 </xsl:template>
 
 <!--
@@ -60,17 +56,24 @@ Remark: <input type="text" name="remark" value="{remark}" class="text" />
 //
 //-->
 <xsl:template match="submit">
-<xsl:call-template name="header" />
+<xsl:call-template name="splitform_header" />
 <p>Your information has been processed.</p>
 
 <h3>Values</h3>
-<table class="values">
+<table class="table table-striped table-condensed">
+<thead>
+<tr><th>Key</th><th>Value</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="value">
 <tr><td><xsl:value-of select="@key" />:</td><td><xsl:value-of select="." /></td></tr>
 </xsl:for-each>
+</tbody>
 </table>
 
-<a href="/demos" class="button">Continue</a>
+<div class="btn-group">
+<a href="/demos" class="btn btn-default">Continue</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

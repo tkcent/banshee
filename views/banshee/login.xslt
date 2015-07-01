@@ -8,21 +8,21 @@
 //
 //-->
 <xsl:template match="login">
+<xsl:call-template name="show_messages" />
 <form action="{url}" method="post" autocomplete="off" onSubmit="javascript:hash_password(); return true;">
-<table class="login">
-<tr><td>Username:</td><td><input type="text" autocapitalize="off" autocorrect="off" name="username" value="{username}" id="username" class="text" /></td></tr>
-<tr><td>Password:</td><td><input type="password" name="password" id="password" class="text" /></td></tr>
-</table>
+<label for="username">Username:</label>
+<input type="text" autocapitalize="off" autocorrect="off" id="username" name="username" value="{username}" class="form-control" />
+<label for="password">Password:</label>
+<input type="password" id="password" name="password" class="form-control" />
 <p>Bind session to IP (<span style="font-size:10px"><xsl:value-of select="remote_addr" /></span>): <input type="checkbox" name="bind_ip">
 <xsl:if test="bind">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
 </input></p>
-<xsl:call-template name="show_messages" />
-<p>
-<input type="submit" value="Login" class="button" />
-<a href="/" class="button">Cancel</a>
-</p>
+<div class="btn-group">
+<input type="submit" value="Login" class="btn btn-default" />
+<a href="/" class="btn btn-default">Cancel</a>
+</div>
 
 <input type="hidden" id="use_cr_method" name="use_cr_method" value="no" />
 </form>

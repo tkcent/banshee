@@ -192,7 +192,7 @@
 			$email = new email("Forum message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
-				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/".CMS_DIRECTORY."/forum";
+				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/cms/forum";
 				if (($key = one_time_key($this->db, $maintainer["id"])) !== false) {
 					$cms_url .= "?login=".$key;
 				}

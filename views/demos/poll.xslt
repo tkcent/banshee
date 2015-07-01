@@ -8,7 +8,9 @@
 <xsl:apply-templates select="active_poll" />
 <p>This page contains a poll demonstration. If you haven't voted yet, try it now.</p>
 
-<a href="/demos" class="button">Back</a>
+<div class="btn-group">
+<a href="/demos" class="btn btn-default">Back</a>
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

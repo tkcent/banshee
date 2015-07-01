@@ -3,7 +3,7 @@
 		public function execute() {
 			$graph = new graph($this->output);
 			$graph->title = "Demo graph";
-			$graph->width = 700;
+			$graph->width = 600;
 			$graph->height = 200;
 
 			$nr = 1;

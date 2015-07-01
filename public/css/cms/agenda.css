@@ -1,0 +1,8 @@
+table.table th:nth-child(n+2) {
+	width:25%;
+}
+
+textarea.form-control {
+	max-width:800px;
+	height:250px;
+}

@@ -20,75 +20,76 @@
 
 	$banshee_modules = array(
 		"agenda" => array(
-			"pages"     => array("agenda", CMS_DIRECTORY."/agenda"),
-			"tables"    => array("agenda")),
+			"pages"      => array("agenda", "cms/agenda"),
+			"tables"     => array("agenda")),
 		"apitest" => array(
-			"pages"     => array(CMS_DIRECTORY."/apitest")),
+			"pages"      => array("cms/apitest")),
 		"captcha" => array(
-			"pages"     => array("captcha"),
-			"libraries" => array("captcha"),
-			"files"     => array("extra/captcha_font.ttf")),
+			"pages"      => array("captcha"),
+			"libraries"  => array("captcha"),
+			"files"      => array("extra/captcha_font.ttf")),
 		"contact" => array(
-			"pages"     => array("contact"),
-			"settings"  => array("contact\_%")),
+			"pages"      => array("contact"),
+			"settings"   => array("contact\_%")),
 		"dictionary" => array(
-			"pages"     => array("dictionary", CMS_DIRECTORY."/dictionary"),
-			"tables"    => array("dictionary")),
+			"pages"      => array("dictionary", "cms/dictionary"),
+			"tables"     => array("dictionary")),
 		"faq" => array(
-			"pages"     => array("faq", CMS_DIRECTORY."/faq"),
-			"tables"    => array("faqs", "faq_sections")),
+			"pages"      => array("faq", "cms/faq"),
+			"tables"     => array("faqs", "faq_sections")),
 		"flag" => array(
-			"pages"     => array(CMS_DIRECTORY."/flag"),
-			"libraries" => array("flags"),
-			"tables"    => array("flags")),
+			"pages"      => array("cms/flag"),
+			"libraries"  => array("flags"),
+			"tables"     => array("flags")),
 		"forum" => array(
-			"pages"     => array("forum", CMS_DIRECTORY."/forum"),
-			"tables"    => array("forum_last_view", "forum_messages", "forum_topics", "forums"),
-			"settings"  => array("forum\_%")),
+			"pages"      => array("forum", "cms/forum", "cms/forum/section"),
+			"tables"     => array("forum_last_view", "forum_messages", "forum_topics", "forums"),
+			"settings"   => array("forum\_%"),
+			"directores" => array("cms/forum")),
 		"guestbook" => array(
-			"pages"     => array("guestbook", CMS_DIRECTORY."/guestbook"),
-			"tables"    => array("guestbook"),
-			"settings"  => array("guestbook\_%")),
+			"pages"      => array("guestbook", "cms/guestbook"),
+			"tables"     => array("guestbook"),
+			"settings"   => array("guestbook\_%")),
 		"links" => array(
-			"pages"     => array("links", CMS_DIRECTORY."/links"),
-			"tables"    => array("links")),
+			"pages"      => array("links", "cms/links"),
+			"tables"     => array("links")),
 		"logging" => array(
-			"pages"     => array(CMS_DIRECTORY."/logging"),
-			"libraries" => array("logging"),
-			"tables"    => array("log_page_views", "log_referers", "log_search_queries", "log_visits"),
-			"files"     => array("database/verify_referer_log")),
+			"pages"      => array("cms/logging"),
+			"libraries"  => array("logging"),
+			"tables"     => array("log_page_views", "log_referers", "log_search_queries", "log_visits"),
+			"files"      => array("database/verify_referer_log")),
 		"mailbox" => array(
-			"pages"     => array("mailbox"),
-			"tables"    => array("mailbox")),
+			"pages"      => array("mailbox"),
+			"tables"     => array("mailbox")),
 		"news" => array(
-			"pages"     => array("news", "news.xml", CMS_DIRECTORY."/news"),
-			"tables"    => array("news"),
-			"settings"  => array("news\_%")),
-		"newsletter"    => array(
-			"pages"     => array("newsletter", CMS_DIRECTORY."/newsletter", CMS_DIRECTORY."/subscriptions"),
-			"libraries" => array("newsletter"),
-			"tables"    => array("subscriptions"),
-			"settings"  => array("newsletter\_%"),
-			"files"     => array("extra/newsletter.txt")),
+			"pages"      => array("news", "news.xml", "cms/news"),
+			"tables"     => array("news"),
+			"settings"   => array("news\_%")),
+		"newsletter"     => array(
+			"pages"      => array("newsletter", "cms/newsletter", "cms/subscriptions"),
+			"libraries"  => array("newsletter"),
+			"tables"     => array("subscriptions"),
+			"settings"   => array("newsletter\_%"),
+			"files"      => array("extra/newsletter.txt")),
 		"password" => array(
-			"pages"     => array("password"),
-			"files"     => array("extra/reset_password.txt")),
+			"pages"      => array("password"),
+			"files"      => array("extra/reset_password.txt")),
 		"photo" => array(
-			"pages"     => array("photo", "collection", CMS_DIRECTORY."/photos", CMS_DIRECTORY."/albums", CMS_DIRECTORY."/collection"),
-			"libraries" => array("image"),
-			"tables"    => array("collection_album", "collections", "photos", "photo_albums"),
-			"settings"  => array("photo\_%")),
+			"pages"      => array("photo", "collection", "cms/photos", "cms/albums", "cms/collection"),
+			"libraries"  => array("image"),
+			"tables"     => array("collection_album", "collections", "photos", "photo_albums"),
+			"settings"   => array("photo\_%")),
 		"poll" => array(
-			"pages"     => array("poll", CMS_DIRECTORY."/poll"),
-			"libraries" => array("poll"),
-			"tables"    => array("poll_answers", "polls"),
-			"settings"  => array("poll\_%")),
+			"pages"      => array("poll", "cms/poll"),
+			"libraries"  => array("poll"),
+			"tables"     => array("poll_answers", "polls"),
+			"settings"   => array("poll\_%")),
 		"search" => array(
-			"pages"     => array("search")),
+			"pages"      => array("search")),
 		"weblog" => array(
-			"pages"     => array("weblog", "weblog.xml", CMS_DIRECTORY."/weblog"),
-			"tables"    => array("weblog_tagged", "weblog_tags", "weblog_comments", "weblogs"),
-			"settings"  => array("weblog\_%")));
+			"pages"      => array("weblog", "weblog.xml", "cms/weblog"),
+			"tables"     => array("weblog_tagged", "weblog_tags", "weblog_comments", "weblogs"),
+			"settings"   => array("weblog\_%")));
 
 	if (count($argv) == 1) {
 		/* Show modules
@@ -153,7 +154,7 @@
 						if (file_exists($file)) {
 							printf("Deleting file %s.\n", substr($file, 3));
 							if (unlink($file) == false) {
-								printf("Error while deleting file '%s'\n", $file);
+								printf("Error while deleting file %s\n", $file);
 							}
 						}
 					}
@@ -168,7 +169,7 @@
 					if (file_exists($file)) {
 						printf("Deleting library %s.\n", $file);
 						if (unlink($file) == false) {
-							printf("Error while deleting library '%s'\n", $file);
+							printf("Error while deleting library %s\n", $file);
 						}
 					}
 				}
@@ -202,6 +203,22 @@
 					$key = str_replace("%", "*", $key);
 					printf("Deleting setting %s.\n", $key);
 					$db->query("delete from settings where %S like %s", "key", $setting);
+				}
+			}
+
+			/* Directories
+			 */
+			if (isset($module["directories"])) {
+				foreach ($locations as $paths) {
+					foreach ($paths as $path) {
+						foreach ($module["directories"] as $directory) {	
+							$directory = "../".$path."/".$directory;
+							printf("Deleting directory %s.\n", $directory);
+							if (rmdir($directory) == false) {
+								printf("Error while deleting directory %s\n", $directory);
+							}
+						}
+					}
 				}
 			}
 		}

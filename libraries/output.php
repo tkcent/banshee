@@ -65,15 +65,6 @@
 			foreach ($mobiles as $mobile) {
         		if (strpos($_SERVER["HTTP_USER_AGENT"], $mobile) !== false) {
 		            $this->mobile = true;
-					if ($this->add_javascript("banshee/mobile.js")) {
-						$this->run_javascript("hide_url_bar()");
-					}
-					if (LAYOUT_MOBILE != "") {
-						$this->set_layout(LAYOUT_MOBILE);
-					} else if ($this->layout == LAYOUT_SITE) {
-						$this->add_css("banshee/mobile.css");
-					}
-					break;
 				}
 			}
 		}
@@ -275,7 +266,7 @@
 		public function set_layout($layout = null) {
 			if ($layout === null) {
 				$inherit_layout = array(LOGOUT_MODULE, "password");
-				if (substr($this->page->url, 0, 6) == "/".CMS_DIRECTORY) {
+				if (substr($this->page->url, 0, 4) == "/cms") {
 					$this->layout = LAYOUT_CMS;
 				} else if (in_array($this->page->module, $inherit_layout)) {
 					if ($_SESSION["previous_layout"] == LAYOUT_CMS) {
@@ -555,7 +546,11 @@
 						header("Status: 500");
 						header("Content-Type: text/plain");
 						$result = "Banshee: Fatal XSL Transformation error.\n";
-						$result .= sprintf("%s: file not found or invalid XML.\n", substr($xslt_file, 3));
+						if (file_exists($xslt_file) == false) {
+							$result .= sprintf("%s: file not found.\n", substr($xslt_file, 3));
+						} else {
+							$result .= sprintf("%s: invalid XML.\n", substr($xslt_file, 3));
+						}
 						break;
 					}
 

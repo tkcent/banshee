@@ -10,30 +10,38 @@
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" onSubmit="javascript:hash_passwords(); return true;">
-<table class="form">
-<tr><td>Name:</td><td><input type="text" name="fullname" value="{fullname}" class="text" /></td></tr>
-<tr><td>E-mail address:</td><td><input type="text" name="email" value="{email}" class="text" /></td></tr>
-<tr><td>New password:</td><td><input type="password" name="password" id="password" class="text" onKeyUp="javascript:password_strength(this, 'username')" /> <font style="font-size:10px">(will not be changed when left blank)</font></td></tr>
-<tr><td>Repeat password:</td><td><input type="password" name="repeat" id="repeat" class="text" /></td></tr>
-<tr class="current"><td>Current password:</td><td><input type="password" name="current" id="current" class="text" /></td></tr>
-</table>
+<label for="fullname">Name:</label>
+<input type="text" id="fullname" name="fullname" value="{fullname}" class="form-control" />
+<label for="email">E-mail address:</label>
+<input type="text" id="email" name="email" value="{email}" class="form-control" />
+<label for="current">Current password:</label>
+<input type="password" id="current" name="current" class="form-control" />
+<label for="password">New password:</label> <span class="blank" style="font-size:10px">(will not be changed when left blank)</span>
+<input type="password" id="password" name="password" class="form-control" onKeyUp="javascript:password_strength(this, 'username')" />
+<label for="repeat">Repeat password:</label>
+<input type="password" id="repeat" name="repeat" class="form-control" />
 
-<input type="submit" name="submit_button" value="Update profile" class="button" />
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Update profile" class="btn btn-default" />
 <xsl:if test="cancel">
-<a href="/{cancel/@page}" class="button"><xsl:value-of select="cancel" /></a>
+<a href="/{cancel/@page}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
 </xsl:if>
+</div>
 
 <input type="hidden" id="username" value="{username}" />
 <input type="hidden" id="password_hashed" name="password_hashed" value="no" />
 </form>
 
 <h2>Recent account activity</h2>
-<table class="list">
+<table class="table table-striped">
+<thead>
 <tr>
 <th>IP address</th>
 <th>Timestamp</th>
 <th>Message</th>
 </tr>
+</thead>
+<tbody>
 <xsl:for-each select="actionlog/log">
 <tr>
 <td><xsl:value-of select="ip" /></td>
@@ -41,6 +49,7 @@
 <td><xsl:value-of select="message" /></td>
 </tr>
 </xsl:for-each>
+</tbody>
 </table>
 </xsl:template>
 
