@@ -8,18 +8,17 @@
 				"type"     => "varchar",
 				"overview" => true,
 				"required" => true),
+			"timestamp" => array(
+				"label"    => "Timestamp",
+				"type"     => "timestamp",
+				"overview" => true),
 			"content" => array(
 				"label"    => "Content",
 				"type"     => "ckeditor",
-				"required" => true),
-			"timestamp" => array(
-				"label"    => "Timestamp",
-				"type"     => "date",
-				"overview" => true,
-				"readonly" => true));
+				"required" => true));
 
 		public function create_item($item) {
-			$item["date"] = date("Y-m-d H:i:s");
+			$item["timestamp"] = date("Y-m-d H:i:s");
 			parent::create_item($item);
 		}
 	}

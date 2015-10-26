@@ -10,7 +10,7 @@
 <xsl:template match="links">
 <ul class="links">
 <xsl:for-each select="link">
-<li><xsl:value-of select="." /> - <a href="{@url}" target="_blank"><xsl:value-of select="@url" /></a></li>
+<li><span class="text"><xsl:value-of select="." /></span><span class="link"><a href="{@url}" target="_blank"><xsl:value-of select="@url" /></a></span></li>
 </xsl:for-each>
 </ul>
 </xsl:template>

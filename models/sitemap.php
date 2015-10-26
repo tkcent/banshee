@@ -3,9 +3,9 @@
 		public function get_public_urls() {
 			/* Modules on disk
 			 */
-			$exclude = array("captcha.png", "login", "logout", "offline", "password", "sitemap.xml");
+			$exclude = array("captcha.png", "logout", "offline", "password", "sitemap.xml");
 
-			$urls = array_diff(config_file("public_pages"), $exclude);
+			$urls = array_diff(config_file("public_modules"), $exclude);
 
 			/* Pages from database
 			 */

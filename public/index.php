@@ -96,6 +96,15 @@
 			$_language->to_output();
 		}
 
+		/* Unsecured connection
+		 */
+		if (($_SERVER["HTTPS"] != "on") && ($_SERVER["HTTP_SCHEME"] != "https")) {
+			$pages = array(LOGIN_MODULE, "register", "password");
+			if (in_array($_page->module, $pages) || (substr($_page->module, 0, 3) == "cms")) {
+				$_output->add_system_warning("Warning, the connection you are using is not secure!");
+			}
+		}
+
 		/* Main menu
 		 */
 		if (is_true(WEBSITE_ONLINE)) {
@@ -195,9 +204,12 @@
 	/* Output content
 	 */
 	$output = $_output->generate();
-	if (($last_errors = ob_get_clean()) != "") {
+    if ((($last_errors = ob_get_clean()) != "") && ($_page->module != "setup")) {
+		$last_errors = "Fatal errors:\n".$last_errors;
+
+		header_remove("Content-Encoding");
+		header("Content-Length: ".strlen($last_errors));
 		header("Content-Type: text/plain");
-		print "Fatal error:\n";
 		print $last_errors;
 	} else {
 		print $output;

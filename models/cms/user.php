@@ -192,13 +192,19 @@
 		}
 
 		public function create_user($user) {
-			$keys = array("id", "organisation_id", "username", "password", "one_time_key", "status", "fullname", "email");
+			$keys = array("id", "organisation_id", "username", "password", "one_time_key", "cert_serial", "status", "fullname", "email");
 
 			$user["id"] = null;
+			$user["password"] = hash_password($user["password"], $user["username"]);
+			$user["one_time_key"] = null;
+
 			if ($this->user->is_admin == false) {
 				$user["organisation_id"] = $this->user->organisation_id;
 			}
-			$user["one_time_key"] = null;
+
+			if ($user["cert_serial"] == "") {
+				$user["cert_serial"] = null;
+			}
 
 			if ($this->db->query("begin") == false) {
 				return false;
@@ -220,15 +226,20 @@
 
 		public function update_user($user) {
 			$keys = array("username", "fullname", "email", "cert_serial");
+
 			if ($user["password"] != "") {
 				array_push($keys, "password");
+				$user["password"] = hash_password($user["password"], $user["username"]);
 			}
+
 			if ($this->user->is_admin) {
 				array_push($keys, "organisation_id");
 			}
+
 			if (is_array($user["roles"]) == false) {
 				$user["roles"] = array();
 			}
+
 			if ($this->user->id != $user["id"]) {
 				array_push($keys, "status");
 			} else if (($current = $this->get_user($user["id"])) == false) {
@@ -348,12 +359,13 @@
 
 			$replace = array(
 				"USERNAME" => $user["username"],
-				"PASSWORD" => $user["plaintext"],
+				"PASSWORD" => $user["password"],
 				"FULLNAME" => $user["fullname"],
 				"HOSTNAME" => $_SERVER["SERVER_NAME"],
+				"PROTOCOL" => $_SERVER["HTTP_SCHEME"],
 				"TITLE"    => $this->settings->head_title);
 
-			$email = new email("Account ".$type, $this->settings->webmaster_email);
+			$email = new email("Account ".$type." at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields($replace);
 			$email->message($message);
 

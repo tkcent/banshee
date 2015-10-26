@@ -7,7 +7,7 @@
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		/* Login via password
 		 */
-		if ($_user->login_password($_POST["username"], $_POST["password"], is_true($_POST["use_cr_method"]))) {
+		if ($_user->login_password($_POST["username"], $_POST["password"])) {
 			if (is_true($_POST["bind_ip"])) {
 				$_user->bind_to_ip();
 			}
@@ -30,10 +30,6 @@
 		if ($_user->login_ssl_auth($_SERVER[TLS_CERT_SERIAL_VAR])) {
 			$login_successful = true;
 		}
-	} else if (isset($_SESSION["challenge"]) == false) {
-		/* Generate challenge
-		 */
-		$_SESSION["challenge"] = random_string();
 	}
 
 	/* Pre-login actions

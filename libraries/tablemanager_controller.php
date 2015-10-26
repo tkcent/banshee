@@ -18,7 +18,7 @@
 		protected $log_column = null;
 		protected $browsing = "pagination";
 		protected $enable_search = false;
-		private   $table_class = "table table-striped table-hover table-condensed";
+		private   $_table_class = "table table-striped table-hover table-condensed";
 
 		/* Show overview
 		 *
@@ -30,6 +30,9 @@
 			switch ($this->browsing) {
 				case "alphabetize":
 					$alphabet = new alphabetize($this->output, "tableadmin_".$this->model->table);
+					if ($_POST["submit_button"] == "Search") {
+						$alphabet->reset();
+					}
 
 					if (($items = $this->model->get_items($alphabet->char)) === false) {
 						$this->output->add_tag("result", "Error while creating overview.");
@@ -43,6 +46,9 @@
 					}
 
 					$paging = new pagination($this->output, "tableadmin_".$this->model->table, $this->page_size, $item_count);
+					if ($_POST["submit_button"] == "Search") {
+						$paging->reset();
+					}
 
 					if (($items = $this->model->get_items($paging->offset, $paging->size)) === false) {
 						$this->output->add_tag("result", "Error while creating overview.");
@@ -54,7 +60,7 @@
 					$this->output->add_javascript("banshee/jquery.datatables.js");
 					$this->output->run_javascript("$(document).ready(function(){ $('table.datatable').dataTable(); });");
 					$this->output->add_css("banshee/datatables.css");
-					$this->table_class = "datatable";
+					$this->_table_class = "datatable";
 					$this->enable_search = false;
 				default:
 					if (($items = $this->model->get_items()) === false) {
@@ -63,8 +69,12 @@
 					}
 			}
 
+			if ($this->table_class != null) {
+				$this->_table_class .= " ".$this->table_class;
+			}
+
 			$params = array(
-				"class"        => $this->table_class,
+				"class"        => $this->_table_class,
 				"allow_create" => show_boolean($this->model->allow_create));
 			$this->output->open_tag("overview", $params);
 
@@ -95,6 +105,9 @@
 								break;
 							case "date":
 								$value = date("j F Y", strtotime($value));
+								break;
+							case "timestamp":
+								$value = date("j F Y H:i", strtotime($value));
 								break;
 							case "foreignkey":
 								if ($value === null) {
@@ -142,9 +155,6 @@
 		 * ERROR:  -
 		 */
 		protected function show_item_form($item) {
-			$calendar_initialized = false;
-			$ckeditor_initialized = false;
-
 			$args = array(
 				"name"         => strtolower($this->name),
 				"allow_delete" => show_boolean($this->model->allow_delete));
@@ -178,9 +188,10 @@
 					$this->output->add_tag("label", $element["label"]);
 				}
 
-
 				if ($element["type"] == "boolean") {
 					$item[$name] = show_boolean($item[$name]);
+				} else if ($element["type"] == "timestamp") {
+					$item[$name] = date("Y-m-d H:i", strtotime($item[$name]));
 				}
 
 				if ($element["type"] != "blob") {
@@ -211,17 +222,23 @@
 					}
 				}
 
-				if (($element["type"] == "date") && ($calendar_initialized == false)) {
-					$this->output->add_javascript("jquery/jquery-ui.js");
-					$this->output->add_javascript("banshee/datepicker.js");
-					$this->output->add_css("jquery/jquery-ui.css");
-					$calendar_initialized = true;
-				}
-
-				if (($element["type"] == "ckeditor") && ($ckeditor_initialized == false)) {
-					$this->output->add_javascript("ckeditor/ckeditor.js");
-					$this->output->add_javascript("banshee/start_ckeditor.js");
-					$ckeditor_initialized = true;
+				switch ($element["type"]) {
+					case "date":
+						$this->output->add_javascript("jquery/jquery-ui.js");
+						$this->output->add_javascript("banshee/datepicker.js");
+						$this->output->add_css("jquery/jquery-ui.css");
+						break;
+					case "timestamp":
+						$this->output->add_javascript("jquery/jquery-ui.js");
+						$this->output->add_javascript("banshee/jquery.timepicker.js");
+						$this->output->add_javascript("banshee/datetimepicker.js");
+						$this->output->add_css("jquery/jquery-ui.css");
+						$this->output->add_css("banshee/timepicker.css");
+						break;
+					case "ckeditor":
+						$this->output->add_javascript("ckeditor/ckeditor.js");
+						$this->output->add_javascript("banshee/start_ckeditor.js");
+						break;
 				}
 
 				if (($element["type"] == "enum") || ($element["type"] == "foreignkey")) {
@@ -370,6 +387,8 @@
 						$item[$name] = $element["default"];
 					} else if ($element["type"] == "date") {
 						$item[$name] = date("Y-m-d");
+					} else if ($element["type"] == "timestamp") {
+						$item[$name] = date("Y-m-d H:i");
 					}
 				}
 				$this->show_item_form($item);
@@ -384,6 +403,9 @@
 			} else {
 				/* Show item overview
 				 */
+				if (count($_GET) == 0) {
+					$_SESSION["tablemanager_search_".$this->model->table] = null;
+				}
 				$this->show_overview();
 			}
 

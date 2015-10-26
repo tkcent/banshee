@@ -8,15 +8,18 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "5.0");
+	define("BANSHEE_VERSION", "5.1");
 	define("ADMIN_ROLE_ID", 1);
+	define("USER_ROLE_ID", 2);
 	define("YES", 1);
 	define("NO", 0);
 	define("USER_STATUS_DISABLED", 0);
 	define("USER_STATUS_CHANGEPWD", 1);
 	define("USER_STATUS_ACTIVE", 2);
 	define("PASSWORD_HASH", "sha256");
-	define("SESSION_NAME", "WebsiteSessionID");
+	define("PASSWORD_ITERATIONS", 100000);
+	define("SESSION_NAME", "BansheeSessionID");
+	define("HOUR", 3600);
 	define("DAY", 86400);
 	define("LOG_DAYS", 60);
 	define("PAGE_MODULE", "banshee/page");
@@ -136,9 +139,9 @@
 	 * ERROR:  -
 	 */
 	function module_exists($module) {
-		if (in_array($module, config_file("public_pages"))) {
+		if (in_array($module, config_file("public_modules"))) {
 			return true;
-		} else if (in_array($module, config_file("private_pages"))) {
+		} else if (in_array($module, config_file("private_modules"))) {
 			return true;
 		}
 
@@ -348,4 +351,5 @@
 	/* PHP settings
 	 */
 	ini_set("magic_quotes_runtime", 0);
+	ini_set("zlib.output_compression", "Off");
 ?>

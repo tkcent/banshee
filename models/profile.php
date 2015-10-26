@@ -48,24 +48,16 @@
 				}
 			}
 
-			$password_set = $profile["password"] != "";
-
-			if (is_false($profile["password_hashed"])) {
-				$profile["current"]  = hash(PASSWORD_HASH, $profile["current"].hash(PASSWORD_HASH, $this->user->username));
-				$profile["password"] = hash(PASSWORD_HASH, $profile["password"].hash(PASSWORD_HASH, $this->user->username));
-				$profile["repeat"]   = hash(PASSWORD_HASH, $profile["repeat"].hash(PASSWORD_HASH, $this->user->username));
-			}
-
-			if ($profile["current"] != $this->user->password) {
+			if (hash_password($profile["current"], $this->user->username) != $this->user->password) {
 				$this->output->add_message("Current password is incorrect.");
 				$result = false;
 			}
 
-			if ($password_set) {
+			if ($profile["password"] != "") {
 				if ($profile["password"] != $profile["repeat"]) {
 					$this->output->add_message("New passwords do not match.");
 					$result = false;
-				} else if ($this->user->password == $profile["password"]) {
+				} else if ($this->user->password == $profile["hashed"]) {
 					$this->output->add_message("New password must be different from current password.");
 					$result = false;
 				}
@@ -75,15 +67,15 @@
 		}
 
 		public function update_profile($profile) {
+			$keys = array("fullname", "email");
+
 			$profile["status"] = USER_STATUS_ACTIVE;
 
-			$keys = array("fullname", "email");
 			if ($profile["password"] != "") {
 				array_push($keys, "password");
 				array_push($keys, "status");
-				if (is_false($profile["password_hashed"])) {
-					$profile["password"] = hash(PASSWORD_HASH, $profile["password"].hash(PASSWORD_HASH, $this->user->username));
-				}
+
+				$profile["password"] = $profile["hashed"];
 			}
 
 			return $this->db->update("users", $this->user->id, $profile, $keys) !== false;

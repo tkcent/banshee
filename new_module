@@ -121,10 +121,10 @@
 	 */
 	chdir(dirname($argv[0])."/settings");
 
-	if (in_array($view, config_file("public_pages"))) {
+	if (in_array($view, config_file("public_modules"))) {
 		printf("Module '%s' is already a public module.\n", $module);
 		exit;
-	} else if (in_array($view, config_file("private_pages"))) {
+	} else if (in_array($view, config_file("private_modules"))) {
 		printf("Module '%s' is already a private module.\n", $module);
 		exit;
 	}
@@ -174,7 +174,7 @@
 	/* Add to configuration file
 	 */
 	printf("Adding module to %s pages configuration.\n", $access);
-	if (($fp = fopen("settings/".$access."_pages.conf", "a")) !== false) {
+	if (($fp = fopen("settings/".$access."_modules.conf", "a")) !== false) {
 		fputs($fp, $view."\n");
 		fclose($fp);
 	}
@@ -182,7 +182,7 @@
 	/* Register private page in database
 	 */
 	if ($access == "private") {
-		system("database/private_pages");
+		system("database/private_modules");
 	}
 
 	print "Done.\n";

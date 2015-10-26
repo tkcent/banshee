@@ -1,9 +1,7 @@
 <?php
 	class profile_controller extends controller {
 		private function show_profile_form($profile) {
-			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("profile.js");
-			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");
 
@@ -30,6 +28,11 @@
 		}
 
 		public function execute() {
+			if ($this->user->logged_in == false) {
+				$this->output->add_tag("result", "You are not logged in!", array("url" => ""));
+				return;
+			}
+
 			$this->output->description = "Profile";
 			$this->output->keywords = "profile";
 			$this->output->title = "Profile";
@@ -41,6 +44,8 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				/* Update profile
 				 */
+				$_POST["hashed"] = hash_password($_POST["password"], $this->user->username);
+
 				if ($this->model->profile_oke($_POST) == false) {
 					$this->show_profile_form($_POST);
 				} else if ($this->model->update_profile($_POST) === false) {

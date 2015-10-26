@@ -1,5 +1,7 @@
 <?php
 	class XXX_model extends model {
+		private $columns = array();
+
 		public function count_XXXs() {
 			$query = "select count(*) as count from XXXs";
 
@@ -11,9 +13,28 @@
 		}
 
 		public function get_XXXs($offset, $limit) {
-			$query = "select * from XXXs order by id limit %d,%d";
+			if (isset($_SESSION["XXX_order"]) == false) {
+				$_SESSION["XXX_order"] = array("yyy", "zzz");
+			}
 
-			return $this->db->execute($query, $offset, $limit);
+			if ((in_array($_GET["order"], $this->columns)) && ($_GET["order"] != $_SESSION["XXX_order"][0])) {
+				$_SESSION["XXX_order"] = array($_GET["order"], $_SESSION["XXX_order"][0]);
+			}
+
+			$query = "select * from XXXs";
+
+			$search = array();
+			if ($_SESSION["XXX_search"] != null) {
+				foreach ($this->columns as $i => $column) {
+					$this->columns[$i] = $column." like %s";
+					array_push($search, "%".$_SESSION["XXX_search"]."%");
+				}
+				$query .= " having (".implode(" or ", $this->columns).")";
+			}
+
+			$query .= " order by %S,%S limit %d,%d";
+
+			return $this->db->execute($query, $search, $_SESSION["XXX_order"], $offset, $limit);
 		}
 
 		public function get_XXX($XXX_id) {

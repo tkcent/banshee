@@ -4,3 +4,7 @@
 		display:none;
 	}
 }
+
+table.table tr.current td {
+	font-weight:bold;
+}

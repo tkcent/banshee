@@ -39,7 +39,7 @@ div.row h2 {
 	display:inline-block;
 }
 
-div.row div.col-sm-6:nth-child(2) {
+div.row div.col-sm-8 {
 	text-align:right;
 }
 
@@ -53,12 +53,15 @@ table.month {
 	border-top:1px solid #000000;
 	border-left:1px solid #000000;
 	margin-bottom:15px;
+	table-layout:fixed;
 }
 
-table.month th {
+table.month thead th {
 	border-right:1px solid #000000;
 	border-bottom:3px double #000000;
 	background-color:#dbdfeb;
+	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 table.month tr.week {

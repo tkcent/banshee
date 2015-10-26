@@ -99,23 +99,24 @@
 //-->
 <xsl:template match="referers">
 <div class="list referers">
+<form action="/{/output/page}/{../../deselect/@date}" method="post" onSubmit="javascript:return confirm('DELETE: Are you sure?')">
 <h2>Referers</h2>
 <xsl:for-each select="host">
 <xsl:variable name="id" select="position()" />
 <div class="entry" onClick="javascript:$('.ref{$id}').slideToggle('normal')">
 	<xsl:value-of select="@hostname" /> (<xsl:value-of select="@total" /> / <xsl:value-of select="@count" />)
 </div>
-<div class="referer ref{$id}"><ul>
-	<xsl:for-each select="referer">
-	<li><a href="{url}" target="_blank"><xsl:value-of select="url" /></a> (<xsl:value-of select="count" />)
-	</li>
-	</xsl:for-each>
-	<form action="/{/output/page}/{../../deselect/@date}" method="post" onSubmit="javascript:return confirm('DELETE: Are you sure?')">
-		<input type="hidden" name="hostname" value="{@hostname}" />
-		<input type="submit" name="submit_button" value="delete" />
-	</form>
-</ul></div>
+<div class="referer ref{$id}">
+	<input type="checkbox" name="hostname[]" value="{@hostname}" onClick="javascript:document.getElementById('delete_referers').style.display = 'inline-block'" />
+	<ul>
+		<xsl:for-each select="referer">
+		<li><a href="{url}" target="_blank"><xsl:value-of select="url" /></a> (<xsl:value-of select="count" />)</li>
+		</xsl:for-each>
+	</ul>
+</div>
 </xsl:for-each>
+<input type="submit" id="delete_referers" name="submit_button" value="Delete" class="btn btn-primary btn-xs" />
+</form>
 </div>
 </xsl:template>
 

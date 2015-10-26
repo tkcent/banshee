@@ -182,10 +182,19 @@
 			return $referers;
 		}
 
-		public function delete_referers($referer) {
-			$query = "delete from log_referers where hostname=%s";
+		public function delete_referers($referers) {
+			if (is_array($referers["hostname"]) == false) {
+				return true;
+			} else if (count($referers["hostname"]) == 0) {
+				return true;
+			}
 
-			return $this->db->query($query, $referer["hostname"]) !== false;
+			$queries = array();
+			foreach ($referers["hostname"] as $hostname) {
+				array_push($queries, array("delete from log_referers where hostname=%s", $hostname));
+			}
+
+			return $this->db->transaction($queries) !== false;
 		}
 	}
 ?>

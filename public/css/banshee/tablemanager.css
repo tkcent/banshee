@@ -1,6 +1,9 @@
-div.search {
-	margin:40px auto 0 auto;
-	width:200px;
+@media (min-width:767px) {
+	form.search {
+		float:right;
+		margin-top:-45px;
+		margin-right:80px;
+	}
 }
 
 div.datatable {

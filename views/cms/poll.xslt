@@ -9,7 +9,7 @@
 //-->
 <xsl:template match="overview">
 <h2>Future polls</h2>
-<table class="table table-striped table-hover table-condensed">
+<table class="table table-striped table-hover table-condensed pending">
 <thead>
 <tr><th>Question</th><th>Begin</th><th>End</th></tr>
 </thead>
@@ -30,9 +30,9 @@
 </div>
 
 <h2 class="spacer">Active and previous polls</h2>
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed polls">
 <thead>
-<tr><th>Question</th><th>Begin</th><th>End</th></tr>
+<tr><th>Question</th><th>Begin</th><th>End</th><th></th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="polls/poll[@edit='no']">
@@ -40,6 +40,12 @@
 <td><xsl:value-of select="question" /></td>
 <td><xsl:value-of select="begin" /></td>
 <td><xsl:value-of select="end" /></td>
+<xsl:if test="@button='close'">
+<td><form action="/{/output/page}" method="post"><input type="hidden" name="id" value="{@id}" /><input type="submit" name="submit_button" value="Close" class="btn btn-xs btn-primary" onClick="javascript:return confirm('CLOSE: Are you sure?');" /></form></td>
+</xsl:if>
+<xsl:if test="@button='delete'">
+<td><form action="/{/output/page}" method="post"><input type="hidden" name="id" value="{@id}" /><input type="submit" name="submit_button" value="Delete" class="btn btn-xs btn-primary" onClick="javascript:return confirm('DELETE: Are you sure?');" /></form></td>
+</xsl:if>
 </tr>
 </xsl:for-each>
 </tbody>

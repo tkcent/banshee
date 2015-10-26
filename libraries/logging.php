@@ -11,7 +11,7 @@
 		private $today = null;
 		private $search_bots = array("bot", "spider", "crawl", "feed", "rss", "slurp",
 			"thumbshots", "sogou", "claws", "wotbox", "Blogtrottr");
-		private $search_urls = array("www.google.", "www.bing.com");
+		private $search_urls = array("www.google.", "www.bing.com", "duckduckgo.com");
 		private $referer_spam = array("viagra", "pharma", "cheap");
 		private $operating_systems = array("Windows", "Linux", "FreeBSD", "Android",
 			"iPhone" => "iOS", "iPad" => "iOS", "Mac OS X");

@@ -14,6 +14,7 @@
 		private $width = 500;
 		private $title = null;
 		private $bars = array();
+		private $links = array();
 		private $maxy_width = 50;
 
 		/* Constructor
@@ -41,8 +42,35 @@
 			}
 		}
 
-		public function add_bar($x, $y) {
+		/* Add a bar to the graph
+		 *
+		 * INPUT:  mixed x, integer y[, string link]
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function add_bar($x, $y, $link = null) {
 			$this->bars[$x] = $y;
+			if ($link != null) {
+				$this->links[$x] = $link;
+			}
+		}
+
+		/* Convert a big number to a more readable one
+		 *
+		 * INPUT:  integer number
+		 * OUTPUT: string number
+		 * ERROR:  -
+		 */
+        static public function readable_number($number) {
+			if ($number > 1000000000) {
+				return sprintf("%0.1f G", $number / 1000000000);
+			} else if ($number > 1000000) {
+				return sprintf("%0.1f M", $number / 1000000);
+			} else if ($number > 1000) {
+				return sprintf("%0.1f k", $number / 1000);
+			}
+
+			return $number;
 		}
 
 		/* Graph to output
@@ -70,7 +98,7 @@
 				"id"         => $this->graph_id,
 				"height"     => $this->height,
 				"width"      => $this->width,
-				"max_y"      => $max_y,
+				"max_y"      => $this->readable_number($max_y),
 				"bar_width"  => sprintf("%0.2f", $this->width / $bar_count),
 				"maxy_width" => $this->maxy_width);
 			$this->output->open_tag("graph", $params);
@@ -78,10 +106,13 @@
 				$this->output->add_tag("title", $this->title);
 			}
 			foreach ($this->bars as $x => $y) {
-				$bar_y = sprintf("%0.2f", $y * $this->height / $max_y);
+				$bar_y = ($max_y == 0) ? 0 : sprintf("%0.2f", $y * $this->height / $max_y);
 				$params = array(
-					"text" => $x,
-					"value" => $y);
+					"text"  => $x,
+					"value" => $this->readable_number($y));
+				if ($this->links[$x] !== null) {
+					$params["link"] = $this->links[$x];
+				}
 				$this->output->add_tag("bar", $bar_y, $params);
 			}
 			$this->output->close_tag();

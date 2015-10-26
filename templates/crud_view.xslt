@@ -9,19 +9,33 @@
 //
 //-->
 <xsl:template match="overview">
-<table class="list">
+<form action="/{/output/page}" method="post" class="search">
+<input type="text" id="search" name="search" placeholder="Search" class="form-control" />
+<input type="hidden" name="submit_button" value="search" />
+</form>
+
+<table class="table table-condensed table-striped table-hover">
+<thead>
 <tr>
-<th>...</th>
+<th><a href="?order=yyy">YYY</a></th>
 </tr>
+</thead>
+<tbody>
 <xsl:for-each select="XXXs/XXX">
 <tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="XXX" /></td>
 </tr>
 </xsl:for-each>
+</tbody>
 </table>
-<xsl:apply-templates select="pagination" />
 
-<a href="/{/output/page}/new" class="button">New XXX</a>
+<div class="right">
+<xsl:apply-templates select="pagination" />
+</div>
+
+<div class="btn-group left">
+<a href="/{/output/page}/new" class="btn btn-default">New XXX</a>
+</div>
 </xsl:template>
 
 <!--
@@ -36,15 +50,16 @@
 <input type="hidden" name="id" value="{XXX/@id}" />
 </xsl:if>
 
-<table class="edit">
-<tr><td>...:</td><td><input type="text" name="XXX" value="{XXX/...}" class="text" /></td></tr>
-</table>
+<label for="YYY">...:</label>
+<input type="text" id="YYY" name="YYY" value="{XXX/...}" class="form-control" />
 
-<input type="submit" name="submit_button" value="Save XXX" class="button" />
-<a href="/{/output/page}" class="button">Cancel</a>
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Save XXX" class="btn btn-default" />
+<a href="/{/output/page}" class="btn btn-default">Cancel</a>
 <xsl:if test="XXX/@id">
-<input type="submit" name="submit_button" value="Delete XXX" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
+<input type="submit" name="submit_button" value="Delete XXX" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
+</div>
 </form>
 </xsl:template>
 

@@ -40,14 +40,14 @@
 <xsl:template match="reset">
 <p>Enter a new password for your account:</p>
 <xsl:call-template name="show_messages" />
-<form action="/{/output/page}" method="post" onSubmit="javascript:hash_passwords(); return true;">
+<form action="/{/output/page}" method="post">
 <input type="hidden" name="key" value="{key}" />
 <input type="hidden" id="username" value="{username}" />
 <input type="hidden" id="password_hashed" name="password_hashed" value="no" />
-<table>
-<tr><td>Password:</td><td><input type="password" id="password" name="password" class="text" /></td></tr>
-<tr><td>Repeat:</td><td><input type="password" id="repeat" name="repeat" class="text" /></td></tr>
-</table>
+<label for="password">Password:</label>
+<input type="password" id="password" name="password" class="form-control" />
+<label for="repeat">Repeat:</label>
+<input type="password" id="repeat" name="repeat" class="form-control" />
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Save password" class="btn btn-default" />

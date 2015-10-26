@@ -43,6 +43,9 @@
 <div class="btn-group left">
 <a href="/{/output/page}/new" class="btn btn-default">New weblog</a>
 <a href="/cms" class="btn btn-default">Back</a>
+<xsl:if test="comments='yes'">
+<a href="/cms/weblog/comment" class="btn btn-default">Comments</a>
+</xsl:if>
 </div>
 </xsl:template>
 

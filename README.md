@@ -9,11 +9,10 @@ Use the directory 'public' as the webroot directory and allow PHP execution. If 
 
 	UrlToolkit {
 		ToolkitID = banshee
+		Match ^/(css|files|fonts|images|js)(/|$) Expire 1 weeks Return
 		RequestURI isfile Return
-		Match ^/(css|files|images|js)($|/) Return
 		Match ^/(favicon.ico|robots.txt)$ Return
-		Match .*\?(.*) Rewrite /index.php?$1
-		Match .* Rewrite /index.php
+		Match [^?]*(\?.*)? Rewrite /index.php$1
 	}
 
 For Apache, there is a .htaccess file in the 'public' directory which contains the URL rewriting rules.
@@ -30,9 +29,7 @@ Banshee needs PHP's MySQL and XSL module. Use the following PHP settings:
 
 Configure your database
 -----------------------
-Change the database settings in 'settings/website.conf' and run the script 'database/setup_database'. This will create a MySQL user, a MySQL database and initialize the created database.
-
-The installed database already contains two users: 'admin' and 'user'. Both have the password 'banshee'.
+Open the website in your browser and follow the instructions on your screen. In case of an error, add /setup to the URL.
 
 Configure Banshee
 -----------------

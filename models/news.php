@@ -11,8 +11,8 @@
 		}
 
 		public function get_news($offset, $limit) {
-			$query = "select *, UNIX_TIMESTAMP(timestamp) as timestamp ".
-					 "from news order by timestamp desc limit %d,%d";
+			$query = "select *, UNIX_TIMESTAMP(timestamp) as timestamp from news ".
+					 "where timestamp<now() order by timestamp desc limit %d,%d";
 
 			return $this->db->execute($query, $offset, $limit);
 		}

@@ -2,3 +2,16 @@ ul.links {
 	padding-left:15px;
 	list-style:square;
 }
+
+@media (max-width:767px) {
+	ul.links span {
+		display:block;
+	}
+}
+
+@media (min-width:768px) {
+	span.text:after {
+		content:"-";
+		margin:0 10px;
+	}
+}

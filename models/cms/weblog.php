@@ -1,27 +1,27 @@
 <?php
 	class cms_weblog_model extends model {
-		public function count_weblogs($user_id = null) {
+		public function count_weblogs() {
 			$query = "select count(*) as count from weblogs";
-			if ($user_id !== null) {
+			if ($this->user->is_admin == false) {
 				$query .= " where user_id=%d";
 			}
 
-			if (($result = $this->db->execute($query, $user_id)) == false) {
+			if (($result = $this->db->execute($query, $this->user->id)) == false) {
 				return false;
 			}
 
 			return $result[0]["count"];
 		}
 
-		public function get_weblogs($offset, $count, $user_id = null) {
+		public function get_weblogs($offset, $count) {
 			$query = "select w.id, w.user_id, w.title, w.visible, UNIX_TIMESTAMP(w.timestamp) as timestamp, u.fullname as author, ".
 			         "(select count(*) from weblog_comments where weblog_id=w.id) as comments ".
 			         "from weblogs w, users u where w.user_id=u.id";
 			$args = array();
 
-			if ($user_id !== null) {
+			if ($this->user->is_admin == false) {
 				$query .= " and w.user_id=%d";
-				array_push($args, $user_id);
+				array_push($args, $this->user->id);
 			}
 
 			$query .= " order by timestamp desc limit %d,%d";
@@ -31,7 +31,13 @@
 		}
 
 		public function get_weblog($weblog_id) {
-			return $weblog = $this->db->entry("weblogs", $weblog_id);
+			$weblog = $this->db->entry("weblogs", $weblog_id);
+
+			if (($this->user->is_admin == false) && ($weblog["user_id"] != $this->user->id)) {
+				return false;
+			}
+
+			return $weblog;
 		}
 
 		public function get_weblog_tags($weblog_id) {
@@ -146,6 +152,10 @@
 		}
 
 		public function update_weblog($weblog) {
+			if ($this->get_weblog($weblog["id"]) == false) {
+				return false;
+			}
+
 			$keys = array("title", "content", "visible");
 
 			$weblog["visible"] = is_true($weblog["visible"]) ? YES : NO;
@@ -175,6 +185,10 @@
 		}
 
 		public function delete_weblog($weblog_id) {
+			if ($this->get_weblog($weblog_id) == false) {
+				return false;
+			}
+
 			if ($this->db->query("begin") == false) {
 				return false;
 			} else if ($this->db->query("delete from weblog_comments where weblog_id=%d", $weblog_id) == false) {

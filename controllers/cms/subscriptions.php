@@ -4,5 +4,6 @@
 		protected $back = "cms";
 		protected $icon = "subscriptions.png";
 		protected $pathinfo_offset = 2;
+		protected $enable_search = true;
 	}
 ?>

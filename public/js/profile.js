@@ -1,21 +1,7 @@
-function hash_passwords() {
-	document.getElementById("password_hashed").value = "yes";
-
-	username = hash(document.getElementById("username").value);
-	current = document.getElementById("current");
-	password = document.getElementById("password");
-	repeat = document.getElementById("repeat");
-
-	current.value = hash(current.value + username);
-	if (password.value != "") {
-		password.value = hash(password.value + username);
-		repeat.value = hash(repeat.value + username);
-	}
-}
-
-function password_strength(password, username) {
-	username = document.getElementById(username);
+function password_strength() {
 	var words = ["abc", "love", "password", "qwerty", "secret", "123", "321"];
+	var username = document.getElementById('username');
+	var password = document.getElementById('password');
 
 	if (password.value.length == 0) {
 		password.style.backgroundColor = null;

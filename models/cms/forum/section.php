@@ -1,7 +1,7 @@
 <?php
 	class cms_forum_section_model extends tablemanager_model {
 		protected $table = "forums";
-		protected $order = "title";
+		protected $order = "order";
 		protected $elements = array(
 			"title" => array(
 				"label"    => "Title",

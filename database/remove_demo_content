@@ -66,9 +66,9 @@
 
 	$db->query("drop table %S", "dummy");
 
-	/* Page configuration
+	/* Module configuration
 	 */
-	$files = array("../settings/public_pages.conf", "../settings/private_pages.conf");
+	$files = array("../settings/public_modules.conf", "../settings/private_modules.conf");
 	foreach ($files as $file) {
 		if (($config = file($file)) == false) {
 			continue;
@@ -90,5 +90,5 @@
 
 	/* Update pages table
 	 */
-	system("./private_pages");
+	system("./private_modules");
 ?>

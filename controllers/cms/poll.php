@@ -10,15 +10,14 @@
 
 				$this->output->open_tag("polls");
 				foreach ($polls as $poll) {
-					$edit = show_boolean($poll["begin"] > $today);
-					if ($this->output->mobile) {
-						$poll["begin"] = date("Y-m-d", $poll["begin"]);
-						$poll["end"] = date("Y-m-d", $poll["end"]);
-					} else {
-						$poll["begin"] = date("j F Y", $poll["begin"]);
-						$poll["end"] = date("j F Y", $poll["end"]);
+					$edit = $poll["begin"] > $today;
+					$args = array("edit" => show_boolean($edit));
+					if ($edit == false) {
+						$args["button"] = $poll["end"] >= $today ? "close" : "delete";
 					}
-					$this->output->record($poll, "poll", array("edit" => $edit));
+					$poll["begin"] = date("j F Y", $poll["begin"]);
+					$poll["end"] = date("j F Y", $poll["end"]);
+					$this->output->record($poll, "poll", $args);
 				}
 				$this->output->close_tag();
 
@@ -88,15 +87,25 @@
 							}
 						}
 					}
-				} else if ($_POST["submit_button"] == "Delete poll") {
+				} else if (($_POST["submit_button"] == "Delete poll") ||
+				           ($_POST["submit_button"] == "Delete")) {
 					/* Delete poll
 					 */
 					if ($this->model->delete_poll($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Error while deleting poll.");
+						$this->output->add_system_warming("Error while deleting poll.");
 					} else {
 						$this->user->log_action("poll %d deleted", $_POST["id"]);
-						$this->show_poll_overview();
 					}
+					$this->show_poll_overview();
+				} else if ($_POST["submit_button"] == "Close") {
+					/* Close poll
+					 */
+					if ($this->model->close_poll($_POST["id"]) == false) {
+						$this->output->add_system_warning("Error while closing poll.");
+					} else {
+						$this->user->log_action("poll %d closed", $_POST["id"]);
+					}
+					$this->show_poll_overview();
 				} else {
 					$this->show_poll_overview();
 				}

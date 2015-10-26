@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Language" content="{language}" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="author" content="AUTHOR" />
 <meta name="publisher" content="PUBLISHER" />
 <meta name="copyright" content="COPYRIGHT" />
@@ -36,6 +36,12 @@
 <xsl:if test="javascripts/@onload">
 	<xsl:attribute name="onLoad">javascript:<xsl:value-of select="javascripts/@onload" /></xsl:attribute>
 </xsl:if>
+
+<div class="header">
+	<div class="container">
+	</div>
+</div>
+
 <nav class="navbar navbar-inverse">
 	<div class="container">
 		<xsl:if test="count(/output/menu/item)>0">
@@ -60,11 +66,19 @@
 	</div>
 </nav>
 
-<div class="content container">
-	<xsl:apply-templates select="/output/system_warnings" />
-	<xsl:apply-templates select="/output/system_messages" />
-	<xsl:apply-templates select="/output/content" />
+<div class="content">
+	<div class="container">
+		<xsl:apply-templates select="/output/system_warnings" />
+		<xsl:apply-templates select="/output/system_messages" />
+		<xsl:apply-templates select="/output/content" />
+	</div>
 </div>
+
+<div class="footer">
+	<div class="container">
+	</div>
+</div>
+
 <xsl:apply-templates select="/output/internal_errors" />
 </body>
 

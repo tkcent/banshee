@@ -31,6 +31,16 @@
 		}
 	}
 
+	/* Secure password with PBKDF2
+	 *
+	 * INPUT:  string password, string salt
+	 * OUTPUT: string hashed password
+	 * ERROR:  -
+	 */
+	function hash_password($password, $salt) {
+		return hash_pbkdf2(PASSWORD_HASH, $password, hash(PASSWORD_HASH, $salt), PASSWORD_ITERATIONS, 0);
+	}
+
 	/* Prevent Cross-Site Request Forgery
 	 * Note that this protection is not 100% safe (browsers that hide this line).
 	 *
@@ -66,10 +76,9 @@
 			return false;
 		}
 
-		$message = sprintf("CSRF attempt from %s blocked", $_SERVER["HTTP_REFERER"]);
-
-		$output->add_system_warning($message);
-		$user->log_action($message);
+		$message = "CSRF attempt from %s blocked";
+		$output->add_system_warning($message, $_SERVER["HTTP_REFERER"]);
+		$user->log_action($message, $_SERVER["HTTP_REFERER"]);
 		$user->logout();
 		$_SERVER["REQUEST_METHOD"] = "GET";
 		$_GET = array();
@@ -195,24 +204,24 @@
 	/* Return a per-page overview of the access levels
 	 *
 	 * INPUT:  object database
-	 * OUTPUT: array( string page => int access level[, ....] )
+	 * OUTPUT: array( string module => int access level[, ....] )
 	 * ERROR:  false
 	 */
 	function page_access_list($db, $user) {
 		$access_rights = array();
 
-		/* Public pages on disk
+		/* Public modules on disk
 		 */
-		$public = page_to_module(config_file("public_pages"));
+		$public = page_to_module(config_file("public_modules"));
 		foreach ($public as $page) {
 			$access_rights[$page] = 1;
 		}
 
-		/* Private pages on disk
+		/* Private modules on disk
 		 */
-		$private_pages = page_to_module(config_file("private_pages"));
-		foreach ($private_pages as $page) {
-			$access_rights[$page] = $user->is_admin ? YES : NO;
+		$private_modules = page_to_module(config_file("private_modules"));
+		foreach ($private_modules as $module) {
+			$access_rights[$module] = $user->is_admin ? YES : NO;
 		}
 
 		if ($user->logged_in && ($user->is_admin == false)) {

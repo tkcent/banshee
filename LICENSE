@@ -18,9 +18,8 @@ The following files are not part of the Banshee PHP framework:
 	- DataTables        : public/js/banshee/jquery.datatables.js
 	- FPDF              : libraries/fpdf.php
 	- jQuery            : public/(css|js)/jquery/*
-	- MD5 javascript    : public/js/banshee/md5.js
+	- jsencrypt         : public/js/banshee/jsencrypt.js
 	- prettyPhoto       : public/js/banshee/jquery.prettyphoto.js
-	- SHA1 javascript   : public/js/banshee/sha1.js
 	- SHA256 javascript : public/js/banshee/sha256.js
 	- ZIP library       : libraries/zipfile.php
 

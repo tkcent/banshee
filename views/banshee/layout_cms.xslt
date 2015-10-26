@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="author" content="Hugo Leisink" />
 <meta name="publisher" content="Hugo Leisink" />
-<meta name="copyright" content="Copyright (C) by Hugo Leisink. All rights reserved. Protected by the Copyright laws of the Netherlands and international treaties." />
+<meta name="copyright" content="Copyright (C) by Hugo Leisink" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (http://www.banshee-php.org/)" />

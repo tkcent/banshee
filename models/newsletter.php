@@ -76,7 +76,7 @@
 
 			$subject = "Confirm ".$this->settings->head_title." newsletter ".$title;
 			$newsletter = new newsletter($subject, $this->settings->newsletter_email, $this->settings->newsletter_name);
-			$url = "http://".$_SERVER["SERVER_NAME"]."/newsletter/".$code;
+			$url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/newsletter/".$code;
 			$message  = "You recieve this e-mail because your e-mail address has been entered at the newsletter ".
 						"form at the ".$this->settings->head_title." website. Subscribing to or unsubscribing from this ".
 						"newsletter requires confirmation. So, if you do want to ".$action." the ".$this->settings->head_title." ".

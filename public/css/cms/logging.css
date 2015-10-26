@@ -99,19 +99,7 @@ div.client div.list:last-child {
 
 /* Referers
  */
-div.referers div.referer form {
-	text-align:right;
-	position:relative;
-	top:-20px;
-	height:0;
-	margin-right:10px;
-}
-
-div.referers div.referer form input {
-	font-size:9px;
-}
-
-div.referers div.entry:hover {
+div.referers div.entry {
 	cursor:pointer;
 }
 
@@ -130,6 +118,17 @@ div.referers div.referer ul li a {
 	height:18px;
 	overflow:hidden;
 	margin-bottom:-4px;
+}
+
+div.referers input[type=checkbox] {
+	float:right;
+	margin-right:2px;
+}
+
+div.referers input#delete_referers {
+	display:none;
+	float:right;
+	margin-top:10px;
 }
 
 div.graph div.row div:first-child {

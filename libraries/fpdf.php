@@ -504,7 +504,7 @@
 				$this->_out(sprintf('BT /F%d %.2F Tf ET',$this->CurrentFont['i'],$this->FontSizePt));
 		}
 
-		function SetFontSize($size) {
+		public function SetFontSize($size) {
 			// Set font size in points
 			if ($this->FontSizePt == $size)
 				return;
@@ -514,14 +514,14 @@
 				$this->_out(sprintf('BT /F%d %.2F Tf ET',$this->CurrentFont['i'],$this->FontSizePt));
 		}
 
-		function AddLink() {
+		public function AddLink() {
 			// Create a new internal link
 			$n = count($this->links)+1;
 			$this->links[$n] = array(0, 0);
 			return $n;
 		}
 
-		function SetLink($link, $y=0, $page=-1) {
+		public function SetLink($link, $y=0, $page=-1) {
 			// Set destination of internal link
 			if ($y == -1)
 				$y = $this->y;
@@ -530,12 +530,12 @@
 			$this->links[$link] = array($page, $y);
 		}
 
-		function Link($x, $y, $w, $h, $link) {
+		public function Link($x, $y, $w, $h, $link) {
 			// Put a link on the page
 			$this->PageLinks[$this->page][] = array($x*$this->k, $this->hPt-$y*$this->k, $w*$this->k, $h*$this->k, $link);
 		}
 
-		function Text($x, $y, $txt) {
+		public function Text($x, $y, $txt) {
 			// Output a string
 			$s = sprintf('BT %.2F %.2F Td (%s) Tj ET',$x*$this->k,($this->h-$y)*$this->k,$this->_escape($txt));
 			if ($this->underline && $txt != '')
@@ -545,12 +545,12 @@
 			$this->_out($s);
 		}
 
-		function AcceptPageBreak() {
+		public function AcceptPageBreak() {
 			// Accept automatic page break or not
 			return $this->AutoPageBreak;
 		}
 
-		function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='') {
+		public function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='') {
 			// Output a cell
 			$k = $this->k;
 			if ($this->y+$h>$this->PageBreakTrigger && !$this->InHeader && !$this->InFooter && $this->AcceptPageBreak()) {
@@ -621,7 +621,7 @@
 				$this->x += $w;
 		}
 
-		function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=false) {
+		public function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=false) {
 			// Output text with automatic or explicit line breaks
 			$cw = &$this->CurrentFont['cw'];
 			if ($w == 0)
@@ -718,7 +718,7 @@
 			$this->x = $this->lMargin;
 		}
 
-		function Write($h, $txt, $link='') {
+		public function Write($h, $txt, $link='') {
 			// Output text in flowing mode
 			$cw = &$this->CurrentFont['cw'];
 			$w = $this->w-$this->rMargin-$this->x;
@@ -789,7 +789,7 @@
 				$this->Cell($l/1000*$this->FontSize,$h,substr($s,$j),0,0,'',0,$link);
 		}
 
-		function Ln($h=null) {
+		public function Ln($h=null) {
 			// Line feed; default value is last cell height
 			$this->x = $this->lMargin;
 			if ($h === null)
@@ -798,7 +798,7 @@
 				$this->y += $h;
 		}
 
-		function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='') {
+		public function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='') {
 			// Put an image on the page
 			if (!isset($this->images[$file])) {
 				// First use of this image, get info
@@ -855,12 +855,12 @@
 				$this->Link($x,$y,$w,$h,$link);
 		}
 
-		function GetX() {
+		public function GetX() {
 			// Get x position
 			return $this->x;
 		}
 
-		function SetX($x) {
+		public function SetX($x) {
 			// Set x position
 			if ($x>=0)
 				$this->x = $x;
@@ -868,12 +868,12 @@
 				$this->x = $this->w+$x;
 		}
 
-		function GetY() {
+		public function GetY() {
 			// Get y position
 			return $this->y;
 		}
 
-		function SetY($y) {
+		public function SetY($y) {
 			// Set y position and reset x
 			$this->x = $this->lMargin;
 			if ($y>=0)
@@ -882,13 +882,13 @@
 				$this->y = $this->h+$y;
 		}
 
-		function SetXY($x, $y) {
+		public function SetXY($x, $y) {
 			// Set x and y positions
 			$this->SetY($y);
 			$this->SetX($x);
 		}
 
-		function Output($name='', $dest='') {
+		public function Output($name='', $dest='') {
 			// Output PDF to some destination
 			if ($this->state<3)
 				$this->Close();

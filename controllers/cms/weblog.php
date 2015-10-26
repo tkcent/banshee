@@ -3,16 +3,14 @@
 
 	class cms_weblog_controller extends controller {
 		private function show_weblog_overview() {
-			$user_id = $this->user->is_admin ? null : $this->user->id;
-
-			if (($weblog_count = $this->model->count_weblogs($user_id)) === false) {
+			if (($weblog_count = $this->model->count_weblogs()) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
 			}
 
 			$paging = new pagination($this->output, "admin_forum", $this->settings->admin_page_size, $weblog_count);
 
-			if (($weblogs = $this->model->get_weblogs($paging->offset, $paging->size, $user_id)) === false) {
+			if (($weblogs = $this->model->get_weblogs($paging->offset, $paging->size)) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
 			}
@@ -28,6 +26,8 @@
 			$this->output->close_tag();
 
 			$paging->show_browse_links();
+
+			$this->output->add_tag("comments", show_boolean($this->user->access_allowed("cms/weblog/comment")));
 
 			$this->output->close_tag();
 		}
@@ -82,20 +82,7 @@
 				 */
 				$this->output->remove_from_cache("weblog_rss");
 
-				/* Verify access rights
-				 */
-				$access_allowed = true;
-				if (isset($_POST["id"])) {
-					if (($weblog = $this->model->get_weblog($_POST["id"])) == false) {
-						$access_allowed = false;
-					} else if (($this->user->is_admin == false) && ($weblog["user_id"] != $this->user->id)) {
-						$access_allowed = false;
-					}
-				}
-
-				if ($access_allowed == false) {
-					$this->output->add_tag("result", "You are not allowed to edit or delete this weblog.");
-				} else if ($_POST["submit_button"] == "Save weblog") {
+				if ($_POST["submit_button"] == "Save weblog") {
 					/* Save weblog
 					 */
 					if ($this->model->save_oke($_POST) == false) {
@@ -138,8 +125,6 @@
 				 */
 				if (($weblog = $this->model->get_weblog($this->page->pathinfo[2])) == false) {
 					$this->output->add_tag("result", "Weblog not found.");
-				} else if (($this->user->is_admin == false) && ($weblog["user_id"] != $this->user->id)) {
-					$this->output->add_tag("result", "You are not allowed to edit this weblog.");
 				} else {
 					$this->show_weblog_form($weblog);
 				}

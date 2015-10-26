@@ -33,6 +33,10 @@
 		}
 
 		public function execute() {
+			if ($_GET["order"] == null) {
+				$_SESSION["XXX_search"] = null;
+			}
+
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["submit_button"] == "Save XXX") {
 					/* Save XXX
@@ -72,6 +76,11 @@
 						$this->user->log_action("XXX deleted");
 						$this->show_overview();
 					}
+				} else if ($_POST["submit_button"] == "search") {
+					/* Search
+					 */
+					$_SESSION["XXX_search"] = $_POST["search"];
+					$this->show_overview();
 				} else {
 					$this->show_overview();
 				}

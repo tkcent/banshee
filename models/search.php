@@ -71,7 +71,7 @@
 			$args = array("/mailbox/", $this->user->id);
 			$this->add_selection("subject", $query, $args);
 			$this->add_selection("message", $query, $args);
-			$query .= ")";
+			$query .= ") order by timestamp desc";
 
 			return $this->db->execute($query, $args);
 		}
@@ -187,7 +187,7 @@
 		 */
 		private function search_weblog() {
 			$query = "select distinct concat(%s, w.id) as url, w.title as text, w.content ".
-			         "from weblogs w, weblog_comments c where w.id=c.weblog_id and (";
+			         "from weblogs w left join weblog_comments c on w.id=c.weblog_id where (";
 			$args = array("/weblog/");
 			$this->add_selection("w.title", $query, $args);
 			$this->add_selection("w.content", $query, $args);

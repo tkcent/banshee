@@ -20,10 +20,10 @@ table.comments th:first-child {
 	width:20px;
 }
 
-div.tags span { 
+div.tags span {
 	display:inline-block;
-	margin-left:5px;
 	white-space:nowrap;
+	margin-left:10px;
 }
 
 @media (max-width:767px) {

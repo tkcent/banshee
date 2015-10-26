@@ -13,9 +13,9 @@
 <div class="panel panel-default">
 <div class="panel-heading">
 	<div class="row">
-		<div class="col-sm-4"><xsl:value-of select="subject" /></div>
-		<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
-		<div class="col-sm-4"><xsl:value-of select="ip_address" /></div>
+		<div class="col-sm-7"><xsl:value-of select="subject" /></div>
+		<div class="col-sm-3"><xsl:value-of select="timestamp" /></div>
+		<div class="col-sm-2"><xsl:value-of select="ip_address" /></div>
 	</div>
 </div>
 <div class="panel-body">

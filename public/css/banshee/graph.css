@@ -4,7 +4,7 @@ div.graph {
 
 div.graph div.info {
 	height:20px;
-	margin-left:50px;
+	margin-left:70px;
 }
 
 div.graph div.info span.text {
@@ -35,10 +35,25 @@ div.graph table td {
 	border:1px solid #ffffff;
 }
 
+div.graph table td.clickable {
+	cursor:pointer;
+}
+
 div.graph table td div {
 	background-color:#ff0000;
 }
 
-div.graph table.bars td:hover div {
+div.graph table td:hover div {
 	background-color:#ffa000;
+}
+
+@media (max-width:767px) {
+	div.graph div.maxy {
+		display:inline-block;
+		top:56px;
+	}
+
+	div.graph div.bars {
+		margin-left:0;
+	}
 }

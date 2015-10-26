@@ -32,6 +32,12 @@ div.weblog div.content img {
 	max-width:100%;
 }
 
+@media (max-width:767px) {
+	div.weblog div.content img {
+		max-width:50%;
+	}
+}
+
 /* Tags
  */
 div.tags {

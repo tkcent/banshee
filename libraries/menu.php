@@ -163,6 +163,10 @@
 			}
 			$cache = &$_SESSION["menu_cache"];
 
+			if (substr($current_url, 0, 1) != "/") {
+				$current_url = "/".$current_url;
+			}
+
 			$username = ($this->user !== null) ? $this->user->username : "";
 			$index = sha1(sprintf("%d-%d-%s-%s", $this->parent_id, $this->depth, $username, $current_url));
 

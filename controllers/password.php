@@ -1,10 +1,6 @@
 <?php
 	class password_controller extends controller {
 		private function show_password_form($key) {
-			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
-			$this->output->add_javascript("password.js");
-			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
-
 			$this->output->open_tag("reset");
 			$this->output->add_tag("key", $key);
 			$this->output->add_tag("username", $_SESSION["reset_password_username"]);
@@ -38,7 +34,7 @@
 						$this->output->add_message("Error while saving password.");
 						$this->show_password_form($_POST["key"]);
 					} else {
-						$this->output->add_tag("result", "Password has been saved.", array("url" => LOGIN_MODULE));
+						$this->output->add_tag("result", "Password has been saved.", array("url" => ""));
 						unset($_SESSION["reset_password_key"]);
 						unset($_SESSION["reset_password_username"]);
 					}

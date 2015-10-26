@@ -9,7 +9,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/{/output/page}" method="post" onSubmit="javascript:hash_passwords(); return true;">
+<form action="/{/output/page}" method="post">
 <label for="fullname">Name:</label>
 <input type="text" id="fullname" name="fullname" value="{fullname}" class="form-control" />
 <label for="email">E-mail address:</label>
@@ -17,7 +17,7 @@
 <label for="current">Current password:</label>
 <input type="password" id="current" name="current" class="form-control" />
 <label for="password">New password:</label> <span class="blank" style="font-size:10px">(will not be changed when left blank)</span>
-<input type="password" id="password" name="password" class="form-control" onKeyUp="javascript:password_strength(this, 'username')" />
+<input type="password" id="password" name="password" class="form-control" onKeyUp="javascript:password_strength()" />
 <label for="repeat">Repeat password:</label>
 <input type="password" id="repeat" name="repeat" class="form-control" />
 
@@ -27,18 +27,15 @@
 <a href="/{cancel/@page}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
 </xsl:if>
 </div>
-
-<input type="hidden" id="username" value="{username}" />
-<input type="hidden" id="password_hashed" name="password_hashed" value="no" />
 </form>
 
 <h2>Recent account activity</h2>
-<table class="table table-striped">
+<table class="table table-striped table-xs">
 <thead>
 <tr>
 <th>IP address</th>
 <th>Timestamp</th>
-<th>Message</th>
+<th>Activity</th>
 </tr>
 </thead>
 <tbody>

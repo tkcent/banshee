@@ -219,7 +219,7 @@
 			if ((substr($script, 0, 7) != "http://") && (substr($script, 0, 8) != "https://")) {
 				if (file_exists("js/".$script) == false) {
 					if (is_true(DEBUG_MODE)) {
-						printf("Javascript %s not found.", $script);
+						printf("Javascript %s not found.\n", $script);
 					}
 					return false;
 				}
@@ -570,6 +570,7 @@
 							}
 							header("Content-Length: ".strlen($result));
 						}
+						header("Vary: Accept-Encoding");
 						header("X-Powered-By: Banshee PHP framework v".BANSHEE_VERSION);
 					}
 					break;

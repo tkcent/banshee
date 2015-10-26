@@ -66,9 +66,7 @@
 				}
 			}
 
-			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("cms/user.js");
-			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");
 
@@ -120,11 +118,6 @@
 					 */
 					if (is_true($_POST["generate"])) {
 						$_POST["password"] = random_string(10);
-						$_POST["password_hashed"] = false;
-					}
-					if (is_false($_POST["password_hashed"]) && ($_POST["password"] != "")) {
-						$_POST["plaintext"] = $_POST["password"];
-						$_POST["password"] = hash(PASSWORD_HASH, $_POST["password"].hash(PASSWORD_HASH, $_POST["username"]));
 					}
 
 					/* Save user

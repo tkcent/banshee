@@ -1,6 +1,4 @@
 <?php
-	require_once("../libraries/helpers/output.php");
-
 	class news_controller extends controller {
 		public function execute() {
 			$this->output->description = "News";
@@ -18,7 +16,6 @@
 
 					if (($news = $this->model->get_news(0, $this->settings->news_rss_page_size)) != false) {
 						foreach ($news as $item) {
-							$item["content"] = truncate_html($item["content"], 1000);
 							$link = "/news/".$item["id"];
 							$rss->add_item($item["title"], $item["content"], $link, $item["timestamp"]);
 						}

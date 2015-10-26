@@ -127,6 +127,7 @@
 
 	printf("Creating new layout.\n");
 	safe_copy("templates/layout_XXX.xslt", "views/banshee/layout_".$name.".xslt");
+	safe_copy("templates/layout_XXX.css", "public/css/banshee/layout_".$name.".css");
 
 	printf("Setting layout name.\n");
 	set_layout_name($name);

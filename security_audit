@@ -11,17 +11,17 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "5.0";
+	$written_for = "5.1";
 
 	/* Auditor class
 	 */
 	abstract class auditor {
 		protected $extension = null;
-		private $sub_directories = array(".");
+		protected $sub_directories = array(".");
 		private $current_directory = null;
 		private $dp = false;
 		protected $verified = array();
-		private $exclude = array("./public");
+		private $exclude = array("./public", "./templates");
 
 		/* Destructor
 		 *
@@ -79,23 +79,91 @@
 					continue;
 				}
 
-				$info = pathinfo($file);
-				if ($info["extension"] != $this->extension) {
-					$file = false;
-					continue;
+				if ($this->extension !== null) {
+					$info = pathinfo($file);
+					if ($info["extension"] != $this->extension) {
+						$file = false;
+						continue;
+					}
 				}
 			} while ($file === false);
 
-			return substr($file, 2);
+			if (substr($file, 0, 2) == "./") {
+				$file = substr($file, 2);
+			}
+
+			return $file;
 		}
 
 		/* Scan file dummy function
 		 *
-		 * INPUT:  string filename
+		 * INPUT:  string line
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
 		protected function scan_line($line) {
+		}
+
+		/* Scan file
+		 *
+		 * INPUT:  string filename
+		 * OUTPUT: bool issue found
+		 * ERROR:  -
+		 */
+		protected function scan_file($file) {
+			$lines = file($file);
+
+			$results = array();
+			foreach ($lines as $number => $line) {
+				$number++;
+				$line = trim($line);
+
+				if (substr($file, 0, 8) == "banshee/") {
+					$index = substr($file, 8);
+				} else {
+					$index = $file;
+				}
+
+				if (is_array($this->verified[$index])) {
+					if (in_array($number, $this->verified[$index])) {
+						continue;
+					}
+				}
+
+				if (trim($line) == "") {
+					continue;
+				} else if (($line[0] == "#") || (substr($line, 0, 2) == "//")) {
+					continue;
+				}
+
+				ob_start();
+
+				$this->scan_line(strtolower($line), $number);
+
+				$output = ob_get_clean();
+
+				if ($output == "") {
+					continue;
+				}
+
+				$output = explode("\n", trim($output));
+				foreach ($output as $line) {
+					array_push($results, $number.": ".$line);
+				}
+			}
+
+			if (($count = count($results)) > 0) {
+				$total += $count;
+
+				print "  ".$file.":\n";
+				foreach ($results as $line) {
+					print "    ".$line."\n";
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/* Perform audit
@@ -105,63 +173,11 @@
 		 * ERROR:  -
 		 */
 		public function perform_audit() {
-			if ($this->extension == null) {
-				print "  Extension not set!\n\n";
-				return false;
-			}
-
 			$total = 0;
 
 			while (($file = $this->next_file()) != false) {
-				$lines = file($file);
-
-				$results = array();
-				foreach ($lines as $number => $line) {
-					$number++;
-					$line = trim($line);
-
-					if (substr($file, 0, 8) == "banshee/") {
-						$index = substr($file, 8);
-					} else {
-						$index = $file;
-					}
-
-					if (is_array($this->verified[$index])) {
-						if (in_array($number, $this->verified[$index])) {
-							continue;
-						}
-					}
-
-					if (trim($line) == "") {
-						continue;
-					} else if (($line[0] == "#") || (substr($line, 0, 2) == "//")) {
-						continue;
-					}
-
-					ob_start();
-
-					$this->scan_line(strtolower($line), $number);
-
-					$output = ob_get_clean();
-
-					if ($output == "") {
-						continue;
-					}
-
-					$output = explode("\n", trim($output));
-					foreach ($output as $line) {
-						array_push($results, $number.": ".$line);
-					}
-				}
-
-				if (($count = count($results)) > 0) {
-					$total += $count;
-
-					print "  ".$file.":\n";
-					foreach ($results as $line) {
-						print "    ".$line."\n";
-					}
-					print "\n";
+				if ($this->scan_file($file)) {
+					$total++;
 				}
 			}
 
@@ -178,18 +194,15 @@
 		private $variables = array();
 		private $continue_var = null;
 		protected $verified = array(
-			"libraries/database/mssql_connection.php"      => array(13),
 			"libraries/database/mysqli_connection.php"     => array(36),
-			"libraries/database/postgresql_connection.php" => array(14),
-			"libraries/database/sqlite_connection.php"     => array(14),
-			"libraries/menu.php"                           => array(42),
-			"libraries/security.php"                       => array(258),
-			"libraries/settings.php"                       => array(41),
-			"libraries/tablemanager_controller.php"        => array(202),
-			"libraries/tablemanager_model.php"             => array(265),
-			"libraries/user.php"                           => array(274),
+			"libraries/security.php"                       => array(201, 267),
+			"libraries/tablemanager_controller.php"        => array(214),
+			"libraries/tablemanager_model.php"             => array(269),
+			"libraries/user.php"                           => array(268, 277),
+			"models/cms/settings.php"                      => array(58, 81),
 			"models/cms/user.php"                          => array(8),
-			"models/search.php"                            => array(135));
+			"models/search.php"                            => array(135),
+			"models/setup.php"                             => array(128));
 
 		protected function scan_line($line) {
 			/* PHP database query function calls
@@ -206,7 +219,7 @@
 			if ($this->continue_var !== null) {
 				$this->variables[$this->continue_var] .= $line;
 
-				if (substr(rtrim($value), -1) != ".") {
+				if (substr(rtrim($line), -1) != ".") {
 					$this->continue_var = null;
 				}
 
@@ -215,10 +228,22 @@
 
 			/* Variable declaration
 			 */
-			if (preg_match('/^ *\$[a-z_]* *=/', $line) == 1) {
+			if (preg_match('/^\s*\$[A-Za-z0-9_]*\s*=/', $line) == 1) {
 				list($key, $value) = explode("=", $line, 2);
 				$key = substr(trim($key), 1);
-				$this->variables[$key] = $value;
+				$this->variables[$key] = trim($value);
+
+				if (substr(rtrim($value), -1) == ".") {
+					$this->continue_var = $key;
+				}
+
+				return;
+			}
+			
+			if (preg_match('/^\s*\$[A-Za-z0-9_]*\s*\.=/', $line) == 1) {
+				list($key, $value) = explode("=", $line, 2);
+				$key = substr(trim($key, " ."), 1);
+				$this->variables[$key] .= trim($value);
 
 				if (substr(rtrim($value), -1) == ".") {
 					$this->continue_var = $key;
@@ -237,24 +262,56 @@
 			}
 			if ($pos !== false) {
 				$str = substr($line, $pos);
-				list($str) = explode(")", $str);
+
+				$open = 0;
+				for ($i = 0; $i < strlen($line); $i++) {
+					if ($str[$i] == "(") {
+						$open++;
+					} else if ($str[$i] == ")") {
+						if ($open == 0) {
+							$str = substr($str, 0, $i);
+							break;
+						}
+						$open--;
+					}
+				}
+
 				if ($str[0] == '"') {
 					/* Query string is text
 					 */
+					foreach ($this->variables as $key => $value) {
+						if (preg_match('/\.\s*\$'.$key.'/', $str) == 1) {
+							print "include in query string\n";
+							break;
+						}
+					}
+
+					$str = str_replace('\"', "'", $str);
 					list(, $str) = explode('"', $str);
-					if (ltrim($str) == ".") {
-						print "include in query string\n";
+
+					foreach ($this->variables as $key => $value) {
+						if (strpos($str, "$".$key) !== false) {
+							print "include in query string\n";
+							break;
+						}
 					}
 				} else if ($str[0] == "$") {
 					/* Query string is variable
 					 */
 					list($str) = explode(",", $str);
+					foreach ($this->variables as $key => $value) {
+						if (strpos($str, "$".$key) !== false) {
+							if (strpos($value, "\$") !== false) {
+								print "include in query string\n";
+							}
+						}
+					}
+
 					$str = substr(trim($str), 1);
 					if (isset($this->variables[$str]) == false) {
 						print "unknown variable for query string: ".$str."\n";
-					} else if (strpos($this->variables[$str], "\$") !== false) {
-						print "include in query string\n";
 					}
+					
 				} else {
 					/* Weird query string
 					 */
@@ -269,25 +326,82 @@
 	class output_auditor extends auditor {
 		protected $extension = "xslt";
 		protected $verified = array(
-			 "views/cms/photos.xslt"                => array(29),
-			 "views/agenda.xslt"                    => array(19, 79),
-			 "views/banshee/functions.xslt"         => array(15),
-			 "views/banshee/layout_pluralism.xslt"  => array(54),
-			 "views/banshee/page.xslt"              => array(12),
-			 "views/demos/googlemaps.xslt"          => array(14),
-			 "views/demos/posting.xslt"             => array(19),
-			 "views/dictionary.xslt"                => array(60),
-			 "views/faq.xslt"                       => array(18),
-			 "views/forum.xslt"                     => array(78),
-			 "views/guestbook.xslt"                 => array(21),
-			 "views/mailbox.xslt"                   => array(42),
-			 "views/news.xslt"                      => array(20),
-			 "views/weblog.xslt"                    => array(25, 51));
+			"views/agenda.xslt"                    => array(19, 79),
+			"views/banshee/functions.xslt"         => array(15),
+			"views/banshee/page.xslt"              => array(12),
+			"views/demos/googlemaps.xslt"          => array(14),
+			"views/demos/posting.xslt"             => array(19),
+			"views/dictionary.xslt"                => array(60),
+			"views/faq.xslt"                       => array(18),
+			"views/forum.xslt"                     => array(78),
+			"views/guestbook.xslt"                 => array(21),
+			"views/mailbox.xslt"                   => array(42),
+			"views/news.xslt"                      => array(20),
+			"views/weblog.xslt"                    => array(25, 51));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
 				print "output escaping disabled\n";
 			}
+		}
+	}
+
+	class integrity_auditor {
+		private $files = array(
+			"libraries/database" => array(
+				"database_connection.php" => "f010d184b75e2135aceead089ef0d9f57f6a98f9",
+				"mysqli_connection.php"   => "62b7bfb0126eef0246d8d046482c67a30ce2beb3"),
+			"libraries" => array(
+				"banshee.php"    => "3cc8a98d25adf9e41708ad0569afa13eeeecdc36",
+				"controller.php" => "e53384e166afee3e943b423405ced65f7821aeda",
+				"email.php"      => "7f92eb195913c997150ac5dc532053066078d6cc",
+				"model.php"      => "c838eae31ea1aff8f7628b6df13a4a5b41093934",
+				"output.php"     => "1263f60404b956a9cd7041da83b2fef4bad1879a",
+				"page.php"       => "35c1667644a2108ee23268e19bc6c249a1f25c81",
+				"security.php"   => "5549d858727164f3df71442d7fe1a12ae7afed1a",
+				"session.php"    => "623259b1ea3ac9ffb83e153a97b246f516adfdff",
+				"settings.php"   => "f884e2db04b97b0996300028bcb619f46135b7aa",
+				"user.php"       => "ed177f6e46f19d902ac5cc33a9b43ae1c714c75e"),
+			"public" => array(
+				"index.php" => "e9ab42d65bb7d3d20245374b5ad8b8c73ddbdf35"));
+
+		public function perform_audit() {
+			$total = 0;
+
+			foreach ($this->files as $directory => $files) {
+				foreach ($files as $file => $hash) {
+					$file = $directory."/".$file;
+					if (sha1_file($file) != $hash) {
+						print "  The file ".$file." has been changed.\n";
+						$total++;
+					}
+				}
+			}
+
+			if ($total == 0) {
+				print "  no issues found\n";
+			}
+		}
+	}
+
+	/* Webroot auditing
+	 */
+	class webroot_auditor extends auditor {
+		protected $sub_directories = array("public");
+
+		public function scan_file($file) {
+			if ($file == "public/index.php") {
+				return false;
+			}
+
+			$parts = explode(".", $file);
+			$extension = array_pop($parts);
+			if ($extension == "php") {
+				print "  PHP script found in webroot: ".$file."\n";
+				return true;
+			}
+
+			return false;
 		}
 	}
 
@@ -324,4 +438,18 @@
 	$output = new output_auditor;
 	$output->perform_audit();
 	unset($output);
+
+	/* File integrity auditing
+	 */
+	print "File integrity audit results:\n";
+	$integrity = new integrity_auditor;
+	$integrity->perform_audit();
+	unset($integrity);
+
+	/* PHP scripts in webroot auditing
+	 */
+	print "Webroot audit results:\n";
+	$webroot = new webroot_auditor;
+	$webroot->perform_audit();
+	unset($webroot);
 ?>

@@ -53,7 +53,7 @@
 //-->
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
-<form action="/{/output/page}" method="post" onSubmit="javascript:hash_passwords(); return true;">
+<form action="/{/output/page}" method="post">
 <xsl:if test="user/@id">
 <input type="hidden" name="id" value="{user/@id}" />
 </xsl:if>

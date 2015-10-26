@@ -25,6 +25,10 @@
 				"label"    => "Date",
 				"type"     => "date",
 				"overview" => true),
+			"timestamp" => array(
+				"label"    => "Timestamp",
+				"type"     => "timestamp",
+				"overview" => true),
 			"enum" => array(
 				"label"    => "Enum",
 				"type"     => "enum",

@@ -8,7 +8,7 @@
 
 	abstract class tablemanager_model extends model {
 		private $valid_types = array("integer", "varchar", "text", "ckeditor",
-			"boolean", "date", "enum", "foreignkey", "blob", "float");
+			"boolean", "date", "timestamp", "enum", "foreignkey", "blob", "float");
 		protected $table = null;
 		protected $order = "id";
 		protected $desc_order = false;
@@ -167,6 +167,10 @@
 							array_push($args, "%".$search."%");
 						}
 						break;
+					case "timestamp":
+						array_push($filter, "DATE_FORMAT(%S.%S, %s) like %s");
+						array_push($args, $this->table, $key, "%W %d %M %Y %T", "%".$search."%");
+						break;
 					default:
 						array_push($filter, "%S.%S like %s");
 						array_push($args, $this->table, $key, "%".$search."%");
@@ -296,12 +300,10 @@
 
 			if (isset($item["id"]) == false) {
 				if ($this->allow_create == false) {	
-					$this->output->add_message("You are not allowed to create an item.");
 					return false;
 				}
 			} else {
 				if ($this->allow_update == false) {	
-					$this->output->add_message("You are not allowed to update an item.");
 					return false;
 				}
 			}
@@ -322,6 +324,12 @@
 					switch ($element["type"]) {
 						case "date":
 							if (valid_date($item[$name]) == false) {
+								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid date.");
+								$result = false;
+							}
+							break;
+						case "timestamp":
+							if (valid_timestamp($item[$name]) == false) {
 								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
 								$result = false;
 							}
@@ -400,10 +408,15 @@
 
 			foreach ($keys as $key) {
 				$element = $this->elements[$key];
+
 				if (($element["type"] == "foreignkey") && ($element["required"] == false)) {
 					if ($item[$key] == "") {
 						$item[$key] = null;
 					}
+				}
+
+				if (($element["null"] === true) && ($item[$key] == "")) {
+					$item[$key] = null;
 				}
 			}
 
@@ -432,10 +445,15 @@
 
 			foreach ($keys as $key) {
 				$element = $this->elements[$key];
+
 				if (($element["type"] == "foreignkey") && ($element["required"] == false)) {
 					if ($item[$key] == "") {
 						$item[$key] = null;
 					}
+				}
+
+				if (($element["null"] === true) && ($item[$key] == "")) {
+					$item[$key] = null;
 				}
 			}
 

@@ -149,11 +149,13 @@
 			return $this->db->query("commit") != false;
 		}
 
-		public function delete_poll($poll_id) {
-			if ($this->poll_editable($poll_id) == false) {
-				return false;
-			}
+		public function close_poll($poll_id) {
+			$query = "update polls set end=%s where id=%d";
+			
+			return $this->db->query($query, date("Y-m-d", strtotime("yesterday")), $poll_id) != false;
+		}
 
+		public function delete_poll($poll_id) {
 			$queries = array(
 				array("delete from poll_answers where poll_id=%d", $poll_id),
 				array("delete from polls where id=%d", $poll_id));

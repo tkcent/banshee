@@ -80,6 +80,7 @@
 		public function secure_string($str, $replace = " ") {
 			$result = "";
 
+			$str = (string)$str;
 			$len = strlen($str);
 			for ($i = 0; $i < $len; $i++) {
 				$value = ord($str[$i]);
@@ -150,6 +151,7 @@
 
 			$this->open_tag($name, $attributes);
 			if ($data !== null) {
+				//$data = $this->secure_string($data);
 				$this->add_to_buffer($this->xmlspecialchars($data));
 			}
 			$this->close_tag();

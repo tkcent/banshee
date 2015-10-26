@@ -123,7 +123,7 @@
 		 * OUTPUT: boolean login correct
 		 * ERROR:  -
 		 */
-		public function login_password($username, $password, $use_challenge_response_method) {
+		public function login_password($username, $password) {
 			$query = "select * from users where username=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $username, USER_STATUS_DISABLED)) == false) {
 				header("X-Hiawatha-Monitor: failed_login");
@@ -134,14 +134,8 @@
 
 			usleep(rand(0, 10000));
 
-			if ($use_challenge_response_method) {
-				if (hash(PASSWORD_HASH, $_SESSION["challenge"].$user["password"]) === $password) {
-					$this->login((int)$user["id"]);
-				}
-			} else {
-				if ($user["password"] === hash(PASSWORD_HASH, $password.hash(PASSWORD_HASH, $username))) {
-					$this->login((int)$user["id"]);
-				}
+			if ($user["password"] === hash_password($password, $username)) {
+				$this->login((int)$user["id"]);
 			}
 
 			if ($this->logged_in == false) {
@@ -234,7 +228,7 @@
 
 			/* Public module
 			 */
-			if (in_array($page, page_to_module(config_file("public_pages")))) {
+			if (in_array($page, page_to_module(config_file("public_modules")))) {
 				return true;
 			}
 
@@ -267,7 +261,7 @@
 				array_push($rids, $rid);
 			}
 
-			if (in_array($page, page_to_module(config_file("private_pages")))) {
+			if (in_array($page, page_to_module(config_file("private_modules")))) {
 				/* Pages on disk (modules)
 				 */
 				$query = "select %S from roles where id in (".implode(", ", $conditions).")";

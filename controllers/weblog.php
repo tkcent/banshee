@@ -152,12 +152,12 @@
 				/* Comment submits
 				 */
 				if ($this->model->comment_oke($_POST) == false) {
-					$this->show_comment($_POST);
 					$this->show_weblog($_POST["weblog_id"]);
+					$this->show_comment($_POST);
 				} else if ($this->model->add_comment($_POST) == false) {
 					$this->output->add_message("Error while adding comment.");
-					$this->show_comment($_POST);
 					$this->show_weblog($_POST["weblog_id"]);
+					$this->show_comment($_POST);
 				} else {
 					$this->output->add_tag("result", "Comment has been added.", array("url" => $this->page->page."/".$_POST["weblog_id"]));
 				}
@@ -213,6 +213,9 @@
 				/* Show weblog
 				 */
 				$this->show_weblog($this->page->pathinfo[1]);
+				if ($this->user->logged_in) {
+					$this->show_comment(array("author" => $this->user->fullname));
+				}
 			} else {
 				/* Show last weblogs
 				 */

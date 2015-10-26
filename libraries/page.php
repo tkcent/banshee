@@ -43,13 +43,18 @@
 			 */
 			if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
 				header(sprintf("Location: https://%s%s", $_SERVER["HTTP_HOST"], $_SERVER["REQUEST_URI"]));
+				header("Strict-Transport-Security: max-age=31536000");
 				$this->module = ERROR_MODULE;
-				$this->http_code = 403;
+				$this->http_code = 301;
 			} else if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
 				$this->module = "banshee/offline";
 			} else if ($this->db->connected == false) {
-				$this->module = ERROR_MODULE;
-				$this->http_code = 500;
+				if (module_exists("setup") && is_true(DEBUG_MODE)) {
+					$this->module = "setup";
+				} else {
+					$this->module = ERROR_MODULE;
+					$this->http_code = 500;
+				}
 			} else {
 				list($this->url) = explode("?", $_SERVER["REQUEST_URI"], 2);
 				$path = trim($this->url, "/");
@@ -104,13 +109,13 @@
 			return null;
 		}
 
-		/* Page available on disk
+		/* Module available on disk
 		 *
 		 * INPUT:  string URL, string page configuration file
 		 * OUTPUT: string module identifier
 		 * ERROR:  null
 		 */
-		private function page_on_disk($url, $pages) {
+		private function module_on_disk($url, $pages) {
 			$module = null;
 			$url = explode("/", $url);
 			$url_count = count($url);
@@ -174,14 +179,14 @@
 
 			/* Old browser
 			 */
-			if (preg_match("/MSIE [567]/", $_SERVER["HTTP_USER_AGENT"]) > 0) {
+			if (preg_match("/MSIE [5678]/", $_SERVER["HTTP_USER_AGENT"]) > 0) {
 				$this->module = "banshee/browser";
 				return;
 			}
 
-			/* Public page
+			/* Public module
 			 */
-			if (($this->module = $this->page_on_disk($page, config_file("public_pages"))) !== null) {
+			if (($this->module = $this->module_on_disk($page, config_file("public_modules"))) !== null) {
 				$module_count = substr_count($this->module, "/") + 1;
 				$this->parameters = array_slice($this->pathinfo, $module_count);
 				return;
@@ -198,9 +203,9 @@
 				}
 			}
 
-			/* Private page
+			/* Private module
 			 */
-			if (($this->module = $this->page_on_disk($page, config_file("private_pages"))) === null) {
+			if (($this->module = $this->module_on_disk($page, config_file("private_modules"))) === null) {
 				$this->module = $this->page_in_database($page, YES);
 			}
 

@@ -888,7 +888,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1,'admin','c10b391ff5e75af6ee8469539e6a5428f09eff7e693d6a8c4de0e5525cd9b287',NULL,NULL,1,'Administrator','admin@banshee-php.org'),(2,1,'user','b4f6b1c67ef4f9c3dc67aae05c5d09411fa927e360063f7fd983710dc882cb3c',NULL,NULL,1,'Normal user','user@banshee-php.org');
+INSERT INTO `users` VALUES (1,1,'admin','cc5491f3f6075377579ec9be075c710e9ece5e50ab4f4fa2477c7d201cf72998',NULL,NULL,1,'Administrator','admin@banshee-php.org'),(2,1,'user','68554aeee9e1b820869dc9073cb61d7439c4fb672d24f650ba689b2351942e41',NULL,NULL,1,'Normal user','user@banshee-php.org');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

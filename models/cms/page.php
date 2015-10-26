@@ -92,9 +92,9 @@
 			}
 
 			$module = ltrim($page["url"], "/");
-			$public_pages = page_to_module(config_file("public_pages"));
-			$private_pages = page_to_module(config_file("private_pages"));
-			if (in_array($module, $public_pages) || in_array($module, $private_pages)) {
+			$public_modules = page_to_module(config_file("public_modules"));
+			$private_modules = page_to_module(config_file("private_modules"));
+			if (in_array($module, $public_modules) || in_array($module, $private_modules)) {
 				$this->output->add_message("URL belongs to a module.");
 				$result = false;
 			} else {

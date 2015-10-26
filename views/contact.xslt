@@ -11,7 +11,7 @@
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post">
 <label for="name">Name:</label>
-<input type="text" id="name" name="name" value="{name}" class="form-control" />
+<input type="text" id="name" name="name" value="{name}" class="form-control focusedInput" />
 <label for="email">E-mail address:</label>
 <input type="text" id="email" name="email" value="{email}" class="form-control" />
 <label for="telephone">Telephone:</label>

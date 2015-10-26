@@ -15,10 +15,11 @@
 		}
 
 		public function send_password_link($user, $key) {
-			$message = file_get_contents("../extra/reset_password.txt");
+			$message = file_get_contents("../extra/password.txt");
 			$replace = array(
 				"FULLNAME" => $user["fullname"],
 				"HOSTNAME" => $_SERVER["SERVER_NAME"],
+				"PROTOCOL" => $_SERVER["HTTP_SCHEME"],
 				"KEY"      => $key);
 
 			$email = new email("Reset password at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
@@ -30,7 +31,7 @@
 		public function password_oke($username, $password) {
 			$result = true;
 
-			if (($password["password"] == "") || ($password["password"] == hash(PASSWORD_HASH, $username))) {
+			if (trim($password["password"]) == "") {
 				$this->output->add_message("Password can't be empty.");
 				$result = false;
 			} else if ($password["password"] != $password["repeat"]) {
@@ -44,9 +45,9 @@
 		public function save_password($username, $password) {
 			if ($username == "") {
 				return false;
-			} else if (is_false($password["password_hashed"])) {
-				$password["password"] = hash(PASSWORD_HASH, $password["password"].hash(PASSWORD_HASH, $username));
 			}
+				
+			$password["password"] = hash_password($password["password"], $username);
 
 			$query = "update users set password=%s where username=%s";
 

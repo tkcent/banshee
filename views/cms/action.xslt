@@ -9,7 +9,7 @@
 //
 //-->
 <xsl:template match="log">
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed table-xs">
 <thead>
 <tr><th class="timestamp">Timestamp</th><th class="ip_address">IP address</th><th class="user">User</th><th class="user">Switched to</th><th class="event">Event</th></tr>
 </thead>

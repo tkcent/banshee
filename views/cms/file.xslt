@@ -10,14 +10,15 @@
 <xsl:template match="files">
 <table class="table table-striped table-hover table-condensed">
 <thead>
-<tr><th>Filename</th><th>Link</th><th>Filesize</th><th></th></tr>
+<tr><th></th><th>Filename</th><th>Link</th><th>Filesize</th><th></th></tr>
 </thead>
 <tbody>
 <xsl:if test="back">
-<tr><td><a href="{back}">&lt;&lt;&lt; one directory up </a></td><td colspan="3"></td></tr>
+<tr><td><img src="/images/directory.png" /></td><td><a href="{back}">&lt;&lt;&lt; one directory up </a></td><td colspan="3"></td></tr>
 </xsl:if>
 <xsl:for-each select="dir">
 <tr>
+<td><img src="/images/directory.png" /></td>
 <td><a href="{link}">[ <xsl:value-of select="name" /> ]</a></td>
 <td></td>
 <td></td>
@@ -29,6 +30,7 @@
 </xsl:for-each>
 <xsl:for-each select="file">
 <tr>
+<td><img src="/images/file.png" /></td>
 <td><xsl:value-of select="name" /></td>
 <td><a href="{link}" target="_blank"><xsl:value-of select="link" /></a></td>
 <td><xsl:value-of select="size" /></td>

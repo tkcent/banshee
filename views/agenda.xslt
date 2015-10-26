@@ -33,8 +33,8 @@
 //-->
 <xsl:template match="month">
 <div class="row">
-<div class="col-sm-6"><h2><xsl:value-of select="@title" /></h2></div>
-<div class="col-sm-6"><div class="btn-group">
+<div class="col-sm-4"><h2><xsl:value-of select="@title" /></h2></div>
+<div class="col-sm-8"><div class="btn-group">
 	<a href="/{/output/page}/list" class="btn btn-xs btn-primary">List view</a>
 	<a href="/{/output/page}/{prev}" class="btn btn-xs btn-primary">Previous month</a>
 	<a href="/{/output/page}/current" class="btn btn-xs btn-primary">Current month</a>
