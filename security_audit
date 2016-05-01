@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "5.1";
+	$written_for = "5.2";
 
 	/* Auditor class
 	 */
@@ -195,14 +195,17 @@
 		private $continue_var = null;
 		protected $verified = array(
 			"libraries/database/mysqli_connection.php"     => array(36),
+			"libraries/database/postgresql_connection.php" => array(46),
 			"libraries/security.php"                       => array(201, 267),
 			"libraries/tablemanager_controller.php"        => array(214),
-			"libraries/tablemanager_model.php"             => array(269),
+			"libraries/tablemanager_model.php"             => array(284),
 			"libraries/user.php"                           => array(268, 277),
-			"models/cms/settings.php"                      => array(58, 81),
+			"models/cms/settings.php"                      => array(54, 77),
 			"models/cms/user.php"                          => array(8),
+			"models/cms/webshop/article.php"               => array(37),
 			"models/search.php"                            => array(135),
-			"models/setup.php"                             => array(128));
+			"models/setup.php"                             => array(130),
+			"models/webshop/cart.php"                      => array(14));
 
 		protected function scan_line($line) {
 			/* PHP database query function calls
@@ -329,6 +332,8 @@
 			"views/agenda.xslt"                    => array(19, 79),
 			"views/banshee/functions.xslt"         => array(15),
 			"views/banshee/page.xslt"              => array(12),
+			"views/cms/webshop/order.xslt"         => array(34, 83, 91),
+			"views/cms/webshop/article.xslt"       => array(30),
 			"views/demos/googlemaps.xslt"          => array(14),
 			"views/demos/posting.xslt"             => array(19),
 			"views/dictionary.xslt"                => array(60),
@@ -337,7 +342,11 @@
 			"views/guestbook.xslt"                 => array(21),
 			"views/mailbox.xslt"                   => array(42),
 			"views/news.xslt"                      => array(20),
-			"views/weblog.xslt"                    => array(25, 51));
+			"views/weblog.xslt"                    => array(25, 51),
+			"views/webshop.xslt"                   => array(14, 34),
+			"views/webshop/checkout.xslt"          => array(80, 88),
+			"views/webshop/cart.xslt"              => array(25, 35),
+			"views/webshop/orders.xslt"            => array(37, 45));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
@@ -349,21 +358,21 @@
 	class integrity_auditor {
 		private $files = array(
 			"libraries/database" => array(
-				"database_connection.php" => "f010d184b75e2135aceead089ef0d9f57f6a98f9",
+				"database_connection.php" => "8d9aac62ab8e3219d622ce87f0ec70b11f0c9326",
 				"mysqli_connection.php"   => "62b7bfb0126eef0246d8d046482c67a30ce2beb3"),
 			"libraries" => array(
-				"banshee.php"    => "3cc8a98d25adf9e41708ad0569afa13eeeecdc36",
+				"banshee.php"    => "caf17ef391a54875fc8a82ef2516e63da03e8d43",
 				"controller.php" => "e53384e166afee3e943b423405ced65f7821aeda",
 				"email.php"      => "7f92eb195913c997150ac5dc532053066078d6cc",
 				"model.php"      => "c838eae31ea1aff8f7628b6df13a4a5b41093934",
-				"output.php"     => "1263f60404b956a9cd7041da83b2fef4bad1879a",
-				"page.php"       => "35c1667644a2108ee23268e19bc6c249a1f25c81",
-				"security.php"   => "5549d858727164f3df71442d7fe1a12ae7afed1a",
-				"session.php"    => "623259b1ea3ac9ffb83e153a97b246f516adfdff",
+				"output.php"     => "05133f81cb41965d76d7549bf6326f82d1931558",
+				"page.php"       => "fa7d5024ffe43f95b4a5cead7f1209dbb51d4f48",
+				"security.php"   => "f0f74c46b1c2fc50bca2418840662fc85b0d569d",
+				"session.php"    => "c92c8519e0f59619398008a2c4ed8dcb48dc1cb7",
 				"settings.php"   => "f884e2db04b97b0996300028bcb619f46135b7aa",
 				"user.php"       => "ed177f6e46f19d902ac5cc33a9b43ae1c714c75e"),
 			"public" => array(
-				"index.php" => "e9ab42d65bb7d3d20245374b5ad8b8c73ddbdf35"));
+				"index.php"      => "e9ab42d65bb7d3d20245374b5ad8b8c73ddbdf35"));
 
 		public function perform_audit() {
 			$total = 0;

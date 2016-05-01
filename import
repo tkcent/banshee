@@ -1,0 +1,110 @@
+#!/usr/bin/php
+<?php
+	# This script can be used to import self-made modules and layouts from your
+	# current website into a new Banshee installation. It is assumed that the
+	# database of your current website will be reused.
+
+	chdir(dirname($argv[0]));
+	require("libraries/banshee.php");
+	require("libraries/helpers/console.php");
+
+	function help_exit() {
+		printf("%s: <other banshee directory> layout|module <name layout/module>\n", $GLOBALS["argv"][0]);
+		exit;
+	}
+
+	$banshee_dir = rtrim($argv[1], "/");
+	if (file_exists($banshee_dir."/libraries/banshee.php") == false) {
+		help_exit();
+	}
+
+	if (($name = $argv[3]) == "") {
+		help_exit();
+	}
+
+	if ($argv[2] == "layout") {
+		/* Import layout
+		 */
+		$layout = "views/banshee/layout_".$name.".xslt";
+		if (file_exists($layout)) {
+			exit("Layout already exists.\n");
+		} else if (file_exists($banshee_dir."/".$layout) == false) {
+			exit("Layout not found.\n");
+		}
+
+		print "Copying layout.\n";
+		safe_copy($banshee_dir."/".$layout, $layout);
+
+		$stylesheet = "public/css/banshee/layout_".$name.".css";
+		if (file_exists($banshee_dir."/".$stylesheet)) {
+			safe_copy($banshee_dir."/".$stylesheet, $stylesheet);
+		}
+
+		$img_dir = "public/images/layout";
+		if (($dp = opendir($banshee_dir."/".$img_dir)) !== false) {
+			$len = strlen($name) + 1;
+			while (($file = readdir($dp)) !== false) {
+				if (substr($file, 0, $len) == $name."_") {
+					safe_copy($banshee_dir."/".$img_dir."/".$file, $img_dir."/".$file);
+				}
+			}
+		}
+
+		print "Adding layout to website.\n";
+		add_layout_to_website($name);
+
+		print "Activating new layout.\n";
+		activate_layout($name);
+	} else if ($argv[2] == "module") {
+		/* Import module
+		 */
+		$locations = array(
+			"css"  => array("public/css"),
+			"js"   => array("public/js"),
+			"php"  => array("controllers", "models"),
+			"xslt" => array("views"));
+
+		print "Checking module name.\n";
+		chdir("database");
+		if (module_exists($name, true)) {
+			exit;
+		}
+		chdir("..");
+
+		$cwd = getcwd();
+		chdir($banshee_dir."/database");
+		$module_type = null;
+		foreach (array("public", "private") as $type) {
+			foreach (array("modules", "pages") as $item) {
+				if (in_array($name, config_file($type."_".$item))) {
+					$module_type = $type;
+					break;
+				}
+			}
+		}
+		chdir($cwd);
+
+		if ($module_type == null) {
+			printf("Module '%s' not found.\n", $name);
+			exit;
+		}
+
+		print "Copying module files.\n";
+		foreach ($locations as $extension => $paths) {
+			foreach ($paths as $path) {
+				$file = $path."/".$name.$extension;
+				safe_copy($banshee_dir.$file, $file);
+			}
+		}
+
+		print "Activating module.\n";
+		if (($fp = fopen("settings/".$module_type."_modules.conf", "a")) !== false) {
+			fputs($fp, $view."\n");
+			fclose($fp);
+		}
+	} else {
+		help_exit();
+	}
+
+	print "Done.\n";
+?>

@@ -31,7 +31,7 @@
 			return null;
 		}
 
-		element.find("li").each(function(){
+		element.find("li").each(function() {
 			if ($(this).find("ul").size() == 0) {
 				$(this).find("input:nth-child(2)").first().after(all_buttons());
 			} else {
@@ -153,7 +153,7 @@
 	/* Check for empty branches after sorting
 	 */
 	var sorting_done = function(event, ui) {
-		element.find("ul").each(function(){
+		element.find("ul").each(function() {
 			if ($(this).find("li").size() == 0) {
 				var b_add_branch = $(h_add_branch);
 				b_add_branch.bind("click", function(e) { add_branch(this); });
@@ -175,11 +175,11 @@
 	 */
 	var give_name = function(elems, current) {
 		var i = 0;
-		elems.children("li").each(function(){
+		elems.children("li").each(function() {
 			var pos = "[" + i + "]";
 			$(this).find("input:nth-child(2)").prop("name", "menu" + current + pos + "[text]");
 			$(this).find("input:nth-child(4)").prop("name", "menu" + current + pos + "[link]");
-			$(this).children("ul").each(function(){
+			$(this).children("ul").each(function() {
 				give_name($(this), current + pos + "[submenu]");
 			});
 			i++;

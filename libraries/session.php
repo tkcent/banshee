@@ -25,14 +25,16 @@
 			$this->db = $db;
 			$this->settings = $settings;
 
-			if ($_SERVER["HTTP_X_BANSHEE_SESSION"] == "disk") {
-				$this->use_database = false;
-			} else {
-				$this->use_database = ($this->settings->session_timeout >= ini_get("session.gc_maxlifetime"));
-			}
+			$this->use_database = ($this->settings->session_timeout >= ini_get("session.gc_maxlifetime"));
 
 			if ($this->use_database) {
 				$this->db->query("delete from sessions where expire<=now()");
+			}
+
+			/* Don't overwrite secure session cookie via HTTP
+			 */
+			if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
+				return;
 			}
 
 			$this->start();
@@ -155,7 +157,7 @@
 				if (($result = $this->db->execute($query, $session_id)) === false) {
 					return false;
 				}
-			} while ($result != false);
+			} while (count($result) > 0);
 
 			/* Store session in database
 			 */
@@ -209,14 +211,22 @@
 		 * ERROR:  false
 		 */
 		public function reset() {
-			unset($_COOKIE[SESSION_NAME]);
-			$_SESSION = array();
 			if ($this->use_database) {
 				$this->db->query("delete from sessions where id=%d", $this->id);
+				$this->id = null;
 			} else {
 				session_unset();
 				session_destroy();
 			}
+
+			foreach (array_keys($_COOKIE) as $cookie) {
+				setcookie($cookie, null, 1);
+			}
+
+			$_SESSION = array();
+			$_COOKIE = array();
+
+			$this->session_id = null;
 
 			return $this->start();
 		}

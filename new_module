@@ -2,27 +2,13 @@
 <?php
 	require("libraries/banshee.php");
 	require("libraries/security.php");
+	require("libraries/helpers/console.php");
 
 	/* Show help and exit
 	 */
 	function help_exit() {
 		printf("Usage: %s public|private <module name> [tm|sf|db|api]\n", $GLOBALS["argv"][0]);
 		exit;
-	}
-
-	/* Copy file, but don't overwrite
-	 */
-	function safe_copy($source, $dest) {
-		if (file_exists($source) == false) {
-			return false;
-		} else if (file_exists($dest)) {
-			printf("Warning, destination file already exists: %s\n", $dest);
-			return false;
-		}
-
-		copy($source, $dest);
-
-		return true;
 	}
 
 	/* Set class name inside file
@@ -121,11 +107,7 @@
 	 */
 	chdir(dirname($argv[0])."/settings");
 
-	if (in_array($view, config_file("public_modules"))) {
-		printf("Module '%s' is already a public module.\n", $module);
-		exit;
-	} else if (in_array($view, config_file("private_modules"))) {
-		printf("Module '%s' is already a private module.\n", $module);
+	if (module_exists($module, true)) {	
 		exit;
 	}
 
@@ -149,7 +131,7 @@
 
 	/* Copy templates
 	 */
-	printf("Creating controller, model, view and stylesheet.\n");
+	print "Creating controller, model, view and stylesheet.\n";
 	safe_copy("templates/".$type."_controller.php", "controllers/".$module.".php");
 	safe_copy("templates/".$type."_model.php", "models/".$module.".php");
 	if ($type != "api") {
@@ -160,14 +142,14 @@
 
 	/* Set class names
 	 */
-	printf("Setting controller and model class name.\n");
+	print "Setting controller and model class name.\n";
 	set_class_name("controllers", $module);
 	set_class_name("models", $module);
 
 	/* Fix include path in XSLT
 	 */
 	if ($type != "api") {
-		printf("Fixing include paths in view.\n");
+		print "Fixing include paths in view.\n";
 		fix_view_include_path($module);
 	}
 

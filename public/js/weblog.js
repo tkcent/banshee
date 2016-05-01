@@ -1,8 +1,4 @@
-$(function() {
-	$('div.weblog').each(function() {
-		$(this).find('s.slimbox').slimbox({
-			counterText: "Image {x} of {y}"
-		});
-	});
+$(document).ready(function(){
+	$("div.weblog div.content a.photo").prop("rel", "prettyPhoto[gallery]");
+	$("div.weblog div.content a.photo").prettyPhoto({ social_tools:"" });
 });
-

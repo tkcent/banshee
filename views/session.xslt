@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="session">
-<tr class="click {owner}" onClick="javascript:document.location='/session/{@id}'">
+<tr class="{owner}" onClick="javascript:document.location='/session/{@id}'">
 <td><xsl:value-of select="ip_address" /></td>
 <td><xsl:value-of select="expire" /></td>
 <td><xsl:value-of select="name" /></td>

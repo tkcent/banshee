@@ -20,7 +20,7 @@
 				"type"     => "varchar",
 				"overview" => true,
 				"required" => false));
-		private $hidden_keys = array();
+		private $hidden_keys = array("database_version", "secret_website_code");
 
 		public function __construct() {
 			$arguments = func_get_args();
@@ -30,10 +30,6 @@
 			sort($types);
 			foreach ($types as $type) {
 				$this->elements["type"]["options"][$type] = $type;
-			}
-
-			if ($this->settings->secret_website_code != "CHANGE_ME_INTO_A_RANDOM_STRING") {
-				array_push($this->hidden_keys, "secret_website_code");
 			}
 
 			if (is_true(DEBUG_MODE) == false) {

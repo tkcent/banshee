@@ -8,7 +8,7 @@
 
 	class csvfile {
 		private $data = array();
-		private $seperator = ",";
+		private $separator = ",";
 
 		/* Constructor
 		 *
@@ -30,7 +30,7 @@
 		 */
 		public function __set($key, $value) {
 			switch ($key) {
-				case "seperator": $this->seperator = $value; break;
+				case "separator": $this->separator = $value; break;
 			}
 		}
 
@@ -76,7 +76,7 @@
 					}
 				} else if ($in_quoted) {
 					$result[$index] .= $csv[$i];
-				} else if ($csv[$i] == $this->seperator) {
+				} else if ($csv[$i] == $this->separator) {
 					$index++;
 				} else {
 					$result[$index] .= $csv[$i];
@@ -174,13 +174,13 @@
 			foreach ($this->data as $line) {
 				foreach ($line as $i => $item) {
 					$item = utf8_decode($item);
-					if ((strpos($item, '"') !== false) || (strpos($item, ",") !== false) || (trim($item, " ") != $item)) {
+					if ((strpos($item, '"') !== false) || (strpos($item, $this->separator) !== false) || (trim($item, " ") != $item)) {
 						$line[$i] = '"'.str_replace('"', '""', $item).'"';
 					} else {
 						$line[$i] = $item;
 					}
 				}
-				$result .= implode($this->seperator, $line)."\n";
+				$result .= implode($this->separator, $line)."\n";
 			}
 
 			if ($result === "") {

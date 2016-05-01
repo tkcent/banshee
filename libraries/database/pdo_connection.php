@@ -124,6 +124,9 @@
 					if ($format[$pos + 1] == "d") {
 						// Integer
 						$resource->bindValue($nr + 1, (int)$values[$nr], PDO::PARAM_INT);
+					} else if ($format[$pos + 1] == "f") {
+						// Float
+						$resource->bindValue($nr + 1, (float)$values[$nr], PDO::PARAM_STR);
 					} else if ($format[$pos + 1] == "s") {
 						// String
 						$resource->bindValue($nr + 1, (string)$values[$nr], PDO::PARAM_STR);

@@ -15,7 +15,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="words/word">
-	<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="word" /></td>
 	<td><xsl:value-of select="short_description" /></td>
 	</tr>

@@ -41,7 +41,6 @@
 					break;
 				case "done":
 					ob_clean();
-					$this->model->ensure_settings();
 					break;
 			}
 			$this->output->close_tag();

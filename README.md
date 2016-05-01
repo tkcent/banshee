@@ -5,21 +5,42 @@ Banshee is a PHP website framework with a main focus on security. It has a Model
 
 Configure your webserver
 ------------------------
-Use the directory 'public' as the webroot directory and allow PHP execution. If you use the Hiawatha webserver, you can use the following UrlToolkit configuration:
+Use the directory 'public' as the webroot directory and allow PHP execution. If you use the Hiawatha webserver, you can use the following configuration:
 
 	UrlToolkit {
 		ToolkitID = banshee
-		Match ^/(css|files|fonts|images|js)(/|$) Expire 1 weeks Return
 		RequestURI isfile Return
+		Match ^/(css|files|fonts|images|js)(/|$) Return
 		Match ^/(favicon.ico|robots.txt)$ Return
 		Match [^?]*(\?.*)? Rewrite /index.php$1
 	}
 
-For Apache, there is a .htaccess file in the 'public' directory which contains the URL rewriting rules.
+	Directory {
+		DirectoryID = files
+		Path = /files
+		StartFile = index.html
+		ShowIndex = yes
+		ExecuteCGI = no
+	}
+
+	Directory {
+		DirectoryID = static
+		Path = /css, /fonts, /images, /js
+		ExpirePeriod = 2 weeks
+	}
+
+	VirtualHost {
+		...
+		UseToolkit = banshee
+		UseDirectory = static, files
+	}
+
+
+For Apache, there is a .htaccess file in the 'public' directory which contains the required URL rewriting rules.
 
 Configure PHP
 -------------
-Banshee needs PHP's MySQL and XSL module. Use the following PHP settings:
+Banshee needs PHP's MySQL, XSL and GD module. Use the following PHP settings:
 
 	allow_url_include = Off
 	cgi.fix_pathinfo = 0 (when using FastCGI PHP), 1 (otherwise)

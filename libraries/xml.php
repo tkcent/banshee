@@ -184,10 +184,7 @@
 				}
 				
 				if (is_array($record[$key]) == false) {
-					if (is_numeric($key)) {
-						$key = "item";
-					}
-					$this->add_tag($key, $record[$key]);
+					$this->add_tag(is_numeric($key) ? "item" : $key, $record[$key]);
 				} else if ($recursive) {
 					$this->record($record[$key], $key, array(), true);
 				}

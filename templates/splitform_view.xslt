@@ -10,10 +10,12 @@
 //-->
 <xsl:template name="splitform_header">
 <h1>Title</h1>
+<div class="progress">
+	<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{current + 1}" aria-valuemin="1" aria-valuemax="{current/@max + 2}" style="width:{current/@percentage}%"><xsl:value-of select="current + 1" /> / <xsl:value-of select="current/@max + 2" /></div>
+</div>
 </xsl:template>
 
 <xsl:template name="splitform_footer">
-<div>Progress: step <xsl:value-of select="../../current + 1" /> of <xsl:value-of select="../../current/@max + 1" /></div>
 </xsl:template>
 
 <!--
@@ -22,7 +24,7 @@
 //
 //-->
 <xsl:template match="splitform/template_name">
-<label for="key1">>Key 1:</label>
+<label for="key1">Key 1:</label>
 <input type="text" id="key1" name="key1" value="{key1}" class="form-control" />
 <label for="key2">Key 2:</label>
 <input type="text" id="key2" name="key2" value="{key2}" class="form-control" />

@@ -30,6 +30,9 @@
 				"Newsletter" => array(
 					"Newsletter"    => array("cms/newsletter", "newsletter.png"),
 					"Subscriptions" => array("cms/subscriptions", "subscriptions.png")),
+				"Webshop" => array(
+					"Articles"      => array("cms/webshop/article", "articles.png"),
+					"Orders"        => array("cms/webshop/order", "orders.png")),
 				"System" => array(
 					"Logging"       => array("cms/logging", "logging.png"),
 					"Action log"    => array("cms/action", "action.png"),
@@ -41,14 +44,6 @@
 			if ($this->user->is_admin) {
 				if (module_exists("setup")) {
 					$this->output->add_system_warning("The setup module is still available. Remove it from settings/public_modules.conf.");
-				}
-
-				if (($this->user->id == 1) && ($this->user->password == "c10b391ff5e75af6ee8469539e6a5428f09eff7e693d6a8c4de0e5525cd9b287")) {
-					$this->output->add_system_warning("Don't forget to change the password of the admin account!");
-				}
-
-				if ($this->settings->secret_website_code == "CHANGE_ME_INTO_A_RANDOM_STRING") {
-					$this->output->add_system_warning("Don't forget to change the secret_website_code setting.");
 				}
 
 				if (is_true(DEBUG_MODE)) {

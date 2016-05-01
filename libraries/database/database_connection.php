@@ -168,24 +168,26 @@
 
 		/* Returns the id of the latest created record
 		 *
-		 * INPUT:  [int history offset]
+		 * INPUT:  [int history offset, [resource query resource]
 		 * OUTPUT: int insert identifier
 		 * ERROR:  false
 		 */
-		public function last_insert_id($history = null) {
+		public function last_insert_id($history = null, $resource = null) {
+			$param = ($resource !== null) ? $resource : $this->link;
+
 			if ($history !== null) {
 				$size = count($this->insert_id_history);
 				return $history < $size ? $this->insert_id_history[(int)$history] : 0;
 			} else if ($this->db_insert_id == null) {
 				return false;
-			} else if (($last_id = call_user_func($this->db_insert_id, $this->link)) == 0) {
+			} else if (($last_id = call_user_func($this->db_insert_id, $param)) == 0) {
 				return $this->last_insert_id(0);
 			} else {
 				return $last_id;
 			}
 		}
 
-		/* Create a SQL query by securely inserting the parameters in the query string
+		/* Create an SQL query by securely inserting the parameters in the query string
 		 *
 		 * INPUT:  string query[, mixed query parameter, ...]
 		 * OUTPUT: string
@@ -224,7 +226,7 @@
 			return vsprintf($format, $values);
 		}
 
-		/* Execute a SQL query and return the resource identifier
+		/* Execute an SQL query and return the resource identifier
 		 *
 		 * INPUT:  string query[, mixed query parameter, ...]
 		 * OUTPUT: mixed resource identifier
@@ -308,7 +310,7 @@
 			return call_user_func($this->db_free_result, $resource);
 		}
 
-		/* Execute a SQL query and return the result
+		/* Execute an SQL query and return the result
 		 *
 		 * INPUT:  string query[, mixed query parameter, ...]
 		 * OUTPUT: mixed result for 'select' and 'show' queries / int affected rows
@@ -339,7 +341,7 @@
 			return true;
 		}
 
-		/* Execute a SQL query, cache and return the result
+		/* Execute an SQL query, cache and return the result
 		 *
 		 * INPUT:  object database, string query[, mixed query parameter, ...]
 		 * OUTPUT: mixed result for 'select' and 'show' queries / int affected rows

@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="mail">
-<tr class="click {read}" onClick="javascript:document.location='/{/output/page}/{@id}'">
+<tr class="{read}" onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="subject" /></td>
 <td><xsl:value-of select="user" /></td>
 <td><xsl:value-of select="timestamp" /></td>

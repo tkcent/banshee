@@ -17,7 +17,7 @@
 	</thead>
 	<tbody>
 	<xsl:for-each select="../../faqs/faq[section_id=$section_id]">
-		<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'"><td><xsl:value-of select="question" /></td></tr>
+		<tr onClick="javascript:document.location='/{/output/page}/{@id}'"><td><xsl:value-of select="question" /></td></tr>
 	</xsl:for-each>
 	</tbody>
 	</table>

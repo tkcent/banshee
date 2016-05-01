@@ -7,13 +7,17 @@
 	 */
 
 	class SQLite3_connection extends database_connection {
-		public function __construct($filename, $mode = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $encryption_key = null) {
+		public function __construct($filename, $mode = null, $encryption_key = null) {
 			$this->db_close         = array($this, "db_close_wrapper");
 			$this->db_insert_id     = array($this, "db_last_insert_wrapper");
 			$this->db_escape_string = array($this, "db_escape_wrapper");
 			$this->db_query         = array($this, "db_query_wrapper");
 			$this->db_fetch         = array($this, "db_fetch_wrapper");
 			$this->id_delim         = '"';
+
+			if ($mode === null) {
+				$mode = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE;
+			}
 
 			$this->link = new SQLite3($filename, $mode, $encryption_key);
 		}

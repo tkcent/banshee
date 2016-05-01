@@ -8,7 +8,7 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "5.1");
+	define("BANSHEE_VERSION", "5.2");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -26,7 +26,8 @@
 	define("ERROR_MODULE", "banshee/error");
 	define("LOGIN_MODULE", "banshee/login");
 	define("LOGOUT_MODULE", "logout");
-	define("FPDF_FONT_PATH", "../extra/fpdf_fonts/");
+	define("PROFILE_MODULE", "profile");
+	define("FPDF_FONTPATH", "../extra/fpdf_fonts/");
 	define("PHOTO_PATH", "photos");
 	define("FILES_PATH", "files");
 	define("TLS_CERT_SERIAL_VAR", "TLS_CERT_SERIAL");
@@ -138,11 +139,14 @@
 	 * OUTPUT: bool module exists
 	 * ERROR:  -
 	 */
-	function module_exists($module) {
-		if (in_array($module, config_file("public_modules"))) {
-			return true;
-		} else if (in_array($module, config_file("private_modules"))) {
-			return true;
+	function module_exists($module, $warn = false) {
+		foreach (array("public", "private") as $type) {
+			if (in_array($module, config_file($type."_modules"))) {
+				if ($warn) {
+					printf("There already exists a %s module '%s'.\n", $type, $module);
+				}
+				return true;
+			}
 		}
 
 		return false;
@@ -156,6 +160,20 @@
 	 */
 	function library_exists($library) {
 		return file_exists("../libraries/".$library.".php");
+	}
+
+	/* Check for table existence
+	 *
+	 * INPUT:  db database object, string table name
+	 * OUTPUT: bool table exists
+	 * ERROR:  -
+	 */
+	function table_exists($db, $table) {
+		if (($result = $db->execute("show tables like %s", $table)) == false) {
+			return false;
+		}
+
+		return $result[0]["num_rows"] > 0;
 	}
 
 	/* Handle table sort

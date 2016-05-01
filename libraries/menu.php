@@ -127,6 +127,7 @@
 				$this->output->open_tag("item", $args);
 				$this->output->add_tag("link", $item["link"]);
 				$this->output->add_tag("text", $item["text"]);
+				$this->output->add_tag("class", str_replace("/", "_", substr($item["link"], 1)));
 				if (isset($item["submenu"])) {
 					$this->show_menu($item["submenu"]);
 				}

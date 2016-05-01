@@ -3,6 +3,7 @@
 		private $private_key = null;
 		private $public_key = null;
 		private $padding = OPENSSL_PKCS1_PADDING;
+		private $max_length = null;
 
 		/* Constructor
 		 *
@@ -12,20 +13,34 @@
 		 */
 		public function __construct($private_key, $passphrase = "", $public_key = null) {
 			if (is_integer($private_key)) {
-				$this->generate_keys($private_key);
-				return;
-			}
+				/* Generate keys
+				 */
+				$config = array(
+					"digest_alg"       => "sha512",
+					"private_key_bits" => $private_key,
+					"private_key_type" => OPENSSL_KEYTYPE_RSA);
 
-			$this->fix_path($private_key);
-			$this->private_key = openssl_pkey_get_private($private_key, $passphrase);
+				$this->private_key = openssl_pkey_new($config);
 
-			if ($public_key === null) {
-				$public_key = $private_key;
+				$details = openssl_pkey_get_details($this->private_key);
+				$this->public_key = openssl_pkey_get_public($details["key"]);
 			} else {
-				$this->fix_path($public_key);
+				/* Load keys
+				 */
+				$this->fix_path($private_key);
+				$this->private_key = openssl_pkey_get_private($private_key, $passphrase);
+
+				if ($public_key === null) {
+					$public_key = $private_key;
+				} else {
+					$this->fix_path($public_key);
+				}
+
+				$this->public_key = openssl_pkey_get_public($public_key);
 			}
 
-			$this->public_key = openssl_pkey_get_public($public_key);
+			$details = openssl_pkey_get_details($this->private_key);
+			$this->max_length = $details["bits"] / 8;
 		}
 
 		/* Fix path of key file
@@ -61,6 +76,7 @@
 					}
 					return $details["key"];
 				case "padding": return $this->padding;
+				case "max_length": return $this->max_length;
 			}
 
 			return null;
@@ -78,24 +94,6 @@
 			}
 		}
 
-		/* Generate an RSA key pair
-		 *
-		 * INPUT:  int RSA key size
-		 * OUTPUT: -
-		 * ERROR:  -
-		 */
-		private function generate_keys($size) {
-			$config = array(
-				"digest_alg"       => "sha512",
-				"private_key_bits" => $size,
-				"private_key_type" => OPENSSL_KEYTYPE_RSA);
-
-			$this->private_key = openssl_pkey_new($config);
-
-			$details = openssl_pkey_get_details($this->private_key);
-			$this->public_key = openssl_pkey_get_public($details["key"]);
-		}
-
 		/* Encrypt message with private key
 		 *
 		 * INPUT:  string message
@@ -104,6 +102,8 @@
 		 */
 		public function encrypt_with_private_key($message) {
 			if ($this->private_key === null) {
+				return false;
+			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
 			
@@ -123,6 +123,8 @@
 		public function encrypt_with_public_key($message) {
 			if ($this->public_key === null) {
 				return false;
+			} else if (strlen($message) > $this->max_length) {
+				return false;
 			}
 			
 			if (openssl_public_encrypt($message, $result, $this->public_key, $this->padding) == false) {
@@ -141,6 +143,8 @@
 		public function decrypt_with_private_key($message) {
 			if ($this->private_key === null) {
 				return false;
+			} else if (strlen($message) > $this->max_length) {
+				return false;
 			}
 			
 			if (openssl_private_decrypt($message, $result, $this->private_key, $this->padding) == false) {
@@ -158,6 +162,8 @@
 		 */
 		public function decrypt_with_public_key($message) {
 			if ($this->public_key === null) {
+				return false;
+			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
 			

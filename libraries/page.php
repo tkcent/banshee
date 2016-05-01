@@ -179,27 +179,10 @@
 
 			/* Old browser
 			 */
-			if (preg_match("/MSIE [5678]/", $_SERVER["HTTP_USER_AGENT"]) > 0) {
-				$this->module = "banshee/browser";
-				return;
-			}
-
-			/* Public module
-			 */
-			if (($this->module = $this->module_on_disk($page, config_file("public_modules"))) !== null) {
-				$module_count = substr_count($this->module, "/") + 1;
-				$this->parameters = array_slice($this->pathinfo, $module_count);
-				return;
-			} else if (($this->module = $this->page_in_database($page, NO)) !== null) {
-				return;
-			}
-
-			/* Change profile before access to private pages
-			 */
-			if ($this->user->logged_in && ($page != LOGOUT_MODULE)) {
-				if (($this->user->status == USER_STATUS_CHANGEPWD) && (isset($_SESSION["user_switch"]) == false)) {
-					$page = "profile";
-					$this->type = "";
+			if (preg_match("/MSIE ([0-9]*)/", $_SERVER["HTTP_USER_AGENT"], $matches) > 0) {
+				if ((int)$matches[1] < 11) {
+					$this->module = "banshee/browser";
+					return;
 				}
 			}
 
@@ -207,6 +190,18 @@
 			 */
 			if (($this->module = $this->module_on_disk($page, config_file("private_modules"))) === null) {
 				$this->module = $this->page_in_database($page, YES);
+			}
+
+			/* Public module
+			 */
+			if ($this->module == null) {
+				if (($this->module = $this->module_on_disk($page, config_file("public_modules"))) !== null) {
+					$module_count = substr_count($this->module, "/") + 1;
+					$this->parameters = array_slice($this->pathinfo, $module_count);
+					return;
+				} else if (($this->module = $this->page_in_database($page, NO)) !== null) {
+					return;
+				}
 			}
 
 			if ($this->module == null) {
@@ -221,12 +216,17 @@
 				$this->module = LOGIN_MODULE;
 				$this->type = "";
 			} else if ($this->user->access_allowed($this->__get("page").$this->type) == false) {
-				/* Access denied because not with right role.
+				/* Access denied because right role is missing.
 				 */
 				$this->module = ERROR_MODULE;
 				$this->http_code = 403;
 				$this->type = "";
 				$this->user->log_action("unauthorized request for page %s", $page);
+			} else if (($this->module != LOGOUT_MODULE) && ($this->user->status == USER_STATUS_CHANGEPWD) && (isset($_SESSION["user_switch"]) == false)) {
+				/* Change profile before access to private pages.
+				 */
+				$this->module = PROFILE_MODULE;
+				$this->type = "";
 			} else {
 				/* Access allowed.
 				 */

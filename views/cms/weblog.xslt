@@ -23,7 +23,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="weblogs/weblog">
-<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <xsl:if test="/output/user/@admin='yes'">
 <td><xsl:value-of select="author" /></td>

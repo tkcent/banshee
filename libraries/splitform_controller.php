@@ -75,12 +75,12 @@
 						} else if ($this->process_form_data($this->model->values) == false) {
 							/* Submit error
 							 */
-							$this->output->add_tag("result", "Error while processing form information.");
-							return false;
+							$this->model->load_form_data();
 						} else {
 							/* Submit oke
 							 */
 							$this->output->open_tag("submit");
+							$this->output->add_tag("current", $this->model->max + 1, array("max" => $this->model->max, "percentage" => "100"));
 							foreach ($this->model->values as $key => $value) {
 								$this->output->add_tag("value", $value, array("key" => $key));
 							}
@@ -96,14 +96,20 @@
 			}
 
 			$this->output->open_tag("splitforms");
-			$this->output->add_tag("current", $this->model->current, array("max" => $this->model->max));
+			$percentage = round(100 * ($this->model->current + 1) / ($this->model->max + 2));
+			$this->output->add_tag("current", $this->model->current, array("max" => $this->model->max, "percentage" => $percentage));
 
 			/* Show the webform
 			 */
+			$template = $this->model->forms[$this->model->current]["template"];
+
 			$this->output->open_tag("splitform");
-			$this->output->open_tag($this->model->forms[$this->model->current]["template"]);
+			$this->output->open_tag($template);
 			foreach ($_POST as $key => $value) {
 				$this->output->add_tag($key, $value);
+			}
+			if (method_exists($this, "prepare_".$template)) {
+				call_user_func(array($this, "prepare_".$template));
 			}
 			$this->output->close_tag();
 			$this->output->close_tag();

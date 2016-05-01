@@ -1,3 +1,17 @@
+banshee (5.2) stable; urgency=low
+
+  * Webshop modules added.
+  * Improved setup module.
+  * Added import script.
+  * jQuery updated to 2.2.0.
+  * Bootstrap updated to 3.3.6.
+  * CKEditor updated to 4.5.6.
+  * DataTables updated to 1.10.10.
+  * FPDF updated to 1.81. Bookmark script included.
+  * Small bugfixes and improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 21 Feb 2015 20:36:05 +0100
+
 banshee (5.1) stable; urgency=low
 
   * Register module added.

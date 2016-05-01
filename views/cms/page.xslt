@@ -15,7 +15,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="pages/page[private=0]">
-	<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
 	<td><xsl:value-of select="visible" /></td>
@@ -31,7 +31,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="pages/page[private=1]">
-	<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
 	<td><xsl:value-of select="visible" /></td>

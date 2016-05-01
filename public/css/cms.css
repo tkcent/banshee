@@ -34,6 +34,14 @@ div.panel_newsletter {
 	float:right;
 }
 
+div.panel_webshop {
+	display:inline-block;
+	width:48%;
+	float:left;
+}
+
 div.panel_system {
-	clear:both;
+	display:inline-block;
+	width:48%;
+	float:right;
 }

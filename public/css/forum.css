@@ -56,6 +56,10 @@ div.topic div.panel-heading div div:nth-child(3) {
 	text-align:right;
 }
 
+span.registered {
+	color:#0080ff;
+}
+
 /* Smilies
  */
 div.smilies img {

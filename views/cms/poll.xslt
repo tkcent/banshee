@@ -15,7 +15,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="polls/poll[@edit='yes']">
-<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="question" /></td>
 <td><xsl:value-of select="begin" /></td>
 <td><xsl:value-of select="end" /></td>

@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="roles/role">
-	<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="." /></td>
 	<td class="users"><xsl:value-of select="@users" /></td>
 	</tr>
@@ -81,7 +81,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="members/member">
-<tr onClick="javascript:location='/cms/user/{@id}'" class="click">
+<tr onClick="javascript:location='/cms/user/{@id}'">
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
 </tr>

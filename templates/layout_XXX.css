@@ -1,3 +1,17 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+html, body {
+	height:100%;
+}
+
+div.wrapper {
+	min-height:100%;
+	position:relative;
+}
+
 h1 {
 	font-size:32px;
 	margin-top:0;
@@ -56,8 +70,14 @@ nav.navbar {
 	border-radius:0
 }
 
-/* Page
+/* Content
  */
+div.content div.container {
+	padding-top:25px;
+	padding-bottom:75px;
+	position:relative;
+}
+
 input.form-control, textarea.form-control, select.form-control {
 	max-width:500px;
 	margin-bottom:5px;
@@ -86,9 +106,14 @@ table.table-hover tbody tr:hover {
 /* Footer
  */
 div.footer {
+	position:absolute;
+	bottom:0;
+	height:50px;
+	width:100%;
+	background-color:#f0f0f0;
+	border-top:1px solid #e0e0e0;
+	padding-top:15px;
 	text-align:center;
-	margin-top:30px;
-	margin-bottom:40px;
 	color:#a0a0a0;
 	font-size:12px;
 }
@@ -109,6 +134,9 @@ div.footer a {
 }
 
 @media (max-width:767px) {
+	div.footer {
+		height:125px;
+	}
 	div.footer span {
 		display:block;
 		margin-bottom:10px;

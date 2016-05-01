@@ -70,7 +70,7 @@
 	<div class="panel panel-default">
 	<div class="panel-heading">
 		<div class="row">
-		<div class="col-xs-5"><xsl:value-of select="author" /><xsl:if test="unread='yes'"><span class="unread">*</span></xsl:if></div>
+		<div class="col-xs-5"><span class="{usertype}"><xsl:value-of select="author" /></span><xsl:if test="unread='yes'"><span class="unread">*</span></xsl:if></div>
 		<div class="col-sm-2"><xsl:if test="@moderate='yes'"><a href="/cms/forum/{@id}">edit</a></xsl:if></div>
 		<div class="col-sm-5"><xsl:value-of select="timestamp" /></div>
 		</div>

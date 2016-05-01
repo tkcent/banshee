@@ -1,5 +1,7 @@
 <?php
 	class setup_model extends model {
+		private $required_php_extensions = array("gd", "libxml", "mysqli", "xsl");
+
 		/* Determine next step
 		 */
 		public function step_to_take() {
@@ -19,6 +21,9 @@
 				 */
 				if ((DB_HOSTNAME == "localhost") && (DB_DATABASE == "banshee") && (DB_USERNAME == "banshee") && (DB_PASSWORD == "banshee")) {
 					return "db_settings";
+				} else if (strpos(DB_PASSWORD, "'") !== false) {
+					$this->output->add_system_message("A single quote is not allowed in the password!");
+					return "db_settings";
 				}
 
 				return "create_db";
@@ -29,12 +34,9 @@
 				return "import_sql";
 			}
 
-/*
-			$settings = new settings($db);
-			if ($settings->database_version != null) {
+			if ($this->settings->database_version < $this->latest_database_version()) {
 				return "update_db";
 			}
-*/
 
 			return "done";
 		}
@@ -49,7 +51,7 @@
 			}
 
 			$missing = array();
-			foreach (array("libxml", "mysqli", "xsl") as $extension) {
+			foreach ($this->required_php_extensions as $extension) {
 				if (extension_loaded($extension) == false) {
 					array_push($missing, $extension);
 				}
@@ -143,7 +145,7 @@
 		/* Import database tables from file
 		 */
 		public function import_sql() {
-			system("mysql -u \"".DB_USERNAME."\" --password=\"".DB_PASSWORD."\" \"".DB_DATABASE."\" < ../database/mysql.sql", $result);
+			system("mysql -h '".DB_HOSTNAME."' -u '".DB_USERNAME."' --password='".DB_PASSWORD."' '".DB_DATABASE."' < ../database/mysql.sql", $result);
 			if ($result != 0) {
 				$this->output->add_message("Error while importing database tables.");
 				return false;
@@ -155,12 +157,24 @@
 			return true;
 		}
 
-		/* Update database
+		/* Collect latest database version from update_database() function
 		 */
-		public function update_database() {
-			$settings = new settings($this->db);
+		private function latest_database_version() {
+			$old_db = $this->db;
+			$old_settings = $this->settings;
+			$this->db = new dummy_object();
+			$this->settings = new dummy_object();
+			$this->settings->database_version = 0;
 
-			return true;
+			$this->update_database();
+			$version = $this->settings->database_version;
+
+			unset($this->db);
+			unset($this->settings);
+			$this->db = $old_db;
+			$this->settings = $old_settings;
+
+			return $version;
 		}
 
 		/* Add setting when missing
@@ -177,13 +191,35 @@
 			return $this->db->insert("settings", $entry) !== false;
 		}
 
-		/* Ensure settings
+		/* Update database
 		 */
-		public function ensure_settings() {
-			$this->ensure_setting("hiawatha_cache_enabled", "boolean", "false");
-			$this->ensure_setting("hiawatha_cache_default_time", "integer", "3600");
-			$this->ensure_setting("session_timeout", "integer", "3600");
-			$this->ensure_setting("session_persistent", "boolean", "false");
+		public function update_database() {
+			if ($this->settings->database_version < 1) {
+				$this->ensure_setting("hiawatha_cache_enabled", "boolean", "false");
+				$this->ensure_setting("hiawatha_cache_default_time", "integer", "3600");
+				$this->ensure_setting("session_timeout", "integer", "3600");
+				$this->ensure_setting("session_persistent", "boolean", "false");
+
+				$this->settings->database_version = 1;
+			}
+
+			return true;
+		}
+	}
+
+	class dummy_object {
+		private $cache = array();
+
+		public function __set($key, $value) {	
+			$this->cache[$key] = $value;
+		}
+
+		public function __get($key) {
+			return $this->cache[$key];
+		}
+
+		public function __call($func, $args) {
+			 return false;
 		}
 	}
 ?>

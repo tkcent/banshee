@@ -140,23 +140,33 @@
 		 * ERROR:  -
 		 */
 		protected function add_search_filter(&$query, &$args, $search) {
+			if (is_array($search) == false) {
+				$search = explode(",", $search);
+				$search = array_slice($search, 0, 10);
+				foreach ($search as $key => $value) {
+					$search[$key] = trim($value);
+				}
+			}
+
+			$item = array_shift($search);
+
 			$filter = array();
 			foreach ($this->elements as $key => $element) {
 				switch ($element["type"]) {
 					case "boolean":
-						if (in_array(strtolower($search), array("yes", "no"))) {
+						if (in_array(strtolower($item), array("yes", "no"))) {
 							array_push($filter, "%S=%d");
-							array_push($args, $key, is_true($search) ? YES : NO);
+							array_push($args, $key, is_true($item) ? YES : NO);
 						}
 						break;
 					case "date":
 						array_push($filter, "DATE_FORMAT(%S.%S, %s) like %s");
-						array_push($args, $this->table, $key, "%W %d %M %Y", "%".$search."%");
+						array_push($args, $this->table, $key, "%W %d %M %Y", "%".$item."%");
 						break;
 					case "foreignkey":
 						if (is_array($element["column"]) == false) {
 							array_push($filter, "%S.%S like %s");
-							array_push($args, $element["table"], $element["column"], "%".$search."%");
+							array_push($args, $element["table"], $element["column"], "%".$item."%");
 						} else {
 							$concat = array();
 							foreach ($element["column"] as $column) {
@@ -164,20 +174,25 @@
 								array_push($args, $element["table"], $column);
 							}
 							array_push($filter, "concat(".implode(", ", $concat).") like %s");
-							array_push($args, "%".$search."%");
+							array_push($args, "%".$item."%");
 						}
 						break;
 					case "timestamp":
 						array_push($filter, "DATE_FORMAT(%S.%S, %s) like %s");
-						array_push($args, $this->table, $key, "%W %d %M %Y %T", "%".$search."%");
+						array_push($args, $this->table, $key, "%W %d %M %Y %T", "%".$item."%");
 						break;
 					default:
 						array_push($filter, "%S.%S like %s");
-						array_push($args, $this->table, $key, "%".$search."%");
+						array_push($args, $this->table, $key, "%".$item."%");
 				}
 			}
 
 			$query .= " (".implode(" or ", $filter).")";
+
+			if (count($search) > 0) {
+				$query .= " and";
+				$this->add_search_filter($query, $args, $search);
+			}
 		}
 
 		/* Count all items

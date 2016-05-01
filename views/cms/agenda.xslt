@@ -18,7 +18,7 @@
 <tbody>
 <xsl:for-each select="appointments/appointment[timestamp&gt;$now]">
 <xsl:sort select="begin" order="ascending" />
-<tr class="click" onclick="javascript:document.location='/{/output/page}/{@id}'">
+<tr onclick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <td><xsl:value-of select="begin" /></td>
 <td><xsl:value-of select="end" /></td>
@@ -35,7 +35,7 @@
 <tbody>
 <xsl:for-each select="appointments/appointment[not(timestamp&gt;$now)]">
 <xsl:sort select="begin" order="descending" />
-<tr class="click" onclick="javascript:document.location='/{/output/page}/{@id}'">
+<tr onclick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="title" /></td>
 <td><xsl:value-of select="begin" /></td>
 <td><xsl:value-of select="end" /></td>

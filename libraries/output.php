@@ -265,7 +265,7 @@
 		 */
 		public function set_layout($layout = null) {
 			if ($layout === null) {
-				$inherit_layout = array(LOGOUT_MODULE, "password");
+				$inherit_layout = array(LOGOUT_MODULE, "password", "profile");
 				if (substr($this->page->url, 0, 4) == "/cms") {
 					$this->layout = LAYOUT_CMS;
 				} else if (in_array($this->page->module, $inherit_layout)) {

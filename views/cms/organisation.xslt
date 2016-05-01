@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="tablemanager/users/user">
-<tr onClick="javascript:location='/cms/user/{@id}'" class="click">
+<tr onClick="javascript:location='/cms/user/{@id}'">
 <td><xsl:value-of select="fullname" /></td>
 <td><xsl:value-of select="email" /></td>
 </tr>

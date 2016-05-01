@@ -2,11 +2,20 @@
 	class weblog_controller extends controller {
 		private $url = null;
 
+		private function include_prettyphoto() {
+			$this->output->add_javascript("banshee/jquery.prettyphoto.js");
+			$this->output->add_javascript("weblog.js");
+
+			$this->output->add_css("banshee/prettyphoto.css");
+		}
+
 		private function show_last_weblogs() {
 			if (($weblogs = $this->model->get_last_weblogs($this->settings->weblog_page_size)) === false) {
 				$this->output->add_tag("result", "Database error.", $this->url);
 				return;
 			}
+
+			$this->include_prettyphoto();
 
 			$this->output->open_tag("weblogs");
 
@@ -35,6 +44,8 @@
 				$this->output->add_tag("result", "Weblog not found.", $this->url);
 				return;
 			}
+
+			$this->include_prettyphoto();
 
 			$this->output->title = $weblog["title"]." - Weblog";
 

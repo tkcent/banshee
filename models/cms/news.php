@@ -9,7 +9,7 @@
 				"overview" => true,
 				"required" => true),
 			"timestamp" => array(
-				"label"    => "Timestamp",
+				"label"    => "Publish at",
 				"type"     => "timestamp",
 				"overview" => true),
 			"content" => array(

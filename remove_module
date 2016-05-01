@@ -14,9 +14,6 @@
 	print "Remove Banshee Module\n\n";
 
 	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
-	if ($db->connected == false) {
-		exit("Internal error: database not available.\n");
-	}
 
 	$banshee_modules = array(
 		"agenda" => array(
@@ -97,7 +94,12 @@
 			"pages"       => array("weblog", "weblog.xml", "cms/weblog", "cms/weblog/comment"),
 			"tables"      => array("weblog_tagged", "weblog_tags", "weblog_comments", "weblogs"),
 			"settings"    => array("weblog\_%"),
-			"directories" => array("cms/weblog")));
+			"directories" => array("cms/weblog")),
+		"webshop" => array(
+			"pages"       => array("webshop", "webshop/cart", "webshop/checkout", "webshop/orders", "cms/webshop/article", "cms/webshop/order"),
+			"tables"      => array("shop_order_article", "shop_orders", "shop_articles"),
+			"settings"    => array("webshop\_%"),
+			"directories" => array("webshop", "cms/webshop")));
 
 	if (count($argv) == 1) {
 		/* Show modules
@@ -123,7 +125,7 @@
 		$cols = floor($width / ($max + 2));
 		$col = 0;
 
-		print "Usage: ".$argv[0]." <module>\n\n";
+		print "Usage: ".$argv[0]." <module> [<module> ...]\n\n";
 		print "Available modules:\n";
 		foreach ($modules as $module) {
 			print "  ".str_pad($module, $max);
@@ -133,134 +135,141 @@
 			}
 		}
 		print "\n";
-	} else {
-		/* Remove module
-		 */
-		$params = $argv;
-		array_shift($params);
+		
+		return;
+	}
 
-		$modules = array();
-		foreach ($params as $param) {
-			if (isset($banshee_modules[$param])) {
-				array_push($modules, $banshee_modules[$param]);
-			}
+	/* Remove module
+	 */
+	$params = $argv;
+	array_shift($params);
+
+	$modules = array();
+	foreach ($params as $param) {
+		if (isset($banshee_modules[$param])) {
+			array_push($modules, $banshee_modules[$param]);
 		}
+	}
 
-		$locations = array(
-			"css"  => array("public/css"),
-			"js"   => array("public/js"),
-			"php"  => array("controllers", "models"),
-			"xslt" => array("views"));
+	$locations = array(
+		"css"  => array("public/css"),
+		"js"   => array("public/js"),
+		"php"  => array("controllers", "models"),
+		"xslt" => array("views"));
 
-		foreach ($modules as $module) {
-			/* Pages
-			 */
-			foreach ($locations as $extension => $paths) {
-				foreach ($paths as $path) {
-					foreach ($module["pages"] as $page) {
-						$file = "../".$path."/".$page.".".$extension;
-						if (file_exists($file)) {
-							printf("Deleting file %s.\n", substr($file, 3));
-							if (unlink($file) == false) {
-								printf("Error while deleting file %s\n", $file);
-							}
-						}
-					}
-				}
-			}
-
-			/* Libraries
-			 */
-			if (isset($module["libraries"])) {
-				foreach ($module["libraries"] as $library) {
-					$file = "../libraries/".$library.".php";
+	foreach ($modules as $module) {
+		/* Pages
+		 */
+		foreach ($locations as $extension => $paths) {
+			foreach ($paths as $path) {
+				foreach ($module["pages"] as $page) {
+					$file = "../".$path."/".$page.".".$extension;
 					if (file_exists($file)) {
-						printf("Deleting library %s.\n", $file);
+						printf("Deleting file %s.\n", substr($file, 3));
 						if (unlink($file) == false) {
-							printf("Error while deleting library %s\n", $file);
+							printf("Error while deleting file %s\n", substr($file, 3));
 						}
 					}
 				}
 			}
+		}
 
-			/* Tables
-			 */
-			if (isset($module["tables"])) {
-				foreach ($module["tables"] as $table) {
-					printf("Dropping table %s.\n", $table);
-					$db->query("drop table if exists %S", $table);
-				}
-			}
-
-			/* Files
-			 */
-			if (isset($module["files"])) {
-				foreach ($module["files"] as $file) {
-					$file = "../".$file;
-					if (file_exists($file)) {
-						unlink($file);
+		/* Libraries
+		 */
+		if (isset($module["libraries"])) {
+			foreach ($module["libraries"] as $library) {
+				$file = "../libraries/".$library.".php";
+				if (file_exists($file)) {
+					printf("Deleting library %s.\n", $file);
+					if (unlink($file) == false) {
+						printf("Error while deleting library %s\n", $file);
 					}
 				}
 			}
+		}
 
-			/* Settings
-			 */
-			if (isset($module["settings"])) {
-				foreach ($module["settings"] as $setting) {
-					$key = str_replace("\\", "", $setting);
-					$key = str_replace("%", "*", $key);
-					printf("Deleting setting %s.\n", $key);
-					$db->query("delete from settings where %S like %s", "key", $setting);
+		/* Tables
+		 */
+		if (isset($module["tables"]) && $db->connected) {
+			foreach ($module["tables"] as $table) {
+				printf("Dropping table %s.\n", $table);
+				$db->query("drop table if exists %S", $table);
+			}
+		}
+
+		/* Files
+		 */
+		if (isset($module["files"])) {
+			foreach ($module["files"] as $file) {
+				$file = "../".$file;
+				if (file_exists($file)) {
+					printf("Deleting file %s.\n", substr($file, 3));
+					if (unlink($file) == false) {
+						printf("Error while deleting file %s\n", substr($file, 3));
+					}
 				}
 			}
+		}
 
-			/* Directories
-			 */
-			if (isset($module["directories"])) {
-				foreach ($locations as $paths) {
-					foreach ($paths as $path) {
-						foreach ($module["directories"] as $directory) {	
-							$directory = "../".$path."/".$directory;
-							printf("Deleting directory %s.\n", $directory);
-							if (file_exists($directory)) {
-								if (rmdir($directory) == false) {
-									printf("Error while deleting directory %s\n", $directory);
-								}
+		/* Settings
+		 */
+		if (isset($module["settings"]) && $db->connected) {
+			foreach ($module["settings"] as $setting) {
+				$key = str_replace("\\", "", $setting);
+				$key = str_replace("%", "*", $key);
+				printf("Deleting setting %s.\n", $key);
+				$db->query("delete from settings where %S like %s", "key", $setting);
+			}
+		}
+
+		/* Directories
+		 */
+		if (isset($module["directories"])) {
+			foreach ($locations as $paths) {
+				foreach ($paths as $path) {
+					foreach ($module["directories"] as $directory) {	
+						$directory = "../".$path."/".$directory;
+						printf("Deleting directory %s.\n", substr($directory, 3));
+						if (file_exists($directory)) {
+							if (rmdir($directory) == false) {
+								printf("Error while deleting directory %s\n", substr($directory, 3));
 							}
 						}
 					}
 				}
 			}
 		}
+	}
 
-		/* Page configuration
-		 */
-		printf("Removing module from page configuration files.\n");
-		foreach (array("public_modules.conf", "private_modules.conf") as $file) {
-			if (($config = file($file)) == false) {
-				continue;
-			}
-
-			if (($fp = fopen($file, "w")) == false) {
-				continue;
-			}
-
-			foreach ($config as $line) {
-				$item = chop($line);
-				list($item) = explode(".", $item, 2);
-
-				foreach ($modules as $module) {
-					if (in_array($item, $module["pages"])) {
-						continue 2;
-					}
-				}
-
-				fputs($fp, $line);
-			}
-
-			fclose($fp);
+	/* Page configuration
+	 */
+	printf("Removing module from page configuration files.\n");
+	foreach (array("public_modules.conf", "private_modules.conf") as $file) {
+		if (($config = file($file)) == false) {
+			continue;
 		}
 
+		if (($fp = fopen($file, "w")) == false) {
+			continue;
+		}
+
+		foreach ($config as $line) {
+			$item = chop($line);
+			list($item) = explode(".", $item, 2);
+
+			foreach ($modules as $module) {
+				if (in_array($item, $module["pages"])) {
+					continue 2;
+				}
+			}
+
+			fputs($fp, $line);
+		}
+
+		fclose($fp);
+	}
+
+	if ($db->connected) {
 		system("../database/private_modules");
 	}
 ?>

@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="collections/collection">
-<tr class="click" onClick="javascript:document.location='/{/output/page}/{@id}'">
+<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="name" /></td>
 </tr>
 </xsl:for-each>

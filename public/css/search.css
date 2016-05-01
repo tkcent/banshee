@@ -1,3 +1,11 @@
+input[type=submit].btn {
+	padding:6px 25px;
+}
+
+input.form-control {
+	max-width:none;
+}
+
 div.sections {
 	margin-top:5px;
 }

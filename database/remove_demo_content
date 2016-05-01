@@ -2,12 +2,16 @@
 <?php
 	/* This script will remove all the demo content in your Banshee installation.
 	 */
-	if (($argv[1] != "for") && ($argv[2] != "sure")) {
-		exit("Use 'for sure' as the parameter for this script.\n");
-	}
 
     chdir(dirname($argv[0]));
 	require("../libraries/banshee.php");
+	require("../libraries/helpers/console.php");
+
+	function delete_file($file) {
+		if (file_exists($file)) {
+			unlink($file);
+		}
+	}
 
 	function truncate_directory($dir) {
 		$dir = "../".$dir;
@@ -19,10 +23,42 @@
 			if ($file[0] == ".") {
 				continue;
 			}
-			unlink($dir."/".$file);
+			delete_file($dir."/".$file);
 		}
 
 		closedir($dp);
+	}
+
+	function remove_layout($name) {
+		$filename = "../views/banshee/main.xslt";
+
+		if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		$include = false;
+		foreach ($file as $i => $line) {
+			if (strpos($line, "layout_".$name) !== false) {
+				continue;
+			}
+
+			fputs($fp, $line);
+		}
+
+		fclose($fp);
+
+		delete_file("../views/banshee/layout_".$name.".xslt");
+		delete_file("../public/css/banshee/layout_".$name.".css");
+
+		return true;
+	}
+
+	if (($argv[1] != "for") && ($argv[2] != "sure")) {
+		exit("Use 'for sure' as the parameter for this script.\n");
 	}
 
 	/* Demo page files
@@ -30,15 +66,15 @@
     $dirs = array("views/demos", "controllers/demos", "models/demos", "public/css/demos");
 	foreach ($dirs as $dir) {
 		$dir = "../".$dir."/";
-		if (($dp = opendir($dir)) != false) {
+		if (($dp = @opendir($dir)) != false) {
 			while (($file = readdir($dp)) != false) {
 				if (($file == ".") || ($file == "..")) {
 					continue;
 				}
 				unlink($dir.$file);
 			}
+			rmdir($dir);
 		}
-		rmdir($dir);
 	}
 
 	/* Demo content on disk
@@ -56,15 +92,20 @@
 	$tables = array("agenda", "dictionary", "cache", "collection_album", "collections",
 		"faqs", "faq_sections", "forum_last_view", "forum_messages", "forum_topics",
 		"forums", "guestbook", "languages", "links", "mailbox", "menu", "news",
-		"page_access", "pages", "poll_answers", "polls", "subscriptions",
-		"weblog_tagged", "weblog_tags", "weblog_comments", "weblogs");
+		"page_access", "pages", "poll_answers", "polls", "shop_order_article", "shop_orders",
+		"shop_articles", "subscriptions", "weblog_tagged", "weblog_tags", "weblog_comments",
+		"weblogs");
 	$db->query("set foreign_key_checks=%d", 0);
 	foreach ($tables as $table) {
-		$db->query("truncate table %S", $table);
+		if (table_exists($db, $table)) {
+			$db->query("truncate table %S", $table);
+		}
 	}
 	$db->query("set foreign_key_checks=%d", 1);
 
-	$db->query("drop table %S", "dummy");
+	if (table_exists($db, "dummy")) {
+		$db->query("drop table %S", "dummy");
+	}
 
 	/* Module configuration
 	 */
@@ -87,6 +128,11 @@
 
 		fclose($fp);
 	}
+
+	/* Layout
+	 */
+	activate_layout("site");
+	remove_layout("demo");
 
 	/* Update pages table
 	 */
