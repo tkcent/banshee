@@ -1,19 +1,30 @@
 <?php
 	class webshop_controller extends controller {
-		public function show_articles($search) {
-			if (($article_count = $this->model->count_articles($search)) === false) {
+		public function show_articles($search, $category) {
+			if (($article_count = $this->model->count_articles($search, $category)) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;	
 			}
 
 			$paging = new pagination($this->output, "webshop_articles", $this->settings->webshop_page_size, $article_count);
 
-			if (($articles = $this->model->get_articles($paging->offset, $paging->size, $search)) === false) {
+			if (($articles = $this->model->get_articles($paging->offset, $paging->size, $search, $category)) === false) {
+				$this->output->add_tag("result", "Database error.");
+				return;	
+			}
+
+			if (($categories = $this->model->get_categories()) == false) {
 				$this->output->add_tag("result", "Database error.");
 				return;	
 			}
 
 			$this->output->open_tag("webshop");
+
+			$this->output->open_tag("categories", array("current" => (int)$_SESSION["webshop_category"]));
+			foreach ($categories as $category) {
+				$this->output->add_tag("category", $category["name"], array("id" => $category["id"]));
+			}
+			$this->output->close_tag();
 
 			$this->output->open_tag("articles", array("currency" => WEBSHOP_CURRENCY));
 			foreach ($articles as $article) {
@@ -48,6 +59,16 @@
 				}
 			}
 
+			if ($this->page->pathinfo[1] == "category") {
+				if ($this->page->pathinfo[2] == 0) {
+					$_SESSION["webshop_category"] = null;
+				} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+					$_SESSION["webshop_category"] = $this->page->pathinfo[2];
+				} else {
+					$_SESSION["webshop_category"] = null;
+				}
+			}
+
 			$cart_count = 0;
 			foreach ($_SESSION["webshop_cart"] as $article) {
 				$cart_count += $article["quantity"];
@@ -63,7 +84,7 @@
 					$this->output->add_tag("result", "Article not found.");
 				}
 			} else {
-				$this->show_articles($_SESSION["webshop_search"]);
+				$this->show_articles($_SESSION["webshop_search"], $_SESSION["webshop_category"]);
 			}
 		}
 	}

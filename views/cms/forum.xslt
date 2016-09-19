@@ -26,7 +26,7 @@
 		<div class="col-xs-2 list-group">
 			<a href="/forum/topic/{topic_id}#{@id}" class="list-group-item">view</a>
 			<a href="/{/output/page}/{@id}" class="list-group-item">edit</a>
-			<form action="/{/output/page}" method="post" class="list-group-ite">
+			<form action="/{/output/page}" method="post">
 				<input type="hidden" name="message_id" value="{@id}" />
 				<input type="submit" name="submit_button" value="delete" class="list-group-item" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 			</form>

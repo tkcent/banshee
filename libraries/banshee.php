@@ -4,11 +4,11 @@
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
+	 *
+	 * Don't change this file, unless you know what you are doing.
 	 */
 
-	/* For internal usage. Only change if you know what you're doing!
-	 */
-	define("BANSHEE_VERSION", "5.2");
+	define("BANSHEE_VERSION", "5.3");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -18,7 +18,8 @@
 	define("USER_STATUS_ACTIVE", 2);
 	define("PASSWORD_HASH", "sha256");
 	define("PASSWORD_ITERATIONS", 100000);
-	define("SESSION_NAME", "BansheeSessionID");
+	define("SESSION_NAME", "banshee_session_id");
+	define("SESSION_LOGIN", "banshee_login_id");
 	define("HOUR", 3600);
 	define("DAY", 86400);
 	define("LOG_DAYS", 60);
@@ -28,6 +29,7 @@
 	define("LOGOUT_MODULE", "logout");
 	define("PROFILE_MODULE", "profile");
 	define("FPDF_FONTPATH", "../extra/fpdf_fonts/");
+	define("K_PATH_FONTS", "../extra/tcpdf_fonts/");
 	define("PHOTO_PATH", "photos");
 	define("FILES_PATH", "files");
 	define("TLS_CERT_SERIAL_VAR", "TLS_CERT_SERIAL");
@@ -173,7 +175,7 @@
 			return false;
 		}
 
-		return $result[0]["num_rows"] > 0;
+		return count($result[0]) > 0;
 	}
 
 	/* Handle table sort
@@ -309,7 +311,7 @@
 		$config = array();
 		foreach (file($config_file) as $line) {
 			if ($remove_comments) {
-				$line = trim(preg_replace("/(^| )#.*/", "", $line));
+				$line = trim(preg_replace("/(^|\s)#.*/", "", $line));
 			}
 			$line = rtrim($line);
 

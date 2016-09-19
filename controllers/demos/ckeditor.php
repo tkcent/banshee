@@ -8,9 +8,8 @@
 				$this->output->add_tag("editor", $_POST["editor"]);
 				$this->output->close_tag();
 			} else {
-				$this->output->add_javascript("ckeditor/ckeditor.js");
-				$this->output->add_javascript("banshee/start_ckeditor.js");
-				$this->output->run_javascript("start_ckeditor()");
+				$this->output->add_ckeditor();
+#				$this->output->add_ckeditor("div.btn-group");
 
 				$this->output->add_tag("edit");
 			}

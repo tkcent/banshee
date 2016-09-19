@@ -4,27 +4,11 @@ div.forums {
 	margin-bottom:20px;
 }
 
-div.forums div {
-	border-bottom:1px solid #c0c0c0;
-	padding:5px;
+div.forums table tbody tr:nth-child(2n) td {
+	padding-left:30px;
 }
 
-div.forums div {
-	font-style:italic;
-}
-
-div.forums div:last-child {
-	border:0;
-}
-
-div.forums h3 {
-	font-style:normal;
-	margin:0;
-	padding:0;
-	border:0;
-}
-
-div.forums a {
+div.forums table a {
 	font-weight:bold;
 	text-decoration:none;
 }

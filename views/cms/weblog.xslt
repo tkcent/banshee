@@ -80,14 +80,12 @@
 <label for="newtag">New tags:</label>
 <input type="text" id="newtag" name="new_tags" value="{weblog/new_tags}" class="form-control" />
 
-<div>
 <label for="visible">Visible:</label>
 <input type="checkbox" id="visible" name="visible">
 <xsl:if test="weblog/visible='yes'">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
 </input>
-</div>
 
 <!-- Buttons -->
 <div class="btn-group">
@@ -96,7 +94,6 @@
 <xsl:if test="weblog/@id">
 <input type="submit" name="submit_button" value="Delete weblog" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
-<input type="button" value="Start CKEditor" id="start_cke" class="btn btn-default" onClick="javascript:start_ckeditor()" />
 </div>
 
 <!-- Comments -->

@@ -18,5 +18,5 @@ if [ ! -s jquery-min.js ]; then
 	exit
 fi
 
-echo "Installing new jQuery."
+echo "Installing jQuery."
 mv -f jquery-min.js jquery.js

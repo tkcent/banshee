@@ -13,12 +13,12 @@ In no event shall the author of Banshee be liable for any bug in this software.
 
 The following files are not part of the Banshee PHP framework:
 
-	- CKeditor          : public/js/ckeditor/*
 	- Bootstrap         : public/(css|js)/banshee/bootstrap.(css.js)
 	- DataTables        : public/js/banshee/jquery.datatables.js
 	- FPDF              : libraries/fpdf.php
 	- jQuery            : public/(css|js)/jquery/*
 	- jsencrypt         : public/js/banshee/jsencrypt.js
+	- Notify.js         : public/js/banshee/notify.js
 	- prettyPhoto       : public/js/banshee/jquery.prettyphoto.js
 	- SHA256 javascript : public/js/banshee/sha256.js
 	- ZIP library       : libraries/zipfile.php

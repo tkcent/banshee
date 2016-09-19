@@ -9,7 +9,7 @@
 		 */
 		if ($_user->login_password($_POST["username"], $_POST["password"])) {
 			if (is_true($_POST["bind_ip"])) {
-				$_user->bind_to_ip();
+				$_session->bind_to_ip();
 			}
 			$_SERVER["REQUEST_METHOD"] = "GET";
 			$_POST = array();

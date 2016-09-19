@@ -236,8 +236,7 @@
 						$this->output->add_css("banshee/timepicker.css");
 						break;
 					case "ckeditor":
-						$this->output->add_javascript("ckeditor/ckeditor.js");
-						$this->output->add_javascript("banshee/start_ckeditor.js");
+						$this->output->add_ckeditor("div.btn-group");
 						break;
 				}
 
@@ -334,6 +333,9 @@
 				/* Search item
 				 */
 				$_SESSION["tablemanager_search_".$this->model->table] = $_POST["search"];
+				if ($_POST["search"] != "") {
+					$this->browsing = null;
+				}
 				$this->show_overview();
 			} else {
 				$this->show_overview();

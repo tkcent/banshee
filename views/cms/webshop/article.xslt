@@ -19,6 +19,7 @@
 <tr>
 <th><a href="?order=article_nr">Article number</a></th>
 <th><a href="?order=title">Title</a></th>
+<th><a href="?order=category">Category</a></th>
 <th><a href="?order=price">Price</a></th>
 </tr>
 </thead>
@@ -27,6 +28,7 @@
 <tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="article_nr" /></td>
 <td><xsl:value-of select="title" /></td>
+<td><xsl:value-of select="category" /></td>
 <td><span class="currency"><xsl:value-of select="../@currency" disable-output-escaping="yes" /></span><xsl:value-of select="price" /></td>
 </tr>
 </xsl:for-each>
@@ -57,6 +59,12 @@
 
 <label for="article_nr">Article number:</label>
 <input type="text" id="article_nr" name="article_nr" value="{article/article_nr}" class="form-control" />
+<label for="category">Category</label>
+<select name="shop_category_id" class="form-control">
+<xsl:for-each select="categories/category">
+<option value="{@id}"><xsl:if test="@id=../../article/shop_category_id"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if><xsl:value-of select="." /></option>
+</xsl:for-each>
+</select>
 <label for="title">Title:</label>
 <input type="text" id="title" name="title" value="{article/title}" class="form-control" />
 <label for="short_description">Short descrtiption:</label>
@@ -67,10 +75,8 @@
 <input type="text" id="image" name="image" value="{article/image}" class="form-control" />
 <label for="price">Price:</label>
 <input type="text" id="price" name="price" value="{article/price}" class="form-control" />
-<div>
 <label for="visible">Visible:</label>
 <input type="checkbox" id="visible" name="visible"><xsl:if test="article/visible='yes'"><xsl:attribute name="checked">checked></xsl:attribute></xsl:if></input>
-</div>
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Save article" class="btn btn-default" />

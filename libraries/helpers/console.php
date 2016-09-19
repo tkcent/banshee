@@ -66,7 +66,7 @@
 	/* Activate new layout
 	 */
 	function activate_layout($name) {
-		$filename = "settings/website.conf";
+		$filename = "../settings/website.conf";
 
 		if (($file = file($filename)) === false) {
 			return false;

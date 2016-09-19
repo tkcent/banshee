@@ -8,18 +8,25 @@
 //
 //-->
 <xsl:template match="list">
-<div class="list">
+<table class="table table-striped list">
+<thead>
+<tr>
+<th>Begin</th><th>end</th><th>Title</th>
+</tr>
+</thead>
+<tbody>
 <xsl:for-each select="appointment">
-<div class="summary" onClick="javascript:$('.content{@id}').slideToggle('normal')">
-<div class="title"><xsl:value-of select="title" /></div>
-<div class="date"><xsl:value-of select="begin" /> - <xsl:value-of select="end" /></div>
-</div>
-
-<div class="content content{@id}">
-<xsl:value-of disable-output-escaping="yes" select="content" />
-</div>
+<tr>
+<td><xsl:value-of select="begin" /></td>
+<td><xsl:value-of select="end" /></td>
+<td><xsl:value-of select="title" /></td>
+</tr>
+<tr>
+<td colspan="3"><xsl:value-of disable-output-escaping="yes" select="content" /></td>
+</tr>
 </xsl:for-each>
-</div>
+</tbody>
+</table>
 
 <div class="btn-group">
 <a href="/{/output/page}" class="btn btn-default">Back</a>

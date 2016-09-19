@@ -15,8 +15,8 @@ div.well input[type=checkbox] {
 	margin-left:0;
 }
 
-textarea#style:focus {
-	height:250px;
+textarea#style {
+	height:100px;
 }
 
 textarea#editor {

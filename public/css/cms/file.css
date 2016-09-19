@@ -22,3 +22,7 @@ table.table th:nth-child(5) {
 input[type=file] {
 	padding:0px;
 }
+
+div.input-group span input {
+	padding:6px 25px;
+}

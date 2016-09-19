@@ -33,15 +33,6 @@
 
 <!--
 //
-//  Result template
-//
-//-->
-<xsl:template match="result">
-<p><xsl:value-of select="." /></p>
-</xsl:template>
-
-<!--
-//
 //  Content template
 //
 //-->

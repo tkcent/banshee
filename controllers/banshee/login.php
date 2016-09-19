@@ -9,19 +9,17 @@
 
 			$this->output->add_javascript("banshee/login.js");
 
+			$bind_ip = ($_SERVER["REQUEST_METHOD"] == "POST") ? $_POST["bind_ip"] : true;
+
 			$this->output->open_tag("login", array(
 				"password" => show_boolean(module_exists("password")),
-				"register" => show_boolean(module_exists("register"))));
+				"register" => show_boolean(module_exists("register")),
+				"bind_ip"  => show_boolean($bind_ip)));
 
 			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
 
-			if ($_SERVER["REQUEST_METHOD"] != "POST") {
-				$this->output->add_tag("bind");
-			} else {
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$this->output->add_tag("username", $_POST["username"]);
-				if (is_true($_POST["bind_ip"])) {
-					$this->output->add_tag("bind");
-				}
 			}
 
 			$this->output->add_tag("remote_addr", $_SERVER["REMOTE_ADDR"]);

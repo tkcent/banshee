@@ -1,0 +1,14 @@
+div.modal-header {
+	color:#ffffff;
+	background-color: #337ab7;
+}
+
+button.help {
+	float:right;
+}
+
+@media (max-width:767px) {
+	button.help {
+		margin-top:10px;
+	}
+}

@@ -1,3 +1,20 @@
+banshee (5.3) stable; urgency=low
+
+  * Session library improved.
+  * Public/private page selection improved.
+  * Photo module improved.
+  * Article categories added to webshop.
+  * Several layout improvements.
+  * Help Javascript library added.
+  * Old-browser warning page removed.
+  * Made CKEditor an optional download.
+  * Included TCPDF download script.
+  * jQuery updated to 2.2.4.
+  * DataTables updated to 1.10.11.
+  * Small bugfixes and improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu, 26 May 2016 14:33:27 +0200
+
 banshee (5.2) stable; urgency=low
 
   * Webshop modules added.
@@ -10,7 +27,7 @@ banshee (5.2) stable; urgency=low
   * FPDF updated to 1.81. Bookmark script included.
   * Small bugfixes and improvements.
 
- -- Hugo Leisink <hugo@leisink.net>  Sun, 21 Feb 2015 20:36:05 +0100
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 21 Feb 2016 20:36:05 +0100
 
 banshee (5.1) stable; urgency=low
 

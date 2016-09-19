@@ -16,7 +16,22 @@
 				"label"    => "Timestamp",
 				"type"     => "date",
 				"overview" => true,
-				"readonly" => true));
+				"readonly" => false),
+			"listed" => array(
+				"label"    => "Listed in index",
+				"type"     => "boolean",
+				"overview" => true,
+				"default"  => true),
+			"private" => array(
+				"label"    => "Private",
+				"type"     => "boolean",
+				"overview" => true));
+
+		public function create_item($item) {
+			$item["timestamp"] = date("Y-m-d");
+
+			parent::create_item($item);
+		}
 
 		public function delete_oke($item_id) {
 			$query = "select count(*) as count from photos where photo_album_id=%d";

@@ -9,17 +9,14 @@
 //-->
 <xsl:template match="content">
 <h1>Search</h1>
+<div class="well">
 <form action="/{/output/page}" method="post">
-<div class="row">
-	<div class="col-lg-6">
-		<div class="input-group">
-			<input type="text" id="query" name="query" value="{query}" class="form-control" />
-			<span class="input-group-btn">
-				<input type="submit" name="submit_button" value="Search" class="btn btn-default" />
-			</span>
-		</div><!-- /input-group -->
-	</div><!-- /.col-lg-6 -->
-</div><!-- /.row -->
+<div class="input-group">
+	<input type="text" id="query" name="query" value="{query}" class="form-control" />
+	<span class="input-group-btn">
+		<input type="submit" name="submit_button" value="Search" class="btn btn-default" />
+	</span>
+</div>
 
 <div class="sections">Sections:
 <xsl:for-each select="sections/section">
@@ -27,6 +24,7 @@
 </xsl:for-each>
 </div>
 </form>
+</div>
 
 <xsl:if test="result">
 <div class="error"><xsl:value-of select="result" /></div>

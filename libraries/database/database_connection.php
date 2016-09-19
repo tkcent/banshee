@@ -162,6 +162,9 @@
 			if (is_float($variable)) {
 				return "%f";
 			}
+			if (is_bool($variable)) {
+				return "%d";
+			}
 
 			return "%s";
 		}

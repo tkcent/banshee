@@ -8,27 +8,23 @@
 
 			$this->output->open_tag("sessions");
 			foreach ($sessions as $session) {
-				$session["owner"] = ($session["session_id"] == $_COOKIE[SESSION_NAME]) ? "current" : "other";
+				$owner = show_boolean($session["session_id"] == $_COOKIE[SESSION_NAME]);
 				$session["expire"] = date("j F Y, H:i:s", $session["expire"]);
-				$this->output->record($session, "session");
+				$session["bind_to_ip"] = show_boolean($session["bind_to_ip"]);
+				$this->output->record($session, "session", array("owner" => $owner));
 			}
 			$this->output->close_tag();
 		}
 
 		private function show_session_form($session) {
 			$this->output->open_tag("edit");
-
 			$this->output->record($session, "session");
-
 			$this->output->close_tag();
 		}
 
 		public function execute() {
 			if ($this->user->logged_in == false) {
 				$this->output->add_tag("result", "The session manager should not be accessible for non-authenticated visitors!");
-				return;
-			} else if ($this->user->session_via_database == false) {
-				$this->output->add_tag("result", "The database is not being used to store sessions, so there is nothing to manage.");
 				return;
 			}
 

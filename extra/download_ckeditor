@@ -18,11 +18,17 @@ if [ ! -s ckeditor.zip ]; then
 	exit
 fi
 
-echo "Installing new CKEditor."
-mv -f ckeditor ckeditor_old
+echo "Installing CKEditor."
+if [ -d ckeditor ]; then
+	mv -f ckeditor ckeditor_old
+fi
 unzip ckeditor.zip > /dev/null
 rm -rf ckeditor/samples
-mv -f ckeditor_old/config.js ckeditor
+if [ -d ckeditor_old ]; then
+	mv -f ckeditor_old/config.js ckeditor
+else
+	cp -f ../../extra/ckeditor_config.js ckeditor/config.js
+fi
 
 echo "Cleaning up."
 rm -rf ckeditor_old

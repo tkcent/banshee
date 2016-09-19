@@ -27,9 +27,22 @@
 		}
 
 		private function show_article_form($article) {
+			if (($categories = $this->model->get_categories()) === false) {
+				$this->output->add_tag("result", "Database error.");
+				return false;
+			}
+
 			$this->output->open_tag("edit");
+
 			$article["visible"] = show_boolean($article["visible"]);
 			$this->output->record($article, "article");
+
+			$this->output->open_tag("categories");
+			foreach ($categories as $category) {
+				$this->output->add_tag("category", $category["name"], array("id" => $category["id"]));
+			}
+			$this->output->close_tag();
+
 			$this->output->close_tag();
 		}
 

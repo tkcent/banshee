@@ -245,9 +245,10 @@
 				$this->add_search_tables($query, $args);
 				$query .= " where";
 				$this->add_search_filter($query, $args, $search);
-			}
 
-			switch (func_num_args()) {
+				$query .= " order by ".$order;
+				array_push($args, $this->order);
+			} else switch (func_num_args()) {
 				case 0:
 					/* No browsing
 					 */

@@ -12,20 +12,15 @@
 <div class="albums">
 <xsl:for-each select="albums/album">
 <div class="album row">
-	<div class="col-xs-6">
-		<xsl:if test="thumbnail">
-		<a href="/{/output/page}/{@id}"><img src="/{/output/page}/thumbnail_{thumbnail}.{extension}" alt="thumbnail {thumbnail}" /></a>
-		</xsl:if>
-	</div>
-	<div class="col-xs-6">
-		<div class="name"><a href="/{/output/page}/{@id}"><xsl:value-of select="name" /></a></div>
-		<div class="description"><xsl:value-of select="description" /></div>
-	</div>
+	<div class="name"><xsl:value-of select="name" /></div>
+	<div class="image"><a href="/{/output/page}/{@id}"><img src="/{/output/page}/image_{thumbnail}.{extension}" alt="thumbnail {thumbnail}" /></a></div>
+	<div class="timestamp"><xsl:value-of select="timestamp" /></div>
+	<div class="description"><xsl:value-of select="description" /></div>
 </div>
 </xsl:for-each>
 </div>
 
-<div class="clear"></div>
+<div class="clear" />
 
 <div class="right">
 <xsl:apply-templates select="pagination" />
@@ -38,30 +33,23 @@
 //
 //-->
 <xsl:template match="photos">
-<p><xsl:value-of select="@info" /></p>
 <div class="photos" id="gallery">
 <xsl:for-each select="photo">
 <div class="photo"><a href="/{/output/page}/image_{@id}.{extension}" title="{title}"><div class="box"><img src="/{/output/page}/thumbnail_{@id}.{extension}" alt="{title}" /></div></a></div>
 </xsl:for-each>
+<div class="clear" />
+<p><span><xsl:value-of select="@timestamp" /></span><span><xsl:value-of select="@info" /></span></p>
 </div>
-<br clear="both" />
 
 <div class="right">
 <xsl:apply-templates select="pagination" />
 </div>
+<xsl:if test="@listed='yes'">
 <div class="btn-group left">
 <a href="/{/output/page}" class="btn btn-default">Back</a>
 </div>
+</xsl:if>
 <div class="clear"></div>
-</xsl:template>
-
-<!--
-//
-//  Result template
-//
-//-->
-<xsl:template match="result">
-<p><xsl:value-of select="." /></p>
 </xsl:template>
 
 <!--
@@ -74,6 +62,7 @@
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="photos" />
 <xsl:apply-templates select="result" />
+<xsl:apply-templates select="website_error" />
 </xsl:template>
 
 </xsl:stylesheet>

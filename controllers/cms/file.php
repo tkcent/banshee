@@ -8,7 +8,7 @@
 			$directory = $base_dir.$sub_dir;
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				if ($_POST["submit_button"] == "Create directory") {
+				if ($_POST["submit_button"] == "Create") {
 					/* Create directory
 					 */
 					if ($this->model->directory_oke($_POST["create"], $directory) == false) {
@@ -17,7 +17,7 @@
 						$this->output->add_tag("create", $_POST["create"]);
 						$this->output->add_message("Error creating directory.");
 					}
-				} else if ($_POST["submit_button"] == "Upload file") {
+				} else if ($_POST["submit_button"] == "Upload") {
 					/* Upload file
 					 */
 					if ($this->model->upload_oke($_FILES["file"], $directory)) {

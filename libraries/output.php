@@ -196,14 +196,18 @@
 		 * OUTPUT: boolean CSS file exists
 		 * ERROR:  -
 		 */
-		public function add_css($css) {
+		public function add_css($css, $prepend = false) {
 			if (file_exists("css/".$css) == false) {
 				return false;
 			}
 			$css = "/css/".$css;
 
 			if (in_array($css, $this->css_links) == false) {
-				array_push($this->css_links, $css);
+				if ($prepend) {
+					array_unshift($this->css_links, $css);
+				} else {
+					array_push($this->css_links, $css);
+				}
 			}
 
 			return true;
@@ -255,6 +259,36 @@
 				"title" => $title,
 				"type"  => $type,
 				"url"   => $url));
+		}
+
+		/* Add CKEditor
+		 */
+		public function add_ckeditor($button_selector = null, $textarea_selector = "editor") {
+			if (file_exists("js/ckeditor/ckeditor.js") == false) {
+				if ($button_selector === null) {	
+					$this->add_system_warning("The CKEditor library was not found. Run the script extra/download_ckeditor to download and install it.");
+				}
+				return;
+			}
+
+			$this->add_javascript("ckeditor/ckeditor.js");
+			$this->add_javascript("banshee/ckeditor.js");
+			if ($button_selector == null) {
+				$this->run_javascript("start_ckeditor('".$textarea_selector."')");
+			} else {
+				$this->run_javascript("add_ckeditor_button('".$button_selector."', '".$textarea_selector."')");
+			}
+		}
+
+		/* Add help button
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function add_help_button() {
+			$this->add_javascript("banshee/help.js");
+			$this->add_css("banshee/help.css");
 		}
 
 		/* Set page layout

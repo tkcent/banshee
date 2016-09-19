@@ -6,6 +6,9 @@
 			if (($collections = $this->model->get_collections()) === false) {
 				$this->output->add_tag("result", "Database error.");
 				return;
+			} else if (count($collections) == 0) {
+				$this->output->add_tag("result", "No photo album collections are available.", array("seconds" => 0));
+				return;
 			}
 
 			$this->output->open_tag("overview");

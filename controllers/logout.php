@@ -9,7 +9,7 @@
 					$url = $this->settings->start_page;
 				} else {
 					$this->user->log_action("switched back to self");
-					$_SESSION["user_id"] = $_SESSION["user_switch"];
+					$this->user->session->set_user_id($_SESSION["user_switch"]);
 					unset($_SESSION["user_switch"]);
 					$url = "cms/switch";
 				}

@@ -133,6 +133,19 @@
 			return $this->db->execute($query, $args);
 		}
 
+		/* User public functions
+		 */
+		public function get_user($user_id) {
+			return $this->borrow("cms/user")->get_user($user_id);
+		}
+
+		public function get_weblogs_by_user($user_id) {
+			$query = "select w.id, w.title, UNIX_TIMESTAMP(w.timestamp) as timestamp, u.fullname as author, month(timestamp) as month ".
+			         "from weblogs w, users u where w.user_id=u.id and u.id=%d and visible=%d order by timestamp desc";
+
+			return $this->db->execute($query, $user_id, YES);
+		}
+
 		public function comment_oke($comment) {
 			$result = true;
 
@@ -178,9 +191,9 @@
 				return false;
 			}
 
-			$weblog_url = "http://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/".$weblog_id;
+			$weblog_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/".$weblog_id;
 
-			$cms_url = "http://".$_SERVER["SERVER_NAME"]."/cms/weblog/".$weblog_id;
+			$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/weblog/".$weblog_id;
 			if (($key = one_time_key($this->db, $author["id"])) !== false) {
 				$cms_url .= "?login=".$key;
 			}

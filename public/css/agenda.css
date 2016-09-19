@@ -1,35 +1,11 @@
 /* List view
  */
-div.list {
-	width:600px;
-	margin-bottom:10px;
+table.list thead tr th:nth-child(1),
+table.list thead tr th:nth-child(2) {
+	width:200px;
 }
-
-div.list div.summary {
-	cursor:pointer;
-	margin-top:5px;
-}
-
-div.list div.summary:hover div.title {
-	color:#ff5a00;
-}
-
-div.list div.title {
-	font-weight:bold;
-	float:left;
-	margin-right:5px;
-}
-
-div.list div.title:after {
-	content:",";
-}
-
-div.list div.content {
-	display:none;
-	background-color:#f0f0f0;
-	margin:0px 0px 10px 10px;
-	padding:0px 5px 5px 15px;
-	border:1px solid #e8e8e8;
+table.list tbody tr:nth-child(2n) td {
+	padding-left:30px;
 }
 
 /* Month view
@@ -50,18 +26,22 @@ div.row div.btn-group {
 table.month {
 	width:100%;
 	border-spacing:0px;
-	border-top:1px solid #000000;
-	border-left:1px solid #000000;
+	margin-top:10px;
 	margin-bottom:15px;
 	table-layout:fixed;
 }
 
+table.month tbody {
+	border-top:1px solid #c0c0c0;
+	border-left:1px solid #c0c0c0;
+}
+
 table.month thead th {
-	border-right:1px solid #000000;
-	border-bottom:3px double #000000;
-	background-color:#dbdfeb;
+	border-bottom:1px solid #c0c0c0;
 	overflow:hidden;
 	text-overflow:ellipsis;
+	text-align:center;
+	padding-bottom:7px;
 }
 
 table.month tr.week {
@@ -70,14 +50,16 @@ table.month tr.week {
 
 table.month td.day {
 	width:14%;
-	border-right:1px solid #000000;
-	border-bottom:1px solid #000000;
+	border-right:1px solid #c0c0c0;
+	border-bottom:1px solid #c0c0c0;
 	vertical-align:top;
 	padding:0px 3px;
 }
 
-table.month td.day div {
+table.month td.day div.nr {
 	margin-bottom:0;
+	text-align:right;
+	margin:5px 5px 0 0;
 }
 
 table.month td.dow6, table.month td.dow7 {

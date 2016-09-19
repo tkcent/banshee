@@ -49,16 +49,19 @@ img.title_icon {
 }
 
 @media (max-width:767px) {
-	table.table-xs th,
-	table.table-xs td {
+	table.table-xs > thead > tr > th,
+	table.table-xs > tbody > tr > td,
+	table.table-xs > tfoot > tr > td {
 		display:block;
 	}
 
-	table.table-xs th:last-child {
+	table.table-xs > thead > tr > th:last-child {
 		border:none;
 	}
-	table.table-xs th:first-child,
-	table.table-xs td:first-child {
+
+	table.table-xs > thead > tr > th:first-child,
+	table.table-xs > tbody > tr > td:first-child,
+	table.table-xs > tfoot > tr > td:first-child {
 		border-top:2px solid #808080;
 	}
 }
@@ -134,6 +137,9 @@ div.footer a {
 }
 
 @media (max-width:767px) {
+	div.content div.container {
+		padding-bottom:140px;
+	}
 	div.footer {
 		height:125px;
 	}

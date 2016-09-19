@@ -31,6 +31,10 @@ img.preview_edit {
 	margin-right:200px;
 }
 
+table.settings td:first-child {
+	width:120px;
+}
+
 input[type=file].form-control {
 	padding:0;
 }

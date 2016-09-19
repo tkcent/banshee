@@ -20,7 +20,7 @@
 				$this->output->add_tag("result", "Database error retrieving albums");
 				return;
 			} else if (count($albums) == 0) {
-				$this->output->add_tag("result", "No photo albums have been created.");
+				$this->output->add_tag("result", "No photo albums have been created yet.", array("seconds" => 0));
 				return;
 			}
 
@@ -28,6 +28,7 @@
 
 			$this->output->open_tag("albums");
 			foreach ($albums as $album) {
+				$album["timestamp"] = date("j F Y", strtotime($album["timestamp"]));
 				$this->output->record($album, "album");
 			}
 			$this->output->close_tag();
@@ -38,13 +39,16 @@
 		}
 
 		private function show_album($album_id) {
-			if (($album = $this->model->get_album_info($album_id)) == false) {
-				$this->output->add_tag("result", "Database error retrieving album title.");
+			if (($album = $this->model->get_album_info($album_id)) === false) {
+				$this->output->add_tag("result", "Database error retrieving album information.");
+				return;
+			} else if ($album === null) {
+				$this->output->add_tag("result", "Photo album not found.");
 				return;
 			}
 
 			if (($count = $this->model->count_photos_in_album($album_id)) === false) {
-				$this->output->add_tag("result", "Database error counting albums");
+				$this->output->add_tag("result", "database error counting albums");
 				return;
 			}
 
@@ -60,7 +64,10 @@
 
 			$this->title = $album["name"];
 
-			$this->output->open_tag("photos", array("info" => $album["description"]));
+			$this->output->open_tag("photos", array(
+				"timestamp" => date("j F Y", strtotime($album["timestamp"])),
+				"info"      => $album["description"],
+				"listed"    => show_boolean($album["listed"])));
 			foreach ($photos as $photo) {
 				$this->output->record($photo, "photo");
 			}
@@ -74,26 +81,37 @@
 		}
 
 		private function show_photo($photo) {
-			list($name, $extension) = explode(".", $photo);
+			list($name, $extension) = explode(".", $photo, 2);
+
+			if ($this->user->logged_in == false) {
+				list(, $photo_id) = explode("_", $name, 2);
+				if ($this->model->private_photo($photo_id)) {
+					return false;
+				}
+			}
+
 			if (isset($this->extensions[$extension]) == false) {
-				header("Result: 404");
-				return;
+				return false;
 			} else if (file_exists(PHOTO_PATH."/".$photo) == false) {
-				header("Result: 404");
-				return;
+				return false;
 			}
 
 			header("Content-Type: ".$this->extensions[$extension]);
 			readfile(PHOTO_PATH."/".$photo);
 
 			$this->output->disable();
+
+			return true;
 		}
 
 		public function execute() {
 			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				$this->show_album($this->page->pathinfo[1]);
 			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."_.", VALIDATE_NONEMPTY)) {
-				$this->show_photo($this->page->pathinfo[1]);
+				if ($this->show_photo($this->page->pathinfo[1]) == false) {
+					header("Result: 404");
+					$this->output->add_tag("result", "This image could not be found.");
+				}
 			} else {
 				$this->show_albums();
 			}

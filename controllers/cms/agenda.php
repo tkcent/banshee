@@ -23,10 +23,9 @@
 		}
 
 		public function show_appointment_form($appointment) {
-			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("banshee/start_ckeditor.js");
 			$this->output->add_javascript("jquery/jquery-ui.js");
 			$this->output->add_javascript("banshee/datepicker.js");
+			$this->output->add_ckeditor("div.btn-group");
 
 			$this->output->add_css("jquery/jquery-ui.css");
 

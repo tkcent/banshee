@@ -92,9 +92,9 @@
 	$tables = array("agenda", "dictionary", "cache", "collection_album", "collections",
 		"faqs", "faq_sections", "forum_last_view", "forum_messages", "forum_topics",
 		"forums", "guestbook", "languages", "links", "mailbox", "menu", "news",
-		"page_access", "pages", "poll_answers", "polls", "shop_order_article", "shop_orders",
-		"shop_articles", "subscriptions", "weblog_tagged", "weblog_tags", "weblog_comments",
-		"weblogs");
+		"page_access", "pages", "photo_collections", "photos", "poll_answers", "polls",
+		"shop_order_article", "shop_categories", "shop_orders", "shop_articles",
+		"subscriptions", "weblog_tagged", "weblog_tags", "weblog_comments", "weblogs");
 	$db->query("set foreign_key_checks=%d", 0);
 	foreach ($tables as $table) {
 		if (table_exists($db, $table)) {

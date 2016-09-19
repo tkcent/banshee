@@ -12,8 +12,8 @@
 		private $db = null;
 		private $settings = null;
 		private $session = null;
-		private $logged_in = false;
 		private $record = array();
+		private $logged_in = false;
 		private $is_admin = false;
 
 		/* Constructor
@@ -36,17 +36,13 @@
 					if ($this->login_password($username, $password, false) == false) {
 						header("Status: 401");
 					} else {
-						$this->bind_to_ip();
+						$session->bind_to_ip();
 					}
 				}
 			}
 
-			if (isset($_SESSION["user_id"])) {
-				if (time() - $_SESSION["last_private_visit"] >= $this->settings->session_timeout) {
-					$this->logout();
-				} else if (($_SESSION["binded_ip"] === NO) || ($_SESSION["binded_ip"] === $_SERVER["REMOTE_ADDR"])) {
-					$this->load_user_record($_SESSION["user_id"]);
-				}
+			if ($this->session->user_id !== null) {
+				$this->load_user_record($this->session->user_id);
 			}
 		}
 
@@ -61,7 +57,7 @@
 				case "logged_in": return $this->logged_in;
 				case "is_admin": return $this->is_admin;
 				case "do_not_track": return $_SERVER["HTTP_DNT"] == 1;
-				case "session_via_database": return $this->session->using_database;
+				case "session": return $this->session;
 				default:
 					if (isset($this->record[$key])) {
 						return $this->record[$key];
@@ -105,21 +101,14 @@
 		 * ERROR:  -
 		 */
 		private function login($user_id) {
+			$this->session->set_user_id($user_id);
 			$this->load_user_record($user_id);
 			$this->log_action("user logged-in");
-
-			$_SESSION["user_id"] = $user_id;
-			$_SESSION["binded_ip"] = NO;
-			$_SESSION["last_private_visit"] = time();
-
-			$this->session->set_user_id($user_id);
-
-			unset($_SESSION["challenge"]);
 		}
 
 		/* Verify user credentials
 		 *
-		 * INPUT:  string username, string password, boolean challenge-response method used
+		 * INPUT:  string username, string password
 		 * OUTPUT: boolean login correct
 		 * ERROR:  -
 		 */
@@ -171,7 +160,7 @@
 			$this->db->query($query, $user["id"]);
 
 			$this->login((int)$user["id"]);
-			$this->bind_to_ip();
+			$session->bind_to_ip();
 
 			return true;
 		}
@@ -282,16 +271,6 @@
 			$access[$page] = max(array_flatten($access)) > 0;
 
 			return $access[$page];
-		}
-
-		/* Bind current session to IP address
-		 *
-		 * INPUT:  -
-		 * OUTPUT: -
-		 * ERROR:  -
-		 */
-		public function bind_to_ip() {
-			$_SESSION["binded_ip"] = $_SERVER["REMOTE_ADDR"];
 		}
 
 		/* Verify if user has a certain role

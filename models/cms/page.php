@@ -58,6 +58,21 @@
 			return $result;
 		}
 
+		private function url_belongs_to_module($url, $config) {
+			$url = ltrim($url, "/");
+			$modules = page_to_module(config_file($config));
+
+			$url_parts = explode("/", $url);
+			while (count($url_parts) > 0) {	
+				if (in_array(implode("/", $url_parts), $modules)) {
+					return true;
+				}
+				array_pop($url_parts);
+			}
+
+			return false;
+		}
+
 		public function save_oke($page) {
 			$result = true;
 
@@ -91,19 +106,20 @@
 				$result = false;
 			}
 
-			$module = ltrim($page["url"], "/");
-			$public_modules = page_to_module(config_file("public_modules"));
-			$private_modules = page_to_module(config_file("private_modules"));
-			if (in_array($module, $public_modules) || in_array($module, $private_modules)) {
-				$this->output->add_message("URL belongs to a module.");
+			if ($this->url_belongs_to_module($page["url"], "public_modules")) {
+				$this->output->add_message("The URL belongs to a public module.");
+				$result = false;
+			} else if ($this->url_belongs_to_module($page["url"], "private_modules")) {
+				$this->output->add_message("The URL belongs to a private module.");
 				$result = false;
 			} else {
-				$query = "select * from pages where id!=%d and url=%s limit 1";
-				if (($page = $this->db->execute($query, $page["id"], $page["url"])) != false) {
-					if (count($page) > 0) {
-						$this->output->add_message("URL belongs to another page.");
-						$result = false;
-					}
+				$query = "select count(*) as count from pages where id!=%d and url=%s";
+				if (($page = $this->db->execute($query, $page["id"], $page["url"])) === false) {
+					$this->output->add_message("Error while verifying the URL.");
+					$result = false;
+				} else if ($page[0]["count"] > 0) {
+					$this->output->add_message("The URL belongs to another page.");
+					$result = false;
 				}
 			}
 

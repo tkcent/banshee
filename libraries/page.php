@@ -145,13 +145,13 @@
 
 		/* Page available in database
 		 *
-		 * INPUT:  string URL, int private page
+		 * INPUT:  string page, int private page
 		 * OUTPUT: string module identifier
 		 * ERROR:  null
 		 */
-		private function page_in_database($url, $private) {
+		private function page_in_database($page, $private) {
 			$query = "select id,visible from pages where url=%s and private=%d limit 1";
-			if (($result = $this->db->execute($query, "/".$url, $private)) == false) {
+			if (($result = $this->db->execute($query, "/".$page, $private)) == false) {
 				return null;
 			}
 
@@ -160,8 +160,8 @@
 					return null;
 				}
 			}
-			$this->url = "/".$url;
-			$this->page = $url;
+			$this->url = "/".$page;
+			$this->page = $page;
 
 			return PAGE_MODULE;
 		}
@@ -177,64 +177,66 @@
 				return;
 			}
 
-			/* Old browser
-			 */
-			if (preg_match("/MSIE ([0-9]*)/", $_SERVER["HTTP_USER_AGENT"], $matches) > 0) {
-				if ((int)$matches[1] < 11) {
-					$this->module = "banshee/browser";
-					return;
-				}
+			if (($public_module = $this->module_on_disk($page, config_file("public_modules"))) !== null) {
+				$public_count = substr_count($public_module, "/") + 1;
+			} else if (($public_module = $this->page_in_database($page, NO)) !== null) {
+				$public_count = substr_count($page, "/") + 1;
+			} else {
+				$public_count = 0;
 			}
 
-			/* Private module
-			 */
-			if (($this->module = $this->module_on_disk($page, config_file("private_modules"))) === null) {
-				$this->module = $this->page_in_database($page, YES);
+			if (($private_module = $this->module_on_disk($page, config_file("private_modules"))) !== null) {
+				$private_count = substr_count($private_module, "/") + 1;
+			} else if (($private_module = $this->page_in_database($page, YES)) !== null) {
+				$private_count = substr_count($page, "/") + 1;
+			} else {
+				$private_count = 0;
 			}
 
-			/* Public module
-			 */
-			if ($this->module == null) {
-				if (($this->module = $this->module_on_disk($page, config_file("public_modules"))) !== null) {
-					$module_count = substr_count($this->module, "/") + 1;
-					$this->parameters = array_slice($this->pathinfo, $module_count);
-					return;
-				} else if (($this->module = $this->page_in_database($page, NO)) !== null) {
-					return;
-				}
-			}
-
-			if ($this->module == null) {
-				/* Page does not exist.
+			if (($public_module == null) && ($private_module == null)) {
+				/* Page does not exist
 				 */
 				$this->module = ERROR_MODULE;
 				$this->http_code = 404;
 				$this->type = "";
-			} else if ($this->user->logged_in == false) {
-				/* User not logged in.
+				return;
+			}
+
+			if ($public_count >= $private_count) {	
+				/* Page is public
+				 */
+				$this->module = $public_module;
+				$this->parameters = array_slice($this->pathinfo, $public_count);
+				return;
+			}
+
+			/* Page is private
+			 */
+			$this->module = $private_module;
+			$this->parameters = array_slice($this->pathinfo, $private_count);
+
+			if ($this->user->logged_in == false) {
+				/* User not logged in
 				 */
 				$this->module = LOGIN_MODULE;
 				$this->type = "";
 			} else if ($this->user->access_allowed($this->__get("page").$this->type) == false) {
-				/* Access denied because right role is missing.
+				/* Access denied because right role is missing
 				 */
 				$this->module = ERROR_MODULE;
 				$this->http_code = 403;
 				$this->type = "";
 				$this->user->log_action("unauthorized request for page %s", $page);
 			} else if (($this->module != LOGOUT_MODULE) && ($this->user->status == USER_STATUS_CHANGEPWD) && (isset($_SESSION["user_switch"]) == false)) {
-				/* Change profile before access to private pages.
+				/* Change profile before access to private pages
 				 */
 				$this->module = PROFILE_MODULE;
 				$this->type = "";
 			} else {
-				/* Access allowed.
+				/* Access allowed
 				 */
 				$this->is_public = false;
 				$_SESSION["last_private_visit"] = time();
-
-				$module_count = substr_count($this->module, "/") + 1;
-				$this->parameters = array_slice($this->pathinfo, $module_count);
 			}
 		}
 	}

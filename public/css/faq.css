@@ -1,7 +1,7 @@
-h3.list-group-item-heading {
+div.panel-heading {
 	cursor:pointer;
 }
 
-div.list-group-item-text {
+div.panel-body {
 	display:none;
 }

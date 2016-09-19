@@ -220,6 +220,20 @@
 						$this->output->close_tag();
 					}
 				}
+			} else if (($this->page->pathinfo[1] == "user") && (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY))) {
+				/* Tagged weblogs
+				 */
+				if (($user = $this->model->get_user($this->page->pathinfo[2])) == false) {
+					$this->output->add_tag("result", "Unknown user");
+				} else if (($weblogs = $this->model->get_weblogs_by_user($this->page->pathinfo[2])) === false) {
+					$this->output->add_tag("result", "Error fetching weblogs", $this->url);
+				} else {
+					$this->output->open_tag("list", array("label" => "Weblogs by ".$user["fullname"]));
+					foreach ($weblogs as $weblog) {
+						$this->output->record($weblog, "weblog");
+					}
+					$this->output->close_tag();
+				}
 			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show weblog
 				 */

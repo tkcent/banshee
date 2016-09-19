@@ -11,7 +11,12 @@
 <xsl:template match="overview">
 <xsl:if test="search">
 <form action="" method="post" class="search">
-<input type="text" name="search" value="{search}" placeholder="Search" class="form-control" />
+<div class="input-group search">
+<input type="text" id="search" name="search" value="{search}" placeholder="Search" class="form-control" />
+<xsl:if test="search!=''">
+<span class="input-group-btn"><input type="button" name="submit_button" value="X" class="btn btn-default reset" onClick="$('input#search').val(''); $('form.search').submit();" /></span>
+</xsl:if>
+</div>
 <input type="hidden" name="submit_button" value="Search" />
 </form>
 </xsl:if>
@@ -69,7 +74,7 @@
 <xsl:choose>
 	<!-- Boolean -->
 	<xsl:when test="@type='boolean'">
-		<div><input type="checkbox" id="{@name}" name="{@name}"><xsl:if test="value='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input></div>
+		<input type="checkbox" id="{@name}" name="{@name}"><xsl:if test="value='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input>
 	</xsl:when>
 	<!-- Date -->
 	<xsl:when test="@type='date'">
@@ -115,9 +120,6 @@
 <a href="/{/output/page}" class="cancel btn btn-default">Cancel</a>
 <xsl:if test="form/@id and form/@allow_delete='yes'">
 <input type="submit" name="submit_button" value="Delete {form/@name}" class="delete btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
-</xsl:if>
-<xsl:if test="form/element[@type='ckeditor']">
-<input type="button" value="Start CKEditor" id="start_cke" class="ckeditor btn btn-default" onClick="javascript:start_ckeditor(300)" />
 </xsl:if>
 </div>
 </form>

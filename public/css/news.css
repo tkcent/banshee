@@ -4,6 +4,10 @@ div.rsslink {
 	right:50px;
 }
 
+div.row div:nth-child(1) {
+	font-weight:bold;
+}
+
 div.row div:nth-child(2) {
 	text-align:right;
 }

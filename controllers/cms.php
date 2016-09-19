@@ -32,6 +32,7 @@
 					"Subscriptions" => array("cms/subscriptions", "subscriptions.png")),
 				"Webshop" => array(
 					"Articles"      => array("cms/webshop/article", "articles.png"),
+					"Categories"    => array("cms/webshop/category", "categories.png"),
 					"Orders"        => array("cms/webshop/order", "orders.png")),
 				"System" => array(
 					"Logging"       => array("cms/logging", "logging.png"),

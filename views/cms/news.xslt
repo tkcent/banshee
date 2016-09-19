@@ -5,9 +5,6 @@
 
 <xsl:template match="content">
 <xsl:apply-templates select="tablemanager" />
-<xsl:if test="tablemanager/ckeditor">
-<input type="button" value="Start CKEditor" id="start_cke" class="btn btn-default" onClick="javascript:start_ckeditor(300)" />
-</xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>

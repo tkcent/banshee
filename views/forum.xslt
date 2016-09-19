@@ -10,12 +10,17 @@
 //-->
 <xsl:template match="forums">
 <div class="forums">
+<table class="table table-striped">
+<thead>
+<tr><th>Forum section</th><th>Number of topics</th></tr>
+</thead>
+<tbody>
 <xsl:for-each select="forum">
-<div>
-<h3><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a> (<xsl:value-of select="topics" />)</h3>
-<p><xsl:value-of select="description" /></p>
-</div>
+<tr><td><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a></td><td><xsl:value-of select="topics" /></td></tr>
+<tr><td colspan="2"><xsl:value-of select="description" /></td></tr>
 </xsl:for-each>
+</tbody>
+</table>
 </div>
 </xsl:template>
 

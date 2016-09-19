@@ -1,7 +1,7 @@
 <?php
 	class session_model extends model {
 		public function get_sessions() {
-			$query = "select id, session_id, UNIX_TIMESTAMP(expire) as expire , ip_address, name from sessions ".
+			$query = "select id, session_id, UNIX_TIMESTAMP(expire) as expire, ip_address, bind_to_ip, name from sessions ".
 			         "where user_id=%d and expire>=now() order by name, ip_address";
 
 			return $this->db->execute($query, $this->user->id);

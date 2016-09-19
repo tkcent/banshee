@@ -72,8 +72,7 @@
 
 			$this->resource = $resource;
 			$this->filename = $filename;
-			$this->width = imagesx($resource);
-			$this->height = imagesy($resource);
+			$this->update_size();
 
 			return true;
 		}
@@ -159,6 +158,26 @@
 
 			imagedestroy($this->resource);
 			$this->resource = $resource;
+			$this->update_size();
+
+			return true;
+		}
+
+		/* Crop an image
+		 *
+		 * INPUT:  int x, int y, int width, int height
+		 * OUTPUT: true
+		 * ERROR:  false
+		 */
+		public function crop($x, $y, $width, $height) {
+			$cropped = imagecreatetruecolor($width, $height);
+			if (imagecopy($cropped, $this->resource, 0, 0, $x, $y, $width, $height) == false) {
+				imagedestroy($cropped);
+				return false;
+			}
+
+			imagedestroy($this->resource);
+			$this->resource = $cropped;
 			$this->update_size();
 
 			return true;

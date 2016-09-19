@@ -10,13 +10,14 @@
 <xsl:template match="sessions">
 <table class="table table-striped table-hover table-condensed">
 <thead>
-<tr><th>IP address</th><th>Expire date</th><th>Name</th></tr>
+<tr><th>IP address</th><th>Expire date</th><th>IP binded</th><th>Name</th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="session">
-<tr class="{owner}" onClick="javascript:document.location='/session/{@id}'">
+<tr onClick="javascript:document.location='/session/{@id}'"><xsl:if test="@owner='yes'"><xsl:attribute name="class">info</xsl:attribute></xsl:if>
 <td><xsl:value-of select="ip_address" /></td>
 <td><xsl:value-of select="expire" /></td>
+<td><xsl:value-of select="bind_to_ip" /></td>
 <td><xsl:value-of select="name" /></td>
 </tr>
 </xsl:for-each>
@@ -47,15 +48,6 @@
 <input type="submit" name="submit_button" value="Delete session" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </div>
 </form>
-</xsl:template>
-
-<!--
-//
-//  Result template
-//
-//-->
-<xsl:template match="result">
-<p><xsl:value-of select="." /></p>
 </xsl:template>
 
 <!--

@@ -11,4 +11,4 @@ password=`cat ../settings/website.conf | grep DB_PASSWORD | awk -F"=" '{gsub(/^ 
 
 dow=`date +%a | tr "[:upper:]" "[:lower:]"`
 
-mysqldump -u "${username}" --password="${password}" -h "${hostname}" "${database}" | gzip > "${database}"-${dow}.sql.gz
+mysqldump -u "${username}" --password="${password}" -h "${hostname}" "${database}" | grep -v "INSERT INTO \`sessions\`" | grep -v "INSERT INTO \`cache\`" | gzip > "${database}"-${dow}.sql.gz

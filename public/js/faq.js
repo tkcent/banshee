@@ -1,4 +1,7 @@
 function toggle_item(id) {
-	$('div#faq'+id+' div').slideToggle('normal');
-	$('div#faq'+id).toggleClass('active');
+	$('div.panel-body').slideUp('normal');
+
+	if ($('div#faq'+id).is(':visible') == false) {
+		$('div#faq'+id).slideToggle('normal');
+	}
 }

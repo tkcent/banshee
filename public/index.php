@@ -129,14 +129,7 @@
 			}
 		}
 
-		/* Stylesheet
-		 */
-		$_output->add_css("banshee/bootstrap.css");
-		$_output->add_css("banshee/bootstrap-theme.css");
-		$_output->add_css("banshee/layout_".$_output->layout.".css");
-		$_output->add_css($_page->module.".css");
-
-		/* Javascripts
+		/* Add javascripts to output
 		 */
 		$_output->add_javascript("jquery/jquery.js");
 		$_output->add_javascript("banshee/bootstrap.js");
@@ -183,6 +176,13 @@
 	}
 
 	if ($_output->add_layout_data) {
+		/* Prepend stylesheets to output
+		 */
+		$_output->add_css($_page->module.".css", true);
+		$_output->add_css("banshee/layout_".$_output->layout.".css", true);
+		$_output->add_css("banshee/bootstrap-theme.css", true);
+		$_output->add_css("banshee/bootstrap.css", true);
+
 		$_output->close_tag();
 	}
 

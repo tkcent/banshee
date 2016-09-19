@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "5.2";
+	$written_for = "5.3";
 
 	/* Auditor class
 	 */
@@ -199,10 +199,10 @@
 			"libraries/security.php"                       => array(201, 267),
 			"libraries/tablemanager_controller.php"        => array(214),
 			"libraries/tablemanager_model.php"             => array(284),
-			"libraries/user.php"                           => array(268, 277),
+			"libraries/user.php"                           => array(256, 265),
 			"models/cms/settings.php"                      => array(54, 77),
 			"models/cms/user.php"                          => array(8),
-			"models/cms/webshop/article.php"               => array(37),
+			"models/cms/webshop/article.php"               => array(39),
 			"models/search.php"                            => array(135),
 			"models/setup.php"                             => array(130),
 			"models/webshop/cart.php"                      => array(14));
@@ -329,24 +329,24 @@
 	class output_auditor extends auditor {
 		protected $extension = "xslt";
 		protected $verified = array(
-			"views/agenda.xslt"                    => array(19, 79),
+			"views/agenda.xslt"                    => array(25, 86),
 			"views/banshee/functions.xslt"         => array(15),
 			"views/banshee/page.xslt"              => array(12),
 			"views/cms/webshop/order.xslt"         => array(34, 83, 91),
-			"views/cms/webshop/article.xslt"       => array(30),
+			"views/cms/webshop/article.xslt"       => array(32),
 			"views/demos/googlemaps.xslt"          => array(14),
 			"views/demos/posting.xslt"             => array(19),
 			"views/dictionary.xslt"                => array(60),
 			"views/faq.xslt"                       => array(18),
-			"views/forum.xslt"                     => array(78),
+			"views/forum.xslt"                     => array(83),
 			"views/guestbook.xslt"                 => array(21),
 			"views/mailbox.xslt"                   => array(42),
 			"views/news.xslt"                      => array(20),
-			"views/weblog.xslt"                    => array(25, 51),
-			"views/webshop.xslt"                   => array(14, 34),
+			"views/weblog.xslt"                    => array(27, 57),
+			"views/webshop.xslt"                   => array(24, 48),
 			"views/webshop/checkout.xslt"          => array(80, 88),
 			"views/webshop/cart.xslt"              => array(25, 35),
-			"views/webshop/orders.xslt"            => array(37, 45));
+			"views/webshop/orders.xslt"            => array(40, 48));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
@@ -358,21 +358,21 @@
 	class integrity_auditor {
 		private $files = array(
 			"libraries/database" => array(
-				"database_connection.php" => "8d9aac62ab8e3219d622ce87f0ec70b11f0c9326",
+				"database_connection.php" => "f15eea78f6e369292275795906fcd3bf66a35de1",
 				"mysqli_connection.php"   => "62b7bfb0126eef0246d8d046482c67a30ce2beb3"),
 			"libraries" => array(
-				"banshee.php"    => "caf17ef391a54875fc8a82ef2516e63da03e8d43",
+				"banshee.php"    => "0acd3599cdcba7057baade22683abef667efbb55",
 				"controller.php" => "e53384e166afee3e943b423405ced65f7821aeda",
 				"email.php"      => "7f92eb195913c997150ac5dc532053066078d6cc",
-				"model.php"      => "c838eae31ea1aff8f7628b6df13a4a5b41093934",
-				"output.php"     => "05133f81cb41965d76d7549bf6326f82d1931558",
-				"page.php"       => "fa7d5024ffe43f95b4a5cead7f1209dbb51d4f48",
+				"model.php"      => "4aab358bd92765255fb52c6b77d021396bd1ed12",
+				"output.php"     => "907e92274f815ddfd043e652d36c38bc6e5a9755",
+				"page.php"       => "febe15a8e564beb6da5a12253bd6b1c9729e5d32",
 				"security.php"   => "f0f74c46b1c2fc50bca2418840662fc85b0d569d",
-				"session.php"    => "c92c8519e0f59619398008a2c4ed8dcb48dc1cb7",
+				"session.php"    => "92de5c400fba6a6c8c0e724e0020aeac02f6d548",
 				"settings.php"   => "f884e2db04b97b0996300028bcb619f46135b7aa",
-				"user.php"       => "ed177f6e46f19d902ac5cc33a9b43ae1c714c75e"),
+				"user.php"       => "26f66c3e881f863611bc50045fa60defcb8308e7"),
 			"public" => array(
-				"index.php"      => "e9ab42d65bb7d3d20245374b5ad8b8c73ddbdf35"));
+				"index.php"      => "a993ef1a9f505279fa6c480ca17bb1c6477bbed4"));
 
 		public function perform_audit() {
 			$total = 0;
@@ -419,9 +419,9 @@
 	error_reporting(E_ALL & ~E_NOTICE);
 
 	print "Banshee Security Audit v".$written_for."\n\n";
-	print "  Note that the findings below are not necessarily a security issue.\n";
-	print "    They only require extra attention from the auditor.\n";
-	print "  Also note that this tool does not guarantee to find all security issues.\n";
+	print "  Note that the findings below are not necessarily a security issue. They\n";
+	print "  only require extra attention from the auditor. Also note that it's not\n";
+	print "  guaranteed that this tool will find all security issues.\n";
 	print "\n";
 
 	/* Check Banshee version

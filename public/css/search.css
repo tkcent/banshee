@@ -11,7 +11,7 @@ div.sections {
 }
 
 div.sections span {
-	margin-right:10px;
+	margin-right:20px;
 	white-space:nowrap;
 	display:inline-block;
 }
@@ -20,6 +20,10 @@ div.sections span input {
 	margin-right:5px;
 	position:relative;
 	top:1px;
+}
+
+h2 {
+	border-bottom:1px solid #e0e0e0;
 }
 
 ul.pagination {

@@ -15,7 +15,7 @@
 <label for="password">Password:</label>
 <input type="password" id="password" name="password" class="form-control" />
 <p>Bind session to IP (<xsl:value-of select="remote_addr" />): <input type="checkbox" name="bind_ip">
-<xsl:if test="bind">
+<xsl:if test="@bind_ip='yes'">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
 </input></p>

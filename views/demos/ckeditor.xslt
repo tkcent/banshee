@@ -9,7 +9,7 @@
 //-->
 <xsl:template match="edit">
 <form method="post" action="/demos/ckeditor">
-<textarea id="editor" name="editor"></textarea>
+<textarea id="editor" name="editor" class="form-control"></textarea>
 
 <div class="btn-group">
 <input type="submit" name="save" value="Submit" class="btn btn-default" />

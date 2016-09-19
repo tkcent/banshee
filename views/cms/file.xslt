@@ -52,13 +52,9 @@
 <div class="panel-heading">Upload new file</div>
 <div class="panel-body">
 <form action="/{/output/page}{@dir}" method="post" enctype="multipart/form-data">
-<div class="row">
-<div class="col-md-7">
+<div class="input-group">
 <input type="file" name="file" class="form-control" />
-</div>
-<div class="col-md-5">
-<input type="submit" name="submit_button" value="Upload file" class="btn btn-default" />
-</div>
+<span class="input-group-btn"><input type="submit" name="submit_button" value="Upload" class="btn btn-default" /></span>
 </div>
 </form>
 </div>
@@ -70,13 +66,9 @@
 <div class="panel-heading">Create directory</div>
 <div class="panel-body">
 <form action="/{/output/page}{@dir}" method="post">
-<div class="row">
-<div class="col-md-6">
+<div class="input-group">
 <input type="text" name="create" value="{../create}" class="form-control" />
-</div>
-<div class="col-md-6">
-<input type="submit" name="submit_button" value="Create directory" class="btn btn-default" />
-</div>
+<span class="input-group-btn"><input type="submit" name="submit_button" value="Create" class="btn btn-default" /></span>
 </div>
 </form>
 </div>

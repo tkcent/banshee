@@ -237,7 +237,7 @@
 
 			/* Don't log visits of admin and system pages
 			 */
-			$skip_pages = array("cms", "banshee/browser");
+			$skip_pages = array("cms");
 			if (in_array($this->page->page, $skip_pages)) {
 				return;
 			} else if (substr($this->page->page, 0, 6) == "cms/") {

@@ -62,12 +62,12 @@
 
 			$maintainers = users_with_role($this->db, $this->settings->guestbook_maintainers);
 
-			$guestbook_url = "http://".$_SERVER["SERVER_NAME"]."/".$this->page->module;
+			$guestbook_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module;
 
 			$email = new email("Guestbook message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
-				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/cms/guestbook";
+				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/guestbook";
 				if (($key = one_time_key($this->db, $maintainer["id"])) !== false) {
 					$cms_url .= "?login=".$key;
 				}

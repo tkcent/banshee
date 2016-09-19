@@ -28,9 +28,14 @@ Photo album: <select name="album" onChange="javascript:submit()">
 
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" enctype="multipart/form-data">
-<table>
+<table class="settings">
 <tr><td>Photos:</td><td><input type="file" accept="image/*" name="photos[]" multiple="multiple" class="form-control"/></td></tr>
 <tr><td>Overview:</td><td><input type="checkbox" name="overview" /></td></tr>
+<tr><td>Thumbnail mode:</td><td><select name="mode" class="form-control">
+<xsl:for-each select="modes/mode">
+<option value="{position() - 1}"><xsl:value-of select="." /></option>
+</xsl:for-each>
+</select></td></tr>
 </table>
 
 <div class="btn-group">
@@ -54,6 +59,12 @@ Photo album: <select name="album" onChange="javascript:submit()">
 <input type="text" id="title" name="title" value="{photo/title}" class="form-control" />
 <div><label for="overview">Overview:</label>
 <input type="checkbox" id="overview" name="overview"><xsl:if test="photo/overview='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input></div>
+<label for="mode">Thumbnail mode:</label>
+<select name="mode" class="form-control">
+<xsl:for-each select="modes/mode">
+<option value="{position() - 1}"><xsl:if test="position()-1=../../photo/thumbnail_mode"><xsl:attribute name="selected" value="selected" /></xsl:if><xsl:value-of select="." /></option>
+</xsl:for-each>
+</select>
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Save photo" class="btn btn-default" />

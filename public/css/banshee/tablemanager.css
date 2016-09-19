@@ -2,8 +2,12 @@
 	form.search {
 		float:right;
 		margin-top:-45px;
-		margin-right:150px;
+		margin-right:100px;
 	}
+}
+
+div.search input.reset {
+    padding:6px 10px;
 }
 
 div.datatable {

@@ -39,8 +39,7 @@
 				$faq["select"] = count($sections) == 0 ? "new" : "old";
 			}
 
-			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("banshee/start_ckeditor.js");
+			$this->output->add_ckeditor("div.btn-group");
 			$this->output->add_javascript("cms/faq.js");
 
 			$this->output->open_tag("edit");

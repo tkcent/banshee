@@ -18,23 +18,29 @@
 //-->
 <xsl:template match="weblog">
 <div class="weblog">
-<div class="row">
-<div class="col-sm-8"><h2><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a></h2></div>
-<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
+
+<div class="row weblog-header">
+	<div class="col-sm-8"><h2><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a></h2></div>
+	<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
 </div>
-<div class="content"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
+
+<div class="weblog-body"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
 
 <!-- Tags -->
-<div class="tags">Tags:
-<xsl:for-each select="tags/tag">
-<span class="tag"><a href="/{/output/page}/tag/{@id}"><xsl:value-of select="." /></a></span>
-</xsl:for-each>
+<div class="row weblog-footer">
+	<div class="col-xs-8 tags">
+		Tags: <xsl:for-each select="tags/tag">
+		<span class="tag"><a href="/{/output/page}/tag/{@id}"><xsl:value-of select="." /></a></span>
+		</xsl:for-each>
+	</div>
+	<div class="col-xs-4 author">
+		<div>by <xsl:value-of select="author" /></div>
+		<xsl:if test="comment_count">
+		<div><a href="/{/output/page}/{@id}"><span class="glyphicon glyphicon-comment" aria-hidden="true" /> Comments: <xsl:value-of select="comment_count" /></a></div>
+		</xsl:if>
+	</div>
 </div>
 
-<div class="author">by <xsl:value-of select="author" /></div>
-<xsl:if test="comment_count">
-<div class="comment_count"><a href="/{/output/page}/{@id}">Comments: <xsl:value-of select="comment_count" /></a></div>
-</xsl:if>
 </div>
 
 <!-- Comments -->
@@ -42,13 +48,13 @@
 <div class="comments">
 <xsl:for-each select="comments/comment">
 <div class="panel panel-default">
-<div class="panel-heading">
-<div class="row">
-<div class="col-sm-8"><xsl:value-of select="author" /></div>
-<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
-</div>
-</div>
-<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
+	<div class="panel-heading">
+		<div class="row">
+		<div class="col-sm-8"><xsl:value-of select="author" /></div>
+		<div class="col-sm-4"><xsl:value-of select="timestamp" /></div>
+		</div>
+	</div>
+	<div class="panel-body"><xsl:value-of disable-output-escaping="yes" select="content" /></div>
 </div>
 </xsl:for-each>
 
@@ -92,29 +98,35 @@
 //
 //-->
 <xsl:template match="sidebar">
-<div class="sidebar">
+<div class="well sidebar">
 <p><a href="{/output/page}">All articles</a></p>
 
+<xsl:if test="count(tags/tag)>1">
 All tags:
 <ul>
 <xsl:for-each select="tags/tag">
 <li><a href="/{/output/page}/tag/{@id}"><xsl:value-of select="." /></a></li>
 </xsl:for-each>
 </ul>
+</xsl:if>
 
+<xsl:if test="count(years/year)>1">
 Years:
 <ul>
 <xsl:for-each select="years/year">
 <li><a href="/{/output/page}/period/{.}"><xsl:value-of select="." /></a></li>
 </xsl:for-each>
 </ul>
+</xsl:if>
 
+<xsl:if test="count(periods/period)>1">
 Periods:
 <ul>
 <xsl:for-each select="periods/period">
 <li><a href="/{/output/page}/period/{@link}"><xsl:value-of select="." /></a></li>
 </xsl:for-each>
 </ul>
+</xsl:if>
 </div>
 </xsl:template>
 
@@ -128,12 +140,12 @@ Periods:
 <xsl:if test="not(result)">
 <div class="rsslink"><a href="/weblog.xml"><img src="/images/rss.png" alt="RSS" /></a></div>
 <div class="row">
-<div class="weblog col-sm-9">
+<div class="col-md-9">
 <xsl:apply-templates select="weblogs" />
 <xsl:apply-templates select="weblog" />
 <xsl:apply-templates select="list" />
 </div>
-<div class="col-sm-2 col-sm-offset-1">
+<div class="col-md-3">
 <xsl:apply-templates select="sidebar" />
 </div>
 </div>

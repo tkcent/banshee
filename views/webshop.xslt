@@ -9,18 +9,32 @@
 //
 //-->
 <xsl:template match="webshop">
+<div class="row webshop-body">
+<div class="col-sm-3">
+<div class="list-group">
+<xsl:for-each select="categories/category">
+<a href="/{/output/page}/category/{@id}"><xsl:choose><xsl:when test="@id=../@current"><xsl:attribute name="class">list-group-item active</xsl:attribute></xsl:when><xsl:otherwise><xsl:attribute name="class">list-group-item</xsl:attribute></xsl:otherwise></xsl:choose><xsl:value-of select="." /></a>
+</xsl:for-each>
+</div>
+</div>
+
+<div class="col-sm-9">
 <xsl:for-each select="articles/article">
 <div class="panel panel-default">
 <div class="panel-heading"><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a> (<xsl:value-of select="article_nr" />)<span class="price"><span class="currency"><xsl:value-of select="../@currency" disable-output-escaping="yes" /></span><xsl:value-of select="price" /></span></div>
 <div class="panel-body"><xsl:if test="image!=''"><a href="/{/output/page}/{@id}"><img src="{image}" class="image small" /></a></xsl:if><xsl:value-of select="short_description" /></div>
 </div>
 </xsl:for-each>
+</div>
+</div>
 
+<div class="webshop-footer">
 <div class="btn-group left">
 <a href="/{/output/page}/orders" class="btn btn-default">View orders</a>
 </div>
 <div class="right">
 <xsl:apply-templates select="pagination" />
+</div>
 </div>
 </xsl:template>
 
@@ -48,8 +62,18 @@
 //-->
 <xsl:template match="content">
 <h1>Webshop</h1>
-<div class="cart"><a href="/{/output/page}/cart"><span><xsl:value-of select="cart" /></span></a></div>
-<form action="/{/output/page}" method="post" class="search"><input type="text" name="search" value="{search}" placeholder="Search" class="form-control" /><input type="hidden" name="submit_button" value="search" /></form>
+<div class="row webshop-header">
+<div class="col-xs-6"><div class="cart"><a href="/{/output/page}/cart"><span><xsl:value-of select="cart" /></span></a></div></div>
+<div class="col-xs-6"><form action="/{/output/page}" method="post" class="search">
+	<div class="input-group">
+		<input type="text" id="search" name="search" value="{search}" placeholder="Search" class="form-control" />
+		<xsl:if test="search!=''">
+		<span class="input-group-btn"><input type="button" value="X" class="btn btn-default" onClick="javascript:$('input#search').val(''); $('form.search').submit();"/></span>
+		</xsl:if>
+	</div><!-- /input-group -->
+	<input type="hidden" name="submit_button" value="search" />
+</form></div>
+</div>
 
 <xsl:apply-templates select="webshop" />
 <xsl:apply-templates select="article" />

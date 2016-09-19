@@ -129,16 +129,6 @@
 
 <!--
 //
-//  Result template
-//
-//-->
-<xsl:template match="result">
-<p><xsl:value-of select="." /></p>
-<xsl:call-template name="redirect" />
-</xsl:template>
-
-<!--
-//
 //  Content template
 //
 //-->

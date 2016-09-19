@@ -1,12 +1,17 @@
 <?php
 	class webshop_model extends model {
-		public function count_articles($search = null) {
+		public function count_articles($search = null, $category_id = null) {
 			$query = "select count(*) as count from shop_articles where visible=%d";
 			$args = array(YES);
 
 			if ($search != null) {
 				$query .= " and title like %s";
 				array_push($args, "%".$search."%");
+			}
+
+			if ($category_id != null) {
+				$query .= " and shop_category_id=%d";
+				array_push($args, $category_id);
 			}
 
 			if (($result = $this->db->execute($query, $args)) === false) {
@@ -16,7 +21,7 @@
 			return (int)$result[0]["count"];
 		}
 
-		public function get_articles($offset, $limit, $search = null) {
+		public function get_articles($offset, $limit, $search = null, $category_id = null) {
 			$query = "select * from shop_articles where visible=%d";
 			$args = array(YES);
 
@@ -25,10 +30,27 @@
 				array_push($args, "%".$search."%");
 			}
 
+			if ($category_id != null) {
+				$query .= " and shop_category_id=%d";
+				array_push($args, $category_id);
+			}
+
 			$query .= " order by title limit %d,%d";
 			array_push($args, $offset, $limit);
 
 			return $this->db->execute($query, $args);
+		}
+
+		public function get_categories() {
+			if (($result = $this->db->execute("select * from shop_categories order by name")) === false) {
+				return false;
+			}
+
+			array_unshift($result, array(
+				"id"   => 0,
+				"name" => "All"));
+
+			return $result;
 		}
 
 		public function get_article($article_id) {

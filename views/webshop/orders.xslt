@@ -9,6 +9,9 @@
 //
 //-->
 <xsl:template match="orders">
+<xsl:if test="count(order)=0">
+<p>There are no orders available.</p>
+</xsl:if>
 <ul class="list-group">
 <xsl:for-each select="order">
 <div class="row list-group-item">

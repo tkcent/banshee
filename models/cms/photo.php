@@ -1,7 +1,13 @@
 <?php
+	define("THUMBNAIL_MODE_NORMAL", 0);
+	define("THUMBNAIL_MODE_TOP_LEFT", 1);
+	define("THUMBNAIL_MODE_CENTER", 2);
+	define("THUMBNAIL_MODE_BOTTOM_RIGHT", 3);
+
 	class cms_photo_model extends model {
 		protected $table = "photos";
 		protected $order = "title";
+		protected $desc_order = true;
 		protected $extensions = array(
 			"image/gif"  => "gif",
 			"image/jpeg" => "jpg",
@@ -46,7 +52,7 @@
 		}
 
 		public function get_photos($album_id) {
-			$query = "select * from photos where photo_album_id=%d order by title";
+			$query = "select * from photos where photo_album_id=%d order by title,id";
 
 			return $this->db->execute($query, $album_id);
 		}
@@ -116,6 +122,39 @@
 			}
 
 			$image->load($photo["file"]);
+
+			if ($photo["mode"] != THUMBNAIL_MODE_NORMAL) {
+				if ($image->width > $image->height) {
+					$long = $image->width;
+					$short = $image->height;
+				} else {
+					$long = $image->height;
+					$short = $image->width;
+				}
+
+				switch ($photo["mode"]) {
+					case THUMBNAIL_MODE_TOP_LEFT:
+						$x = $y = 0;
+						break;
+					case THUMBNAIL_MODE_CENTER:
+						$x = ($long - $short) / 2;
+						$y = 0;
+						if ($image->height > $image->width) {
+							list($x, $y) = array($y, $x);
+						}
+						break;
+					case THUMBNAIL_MODE_BOTTOM_RIGHT:
+						$x = $long - $short;
+						$y = 0;
+						if ($image->height > $image->width) {
+							list($x, $y) = array($y, $x);
+						}
+						break;
+				}
+
+				$image->crop($x, $y, $short, $short);
+			}
+
 			$image->resize($this->settings->photo_thumbnail_height, $this->settings->photo_thumbnail_width);
 
 			if ($image->save(PHOTO_PATH."/thumbnail_".$photo["id"].".".$photo["extension"]) == false) {
@@ -159,7 +198,8 @@
 					"title"          => "Photo ".(++$photo_nr),
 					"photo_album_id" => $_SESSION["photo_album"],
 					"extension"      => $extension,
-					"overview"       => is_true($settings["overview"]) ? YES : NO);
+					"overview"       => is_true($settings["overview"]) ? YES : NO,
+					"thumbnail_mode" => THUMBNAIL_MODE_NORMAL);
 
 				$this->db->query("begin");
 
@@ -171,7 +211,8 @@
 				$photo = array(
 					"id"        => $this->db->last_insert_id,
 					"file"      => $photos["tmp_name"][$i],
-					"extension" => $extension);
+					"extension" => $extension,
+					"mode"      => $settings["mode"]);
 
 				if ($this->save_image($photo) == false) {
 					$this->db->query("rollback");
@@ -187,11 +228,27 @@
 		}
 
 		public function update_photo($photo) {
-			$data = array(
-				"title"    => $photo["title"],
-				"overview" => is_true($photo["overview"]) ? YES : NO);
+			if (($current = $this->get_photo($photo["id"])) == false) {
+				return false;
+			}
 
-			return $this->db->update("photos", $photo["id"], $data) !== false;
+			$data = array(
+				"title"          => $photo["title"],
+				"overview"       => is_true($photo["overview"]) ? YES : NO,
+				"thumbnail_mode" => $photo["mode"]);
+
+			if ($this->db->update("photos", $photo["id"], $data) === false) {
+				return false;
+			}
+
+			$photo["extension"] = $current["extension"];
+			$photo["file"] = PHOTO_PATH."/image_".$photo["id"].".".$photo["extension"];
+			unlink(PHOTO_PATH."/thumbnail_".$photo["id"].".".$photo["extension"]);
+			if ($this->save_thumbnail($photo) == false) {
+				return false;
+			}
+
+			return true;
 		}
 
 		public function delete_photo($photo_id) {

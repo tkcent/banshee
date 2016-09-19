@@ -53,7 +53,7 @@
 		"logging" => array(
 			"pages"       => array("cms/logging"),
 			"libraries"   => array("logging"),
-			"tables"      => array("log_page_views", "log_referers", "log_search_queries", "log_visits")),
+			"tables"      => array("log_clients", "log_page_views", "log_referers", "log_search_queries", "log_visits")),
 		"mailbox" => array(
 			"pages"       => array("mailbox"),
 			"tables"      => array("mailbox")),
@@ -96,9 +96,11 @@
 			"settings"    => array("weblog\_%"),
 			"directories" => array("cms/weblog")),
 		"webshop" => array(
-			"pages"       => array("webshop", "webshop/cart", "webshop/checkout", "webshop/orders", "cms/webshop/article", "cms/webshop/order"),
+			"pages"       => array("webshop", "webshop/cart", "webshop/checkout", "webshop/orders",
+			                       "cms/webshop/article", "cms/webshop/category", "cms/webshop/order"),
 			"tables"      => array("shop_order_article", "shop_orders", "shop_articles"),
 			"settings"    => array("webshop\_%"),
+			"files"       => array("public/images/cart.png"),
 			"directories" => array("webshop", "cms/webshop")));
 
 	if (count($argv) == 1) {

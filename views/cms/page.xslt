@@ -86,14 +86,14 @@
 </option>
 </xsl:for-each>
 </select>
-<div><label for="visible">Visible:</label>
+<label for="visible">Visible:</label>
 <input type="checkbox" id="visible" name="visible">
 <xsl:if test="page/visible='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
-</input></div>
-<div><label for="back">Back link:</label>
+</input>
+<label for="back">Back link:</label>
 <input type="checkbox" id="back" name="back">
 <xsl:if test="page/back='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
-</input></div>
+</input>
 <label for="private">Private:</label>
 <input type="checkbox" id="private" name="private" onClick="javascript:toggle_roles(this.checked)">
 <xsl:if test="page/private='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
@@ -133,7 +133,6 @@
 <xsl:if test="page/@id">
 <input type="submit" name="submit_button" value="Delete page" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
-<input type="button" value="Start CKEditor" id="start_cke" class="btn btn-default" onClick="javascript:start_ckeditor(300)" />
 </div>
 </form>
 </xsl:template>

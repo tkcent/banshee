@@ -184,7 +184,7 @@
 
 			$maintainers = users_with_role($this->db, $this->settings->forum_maintainers);
 
-			$topic_url = "http://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/topic/".$topic_id;
+			$topic_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/topic/".$topic_id;
 			if ($message_id !== null) {
 				$topic_url .= "#".$message_id;
 			}
@@ -192,7 +192,7 @@
 			$email = new email("Forum message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
-				$cms_url = "http://".$_SERVER["SERVER_NAME"]."/cms/forum";
+				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/forum";
 				if (($key = one_time_key($this->db, $maintainer["id"])) !== false) {
 					$cms_url .= "?login=".$key;
 				}

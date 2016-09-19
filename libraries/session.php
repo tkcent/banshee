@@ -13,7 +13,7 @@
 		private $settings = null;
 		private $id = null;
 		private $session_id = null;
-		private $use_database = null;
+		private $user_id = null;
 
 		/* Constructor
 		 *
@@ -25,11 +25,11 @@
 			$this->db = $db;
 			$this->settings = $settings;
 
-			$this->use_database = ($this->settings->session_timeout >= ini_get("session.gc_maxlifetime"));
-
-			if ($this->use_database) {
-				$this->db->query("delete from sessions where expire<=now()");
+			if ($this->db->connected == false) {
+				return;
 			}
+
+			$this->db->query("delete from sessions where expire<=now()");
 
 			/* Don't overwrite secure session cookie via HTTP
 			 */
@@ -47,21 +47,15 @@
 		 * ERROR:  -
 		 */
 		public function __destruct() {
-			if ($this->use_database == false) {
-				session_write_close();
-				return;
-			} else if ($this->id === null) {
+			if ($this->id === null) {
 				return;
 			} else if ($this->db->connected == false) {
 				return;
 			}
 
 			$session_data = array(
-				"content"    => json_encode($_SESSION),
-				"ip_address" => $_SERVER["REMOTE_ADDR"]);
-			if (is_true($this->settings->session_persistent) == false) {
-				$session_data["expire"] = date("Y-m-d H:i:s", time() + $this->settings->session_timeout);
-			}
+				"content" => json_encode($_SESSION),
+				"expire"  => date("Y-m-d H:i:s", time() + $this->settings->session_timeout));
 
 			$this->db->update("sessions", $this->id, $session_data);
 
@@ -76,7 +70,8 @@
 		 */
 		public function __get($key) {
 			switch ($key) {
-				case "using_database": return $this->use_database;
+				case "id": return $this->session_id;
+				case "user_id": return $this->user_id;
 			}
 
 			return null;
@@ -89,48 +84,42 @@
 		 * ERROR:  false
 		 */
 		private function start() {
-			if ($this->use_database) {
-				/* Use database
+			if (isset($_COOKIE[SESSION_NAME]) == false) {
+				/* New session
 				 */
-				$query = "select * from sessions where session_id=%s";
+				return $this->new_session();
+			}
 
-				if (isset($_COOKIE[SESSION_NAME]) == false) {
-					/* New session
-					 */
-					if ($this->new_session() == false) {
-						return false;
-					}
-				} else if (($sessions = $this->db->execute($query, $_COOKIE[SESSION_NAME])) != false) {
-					/* Existing session
-					 */
-					$this->id = (int)$sessions[0]["id"];
-					$this->session_id = $_COOKIE[SESSION_NAME];
-					$_SESSION = json_decode($sessions[0]["content"], true);
-				} else {
-					/* Unknown session
-					 */
-					if ($this->new_session() == false) {
-						return false;
-					}
-				}
-			} else {
-				/* Use PHP's session handling
+			$query = "select * from sessions where session_id=%s";
+			if (($sessions = $this->db->execute($query, $_COOKIE[SESSION_NAME])) == false) {
+				/* Unknown session
 				 */
-				session_name(SESSION_NAME);
-				if (is_true($this->settings->session_persistent)) {
-					session_set_cookie_params($this->settings->session_timeout);
-				}
+				return $this->new_session();
+			}
 
-				if (ctype_print($_COOKIE[SESSION_NAME]) == false) {
-					unset($_COOKIE[SESSION_NAME]);
-				}
+			/* Existing session
+			 */
+			$session = $sessions[0];
 
-				if (session_start() == false) {
+			if ($session["bind_to_ip"]) {
+				if ($session["ip_address"] != $_SERVER["REMOTE_ADDR"]) {
 					return false;
 				}
-
-				$this->session_id = session_id();
 			}
+
+			if ($session["user_id"] !== null) {
+				if ($_COOKIE[SESSION_LOGIN] != $session["login_id"]) {
+					foreach (array_keys($_COOKIE) as $cookie) {
+						setcookie($cookie, null, 1);
+					}
+					return false;
+				}
+				$this->user_id = (int)$session["user_id"];
+			}
+
+			$this->id = (int)$session["id"];
+			$this->session_id = $_COOKIE[SESSION_NAME];
+			$_SESSION = json_decode($session["content"], true);
 
 			return true;
 		}
@@ -142,43 +131,33 @@
 		 * ERROR:  false
 		 */
 		private function new_session() {
-			/* Create new session id
-			 */
 			$attempts = 3;
-			$query = "select id from sessions where session_id=%s";
 
-			do {
-				if ($attempts-- == 0) {
-					return false;
-				}
-
-				$session_id = random_string(100);
-
-				if (($result = $this->db->execute($query, $session_id)) === false) {
-					return false;
-				}
-			} while (count($result) > 0);
-
-			/* Store session in database
-			 */
 			$session_data = array(
 				"id"         => null,
-				"session_id" => $session_id,
+				"session_id" => null,
+				"login_id"   => null,
 				"content"    => null,
 				"expire"     => date("Y-m-d H:i:s", time() + $this->settings->session_timeout),
 				"user_id"    => null,
 				"ip_address" => $_SERVER["REMOTE_ADDR"],
+				"bind_to_ip" => false,
 				"name"       => null);
 
-			if ($this->db->insert("sessions", $session_data) === false) {
-				return false;
-			}
+			do {
+				if ($attempts-- == 0) {
+					print "session create error\n";
+					return false;
+				}
+
+				$session_data["session_id"] = random_string(100);
+
+				$result = $this->db->insert("sessions", $session_data);
+			} while ($result == false);
 
 			$this->id = $this->db->last_insert_id;
-			$this->session_id = $session_id;
+			$this->session_id = $session_data["session_id"];
 
-			/* Place session id in cookie
-			 */
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
 			setcookie(SESSION_NAME, $this->session_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
 			$_COOKIE[SESSION_NAME] = $this->session_id;
@@ -193,15 +172,43 @@
 		 * ERROR:  false
 		 */
 		public function set_user_id($user_id) {
-			if ($this->use_database == false) {
-				return true;
-			} else if ($this->id === null) {
+			if ($this->id === null) {
+				return false;
+			} else if ($this->db->connected == false) {
 				return false;
 			}
 
-			$user_data = array("user_id" => (int)$user_id);
+			$login_id = random_string(100);
+
+			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
+			setcookie(SESSION_LOGIN, $login_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
+
+			$user_data = array(
+				"user_id"    => (int)$user_id,
+				"login_id"   => $login_id,
+				"ip_address" => $_SERVER["REMOTE_ADDR"]);
 
 			return $this->db->update("sessions", $this->id, $user_data) !== false;
+		}
+
+		/* Bind session to IP
+		 *
+		 * INPUT:  -
+		 * OUTPUT: true
+		 * ERROR:  false
+		 */
+		public function bind_to_ip() {
+			if ($this->id === null) {
+				return false;
+			} else if ($this->db->connected == false) {
+				return false;
+			}
+
+			$data = array(
+				"bind_to_ip" => true,
+				"ip_address" => $_SERVER["REMOTE_ADDR"]);
+
+			return $this->db->update("sessions", $this->id, $data) !== false;
 		}
 
 		/* Reset session
@@ -211,13 +218,12 @@
 		 * ERROR:  false
 		 */
 		public function reset() {
-			if ($this->use_database) {
-				$this->db->query("delete from sessions where id=%d", $this->id);
-				$this->id = null;
-			} else {
-				session_unset();
-				session_destroy();
+			if ($this->db->connected == false) {
+				return false;
 			}
+
+			$this->db->query("delete from sessions where id=%d", $this->id);
+			$this->id = null;
 
 			foreach (array_keys($_COOKIE) as $cookie) {
 				setcookie($cookie, null, 1);

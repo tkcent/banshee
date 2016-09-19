@@ -1,5 +1,7 @@
 <?php
 	class cms_photo_controller extends controller {
+		private $modes = array("Normal", "Top / Left", "Center", "Bottom / Right");
+
 		private function show_overview() {
 			if (($albums = $this->model->get_albums()) === false) {
 				return false;
@@ -24,6 +26,12 @@
 			}
 			$this->output->close_tag();
 
+			$this->output->open_tag("modes");
+			foreach ($this->modes as $mode) {
+				$this->output->add_tag("mode", $mode);
+			}
+			$this->output->close_tag();
+
 			$this->output->close_tag();
 		}
 
@@ -31,6 +39,13 @@
 			$this->output->open_tag("edit");
 			$photo["overview"] = show_boolean($photo["overview"]);
 			$this->output->record($photo, "photo");
+
+			$this->output->open_tag("modes");
+			foreach ($this->modes as $mode) {
+				$this->output->add_tag("mode", $mode);
+			}
+			$this->output->close_tag();
+
 			$this->output->close_tag();
 		}
 

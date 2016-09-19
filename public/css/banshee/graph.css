@@ -1,4 +1,4 @@
-div.graph {
+div.graph div.panel-body {
 	position:relative;
 }
 
@@ -15,7 +15,7 @@ div.graph div.info span.text {
 div.graph div.maxy {
 	text-align:right;
 	position:absolute;
-	top:75px;
+	top:35px;
 	left:20px;
 }
 
@@ -50,7 +50,7 @@ div.graph table td:hover div {
 @media (max-width:767px) {
 	div.graph div.maxy {
 		display:inline-block;
-		top:56px;
+		top:16px;
 	}
 
 	div.graph div.bars {

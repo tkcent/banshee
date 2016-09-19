@@ -30,8 +30,7 @@
 			}
 
 			$this->output->add_javascript("cms/page.js");
-			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("banshee/start_ckeditor.js");
+			$this->output->add_ckeditor("div.btn-group");
 
 			$this->output->open_tag("edit");
 

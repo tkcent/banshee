@@ -18,7 +18,7 @@ if [ ! -s bootstrap.zip ]; then
 	exit
 fi
 
-echo "Installing new Bootstrap."
+echo "Installing Bootstrap."
 unzip -p bootstrap.zip bootstrap-${version}-dist/css/bootstrap.min.css | sed 's/url(\.\./url(/g' > css/banshee/bootstrap.css
 unzip -p bootstrap.zip bootstrap-${version}-dist/css/bootstrap-theme.min.css > css/banshee/bootstrap-theme.css
 unzip -p bootstrap.zip bootstrap-${version}-dist/js/bootstrap.min.js > js/banshee/bootstrap.js

@@ -57,7 +57,6 @@
 <xsl:if test="@id">
 <input type="submit" name="submit_button" value="Delete word" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>
-<input type="button" value="Start CKEditor" id="start_cke" class="btn btn-default" onClick="javascript:start_ckeditor()" />
 </div>
 </form>
 </xsl:template>

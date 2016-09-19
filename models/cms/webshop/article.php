@@ -1,6 +1,7 @@
 <?php
 	class cms_webshop_article_model extends model {
-		private $columns = array("article_nr", "title", "short_description", "long_description", "price");
+		private $order_columns = array("article_nr", "title", "category", "price");
+		private $search_columns = array("article_nr", "title", "category", "short_description", "long_description", "price");
 
 		public function count_articles() {
 			$query = "select count(*) as count from shop_articles";
@@ -17,19 +18,20 @@
 				$_SESSION["article_order"] = array("title", "price");
 			}
 
-			if ((in_array($_GET["order"], $this->columns)) && ($_GET["order"] != $_SESSION["article_order"][0])) {
+			if ((in_array($_GET["order"], $this->order_columns)) && ($_GET["order"] != $_SESSION["article_order"][0])) {
 				$_SESSION["article_order"] = array($_GET["order"], $_SESSION["article_order"][0]);
 			}
 
-			$query = "select * from shop_articles";
+			$query = "select a.*, c.name as category from shop_articles a, shop_categories c ".
+			         "where a.shop_category_id=c.id";
 
 			$search = array();
 			if ($_SESSION["article_search"] != null) {
-				foreach ($this->columns as $i => $column) {
-					$this->columns[$i] = $column." like %s";
+				foreach ($this->search_columns as $i => $column) {
+					$this->search_columns[$i] = $column." like %s";
 					array_push($search, "%".$_SESSION["article_search"]."%");
 				}
-				$query .= " having (".implode(" or ", $this->columns).")";
+				$query .= " having (".implode(" or ", $this->search_columns).")";
 			}
 
 			$query .= " order by %S,%S limit %d,%d";
@@ -41,6 +43,10 @@
 			return $this->db->entry("shop_articles", $article_id);
 		}
 
+		public function get_categories() {
+			return $this->db->execute("select * from shop_categories order by name");
+		}
+
 		public function save_oke($article) {
 			$result = true;
 
@@ -48,7 +54,7 @@
 		}
 
 		public function create_article($article) {
-			$keys = array("id", "article_nr", "title", "short_description", "long_description", "image", "price", "visible");
+			$keys = array("id", "shop_category_id", "article_nr", "title", "short_description", "long_description", "image", "price", "visible");
 
 			$article["id"] = null;
 			$article["visible"] = is_true($article["visible"]) ? YES : NO;
@@ -57,7 +63,7 @@
 		}
 
 		public function update_article($article) {
-			$keys = array("article_nr", "title", "short_description", "long_description", "image", "price", "visible");
+			$keys = array("shop_category_id", "article_nr", "title", "short_description", "long_description", "image", "price", "visible");
 
 			$article["visible"] = is_true($article["visible"]) ? YES : NO;
 
