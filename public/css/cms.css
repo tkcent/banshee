@@ -17,31 +17,3 @@ div.panel img {
 	margin:0 auto;
 	height:50px;
 }
-
-.panel-body {
-	padding-bottom:0;
-}
-
-div.panel_photo_album {
-	display:inline-block;
-	width:48%;
-	float:left;
-}
-
-div.panel_newsletter {
-	display:inline-block;
-	width:48%;
-	float:right;
-}
-
-div.panel_webshop {
-	display:inline-block;
-	width:48%;
-	float:left;
-}
-
-div.panel_system {
-	display:inline-block;
-	width:48%;
-	float:right;
-}

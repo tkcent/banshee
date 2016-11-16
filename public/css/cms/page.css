@@ -8,6 +8,7 @@ table.table th:nth-child(3) {
 
 form.clear {
 	display:inline-block;
+	width:100%;
 }
 
 div.well input[type=checkbox] {

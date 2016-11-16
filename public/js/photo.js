@@ -1,4 +1,8 @@
-$(document).ready(function(){
-	$("#gallery a").prop("rel", "prettyPhoto[gallery]");
-	$("#gallery a").prettyPhoto({ social_tools:"" });
+$(document).ready(function() {
+	$('#gallery a').magnificPopup({
+		type:'image',
+		gallery:{
+			enabled:true
+		}
+	});
 });

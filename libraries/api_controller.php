@@ -16,6 +16,7 @@
 
 		public function execute() {
 			$function = strtolower($_SERVER["REQUEST_METHOD"]);
+
 			if (count($this->page->parameters) > 0) {
 				$params = $this->page->parameters;
 				foreach ($params as $i => $param) {

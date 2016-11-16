@@ -166,6 +166,17 @@
 				$result = false;
 			}
 
+			/* Check authenticator secret
+			 */
+			if (is_true(USE_AUTHENTICATOR) && is_true($user["set_secret"])) {
+				if (strlen($user["authenticator_secret"]) > 0) {
+					if (valid_input($user["authenticator_secret"], authenticator::BASE32_CHARS, 16) == false) {
+						$this->output->add_message("Invalid authenticator secret.");
+						$result = false;
+					}
+				}
+			}
+
 			return $result;
 		}
 
@@ -192,7 +203,7 @@
 		}
 
 		public function create_user($user) {
-			$keys = array("id", "organisation_id", "username", "password", "one_time_key", "cert_serial", "status", "fullname", "email");
+			$keys = array("id", "organisation_id", "username", "password", "one_time_key", "cert_serial", "authenticator_secret", "status", "fullname", "email");
 
 			$user["id"] = null;
 			$user["password"] = hash_password($user["password"], $user["username"]);
@@ -250,6 +261,13 @@
 
 			if ($user["cert_serial"] == "") {
 				$user["cert_serial"] = null;
+			}
+
+			if (is_true(USE_AUTHENTICATOR) && is_true($user["set_secret"])) {
+				array_push($keys, "authenticator_secret");
+				if (trim($user["authenticator_secret"]) == "") {
+					$user["authenticator_secret"] = null;
+				}
 			}
 
 			if ($this->db->query("begin") == false) {

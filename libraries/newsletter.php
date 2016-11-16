@@ -7,7 +7,6 @@
 	 */
 
 	class newsletter extends email {
-		protected $content_type = "text/html";
 		private $footers = array();
 
 		/* Constructor

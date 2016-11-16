@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.5.49, for debian-linux-gnu (x86_64)
+-- MySQL dump   Distrib MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: banshee_dev
+-- Host: localhost    Database: banshee
 -- ------------------------------------------------------
--- Server version	5.5.49-0ubuntu0.14.04.1
+-- Server version	  MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -350,16 +350,6 @@ CREATE TABLE `languages` (
   UNIQUE KEY `page` (`page`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `languages`
---
-
-LOCK TABLES `languages` WRITE;
-/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT INTO `languages` VALUES (1,'*','test','Test','Test');
-/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `links`
@@ -770,6 +760,7 @@ CREATE TABLE `roles` (
   `cms/access` tinyint(4) DEFAULT '0',
   `cms/action` tinyint(4) DEFAULT '0',
   `cms/agenda` tinyint(4) DEFAULT '0',
+  `cms/analytics` tinyint(4) DEFAULT '0',
   `cms/apitest` tinyint(4) DEFAULT '0',
   `cms/collection` tinyint(4) DEFAULT '0',
   `cms/dictionary` tinyint(4) DEFAULT '0',
@@ -780,7 +771,6 @@ CREATE TABLE `roles` (
   `cms/forum/section` tinyint(4) DEFAULT '0',
   `cms/guestbook` tinyint(4) DEFAULT '0',
   `cms/links` tinyint(4) DEFAULT '0',
-  `cms/logging` tinyint(4) DEFAULT '0',
   `cms/menu` tinyint(4) DEFAULT '0',
   `cms/news` tinyint(4) DEFAULT '0',
   `cms/newsletter` tinyint(4) DEFAULT '0',
@@ -826,8 +816,8 @@ DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sessions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `session_id` varchar(100) NOT NULL,
-  `login_id` varchar(100) DEFAULT NULL,
+  `session_id` varchar(128) NOT NULL,
+  `login_id` varchar(128) DEFAULT NULL,
   `content` text,
   `expire` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(10) unsigned DEFAULT NULL,
@@ -864,7 +854,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(31,'photo_page_size','integer','10'),(5,'default_language','string','en'),(32,'photo_thumbnail_height','integer','100'),(9,'start_page','string','homepage'),(10,'webmaster_email','string','void@banshee-php.org'),(30,'forum_page_size','string','25'),(12,'forum_maintainers','string','Moderator'),(13,'guestbook_page_size','integer','10'),(14,'guestbook_maintainers','string','Publisher'),(15,'news_page_size','integer','5'),(16,'news_rss_page_size','string','30'),(17,'newsletter_bcc_size','integer','100'),(18,'newsletter_code_timeout','string','15 minutes'),(19,'newsletter_email','string','void@banshee-php.org'),(20,'newsletter_name','string','Hugo Leisink'),(36,'contact_email','string','void@banshee-php.org'),(22,'poll_max_answers','integer','10'),(44,'poll_bans','string\n',''),(24,'weblog_page_size','string','5'),(25,'weblog_rss_page_size','integer','30'),(26,'head_title','string','Banshee'),(27,'head_description','string','Secure PHP framework'),(28,'head_keywords','string','banshee, secure, php, framework'),(33,'photo_image_height','integer','450'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(37,'photo_thumbnail_width','integer','100'),(38,'photo_image_width','integer','700'),(39,'hiawatha_cache_default_time','integer','3600'),(40,'photo_album_size','integer','18'),(41,'hiawatha_cache_enabled','boolean','false'),(42,'session_timeout','integer','1000'),(43,'session_persistent','boolean','false'),(46,'database_version','integer','1'),(47,'webshop_page_size','integer','15'),(48,'webshop_order_page_size','integer','5');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(31,'photo_page_size','integer','10'),(5,'default_language','string','en'),(32,'photo_thumbnail_height','integer','100'),(9,'start_page','string','homepage'),(10,'webmaster_email','string','void@banshee-php.org'),(30,'forum_page_size','string','25'),(12,'forum_maintainers','string','Moderator'),(13,'guestbook_page_size','integer','10'),(14,'guestbook_maintainers','string','Publisher'),(15,'news_page_size','integer','5'),(16,'news_rss_page_size','string','30'),(17,'newsletter_bcc_size','integer','100'),(18,'newsletter_code_timeout','string','15 minutes'),(19,'newsletter_email','string','void@banshee-php.org'),(20,'newsletter_name','string','Hugo Leisink'),(36,'contact_email','string','void@banshee-php.org'),(22,'poll_max_answers','integer','10'),(44,'poll_bans','string\n',''),(24,'weblog_page_size','string','5'),(25,'weblog_rss_page_size','integer','30'),(26,'head_title','string','Banshee'),(27,'head_description','string','Secure PHP framework'),(28,'head_keywords','string','banshee, secure, php, framework'),(33,'photo_image_height','integer','450'),(35,'secret_website_code','string',''),(37,'photo_thumbnail_width','integer','100'),(38,'photo_image_width','integer','700'),(39,'hiawatha_cache_default_time','integer','3600'),(40,'photo_album_size','integer','18'),(41,'hiawatha_cache_enabled','boolean','false'),(42,'session_timeout','integer','1000'),(43,'session_persistent','boolean','false'),(46,'database_version','integer','1'),(47,'webshop_page_size','integer','15'),(48,'webshop_order_page_size','integer','5');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -897,7 +887,7 @@ CREATE TABLE `shop_articles` (
 
 LOCK TABLES `shop_articles` WRITE;
 /*!40000 ALTER TABLE `shop_articles` DISABLE KEYS */;
-INSERT INTO `shop_articles` VALUES (1,1,'00000001','Smart TV','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. ','http://www.mundodigital.net/wp-content/uploads/SmartTV1.jpg',239.50,1),(2,2,'00000003','Game Computer','Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.','Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. ','http://www.computer-bestel.nl/images/gamepc-amd.png',799.95,1),(8,1,'00000002','Crappy item','Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris.','Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede. Sed lectus. Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. ','http://us.123rf.com/450wm/rjfiskness/rjfiskness1501/rjfiskness150100010/35070423-remains-of-old-tractor-in-a-junk-and-salvage-yard.jpg',128.50,0);
+INSERT INTO `shop_articles` VALUES (1,1,'00000001','Smart TV','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. ','http://www.mundodigital.net/wp-content/uploads/SmartTV1.jpg',239.50,1),(2,2,'00000003','Game Computer','Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.','Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. ','https://www.computer-bestel.nl/images/game-pc-epic-preview.png',799.95,1),(8,1,'00000002','Crappy item','Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris.','Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede. Sed lectus. Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. ','http://us.123rf.com/450wm/rjfiskness/rjfiskness1501/rjfiskness150100010/35070423-remains-of-old-tractor-in-a-junk-and-salvage-yard.jpg',128.50,0);
 /*!40000 ALTER TABLE `shop_articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1023,6 +1013,7 @@ CREATE TABLE `users` (
   `password` varchar(128) NOT NULL,
   `one_time_key` varchar(128) DEFAULT NULL,
   `cert_serial` int(10) unsigned DEFAULT NULL,
+  `authenticator_secret` varchar(16) DEFAULT NULL,
   `status` tinyint(4) unsigned NOT NULL DEFAULT '0',
   `fullname` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -1040,7 +1031,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1,'admin','cc5491f3f6075377579ec9be075c710e9ece5e50ab4f4fa2477c7d201cf72998',NULL,NULL,1,'Administrator','admin@banshee-php.org'),(2,1,'user','68554aeee9e1b820869dc9073cb61d7439c4fb672d24f650ba689b2351942e41',NULL,NULL,1,'Normal user','user@banshee-php.org');
+INSERT INTO `users` VALUES (1,1,'admin','cc5491f3f6075377579ec9be075c710e9ece5e50ab4f4fa2477c7d201cf72998',NULL,NULL,NULL,1,'Administrator','admin@banshee-php.org'),(2,1,'user','68554aeee9e1b820869dc9073cb61d7439c4fb672d24f650ba689b2351942e41',NULL,NULL,NULL,1,'Normal user','user@banshee-php.org');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1070,7 +1061,7 @@ CREATE TABLE `weblog_comments` (
 
 LOCK TABLES `weblog_comments` WRITE;
 /*!40000 ALTER TABLE `weblog_comments` DISABLE KEYS */;
-INSERT INTO `weblog_comments` VALUES (1,1,'Hugo','Test comment','2015-06-02 17:20:36','84.106.86.135'),(2,1,'Hugo','Another test comment.','2015-06-02 17:21:07','84.106.86.135');
+INSERT INTO `weblog_comments` VALUES (1,1,'Hugo','Test comment','2015-06-02 17:20:36','1.2.3.4'),(2,1,'Hugo','Another test comment.','2015-06-02 17:21:07','1.2.3.4');
 /*!40000 ALTER TABLE `weblog_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1165,4 +1156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-25 17:28:47
+-- Dump completed on 2016-09-22 14:55:59

@@ -1,11 +1,10 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet	version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet	version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="layout_site">
-<html>
+<html lang="{language}">
 
 <head>
-<meta http-equiv="Content-Language" content="{language}" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="author" content="AUTHOR" />
@@ -15,7 +14,7 @@
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (http://www.banshee-php.org/)" />
 <link rel="apple-touch-icon" href="/images/iphone.png" />
-<title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
+<title><xsl:if test="title/@page!='' and title/@page!=title"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
 <link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
 </xsl:for-each>
@@ -44,17 +43,17 @@
 
 	<nav class="navbar navbar-inverse">
 		<div class="container">
-			<xsl:if test="count(/output/menu/item)>0">
 			<div class="navbar-header">
+				<xsl:if test="count(/output/menu/item)>0">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
+				</xsl:if>
 				<a class="navbar-brand" href="/"><xsl:value-of select="title" /></a>
 			</div>
-			</xsl:if>
 
 			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">

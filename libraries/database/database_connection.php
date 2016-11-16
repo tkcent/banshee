@@ -21,9 +21,8 @@
 		protected $db_errno = null;
 		protected $id_delim = null;
 		private $read_only = false;
-		private $working_dir = null;
 		private $insert_id_history = array();
-		private $log = array();
+		private $query_log = array();
 
 		/* Desctructor
 		 *
@@ -37,18 +36,16 @@
 				$this->link = null;
 			}
 
-			/* Write log to file
-			 */
-			if (count($this->log) == 0) {
-				return;
-			}
+			if (count($this->query_log) > 0) {
+				/* Write queries to logfile
+				 */
+				$queries = "SQL queries:";
+				foreach ($this->query_log as $query) {
+					$queries .= "\n\t".$query;
+				}
 
-			$remote_addr = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : "localhost";
-
-			if (($fp = fopen($this->working_dir."/logfiles/database.log", "a")) !== false) {
-				$data = sprintf("----[ %s ]--[ %s ]--\n%s\n", date("r"), $remote_addr, implode("\n", $this->log));
-				fputs($fp, $data);
-				fclose($fp);
+				$logfile = new logfile("database");
+				$logfile->add_entry($queries);
 			}
 		}
 
@@ -262,13 +259,7 @@
 
 			if (defined("LOG_DB_QUERIES")) {
 				if (in_array(LOG_DB_QUERIES, array("yes", "true"))) {
-					if ($this->working_dir === null) {
-						$parts = explode("/", getcwd());
-						array_pop($parts);
-						$this->working_dir = implode("/", $parts);
-					}
-
-					array_push($this->log, $query);
+					array_push($this->query_log, $query);
 				}
 			}
 
@@ -355,7 +346,7 @@
 			$cache_db = array_unshift($args);
 			$hash = sha1(json_encode($args));
 
-			$cache = new cache($cache_db, "database_cache");
+			$cache = new cache($cache_db, "banshee_db_cache");
 
 			if ($cache->$hash !== null) {
 				$result = $cache->$hash;

@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
-	chdir(dirname($argv[0]));
+	error_reporting(E_ALL & ~E_NOTICE);
+
+	chdir(__DIR__);
 	require("../libraries/banshee.php");
 	require("../libraries/helpers/http.php");
 

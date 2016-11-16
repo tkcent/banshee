@@ -9,9 +9,9 @@
 			$this->output->add_tag("fullname", $profile["fullname"]);
 			$this->output->add_tag("email", $profile["email"]);
 			if ($this->user->status == USER_STATUS_CHANGEPWD) {
-				$this->output->add_tag("cancel", "Logout", array("page" => LOGOUT_MODULE));
+				$this->output->add_tag("cancel", "Logout", array("url" => "/".LOGOUT_MODULE));
 			} else {
-				$this->output->add_tag("cancel", "Back", array("page" => $this->settings->start_page));
+				$this->output->add_tag("cancel", "Back", array("url" => cancel_url()));
 			}
 
 			/* Action log

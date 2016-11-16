@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="../banshee/main.xslt" />
 
 <!--
@@ -9,13 +9,13 @@
 //-->
 <xsl:template match="overview">
 <div class="access">
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed table-xs">
 <thead>
 <tr><th class="user">user</th>
 <xsl:for-each select="roles/role">
 	<th class="access"><xsl:value-of select="." /></th>
 </xsl:for-each>
-<th></th></tr>
+</tr>
 </thead>
 <tbody>
 <xsl:for-each select="users/user">
@@ -32,20 +32,20 @@
 		</xsl:choose>
 		</td>
 	</xsl:for-each>
-	<td></td></tr>
+	</tr>
 </xsl:for-each>
 </tbody>
 </table>
 </div>
 
 <div class="access">
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed table-xs">
 <thead>
 <tr><th class="module">module</th>
 <xsl:for-each select="roles/role">
 	<th class="access"><xsl:value-of select="." /></th>
 </xsl:for-each>
-<th></th></tr>
+</tr>
 </thead>
 <tbody>
 <xsl:for-each select="modules/module">
@@ -62,7 +62,7 @@
 		</xsl:choose>
 		</td>
 	</xsl:for-each>
-	<td></td></tr>
+	</tr>
 </xsl:for-each>
 </tbody>
 </table>
@@ -70,13 +70,13 @@
 
 <xsl:if test="pages/page">
 	<div class="access">
-	<table class="table table-striped table-condensed">
+	<table class="table table-striped table-condensed table-xs">
 	<thead>
 	<tr><th class="module">url</th>
 	<xsl:for-each select="roles/role">
 		<th class="access"><xsl:value-of select="." /></th>
 	</xsl:for-each>
-	<th></th></tr>
+	</tr>
 	</thead>
 	<tbody>
 	<xsl:for-each select="pages/page">
@@ -93,7 +93,7 @@
 			</xsl:choose>
 			</td>
 		</xsl:for-each>
-		<td></td></tr>
+		</tr>
 	</xsl:for-each>
 	</tbody>
 	</table>

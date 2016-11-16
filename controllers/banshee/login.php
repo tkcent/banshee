@@ -12,11 +12,13 @@
 			$bind_ip = ($_SERVER["REQUEST_METHOD"] == "POST") ? $_POST["bind_ip"] : true;
 
 			$this->output->open_tag("login", array(
-				"password" => show_boolean(module_exists("password")),
-				"register" => show_boolean(module_exists("register")),
-				"bind_ip"  => show_boolean($bind_ip)));
+				"authenticator" => show_boolean(USE_AUTHENTICATOR),
+				"password"      => show_boolean(module_exists("password")),
+				"register"      => show_boolean(module_exists("register")),
+				"bind_ip"       => show_boolean($bind_ip)));
 
 			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
+			$this->output->add_tag("cancel", cancel_url());
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$this->output->add_tag("username", $_POST["username"]);

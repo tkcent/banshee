@@ -30,7 +30,7 @@
 		protected function handle_submit() {
 			parent::handle_submit();
 
-			$cache = new cache($this->db, "settings");
+			$cache = new cache($this->db, "banshee_settings");
 			$cache->store("last_updated", time(), 365 * DAY);
 		}
 	}

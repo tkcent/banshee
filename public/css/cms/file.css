@@ -20,7 +20,7 @@ table.table th:nth-child(5) {
 }
 
 input[type=file] {
-	padding:0px;
+	padding:0;
 }
 
 div.input-group span input {

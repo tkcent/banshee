@@ -1,7 +1,7 @@
 <?php
 	class newsletter_model extends model {
-		private function signature($data) {
-			return sha1(implode("|", $data)."|".$this->settings->secret_website_code);
+		private function create_signature($data) {
+			return hash_hmac("sha256", json_encode($data), $this->settings->secret_website_code);
 		}
 
 		public function extract_data($data) {
@@ -19,7 +19,7 @@
 
 			$signature = $data["signature"];
 			unset($data["signature"]);
-			if ($this->signature($data) != $signature) {
+			if ($this->create_signature($data) != $signature) {
 				return false;
 			}
 
@@ -70,7 +70,7 @@
 				"mode"    => $mode,
 				"email"   => $info["email"],
 				"expires" => date("YmdHis", strtotime("+".$this->settings->newsletter_code_timeout)));
-			$data["signature"] = $this->signature($data);
+			$data["signature"] = $this->create_signature($data);
 			$code = base64_encode(json_encode($data));
 			$code = strtr($code, "/+", "_-");
 

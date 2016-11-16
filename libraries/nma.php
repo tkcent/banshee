@@ -6,8 +6,10 @@
 	 * http://www.banshee-php.org/
 	 */
 
-	class NMA extends HTTPS {
-		private $server = "www.notifymyandroid.com";
+	class NMA {
+		const NMA_SERVER = "www.notifymyandroid.com";
+
+		private $api = null;
 		private $application = null;
 		private $api_keys = null;
 		private $developer_key = null;
@@ -27,7 +29,7 @@
 			}
 			$this->developer_key = $developer_key;
 
-			parent::__construct($this->server);
+			$this->api = new HTTPS(self::NMA_SERVER);
 		}
 
 		/* Truncate text
@@ -77,7 +79,7 @@
 				$data["content-type"] = $content_type;
 			}
 
-			if (($result = $this->POST("/publicapi/notify", $data)) === false) {
+			if (($result = $this->api->POST("/publicapi/notify", $data)) === false) {
 				return false;
 			}
 
@@ -97,7 +99,7 @@
 				$params .= "&developerkey=".$this->developer_key;
 			}
 
-			if (($result = $this->GET("/publicapi/verify?".$params)) === false) {
+			if (($result = $this->api->GET("/publicapi/verify?".$params)) === false) {
 				return false;
 			}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="alphabetize.xslt" />
 <xsl:include href="pagination.xslt" />
 
@@ -70,6 +70,7 @@
 </xsl:if>
 
 <xsl:for-each select="form/element">
+<div>
 <label for="{@name}"><xsl:value-of select="label" />:</label>
 <xsl:choose>
 	<!-- Boolean -->
@@ -113,6 +114,7 @@
 		<input type="text" id="{@name}" name="{@name}" value="{value}" class="form-control" />
 	</xsl:otherwise>
 </xsl:choose>
+</div>
 </xsl:for-each>
 
 <div class="btn-group">

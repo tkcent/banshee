@@ -70,7 +70,13 @@
 
 			if (isset($_SESSION["photo_album"]) == false) {
 				if (($albums = $this->model->get_albums()) != false) {
-					$_SESSION["photo_album"] = (int)$albums[0]["id"];
+					$last_date = 0;
+					foreach ($albums as $album) {
+						if ($album["timestamp"] > $last_date) {
+							$_SESSION["photo_album"] = (int)$album["id"];
+							$last_date = (int)$album["timestamp"];
+						}
+					}
 				}
 			}
 

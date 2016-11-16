@@ -70,10 +70,6 @@ table.month td.today {
 	background-color:#ffe0a0;
 }
 
-table.month td.today div.nr {
-	font-weight:bold;
-}
-
 /* Appointment view
  */
 div.appointment {

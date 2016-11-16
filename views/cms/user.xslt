@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="../banshee/main.xslt" />
 <xsl:include href="../banshee/pagination.xslt" />
 
@@ -60,7 +60,7 @@
 <label for="username">Username:</label>
 <input type="text" id="username" name="username" value="{user/username}" class="form-control" />
 <label for="password">Password:</label>
-<span class="generate"><input type="checkbox" name="generate" id="generate" onClick="javascript:generate_checkbox()">
+<span class="generate"><input type="checkbox" name="generate" id="generate" onClick="javascript:password_field()">
 <xsl:if test="user/generate='on'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 </input>Auto-generate password and send it to the user via e-mail.</span>
 <input type="password" id="password" name="password" class="form-control">
@@ -96,6 +96,14 @@
 </option>
 </xsl:for-each>
 </select>
+</xsl:if>
+<xsl:if test="@authenticator='yes'">
+<label for="secret">Authenticator secret:</label>
+<div class="input-group">
+	<span class="input-group-addon"><input type="checkbox" id="set_secret" name="set_secret" onClick="javascript:use_secret()" /></span>
+	<input type="text" id="secret" name="authenticator_secret" value="{user/authenticator_secret}" class="form-control" onKeyPress="javascript:secret_change()" />
+	<span class="input-group-btn"><input type="button" value="Generate" class="btn btn-default" onClick="javascript:set_authenticator_code()" /></span>
+</div>
 </xsl:if>
 <label for="cert_serial">Certificate serial:</label>
 <input type="text" id="cert_serial" name="cert_serial" value="{user/cert_serial}" class="form-control" />

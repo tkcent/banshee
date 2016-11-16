@@ -7,8 +7,6 @@
 	 */
 
 	class secure_cookie {
-		private $crypto = null;
-		private $validity_check = "banshee";
 		private $expire = null;
 
 		/* Constructor
@@ -18,36 +16,7 @@
 		 * ERROR:  -
 		 */
 		public function __construct($settings) {
-			$this->crypto = new AES256($settings->secret_website_code);
 			$this->expire = time() + 30 * DAY;
-		}
-
-		/* Magic method get
-		 *
-		 * INPUT:  string key
-		 * OUTPUT: mixed value
-		 * ERROR:  null
-		 */
-		public function __get($key) {
-			if (($value = $_COOKIE[$key]) === null) {
-				return null;
-			}
-
-			if (($value = base64_decode($value)) === false) {
-				return null;
-			}
-
-			if (($value = $this->crypto->decrypt($value)) === false) {
-				return null;
-			}
-
-			$vc_len = strlen($this->validity_check);
-			if (substr($value, 0, $vc_len) !== $this->validity_check) {
-				return null;
-			}
-			$value = substr($value, $vc_len);
-
-			return json_decode($value, true);
 		}
 
 		/* Set setting
@@ -57,16 +26,34 @@
 		 * ERROR:  -
 		 */
 		public function __set($key, $value) {
-			$value = $this->validity_check.json_encode($value);
+			$value = json_encode($value);
 
-			if (($value = $this->crypto->encrypt($value)) === false) {
+			$crypto = new AES256($this->settings->secret_website_code);
+			if (($value = $crypto->encrypt($value)) === false) {
 				return;
 			}
 
-			$value = base64_encode($value);
-
 			$_COOKIE[$key] = $value;
 			setcookie($key, $value, $this->expire);
+		}
+
+		/* Magic method get
+		 *
+		 * INPUT:  string key
+		 * OUTPUT: mixed value
+		 * ERROR:  null
+		 */
+		public function __get($key) {
+			if (($data = $_COOKIE[$key]) === null) {
+				return null;
+			}
+
+			$crypto = new AES256($this->settings->secret_website_code);
+			if (($value = $crypto->decrypt($data)) === false) {
+				return null;
+			}
+
+			return json_decode($value, true);
 		}
 
 		/* Set cookie expire time

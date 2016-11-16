@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 
 <!--
@@ -69,7 +69,7 @@
 <textarea id="content" name="content" class="form-control"><xsl:value-of select="../comment/content" /></textarea>
 
 <div class="btn-group">
-<input type="submit" value="Save" class="btn btn-default" />
+<input type="submit" value="Post" class="btn btn-default" />
 <a href="/{/output/page}" class="btn btn-default">Back</a>
 </div>
 </form>

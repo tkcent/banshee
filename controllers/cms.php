@@ -27,15 +27,15 @@
 					"Albums"        => array("cms/album", "album.png"),
 					"Collections"   => array("cms/collection", "collection.png"),
 					"Photos"        => array("cms/photo", "photo.png")),
-				"Newsletter" => array(
-					"Newsletter"    => array("cms/newsletter", "newsletter.png"),
-					"Subscriptions" => array("cms/subscriptions", "subscriptions.png")),
 				"Webshop" => array(
 					"Articles"      => array("cms/webshop/article", "articles.png"),
 					"Categories"    => array("cms/webshop/category", "categories.png"),
 					"Orders"        => array("cms/webshop/order", "orders.png")),
+				"Newsletter" => array(
+					"Newsletter"    => array("cms/newsletter", "newsletter.png"),
+					"Subscriptions" => array("cms/subscriptions", "subscriptions.png")),
 				"System" => array(
-					"Logging"       => array("cms/logging", "logging.png"),
+					"Analytics"     => array("cms/analytics", "analytics.png"),
 					"Action log"    => array("cms/action", "action.png"),
 					"Settings"      => array("cms/settings", "settings.png"),
 					"API test"      => array("cms/apitest", "apitest.png")));
@@ -67,11 +67,8 @@
 
 			$this->output->open_tag("menu");
 
-			foreach ($menu as $text => $section) {
-
-				$this->output->open_tag("section", array(
-					"text"  => $text,
-					"class" => strtr(strtolower($text), " &", "__")));
+			foreach ($menu as $title => $section) {
+				$elements = array();
 
 				foreach ($section as $text => $info) {
 					list($module, $icon) = $info;
@@ -86,13 +83,36 @@
 						$access = true;
 					}
 
-					$this->output->add_tag("entry", $module, array(
-						"text"   => $text,
-						"access" => show_boolean($access),
-						"icon"   => $icon));
+					if ($access) {
+						array_push($elements, array(
+							"text"   => $text,
+							"module" => $module,
+							"icon"   => $icon));
+					}
 				}
 
-				$this->output->close_tag();
+				$element_count = count($elements);
+				if ($element_count > 0) {
+					if ($element_count <= 3) {
+						$class = "col-xs-12 col-sm-6";
+					} else if ($element_count <= 4) {
+						$class = "col-xs-12 col-sm-12 col-md-6";
+					} else {
+						$class = "col-xs-12";
+					}
+
+					$this->output->open_tag("section", array(
+						"title" => $title,
+						"class" => $class));
+
+					foreach ($elements as $element) {
+						$this->output->add_tag("entry", $element["module"], array(
+							"text"   => $element["text"],
+							"icon"   => $element["icon"]));
+					}
+
+					$this->output->close_tag();
+				}
 			}
 
 			$this->output->close_tag();

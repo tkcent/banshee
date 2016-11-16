@@ -204,7 +204,7 @@
 	/* Return a per-page overview of the access levels
 	 *
 	 * INPUT:  object database
-	 * OUTPUT: array( string module => int access level[, ....] )
+	 * OUTPUT: array( string module => int access level[, ...] )
 	 * ERROR:  false
 	 */
 	function page_access_list($db, $user) {
@@ -287,11 +287,15 @@
 	 */
 	function random_string($length = 32) {
 		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
-		$max_pos = strlen($characters) - 1;
+		$max_chars = strlen($characters) - 1;
+
+		$bytes = openssl_random_pseudo_bytes($length);
 
 		$result = "";
-		while ($length-- > 0) {
-			$result .= $characters[mt_rand(0, $max_pos)];
+		$pos = 0;
+		for ($i = 0; $i < $length; $i++) {
+			$pos = ($pos + ord($bytes[$i])) % $max_chars;
+			$result .= $characters[$pos];
 		}
 
 		return $result;

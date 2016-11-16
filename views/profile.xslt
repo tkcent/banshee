@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 
 <!--
@@ -24,7 +24,7 @@
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Update profile" class="btn btn-default" />
 <xsl:if test="cancel">
-<a href="/{cancel/@page}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
+<a href="{cancel/@url}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
 </xsl:if>
 </div>
 </form>

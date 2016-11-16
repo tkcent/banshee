@@ -13,6 +13,20 @@
 				return;	
 			}
 
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				if (($art_count = count($articles)) == 0) {
+					$this->output->add_tag("result", "No matching articles have been found.");
+					$_SESSION["webshop_search"] = null;
+					return;
+				}
+
+				$_SESSION["webshop_search_count"] = $art_count;
+				if (($search != "") && ($_SESSION["webshop_search_count"] == 1)) {
+					$this->show_article($articles[0]);
+					return;
+				}
+			}
+
 			if (($categories = $this->model->get_categories()) == false) {
 				$this->output->add_tag("result", "Database error.");
 				return;	
@@ -53,10 +67,11 @@
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["submit_button"] == "search") {
-					/* Search
-					 */
 					$_SESSION["webshop_search"] = $_POST["search"];
 				}
+			} else if (($this->page->pathinfo[1] == null) && ($_SESSION["webshop_search_count"] === 1)) {
+				$_SESSION["webshop_search"] = null;
+				$_SESSION["webshop_search_count"] = null;
 			}
 
 			if ($this->page->pathinfo[1] == "category") {

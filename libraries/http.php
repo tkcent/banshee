@@ -195,7 +195,7 @@
 		 * ERROR:  -
 		 */
 		public function add_cookie($key, $value) {
-			if ($key != "") {
+			if (trim($key) != "") {
 				$this->cookies[$key] = $value;
 			}
 		}
@@ -334,6 +334,7 @@
 			$result = array(
 				"status"  => (int)$status,
 				"headers" => array(),
+				"cookies" => array(),
 				"body"    => $body);
 
 			/* Parse response headers
@@ -343,13 +344,18 @@
 				$parts = explode(":", $header[$i], 2);
 				list($key, $value) = array_map("trim", $parts);
 				$key = strtolower($key);
-				$result["headers"][$key] = $value;
+
+				if ($key != "set-cookie") {
+					$result["headers"][$key] = $value;
+				}
 
 				if ($key == "set-cookie") {
 					/* Cookie
 					 */
-					list($value) = explode(";", $value);
-					list($cookie_key, $cookie_value) = explode("=", $value);
+					list($cookie_key, $cookie_value) = explode("=", $value, 2);
+					$result["cookies"][$cookie_key] = $cookie_value;
+
+					list($cookie_value) = explode(";", $cookie_value, 2);
 					$this->add_cookie($cookie_key, $cookie_value);
 				} else if ($key == "content-encoding") {
 					/* Content encoding

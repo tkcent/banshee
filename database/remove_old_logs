@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-	chdir(dirname($argv[0]));
+	chdir(__DIR__);
 	require("../libraries/banshee.php");
 
 	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);

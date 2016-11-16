@@ -11,7 +11,7 @@
 	class settings {
 		private $db = null;
 		private $max_value_len = 256;
-		private $cache = null;
+		private $cache = array();
 		private $types = array("boolean", "float", "integer", "string");
 
 		/* Constructor
@@ -25,7 +25,7 @@
 
 			/* Handle settings updates
 			 */
-			$cache = new cache($this->db, "settings");
+			$cache = new cache($this->db, "banshee_settings");
 			if ($cache->last_updated === null) {
 				$cache->store("last_updated", time(), 365 * DAY);
 			}

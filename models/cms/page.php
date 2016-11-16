@@ -157,9 +157,9 @@
 			              "title", "description", "keywords", "content",
 			              "visible", "back");
 			$page["id"] = null;
-			$page["private"] = is_true($page["private"]) ? 1 : 0;
-			$page["visible"] = is_true($page["visible"]) ? 1 : 0;
-			$page["back"] = is_true($page["back"]) ? 1 : 0;
+			$page["private"] = is_true($page["private"]) ? YES : NO;
+			$page["visible"] = is_true($page["visible"]) ? YES : NO;
+			$page["back"] = is_true($page["back"]) ? YES : NO;
 
 			if ($page["layout"] == $this->default_layout) {
 				$page["layout"] = null;
@@ -186,9 +186,9 @@
 			$keys = array("url", "language", "layout", "private", "style",
 			              "title", "description", "keywords", "content",
 			              "visible", "back");
-			$page["private"] = is_true($page["private"]) ? 1 : 0;
-			$page["visible"] = is_true($page["visible"]) ? 1 : 0;
-			$page["back"] = is_true($page["back"]) ? 1 : 0;
+			$page["private"] = is_true($page["private"]) ? YES : NO;
+			$page["visible"] = is_true($page["visible"]) ? YES : NO;
+			$page["back"] = is_true($page["back"]) ? YES : NO;
 
 			if ($page["layout"] == $this->default_layout) {
 				$page["layout"] = null;

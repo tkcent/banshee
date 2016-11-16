@@ -33,10 +33,10 @@
 				list($method, $auth) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
 				if (($method == "Basic") && (($auth = base64_decode($auth)) !== false)) {
 					list($username, $password) = explode(":", $auth, 2);
-					if ($this->login_password($username, $password, false) == false) {
+					if ($this->login_password($username, $password) == false) {
 						header("Status: 401");
 					} else {
-						$session->bind_to_ip();
+						$this->session->bind_to_ip();
 					}
 				}
 			}
@@ -108,11 +108,11 @@
 
 		/* Verify user credentials
 		 *
-		 * INPUT:  string username, string password
+		 * INPUT:  string username, string password[, string authenticator code]
 		 * OUTPUT: boolean login correct
 		 * ERROR:  -
 		 */
-		public function login_password($username, $password) {
+		public function login_password($username, $password, $code = null) {
 			$query = "select * from users where username=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $username, USER_STATUS_DISABLED)) == false) {
 				header("X-Hiawatha-Monitor: failed_login");
@@ -123,7 +123,16 @@
 
 			usleep(rand(0, 10000));
 
-			if ($user["password"] === hash_password($password, $username)) {
+			if (is_false(USE_AUTHENTICATOR)) {
+				$auth_code_ok = true;
+			} else if ($user["authenticator_secret"] === null) {
+				$auth_code_ok = true;
+			} else {
+				$authenticator = new authenticator;
+				$auth_code_ok = $authenticator->verify_code($user["authenticator_secret"], $code);
+			}
+
+			if (($user["password"] === hash_password($password, $username)) && $auth_code_ok) {
 				$this->login((int)$user["id"]);
 			}
 
@@ -160,7 +169,7 @@
 			$this->db->query($query, $user["id"]);
 
 			$this->login((int)$user["id"]);
-			$session->bind_to_ip();
+			$this->session->bind_to_ip();
 
 			return true;
 		}
@@ -299,35 +308,27 @@
 
 		/* Log user action
 		 *
-		 * INPUT:  string action
-		 * OUTPUT: true
-		 * ERROR:  false
+		 * INPUT:  string action / format[, mixed arg, ...]
+		 * OUTPUT: -
+		 * ERROR:  -
 		 */
-		public function log_action($action) {
-			if (func_num_args() > 1) {
-				$args = func_get_args();
-				array_shift($args);
-				$action = vsprintf($action, $args);
+		public function log_action() {
+			static $logfile = null;
+
+			if ($logfile === null) {
+				$logfile = new logfile("actions");
 			}
 
-			$mesg = $_SERVER["REMOTE_ADDR"]."|".date("D d M Y H:i:s")."|";
 			if ($this->logged_in == false) {
-				$mesg .= "-";
+				$logfile->user_id = "-";
 			} else if (isset($_SESSION["user_switch"]) == false) {
-				$mesg .= $this->id;
+				$logfile->user_id = $this->id;
 			} else {
-				$mesg .= $_SESSION["user_switch"].":".$this->id;
-			}
-			$mesg .= "|".$action."\n";
-
-			if (($fp = fopen("../logfiles/actions.log", "a")) == false) {
-				return false;
+				$logfile->user_id = $_SESSION["user_switch"].":".$this->id;
 			}
 
-			fputs($fp, $mesg);
-			fclose($fp);
-
-			return true;
+			$arguments = func_get_args();
+			call_user_func_array(array($logfile, "add_entry"), $arguments);
 		}
 	}
 ?>

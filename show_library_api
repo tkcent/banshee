@@ -7,7 +7,7 @@
 	 * http://www.banshee-php.org/
 	 */
 
-	chdir(dirname($argv[0]));
+	chdir(__DIR__);
 	require("libraries/banshee.php");
 	require("libraries/helpers/console.php");
 

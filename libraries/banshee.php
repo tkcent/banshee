@@ -8,7 +8,7 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
-	define("BANSHEE_VERSION", "5.3");
+	define("BANSHEE_VERSION", "5.4");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -54,9 +54,9 @@
 			$class_name = $rename[$class_name];
 		}
 
-		$locations = array("libraries", "libraries/database");
+		$locations = array("/", "/database/");
 		foreach ($locations as $location) {
-			if (file_exists($file = "../".$location."/".$class_name.".php")) {
+			if (file_exists($file = __DIR__.$location.$class_name.".php")) {
 				include_once($file);
 				break;
 			}
@@ -135,6 +135,24 @@
 		return $page;
 	}
 
+	/* Generate URL for cancel button
+	 * INPUT:  -
+	 * OUTPUT: string url
+	 * ERROR:  -
+	 */
+	function cancel_url() {
+		$supported_modules = array("banshee/login", "register", "password", "profile");
+
+		if (in_array($_SESSION["previous_module"], $supported_modules) == false) {
+			list($protocol,,, $path) = explode("/", $_SERVER["HTTP_REFERER"], 4);
+			if (in_array($protocol, array("http:", "https:"))) {
+				$_SESSION["cancel_url"] = $path;
+			}
+		}
+
+		return "/".$_SESSION["cancel_url"];
+	}
+
 	/* Check for module existence
 	 *
 	 * INPUT:  string module
@@ -161,7 +179,7 @@
 	 * ERROR:  -
 	 */
 	function library_exists($library) {
-		return file_exists("../libraries/".$library.".php");
+		return file_exists(__DIR__."/".$library.".php");
 	}
 
 	/* Check for table existence
@@ -301,8 +319,9 @@
 			return $cache[$config_file];
 		}
 
-		if (substr($config_file, 0, 1) != "/") {
-			$config_file = "../settings/".$config_file.".conf";
+		$first_char = substr($config_file, 0, 1);
+		if (($first_char != "/") && ($first_char != ".")) {
+			$config_file = __DIR__."/../settings/".$config_file.".conf";
 		}
 		if (file_exists($config_file) == false) {
 			return array();
@@ -335,12 +354,16 @@
 
 	/* Convert configuration line to array
 	 *
-	 * INPUT:  string config line
+	 * INPUT:  string config line[, bool look for key-value
 	 * OUTPUT: array config line
 	 * ERROR:  -
 	 */
-	function config_array($line) {
+	function config_array($line, $key_value = true) {
 		$items = explode("|", $line);
+
+		if ($key_value == false) {
+			return $items;
+		}
 
 		$result = array();
 		foreach ($items as $item) {

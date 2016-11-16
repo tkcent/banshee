@@ -7,9 +7,9 @@
 	 * http://www.banshee-php.org/
 	 */
 
-	chdir(dirname($argv[0])."/settings");
-	require("../libraries/banshee.php");
-	require("../libraries/helpers/console.php");
+	chdir(__DIR__);
+	require("libraries/banshee.php");
+	require("libraries/helpers/console.php");
 
 	print "Remove Banshee Module\n\n";
 
@@ -19,6 +19,10 @@
 		"agenda" => array(
 			"pages"       => array("agenda", "cms/agenda"),
 			"tables"      => array("agenda")),
+		"analytics" => array(
+			"pages"       => array("cms/analytics"),
+			"libraries"   => array("analytics"),
+			"tables"      => array("log_clients", "log_page_views", "log_referers", "log_search_queries", "log_visits")),
 		"apitest" => array(
 			"pages"       => array("cms/apitest")),
 		"captcha" => array(
@@ -50,10 +54,6 @@
 		"links" => array(
 			"pages"       => array("links", "cms/links"),
 			"tables"      => array("links")),
-		"logging" => array(
-			"pages"       => array("cms/logging"),
-			"libraries"   => array("logging"),
-			"tables"      => array("log_clients", "log_page_views", "log_referers", "log_search_queries", "log_visits")),
 		"mailbox" => array(
 			"pages"       => array("mailbox"),
 			"tables"      => array("mailbox")),
@@ -98,7 +98,7 @@
 		"webshop" => array(
 			"pages"       => array("webshop", "webshop/cart", "webshop/checkout", "webshop/orders",
 			                       "cms/webshop/article", "cms/webshop/category", "cms/webshop/order"),
-			"tables"      => array("shop_order_article", "shop_orders", "shop_articles"),
+			"tables"      => array("shop_order_article", "shop_orders", "shop_articles", "shop_categories"),
 			"settings"    => array("webshop\_%"),
 			"files"       => array("public/images/cart.png"),
 			"directories" => array("webshop", "cms/webshop")));
@@ -109,7 +109,7 @@
 		$modules = array();
 		foreach ($banshee_modules as $module => $info) {
 			$file = $info["pages"][0];
-			if (file_exists("../controllers/".$file.".php") || file_exists("../views/".$file.".xslt")) {
+			if (file_exists("controllers/".$file.".php") || file_exists("../views/".$file.".xslt")) {
 				array_push($modules, $module);
 			}
 		}
@@ -157,6 +157,7 @@
 		"css"  => array("public/css"),
 		"js"   => array("public/js"),
 		"php"  => array("controllers", "models"),
+		"png"  => array("public/images/icons"),
 		"xslt" => array("views"));
 
 	foreach ($modules as $module) {
@@ -165,11 +166,11 @@
 		foreach ($locations as $extension => $paths) {
 			foreach ($paths as $path) {
 				foreach ($module["pages"] as $page) {
-					$file = "../".$path."/".$page.".".$extension;
+					$file = $path."/".$page.".".$extension;
 					if (file_exists($file)) {
-						printf("Deleting file %s.\n", substr($file, 3));
+						printf("Deleting file %s.\n", $file);
 						if (unlink($file) == false) {
-							printf("Error while deleting file %s\n", substr($file, 3));
+							printf("Error while deleting file %s\n", $file);
 						}
 					}
 				}
@@ -180,7 +181,7 @@
 		 */
 		if (isset($module["libraries"])) {
 			foreach ($module["libraries"] as $library) {
-				$file = "../libraries/".$library.".php";
+				$file = "libraries/".$library.".php";
 				if (file_exists($file)) {
 					printf("Deleting library %s.\n", $file);
 					if (unlink($file) == false) {
@@ -203,11 +204,10 @@
 		 */
 		if (isset($module["files"])) {
 			foreach ($module["files"] as $file) {
-				$file = "../".$file;
 				if (file_exists($file)) {
-					printf("Deleting file %s.\n", substr($file, 3));
+					printf("Deleting file %s.\n", $file, 3);
 					if (unlink($file) == false) {
-						printf("Error while deleting file %s\n", substr($file, 3));
+						printf("Error while deleting file %s\n", $file, 3);
 					}
 				}
 			}
@@ -230,11 +230,11 @@
 			foreach ($locations as $paths) {
 				foreach ($paths as $path) {
 					foreach ($module["directories"] as $directory) {	
-						$directory = "../".$path."/".$directory;
-						printf("Deleting directory %s.\n", substr($directory, 3));
+						$directory = $path."/".$directory;
+						printf("Deleting directory %s.\n", $directory);
 						if (file_exists($directory)) {
 							if (rmdir($directory) == false) {
-								printf("Error while deleting directory %s\n", substr($directory, 3));
+								printf("Error while deleting directory %s\n", $directory);
 							}
 						}
 					}
@@ -247,6 +247,8 @@
 	 */
 	printf("Removing module from page configuration files.\n");
 	foreach (array("public_modules.conf", "private_modules.conf") as $file) {
+		$file = "settings/".$file;
+
 		if (($config = file($file)) == false) {
 			continue;
 		}
@@ -272,6 +274,6 @@
 	}
 
 	if ($db->connected) {
-		system("../database/private_modules");
+		system("database/private_modules");
 	}
 ?>

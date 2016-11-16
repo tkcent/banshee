@@ -7,7 +7,9 @@
 	 */
 
 	class XML {
-		private $xml_header = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+		const XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+
+		private $secure_data = null;
 		private $xml_data = "";
 		private $xslt_parameters = array();
 		private $open_tags = array();
@@ -18,16 +20,18 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  [object database]
+		 * INPUT:  [object database][, bool secure XML data]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db = null) {
+		public function __construct($db = null, $secure_data = false) {
 			libxml_disable_entity_loader(false);
 
 			if ($db !== null) {
-				$this->cache = new cache($db, "xml");
+				$this->cache = new cache($db, "banshee_xml");
 			}
+
+			$this->secure_data = $secure_data;
 		}
 
 		/* Magic method get
@@ -40,7 +44,7 @@
 			switch ($key) {
 				case "depth": return count($this->open_tags);
 				case "data": return $this->xml_data;
-				case "document": return $this->xml_header."\n".$this->xml_data;
+				case "document": return self::XML_HEADER."\n".$this->xml_data;
 				case "array": return $this->xml_to_array($this->xml_data);
 			}
 
@@ -151,7 +155,9 @@
 
 			$this->open_tag($name, $attributes);
 			if ($data !== null) {
-				//$data = $this->secure_string($data);
+				if ($this->secure_data) {
+					$data = $this->secure_string($data);
+				}
 				$this->add_to_buffer($this->xmlspecialchars($data));
 			}
 			$this->close_tag();

@@ -31,11 +31,11 @@
 		$_language = new language($_database, $_page, $_output);
 	}
 
-	/* Logging
+	/* Web Analytics
 	 */
-	if (library_exists("logging") && ($_user->is_admin == false)) {
-		$logging = new logging($_database, $_page);
-		$logging->execute();
+	if (library_exists("analytics") && ($_user->is_admin == false)) {
+		$analytics = new analytics($_database, $_page);
+		$analytics->execute();
 	}
 
 	/* Prevent Cross-Site Request Forgery
@@ -78,6 +78,7 @@
 		/* Page information
 		 */
 		$_output->add_tag("page", $_page->page, array(
+			"base"     => $_SERVER["HTTP_SCHEME"]."://".$_SERVER["HTTP_HOST"],
 			"url"      => $_page->url,
 			"module"   => $_page->module,
 			"type"     => $_page->type,
@@ -107,7 +108,7 @@
 
 		/* Main menu
 		 */
-		if (is_true(WEBSITE_ONLINE)) {
+		if (is_true(WEBSITE_ONLINE) || ($_SERVER["REMOTE_ADDR"] == WEBSITE_ONLINE)) {
 			if ((substr($_page->url, 0, 4) == "/cms") || ($_output->layout == LAYOUT_CMS)) {
 				/* CMS menu
 				 */
@@ -122,7 +123,7 @@
 				/* Normal menu
 				 */
 				$menu = new menu($_database, $_output);
-				if (is_true(MENU_CHECK_RIGHTS)) {
+				if (is_true(MENU_PERSONALIZED)) {
 					$menu->set_user($_user);
 				}
 				$menu->to_output();

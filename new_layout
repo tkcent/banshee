@@ -1,6 +1,13 @@
 #!/usr/bin/php
 <?php
-	chdir(dirname($argv[0]));
+	/* new_layout
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	chdir(__DIR__);
 	require("libraries/banshee.php");
 	require("libraries/security.php");
 	require("libraries/helpers/console.php");

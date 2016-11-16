@@ -45,10 +45,8 @@
 		/* Log spam information
 		 */
 		private function log_spam($reason) {
-			if (($fp = fopen("../logfiles/spam.log", "a")) != false) {
-				fputs($fp, $_SERVER["REMOTE_ADDR"]."|".date("D d M Y H:i:s")."|".$reason."\n");
-				fclose($fp);
-			}
+			$logfile = new logfile("spam");
+			$logfile->add_entry($reason);
 		}
 
 		/* Determine whether a message is spam or not
@@ -119,7 +117,7 @@
 			/* Check for maximum allowed number of links
 			 */
 			if (isset($antispam["max_links"])) {
-				$link_count = max(substr_count($this->message, "[url"), substr_count($this->message, "http://"));
+				$link_count = substr_count($this->message, "[url") + substr_count($this->message, "http://") + substr_count($this->message, "https://");
 				if ($link_count > $antispam["max_links"]) {
 					$this->log_spam("+".$antispam["max_links"]." links");
 					return true;

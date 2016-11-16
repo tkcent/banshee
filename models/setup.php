@@ -145,6 +145,12 @@
 		/* Import database tables from file
 		 */
 		public function import_sql() {
+			$result = system("mysql --version");
+			if (substr($result, 0, 5) != "mysql") {
+				$this->output->add_message("The MySQL command line tool could not be found. Install it first.");
+				return false;
+			}
+
 			system("mysql -h '".DB_HOSTNAME."' -u '".DB_USERNAME."' --password='".DB_PASSWORD."' '".DB_DATABASE."' < ../database/mysql.sql", $result);
 			if ($result != 0) {
 				$this->output->add_message("Error while importing database tables.");

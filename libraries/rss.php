@@ -7,6 +7,8 @@
 	 */
 
 	class RSS {
+		const CONTENT_TYPE = "application/rss+xml; charset=utf-8";
+
 		private $output = null;
 		private $protocol = null;
 		private $cache_id = null;
@@ -14,7 +16,6 @@
 		private $description = null;
 		private $url = null;
 		private $items = array();
-		private $content_type = "application/rss+xml; charset=utf-8";
 
 		/* Constructor
 		 *
@@ -57,7 +58,7 @@
 		 * ERROR:  -
 		 */
 		public function fetch_from_cache($cache_id) {
-			$this->output->content_type = $this->content_type;
+			$this->output->content_type = self::CONTENT_TYPE;
 			$this->cache_id = $cache_id;
 
 			return $this->output->fetch_from_cache($cache_id);
@@ -88,7 +89,7 @@
 		 * ERROR:  -
 		 */
 		public function to_output() {
-			$this->output->content_type = $this->content_type;
+			$this->output->content_type = self::CONTENT_TYPE;
 
 			if ($this->cache_id !== null) {
 				$this->output->start_caching($this->cache_id);

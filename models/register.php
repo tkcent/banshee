@@ -1,14 +1,18 @@
 <?php
 	class register_model extends model {
-		private $minimum_username_length = 4;
-		private $minimum_password_length = 8;
-		private $mimimum_fullname_length = 4;
+		const MINIMUM_USERNAME_LENGTH = 4;
+		const MINIMUM_PASSWORD_LENGTH = 8;
+		const MINIMUM_FULLNAME_LENGTH = 4;
+
+		private function create_signature($data) {
+			return hash_hmac("sha256", json_encode($data), $this->settings->secret_website_code);
+		}
 
 		public function valid_signup($data) {
 			$result = true;
 
-			if ((strlen($data["username"]) < $this->minimum_username_length) || (valid_input($data["username"], VALIDATE_NONCAPITALS, VALIDATE_NONEMPTY) == false)) {
-				$this->output->add_message("Your username must consist of lowercase letters with a mimimum length of %d.", $this->minimum_username_length);
+			if ((strlen($data["username"]) < self::MINIMUM_USERNAME_LENGTH) || (valid_input($data["username"], VALIDATE_NONCAPITALS, VALIDATE_NONEMPTY) == false)) {
+				$this->output->add_message("Your username must consist of lowercase letters with a mimimum length of %d.", self::MINIMUM_USERNAME_LENGTH);
 				$result = false;
 			}
 
@@ -21,13 +25,13 @@
 				return false;
 			}
 
-			if (strlen($data["password"]) < $this->minimum_password_length) {
-				$this->output->add_message("The length of your password must be equal or greater than %d.", $this->minimum_password_length);
+			if (strlen($data["password"]) < self::MINIMUM_PASSWORD_LENGTH) {
+				$this->output->add_message("The length of your password must be equal or greater than %d.", self::MINIMUM_PASSWORD_LENGTH);
 				$result = false;
 			}
 
-			if (strlen($data["fullname"]) < $this->mimimum_fullname_length) {
-				$this->output->add_message("The length of your name must be equal or greater than %d.", $this->mimimum_fullname_length);
+			if (strlen($data["fullname"]) < self::MINIMUM_FULLNAME_LENGTH) {
+				$this->output->add_message("The length of your name must be equal or greater than %d.", self::MINIMUM_FULLNAME_LENGTH);
 				$result = false;
 			}
 
@@ -54,12 +58,6 @@
 			return $result;
 		}
 
-		private function get_signature($data) {
-			$data["secret"] = $this->settings->secret_website_code;
-
-			return hash("sha256", json_encode($data));
-		}
-
 		public function send_link($data) {
 			$data = array(
 				"username"  => $data["username"],
@@ -67,7 +65,7 @@
 				"email"     => strtolower($data["email"]),
 				"fullname"  => $data["fullname"],
 				"timestamp" => time());
-			$data["signature"] = $this->get_signature($data);
+			$data["signature"] = $this->create_signature($data);
 
 			$link = json_encode($data);
 
@@ -75,12 +73,6 @@
 			if (($link = $aes->encrypt($link)) === false) {
 				return false;
 			}
-
-			if (($link = base64_encode($link)) === false) {
-				return false;
-			}
-			$link = strtr($link, "/+=", "_-:");
-
 
 			$email = new email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
@@ -98,11 +90,6 @@
 		}
 
 		public function sign_up($data) {
-			$data = strtr($data, "_-:", "/+=");
-			if (($data = base64_decode($data)) === false) {
-				return false;
-			}
-		 	
 			$aes = new AES256($this->settings->secret_website_code);
 			if (($data = $aes->decrypt($data)) === false) {
 				return false;
@@ -118,7 +105,7 @@
 
 			$signature = $data["signature"];
 			unset($data["signature"]);
-			if ($this->get_signature($data) != $signature) {
+			if ($this->create_signature($data) != $signature) {
 				return false;
 			}
 
@@ -127,14 +114,16 @@
 			}
 
 			$user = array(
-				"id"              => null,
-				"organisation_id" => 1,
-				"username"        => $data["username"],
-				"password"        => hash_password($data["password"], $data["username"]),
-				"one_time_key"    => null,
-			    "status"          => USER_STATUS_ACTIVE,
-				"fullname"        => $data["fullname"],
-				"email"           => $data["email"]);
+				"id"                   => null,
+				"organisation_id"      => 1,
+				"username"             => $data["username"],
+				"password"             => hash_password($data["password"], $data["username"]),
+				"one_time_key"         => null,
+				"cert_serial"          => 0,
+			    "status"               => USER_STATUS_ACTIVE,
+				"authenticator_secret" => null,
+				"fullname"             => $data["fullname"],
+				"email"                => $data["email"]);
 
 			if ($this->db->query("begin") == false) {
 				return false;
@@ -151,7 +140,7 @@
 				return false;
 			}
 
-			$email = new email("New account registered at ".$_SERVER["SERVER_NAME"], $this->setttings->webmaster_email);
+			$email = new email("New account registered at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
 				"EMAIL"    => $data["email"],

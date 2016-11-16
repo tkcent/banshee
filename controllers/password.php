@@ -44,7 +44,7 @@
 			} else {
 				/* Step 1: show request form
 				 */
-				$this->output->add_tag("request");
+				$this->output->add_tag("request", null, array("cancel" => cancel_url()));
 			}
 		}
 	}

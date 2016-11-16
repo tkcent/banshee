@@ -14,6 +14,7 @@
 		private $id = null;
 		private $session_id = null;
 		private $user_id = null;
+		private $denied = false;
 
 		/* Constructor
 		 *
@@ -31,7 +32,7 @@
 
 			$this->db->query("delete from sessions where expire<=now()");
 
-			/* Don't overwrite secure session cookie via HTTP
+			/* Don't write secure session cookie via HTTP
 			 */
 			if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
 				return;
@@ -72,6 +73,7 @@
 			switch ($key) {
 				case "id": return $this->session_id;
 				case "user_id": return $this->user_id;
+				case "denied": return $this->denied;
 			}
 
 			return null;
@@ -103,15 +105,14 @@
 
 			if ($session["bind_to_ip"]) {
 				if ($session["ip_address"] != $_SERVER["REMOTE_ADDR"]) {
+					$this->deny_session($session["user_id"]);
 					return false;
 				}
 			}
 
 			if ($session["user_id"] !== null) {
 				if ($_COOKIE[SESSION_LOGIN] != $session["login_id"]) {
-					foreach (array_keys($_COOKIE) as $cookie) {
-						setcookie($cookie, null, 1);
-					}
+					$this->deny_session($session["user_id"]);
 					return false;
 				}
 				$this->user_id = (int)$session["user_id"];
@@ -150,7 +151,7 @@
 					return false;
 				}
 
-				$session_data["session_id"] = random_string(100);
+				$session_data["session_id"] = hash("sha512", random_string(128));
 
 				$result = $this->db->insert("sessions", $session_data);
 			} while ($result == false);
@@ -163,6 +164,31 @@
 			$_COOKIE[SESSION_NAME] = $this->session_id;
 
 			return true;
+		}
+
+		/* Deny access to current session
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		private function deny_session($user_id) {
+			$this->denied = true;
+
+			foreach (array_keys($_COOKIE) as $cookie) {
+				setcookie($cookie, null, 1);
+			}
+
+			$_SERVER["REQUEST_METHOD"] = "GET";
+			$_GET = array();
+			$_POST = array();
+			$_COOKIE = array();
+
+			$logfile = new logfile("actions");
+			$logfile->user_id = $user_id;
+			$logfile->add_entry("session hijack attempt");
+
+			header("X-Hiawatha-Monitor: exploit_attempt");
 		}
 
 		/* Update user_id in session record
@@ -178,7 +204,7 @@
 				return false;
 			}
 
-			$login_id = random_string(100);
+			$login_id = hash("sha512", random_string(128));
 
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
 			setcookie(SESSION_LOGIN, $login_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
@@ -223,7 +249,6 @@
 			}
 
 			$this->db->query("delete from sessions where id=%d", $this->id);
-			$this->id = null;
 
 			foreach (array_keys($_COOKIE) as $cookie) {
 				setcookie($cookie, null, 1);
@@ -232,6 +257,7 @@
 			$_SESSION = array();
 			$_COOKIE = array();
 
+			$this->id = null;
 			$this->session_id = null;
 
 			return $this->start();

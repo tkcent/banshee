@@ -74,10 +74,10 @@
 			$paging->show_browse_links();
 			$this->output->close_tag();
 
-			$this->output->add_javascript("banshee/jquery.prettyphoto.js");
+			$this->output->add_javascript("banshee/jquery.magnific-popup.js");
 			$this->output->add_javascript("photo.js");
 
-			$this->output->add_css("banshee/prettyphoto.css");
+			$this->output->add_css("banshee/magnific-popup.css");
 		}
 
 		private function show_photo($photo) {

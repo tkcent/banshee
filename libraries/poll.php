@@ -117,10 +117,8 @@
 
 			/* Log selected item
 			 */
-			if (($fp = fopen("../logfiles/poll.log", "a")) != false) {
-				fputs($fp, $_SERVER["REMOTE_ADDR"]."|".date("Y-m-d H:i:s")."|".$poll["id"]."|".$answer."\n");
-				fclose($fp);
-			}
+			$logfile = new logfile("poll");
+			$logfile->add_entry($poll["id"]."|".$answer);
 
 			$query = "update poll_answers set votes=votes+1 where id=%d";
 

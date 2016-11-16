@@ -1,22 +1,23 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 
 <xsl:template match="content">
 <h1>Website administration</h1>
+<div class="row">
 <xsl:for-each select="menu/section">
-	<xsl:if test="count(entry[@access='yes'])>0">
-		<div class="panel panel-default panel_{@class}">
-		<div class="panel-heading"><xsl:value-of select="@text" /></div>
+	<div class="{@class}">
+	<div class="panel panel-default">
+		<div class="panel-heading"><xsl:value-of select="@title" /></div>
 		<ul class="panel-body">
-		<xsl:for-each select="entry[@access='yes']">
+		<xsl:for-each select="entry">
 			<li><a href="/{.}"><img src="/images/icons/{@icon}" class="icon" /><xsl:value-of select="@text" /></a></li>
 		</xsl:for-each>
 		</ul>
-		</div>
-	</xsl:if>
+	</div>
+	</div>
 </xsl:for-each>
-<br class="break" />
+</div>
 </xsl:template>
 
 </xsl:stylesheet>

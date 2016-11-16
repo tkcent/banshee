@@ -32,7 +32,7 @@
 				return false;
 			}
 
-			$this->output->open_tag("edit");
+			$this->output->open_tag("edit", array("currency" => WEBSHOP_CURRENCY));
 
 			$article["visible"] = show_boolean($article["visible"]);
 			$this->output->record($article, "article");

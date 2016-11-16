@@ -1,10 +1,18 @@
 #!/usr/bin/php
 <?php
-	# This script can be used to import self-made modules and layouts from your
-	# current website into a new Banshee installation. It is assumed that the
-	# database of your current website will be reused.
+	/* import
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 *
+	 * This script can be used to import self-made modules and layouts from your
+	 * current website into a new Banshee installation. It is assumed that the
+	 * database of your current website will be reused.
+	 */
 
-	chdir(dirname($argv[0]));
+	error_reporting(E_ALL & ~E_NOTICE);
+	chdir(__DIR__);
 	require("libraries/banshee.php");
 	require("libraries/helpers/console.php");
 
@@ -14,8 +22,11 @@
 	}
 
 	$banshee_dir = rtrim($argv[1], "/");
-	if (file_exists($banshee_dir."/libraries/banshee.php") == false) {
+	if ($banshee_dir == "") {
 		help_exit();
+	} else if (file_exists($banshee_dir."/libraries/banshee.php") == false) {
+		print "No Banshee installation detected in directory.\n";
+		exit;
 	}
 
 	if (($name = $argv[3]) == "") {
@@ -65,24 +76,19 @@
 			"xslt" => array("views"));
 
 		print "Checking module name.\n";
-		chdir("database");
 		if (module_exists($name, true)) {
 			exit;
 		}
-		chdir("..");
 
-		$cwd = getcwd();
-		chdir($banshee_dir."/database");
 		$module_type = null;
 		foreach (array("public", "private") as $type) {
 			foreach (array("modules", "pages") as $item) {
-				if (in_array($name, config_file($type."_".$item))) {
+				if (in_array($name, config_file($banshee_dir."/settings/".$type."_".$item.".conf"))) {
 					$module_type = $type;
 					break;
 				}
 			}
 		}
-		chdir($cwd);
 
 		if ($module_type == null) {
 			printf("Module '%s' not found.\n", $name);
@@ -92,18 +98,18 @@
 		print "Copying module files.\n";
 		foreach ($locations as $extension => $paths) {
 			foreach ($paths as $path) {
-				$file = $path."/".$name.$extension;
-				safe_copy($banshee_dir.$file, $file);
+				$file = $path."/".$name.".".$extension;
+				safe_copy($banshee_dir."/".$file, $file);
 			}
 		}
 
 		print "Activating module.\n";
 		if (($fp = fopen("settings/".$module_type."_modules.conf", "a")) !== false) {
-			fputs($fp, $view."\n");
+			fputs($fp, $name."\n");
 			fclose($fp);
 		}
 	} else {
-		help_exit();
+		print "Can only import layouts and modules.\n";
 	}
 
 	print "Done.\n";

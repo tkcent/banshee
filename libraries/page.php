@@ -41,7 +41,10 @@
 
 			/* Select module
 			 */
-			if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
+			if ($this->user->session->denied) {
+				$this->module = ERROR_MODULE;
+				$this->http_code = 403;
+			} else if (is_true(ENFORCE_HTTPS) && ($_SERVER["HTTPS"] != "on")) {
 				header(sprintf("Location: https://%s%s", $_SERVER["HTTP_HOST"], $_SERVER["REQUEST_URI"]));
 				header("Strict-Transport-Security: max-age=31536000");
 				$this->module = ERROR_MODULE;
@@ -81,8 +84,8 @@
 		 * ERROR:  -
 		 */
 		public function __destruct() {
-			$_SESSION["previous_module"] = $this->module;
 			$_SESSION["last_visit"] = time();
+			$_SESSION["previous_module"] = $this->module;
 		}
 
 		/* Magic method get
@@ -94,6 +97,7 @@
 		public function __get($key) {
 			switch ($key) {
 				case "module": return $this->module;
+				case "previous_module": return $this->previous_module;
 				case "url": return $this->url;
 				case "page": return $this->page !== null ? $this->page : $this->module;
 				case "type": return ltrim($this->type, ".");

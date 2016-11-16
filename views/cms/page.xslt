@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="../banshee/main.xslt" />
 
 <!--
@@ -41,7 +41,7 @@
 </table>
 
 <form action="/{/output/page}" method="post" class="clear">
-<div class="btn-group">
+<div class="btn-group btn-responsive">
 <a href="/{/output/page}/new" class="btn btn-default">New page</a>
 <a href="/cms" class="btn btn-default">Back</a>
 <xsl:if test="@hiawatha='yes'">
@@ -127,7 +127,7 @@
 <label for="editor">Content:</label>
 <textarea id="editor" name="content" class="form-control"><xsl:value-of select="page/content" /></textarea>
 
-<div class="btn-group">
+<div class="btn-group btn-responsiv">
 <input type="submit" name="submit_button" value="Save page" class="btn btn-default" />
 <a href="/{/output/page}" class="btn btn-default">Cancel</a>
 <xsl:if test="page/@id">

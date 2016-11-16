@@ -1,7 +1,7 @@
 <?php
 	class register_controller extends controller {
 		private function show_form($data) {
-			$this->output->record($data, "form");
+			$this->output->record($data, "form", array("cancel" => cancel_url()));
 		}
 
 		public function execute() {

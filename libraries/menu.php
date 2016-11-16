@@ -143,44 +143,64 @@
 		 * ERROR:  false
 		 */
 		public function to_output($current_url = null) {
-			/* Handle menu updates
-			 */
-			$cache = new cache($this->db, "menu");
-			if ($cache->last_updated === null) {
-				$cache->store("last_updated", time(), 365 * DAY);
-			}
-			if (isset($_SESSION["menu_last_updated"]) == false) {
-				$_SESSION["menu_last_updated"] = $cache->last_updated;
-			} else if ($cache->last_updated > $_SESSION["menu_last_updated"]) {
-				$_SESSION["menu_cache"] = array();
-				$_SESSION["menu_last_updated"] = $cache->last_updated;
-			}
-			unset($cache);
-
-			/* Build menu
-			 */
-			if (isset($_SESSION["menu_cache"]) == false) {
-				$_SESSION["menu_cache"] = array();
-			}
-			$cache = &$_SESSION["menu_cache"];
-
 			if (substr($current_url, 0, 1) != "/") {
 				$current_url = "/".$current_url;
 			}
 
-			$username = ($this->user !== null) ? $this->user->username : "";
-			$index = sha1(sprintf("%d-%d-%s-%s", $this->parent_id, $this->depth, $username, $current_url));
+			if ($this->user !== null) {
+				/* Create user specific menu
+				 */
+				$cache = new cache($this->db, "banshee_menu");
+				if ($cache->last_updated === null) {
+					$cache->store("last_updated", time(), 365 * DAY);
+				}
+				if (isset($_SESSION["menu_last_updated"]) == false) {
+					$_SESSION["menu_last_updated"] = $cache->last_updated;
+				} else if ($cache->last_updated > $_SESSION["menu_last_updated"]) {
+					$_SESSION["menu_cache"] = array();
+					$_SESSION["menu_last_updated"] = $cache->last_updated;
+				}
+				unset($cache);
 
-			if (isset($cache[$index]) == false) {
+				if (isset($_SESSION["menu_cache"]) == false) {
+					$_SESSION["menu_cache"] = array();
+				}
+				$cache = &$_SESSION["menu_cache"];
+
+				$index = sha1(sprintf("%d-%d-%s-%s", $this->parent_id, $this->depth, $this->user->username, $current_url));
+
+				if (isset($cache[$index]) == false) {
+					if (($menu = $this->get_menu($this->parent_id, $this->depth, $current_url)) === false) {
+						return false;
+					}
+
+					$cache[$index] = json_encode($menu);
+				} else {
+					$menu = json_decode($cache[$index], true);
+				}
+
+				$this->show_menu($menu);
+			} else if ($this->depth > 1) {
+				/* Create cached generic menu
+				 */
+				if ($this->output->fetch_from_cache("banshee_menu") == false) {
+					if (($menu = $this->get_menu($this->parent_id, $this->depth, $current_url)) === false) {
+						return false;
+					}
+
+					$this->output->start_caching("banshee_menu");
+					$this->show_menu($menu);
+					$this->output->stop_caching();
+				}
+			} else {
+				/* Create generic menu
+				 */
 				if (($menu = $this->get_menu($this->parent_id, $this->depth, $current_url)) === false) {
 					return false;
 				}
-				$cache[$index] = json_encode($menu);
-			} else {
-				$menu = json_decode($cache[$index], true);
-			}
 
-			$this->show_menu($menu);
+				$this->show_menu($menu);
+			}
 
 			return true;
 		}

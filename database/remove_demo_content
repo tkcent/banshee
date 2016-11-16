@@ -3,9 +3,10 @@
 	/* This script will remove all the demo content in your Banshee installation.
 	 */
 
-    chdir(dirname($argv[0]));
-	require("../libraries/banshee.php");
-	require("../libraries/helpers/console.php");
+	error_reporting(E_ALL & ~E_NOTICE);
+	chdir(__DIR__."/..");
+	require("libraries/banshee.php");
+	require("libraries/helpers/console.php");
 
 	function delete_file($file) {
 		if (file_exists($file)) {
@@ -14,7 +15,6 @@
 	}
 
 	function truncate_directory($dir) {
-		$dir = "../".$dir;
 		if (($dp = opendir($dir)) == false) {
 			return;
 		}
@@ -30,7 +30,7 @@
 	}
 
 	function remove_layout($name) {
-		$filename = "../views/banshee/main.xslt";
+		$filename = "views/banshee/main.xslt";
 
 		if (($file = file($filename)) === false) {
 			return false;
@@ -51,8 +51,8 @@
 
 		fclose($fp);
 
-		delete_file("../views/banshee/layout_".$name.".xslt");
-		delete_file("../public/css/banshee/layout_".$name.".css");
+		delete_file("views/banshee/layout_".$name.".xslt");
+		delete_file("public/css/banshee/layout_".$name.".css");
 
 		return true;
 	}
@@ -65,7 +65,7 @@
 	 */
     $dirs = array("views/demos", "controllers/demos", "models/demos", "public/css/demos");
 	foreach ($dirs as $dir) {
-		$dir = "../".$dir."/";
+		$dir .= "/";
 		if (($dp = @opendir($dir)) != false) {
 			while (($file = readdir($dp)) != false) {
 				if (($file == ".") || ($file == "..")) {
@@ -109,7 +109,7 @@
 
 	/* Module configuration
 	 */
-	$files = array("../settings/public_modules.conf", "../settings/private_modules.conf");
+	$files = array("settings/public_modules.conf", "settings/private_modules.conf");
 	foreach ($files as $file) {
 		if (($config = file($file)) == false) {
 			continue;
@@ -136,5 +136,5 @@
 
 	/* Update pages table
 	 */
-	system("./private_modules");
+	system("database/private_modules");
 ?>

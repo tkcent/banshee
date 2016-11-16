@@ -26,8 +26,8 @@
 			$args = array(YES);
 
 			if ($search != null) {
-				$query .= " and title like %s";
-				array_push($args, "%".$search."%");
+				$query .= " and (title like %s or short_description like %s or long_description like %s)";
+				array_push($args, "%".$search."%", "%".$search."%", "%".$search."%");
 			}
 
 			if ($category_id != null) {

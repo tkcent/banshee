@@ -1,3 +1,21 @@
+banshee (5.4) stable; urgency=low
+
+  * Support for authenticator app (RFC 6238) added.
+  * Logfile library added.
+  * Using HTML5 as default.
+  * Renamed logging module and library to analytics.
+  * Improved menu caching.
+  * jQuery updated to 3.1.1, jQuery UI updated to 1.12.1.
+  * Bootstrap updated to 3.3.7.
+  * Replaced prettyPhoto with Magnific Popup.
+  * DataTables updated to 1.10.12.
+  * Improved AES256 library.
+  * Improved random string generation.
+  * Path related bug fixed in console scripts.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Fri, 29 Sep 2016 13:32:49 +0200
+
 banshee (5.3) stable; urgency=low
 
   * Session library improved.

@@ -1,5 +1,13 @@
 #!/usr/bin/php
 <?php
+	/* new_module
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	chdir(__DIR__);
 	require("libraries/banshee.php");
 	require("libraries/security.php");
 	require("libraries/helpers/console.php");
@@ -105,7 +113,7 @@
 
 	/* Check for module existence
 	 */
-	chdir(dirname($argv[0])."/settings");
+	chdir("settings");
 
 	if (module_exists($module, true)) {	
 		exit;

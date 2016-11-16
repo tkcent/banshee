@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="../../banshee/main.xslt" />
 <xsl:include href="../../banshee/pagination.xslt" />
 
@@ -74,7 +74,10 @@
 <label for="image">Image:</label>
 <input type="text" id="image" name="image" value="{article/image}" class="form-control" />
 <label for="price">Price:</label>
+<div class="input-group">
+<span class="input-group-addon" id="basic-addon1"><xsl:value-of disable-output-escaping="yes" select="@currency" /></span>
 <input type="text" id="price" name="price" value="{article/price}" class="form-control" />
+</div>
 <label for="visible">Visible:</label>
 <input type="checkbox" id="visible" name="visible"><xsl:if test="article/visible='yes'"><xsl:attribute name="checked">checked></xsl:attribute></xsl:if></input>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 
 <!--
@@ -25,7 +25,8 @@
 //
 //-->
 <xsl:template match="db_settings">
-<p>Enter your database settings in settings/website.conf and refresh this page.</p>
+<p>Enter your database settings in the file settings/website.conf and refresh this page.</p>
+<p>If the specified database and database user do not exist, this setup will create them for you.</p>
 
 <div class="btn-group">
 <a href="/{/output/page}" class="btn btn-default">Refresh</a>
@@ -40,7 +41,7 @@
 <xsl:template match="create_db">
 <xsl:call-template name="show_messages" />
 
-<p>Enter the MySQL root credentials to create a database and a user for your website.</p>
+<p>Enter the MySQL root credentials to create a database and a database user for your website as specified in settings/website.conf.</p>
 <form action="/{/output/page}" method="post">
 <label for="username">Username:</label>
 <input type="text" id="username" name="username" value="{username}" class="form-control" />
@@ -49,6 +50,7 @@
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Create database" class="btn btn-default" />
+<a href="/{/output/page}" class="btn btn-default">Proceed if you created them manually.</a>
 </div>
 </form>
 </xsl:template>
@@ -61,7 +63,7 @@
 <xsl:template match="import_sql">
 <xsl:call-template name="show_messages" />
 
-<p>The next step is to import the file database/mysql.sql into your database.</p>
+<p>The next step is to import the file database/mysql.sql into your database. Make sure the MySQL command-line client is installed on your system.</p>
 <form action="/{/output/page}" method="post">
 <input type="submit" name="submit_button" value="Import SQL" class="btn btn-default" />
 </form>

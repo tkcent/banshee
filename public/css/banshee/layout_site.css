@@ -48,6 +48,10 @@ img.title_icon {
 	margin-bottom:-20px;
 }
 
+div.input-group input.btn {
+	padding:6px 25px;
+}
+
 @media (max-width:767px) {
 	table.table-xs > thead > tr > th,
 	table.table-xs > tbody > tr > td,
@@ -84,6 +88,16 @@ div.content div.container {
 input.form-control, textarea.form-control, select.form-control {
 	max-width:500px;
 	margin-bottom:5px;
+}
+
+@media (max-width:767px) {
+	input.form-control, textarea.form-control, select.form-control {
+		font-size:16px;
+	}
+}
+
+input[type=checkbox] {
+	margin-left:5px;
 }
 
 textarea.form-control {

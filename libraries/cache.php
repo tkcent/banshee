@@ -19,7 +19,7 @@
 		 */
 		public function __construct($db, $section) {
 			$this->db = $db;
-			$this->section = $section."_";
+			$this->section = $section."::";
 		}
 
 		/* Magic method get

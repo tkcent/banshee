@@ -6,7 +6,11 @@
 	 * ERROR:  -
 	 */
 	function exception_handler($error) {
-		print "Caught exception '".$error->getmessage()."'<br />\n";
+		print "<!DOCTYPE html><html><body>\n";
+		print "<h1>Banshee exception</h1>\n";
+		printf("<p><strong>%s</strong></p>\n", $error->getMessage());
+		printf("<p>line %d in %s.</p>\n",  $error->getLine(), $error->getFile());
+		print "</body></html>\n";
 	}
 
 	/* Error handler
@@ -16,7 +20,7 @@
 	 * ERROR:  -
 	 */
 	function error_handler($errno, $errstr, $errfile, $errline) {
-		print $errstr." in ".$errfile." on line ".$errline.".<br />\n";
+		printf("'%s' in %s on line %d.<br>\n", $errstr, $errfile, $errline);
 
 		return true;
 	}

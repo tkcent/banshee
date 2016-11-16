@@ -32,7 +32,7 @@
 	/* Add layout to website
 	 */
 	function add_layout_to_website($name) {
-		$filename = "views/banshee/main.xslt";
+		$filename = __DIR__."/../../views/banshee/main.xslt";
 
 		if (($file = file($filename)) === false) {
 			return false;
@@ -66,7 +66,7 @@
 	/* Activate new layout
 	 */
 	function activate_layout($name) {
-		$filename = "../settings/website.conf";
+		$filename = __DIR__."/../../settings/website.conf";
 
 		if (($file = file($filename)) === false) {
 			return false;

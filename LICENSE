@@ -19,7 +19,7 @@ The following files are not part of the Banshee PHP framework:
 	- jQuery            : public/(css|js)/jquery/*
 	- jsencrypt         : public/js/banshee/jsencrypt.js
 	- Notify.js         : public/js/banshee/notify.js
-	- prettyPhoto       : public/js/banshee/jquery.prettyphoto.js
+	- Magnific Popup    : public/js/banshee/jquery.magnific-popup.js
 	- SHA256 javascript : public/js/banshee/sha256.js
 	- ZIP library       : libraries/zipfile.php
 

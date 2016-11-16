@@ -32,7 +32,7 @@
 		}
 
 		element.find("li").each(function() {
-			if ($(this).find("ul").size() == 0) {
+			if ($(this).find("ul").length == 0) {
 				$(this).find("input:nth-child(2)").first().after(all_buttons());
 			} else {
 				$(this).find("input:nth-child(2)").first().after(node_buttons());
@@ -113,7 +113,7 @@
 		li = $(item).parent().parent();
 		ul = li.parent();
 
-		if (li.find("ul").size() > 0) {
+		if (li.find("ul").length > 0) {
 			if (confirm("Delete branch?") == false) {
 				return;
 			}
@@ -121,7 +121,7 @@
 		li.remove();
 
 		if (ul.parent().prop("tagName") == "LI") {
-			if (ul.find("li").size() == 0) {
+			if (ul.find("li").length == 0) {
 				var b_add_branch = $(h_add_branch);
 				b_add_branch.bind("click", function(e) { add_branch(this); });
 				ul.parent().find("span.buttons").append(b_add_branch);
@@ -154,7 +154,7 @@
 	 */
 	var sorting_done = function(event, ui) {
 		element.find("ul").each(function() {
-			if ($(this).find("li").size() == 0) {
+			if ($(this).find("li").length == 0) {
 				var b_add_branch = $(h_add_branch);
 				b_add_branch.bind("click", function(e) { add_branch(this); });
 				$(this).parent().find("span.buttons").append(b_add_branch);

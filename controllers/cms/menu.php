@@ -43,8 +43,10 @@
 					$this->user->log_action("menu updated");
 					header("X-Hiawatha-Cache-Remove: all");
 
-					$cache = new cache($this->db, "menu");
-					$cache->store("last_updated", time(), 365 * DAY);
+					if (is_true(MENU_PERSONALIZED)) {
+						$cache = new cache($this->db, "banshee_menu");
+						$cache->store("last_updated", time(), 365 * DAY);
+					}
 				}
 			} else {
 				/* Show menu

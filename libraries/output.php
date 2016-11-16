@@ -39,7 +39,7 @@
 		 * ERROR:  -
 		 */
 		public function __construct($db, $settings, $page) {
-			parent::__construct($db);
+			parent::__construct($db, is_true(SECURE_XML_DATA));
 			$this->settings = $settings;
 			$this->page = $page;
 
@@ -592,9 +592,12 @@
 					 */
 					if (headers_sent() == false) {
 						header("X-Frame-Options: sameorigin");
+						header("X-Xss-Protection: 1; mode=block");
+
 						if ($this->activate_hiawatha_cache()) {
 							header("X-Hiawatha-Cache: ".$this->hiawatha_cache_time);
 						}
+
 						header("Content-Type: ".$this->content_type);
 						header("Content-Language: ".$this->language);
 						if (is_false(ini_get("zlib.output_compression"))) {
@@ -604,6 +607,7 @@
 							}
 							header("Content-Length: ".strlen($result));
 						}
+
 						header("Vary: Accept-Encoding");
 						header("X-Powered-By: Banshee PHP framework v".BANSHEE_VERSION);
 					}

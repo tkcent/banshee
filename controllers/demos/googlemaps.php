@@ -4,7 +4,7 @@
 		private $destination = "Paris, FR";
 
 		private function show_static_map() {
-			$google_map = new GoogleMaps($this->db);
+			$google_map = new Google_Maps($this->db);
 
 			$google_map->add_route($this->origin, $this->destination);
 
@@ -25,7 +25,7 @@
 				return;
 			}
 
-			$google_map = new GoogleMaps($this->db);
+			$google_map = new Google_Maps($this->db);
 
 			$google_map->add_route($this->origin, $this->destination);
 			$steps = $google_map->route_description;

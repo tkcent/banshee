@@ -198,6 +198,19 @@
 			return $this->db->execute($query, $args);
 		}
 
+		/* Search webshop
+		 */
+		private function search_webshop() {
+			$query = "select distinct concat(%s, id) as url, title as text, short_description as content ".
+			         "from shop_articles where (";
+			$args = array("/webshop/");
+			$this->add_selection("title", $query, $args);
+			$this->add_selection("short_description", $query, $args);
+			$this->add_selection("long_description", $query, $args);
+			$query .= ") order by title desc";
+			return $this->db->execute($query, $args);
+		}
+
 		/* Search the database
 		 */
 		public function search($post, $sections) {

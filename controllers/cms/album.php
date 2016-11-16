@@ -8,5 +8,10 @@
 		protected $pagination_links = 7;
 		protected $pagination_step = 1;
 		protected $foreign_null = "---";
+
+		public function show_overview() {
+			$this->output->add_javascript("cms/album.js");
+			parent::show_overview();
+		}
 	}
 ?>

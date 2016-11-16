@@ -155,7 +155,7 @@
 			}
 
 			if (trim($comment["content"]) == "") {
-				$this->output->add_message("Please, enter your message.");
+				$this->output->add_message("Empty comments are not allowed.");
 				$result = false;
 			} else {
 				$message = new message($comment["content"]);

@@ -20,7 +20,7 @@ fi
 
 echo "Installing new Datatables."
 unzip -p datatables.zip DataTables-${version}/media/css/jquery.dataTables.min.css | sed 's/\.\.\/images/\/images\/datatables/g' > css/banshee/datatables.css
-unzip -p datatables.zip DataTables-${version}/media/js/jquery.dataTables.min.js > js/banshee/datatables.js
+unzip -p datatables.zip DataTables-${version}/media/js/jquery.dataTables.min.js > js/banshee/jquery.datatables.js
 
 echo "Cleaning up."
 rm -f datatables.zip

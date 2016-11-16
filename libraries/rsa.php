@@ -9,16 +9,18 @@
 	class RSA {
 		private $private_key = null;
 		private $public_key = null;
+		private $bits = null;
+		private $type = null;
 		private $padding = OPENSSL_PKCS1_PADDING;
 		private $max_length = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  string private key PEM (file)[, string passphrase private key, string public key PEM (file)] | integer key size
+		 * INPUT:  string private key PEM (file)[, string passphrase private key] | integer key size
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($private_key, $passphrase = "", $public_key = null) {
+		public function __construct($private_key, $passphrase = "") {
 			if (is_integer($private_key)) {
 				/* Generate keys
 				 */
@@ -26,27 +28,24 @@
 					"digest_alg"       => "sha512",
 					"private_key_bits" => $private_key,
 					"private_key_type" => OPENSSL_KEYTYPE_RSA);
-
-				$this->private_key = openssl_pkey_new($config);
-
-				$details = openssl_pkey_get_details($this->private_key);
-				$this->public_key = openssl_pkey_get_public($details["key"]);
+				$private_key = openssl_pkey_new($config);
 			} else {
 				/* Load keys
 				 */
 				$this->fix_path($private_key);
-				$this->private_key = openssl_pkey_get_private($private_key, $passphrase);
-
-				if ($public_key === null) {
-					$public_key = $private_key;
-				} else {
-					$this->fix_path($public_key);
-				}
-
-				$this->public_key = openssl_pkey_get_public($public_key);
+				$private_key = openssl_pkey_get_private($private_key, $passphrase);
 			}
 
-			$details = openssl_pkey_get_details($this->private_key);
+			if ($private_key == false) {
+				return;
+			}
+
+			$details = openssl_pkey_get_details($private_key);
+
+			$this->private_key = $private_key;
+			$this->public_key = openssl_pkey_get_public($details["key"]);
+			$this->bits = $details["bits"];
+			$this->type = $details["type"];
 			$this->max_length = $details["bits"] / 8;
 		}
 
@@ -82,6 +81,8 @@
 						return false;
 					}
 					return $details["key"];
+				case "bits": return $this->bits;
+				case "type": return $this->type;
 				case "padding": return $this->padding;
 				case "max_length": return $this->max_length;
 			}
@@ -113,7 +114,7 @@
 			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
-			
+
 			if (openssl_private_encrypt($message, $result, $this->private_key, $this->padding) == false) {
 				return false;
 			}
@@ -133,7 +134,7 @@
 			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
-			
+
 			if (openssl_public_encrypt($message, $result, $this->public_key, $this->padding) == false) {
 				return false;
 			}
@@ -153,7 +154,7 @@
 			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
-			
+
 			if (openssl_private_decrypt($message, $result, $this->private_key, $this->padding) == false) {
 				return false;
 			}
@@ -173,7 +174,7 @@
 			} else if (strlen($message) > $this->max_length) {
 				return false;
 			}
-			
+
 			if (openssl_public_decrypt($message, $result, $this->public_key, $this->padding) == false) {
 				return false;
 			}

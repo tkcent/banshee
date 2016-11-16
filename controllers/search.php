@@ -2,6 +2,8 @@
 	require("../libraries/helpers/output.php");
 
 	class search_controller extends controller {
+		const MIN_QUERY_LENGTH = 3;
+
 		private $sections = array(
 			"agenda"     => "Agenda",
 			"dictionary" => "Dictionary",
@@ -11,24 +13,14 @@
 			"pages"      => "Pages",
 			"photos"     => "Photos",
 			"polls"      => "Polls",
-			"weblog"     => "Weblog");
-
-		/* Log the search query
-		 */
-		private function log_search_query($query) {
-			if (($fp = fopen("../logfiles/search.log", "a")) == false) {
-				return;
-			}
-
-			fputs($fp, $_SERVER["REMOTE_ADDR"]."|".date("Y-m-d H:i:s")."|".$query."\n");
-			fclose($fp);
-		}
+			"weblog"     => "Weblog",
+			"webshop"    => "Webshop");
 
 		/* Search directly in database
 		 */
 		public function execute() {
 			if ($this->user->logged_in == false) {
-				unset($this->sections["mail"]);
+				unset($this->sections["mailbox"]);
 			}
 
 			if (isset($_SESSION["search"]) == false) {
@@ -39,7 +31,9 @@
 			}
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$this->log_search_query($_POST["query"]);
+				$logfile = new logfile("search");
+				$logfile->add_entry($_POST["query"]);
+
 				foreach ($this->sections as $section => $label) {
 					$_SESSION["search"][$section] = is_true($_POST[$section]);
 				}
@@ -61,7 +55,7 @@
 			$this->output->close_tag();
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				if (strlen(trim($_POST["query"])) < 3) {
+				if (strlen(trim($_POST["query"])) < self::MIN_QUERY_LENGTH) {
 					$this->output->add_tag("result", "Search query too short.");
 				} else if (($result = $this->model->search($_POST, $this->sections)) === false) {
 					/* Error

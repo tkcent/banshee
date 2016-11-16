@@ -3,9 +3,7 @@
 cd `dirname $0`/..
 
 echo "Downloading latest version of TCPDF."
-url=`curl -s "https://sourceforge.net/projects/tcpdf/files/tcpdf_6_2_12.zip/download" | grep href | cut -f2 -d'"'`
-url=`curl -s "${url}" | grep href | cut -f2 -d'"'`
-curl -s -o tcpdf.zip ${url}
+curl -s -o tcpdf.zip https://codeload.github.com/tecnickcom/TCPDF/zip/master
 
 if [ ! -s tcpdf.zip ]; then
 	rm -f tcpdf.zip
@@ -16,21 +14,21 @@ fi
 echo "Installing TCPDF."
 unzip -q tcpdf.zip
 mkdir -p libraries/tcpdf
-cat tcpdf/tcpdf.php | sed "s/require_once(dirname(__FILE__).'.*\//require_once(dirname(__FILE__).'\/tcpdf\//" > libraries/tcpdf.php
-cp -f tcpdf/tcpdf_barcodes*.php libraries/tcpdf
-cp -f tcpdf/tcpdf_autoconfig.php libraries/tcpdf
-cp -f tcpdf/include/*.php libraries/tcpdf
+cat TCPDF-master/tcpdf.php | sed "s/require_once(dirname(__FILE__).'.*\//require_once(dirname(__FILE__).'\/tcpdf\//" > libraries/tcpdf.php
+cp -f TCPDF-master/tcpdf_barcodes*.php libraries/tcpdf
+cp -f TCPDF-master/tcpdf_autoconfig.php libraries/tcpdf
+cp -f TCPDF-master/include/*.php libraries/tcpdf
 chmod 644 libraries/tcpdf/*
 
 echo "Installing fonts."
 mkdir -p extra/tcpdf_fonts
-cp tcpdf/fonts/courier*.php extra/tcpdf_fonts
-cp tcpdf/fonts/helvetica*.php extra/tcpdf_fonts
-cp tcpdf/fonts/symbol.php extra/tcpdf_fonts
-cp tcpdf/fonts/times*.php extra/tcpdf_fonts
-cp tcpdf/fonts/zapfdingbats.php extra/tcpdf_fonts
+cp TCPDF-master/fonts/courier*.php extra/tcpdf_fonts
+cp TCPDF-master/fonts/helvetica*.php extra/tcpdf_fonts
+cp TCPDF-master/fonts/symbol.php extra/tcpdf_fonts
+cp TCPDF-master/fonts/times*.php extra/tcpdf_fonts
+cp TCPDF-master/fonts/zapfdingbats.php extra/tcpdf_fonts
 chmod 644 extra/tcpdf_fonts/*
 
 echo "Cleaning up."
 rm -f tcpdf.zip
-rm -rf tcpdf
+rm -rf TCPDF-master

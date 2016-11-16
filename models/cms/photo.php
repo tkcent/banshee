@@ -1,10 +1,10 @@
 <?php
-	define("THUMBNAIL_MODE_NORMAL", 0);
-	define("THUMBNAIL_MODE_TOP_LEFT", 1);
-	define("THUMBNAIL_MODE_CENTER", 2);
-	define("THUMBNAIL_MODE_BOTTOM_RIGHT", 3);
-
 	class cms_photo_model extends model {
+		const THUMBNAIL_MODE_NORMAL = 0;
+		const THUMBNAIL_MODE_TOP_LEFT = 1;
+		const THUMBNAIL_MODE_CENTER = 2;
+		const THUMBNAIL_MODE_BOTTOM_RIGHT = 3;
+
 		protected $table = "photos";
 		protected $order = "title";
 		protected $desc_order = true;
@@ -123,7 +123,7 @@
 
 			$image->load($photo["file"]);
 
-			if ($photo["mode"] != THUMBNAIL_MODE_NORMAL) {
+			if ($photo["mode"] != self::THUMBNAIL_MODE_NORMAL) {
 				if ($image->width > $image->height) {
 					$long = $image->width;
 					$short = $image->height;
@@ -133,17 +133,17 @@
 				}
 
 				switch ($photo["mode"]) {
-					case THUMBNAIL_MODE_TOP_LEFT:
+					case self::THUMBNAIL_MODE_TOP_LEFT:
 						$x = $y = 0;
 						break;
-					case THUMBNAIL_MODE_CENTER:
+					case self::THUMBNAIL_MODE_CENTER:
 						$x = ($long - $short) / 2;
 						$y = 0;
 						if ($image->height > $image->width) {
 							list($x, $y) = array($y, $x);
 						}
 						break;
-					case THUMBNAIL_MODE_BOTTOM_RIGHT:
+					case self::THUMBNAIL_MODE_BOTTOM_RIGHT:
 						$x = $long - $short;
 						$y = 0;
 						if ($image->height > $image->width) {
@@ -199,7 +199,7 @@
 					"photo_album_id" => $_SESSION["photo_album"],
 					"extension"      => $extension,
 					"overview"       => is_true($settings["overview"]) ? YES : NO,
-					"thumbnail_mode" => THUMBNAIL_MODE_NORMAL);
+					"thumbnail_mode" => self::THUMBNAIL_MODE_NORMAL);
 
 				$this->db->query("begin");
 

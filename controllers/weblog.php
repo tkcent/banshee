@@ -2,11 +2,11 @@
 	class weblog_controller extends controller {
 		private $url = null;
 
-		private function include_prettyphoto() {
-			$this->output->add_javascript("banshee/jquery.prettyphoto.js");
+		private function include_magnific_popup() {
+			$this->output->add_javascript("banshee/jquery.magnific-popup.js");
 			$this->output->add_javascript("weblog.js");
 
-			$this->output->add_css("banshee/prettyphoto.css");
+			$this->output->add_css("banshee/magnific-popup.css");
 		}
 
 		private function show_last_weblogs() {
@@ -15,7 +15,7 @@
 				return;
 			}
 
-			$this->include_prettyphoto();
+			$this->include_magnific_popup();
 
 			$this->output->open_tag("weblogs");
 
@@ -45,7 +45,7 @@
 				return;
 			}
 
-			$this->include_prettyphoto();
+			$this->include_magnific_popup();
 
 			$this->output->title = $weblog["title"]." - Weblog";
 

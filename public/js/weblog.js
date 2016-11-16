@@ -1,4 +1,8 @@
-$(document).ready(function(){
-	$("div.weblog div.content a.photo").prop("rel", "prettyPhoto[gallery]");
-	$("div.weblog div.content a.photo").prettyPhoto({ social_tools:"" });
+$(document).ready(function() {
+	$('div.weblog-body a.photo').magnificPopup({
+		type:'image',
+		gallery:{
+			enabled:true
+		}
+	});
 });

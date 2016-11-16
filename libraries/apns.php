@@ -7,8 +7,9 @@
 	 */
 
 	class APNS {
-		private $host = "gateway.push.apple.com";
-		private $port = 2195;
+		const GATEWAY_HOST = "gateway.push.apple.com";
+		const GATEWAY_PORT = 2195;
+
 		private $certificate = null;
 		private $notifications = array();
 
@@ -90,7 +91,7 @@
 				return;
 			}
 
-			$uri = sprintf("ssl://%s:%d", $this->host, $this->port);
+			$uri = sprintf("ssl://%s:%d", self::GATEWAY_HOST, self::GATEWAY_PORT);
 			if (($socket = stream_socket_client($uri, $errno, $error, 3, STREAM_CLIENT_CONNECT, $context)) == false) {
 				print "APNS: error creating socket.\n";
 				return;

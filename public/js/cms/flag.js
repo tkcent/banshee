@@ -15,7 +15,7 @@ function get_flags() {
 
 $(document).ready(function() {
 	$("form select#module").change(get_flags);
-	if ($("form select#flag option").size() == 0) {
+	if ($("form select#flag option").length == 0) {
 		get_flags();
 	}
 });
