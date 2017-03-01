@@ -1,5 +1,5 @@
 <?php
-	class cms_role_model extends model {
+	class cms_role_model extends Banshee\model {
 		public function get_all_roles() {
 			$query = "select *, (select count(*) from user_role where role_id=r.id) as users from roles r order by name";
 
@@ -38,24 +38,24 @@
 
 			$query = "select id,name from roles where name=%s";
 			if (($roles = $this->db->execute($query, $role["name"])) === false) {
-				$this->output->add_message("Error while checking name uniqueness.");
+				$this->view->add_message("Error while checking name uniqueness.");
 				$result;
 			}
 			foreach ($roles as $current) {
 				if (($current["name"] == $role["name"]) && ($current["id"] != $role["id"])) {
-					$this->output->add_message("Role already exists.");
+					$this->view->add_message("Role already exists.");
 					$result = false;
 					break;
 				}
 			}
 
 			if ($role["id"] == ADMIN_ROLE_ID) {
-				$this->output->add_message("This role cannot be changed.");
+				$this->view->add_message("This role cannot be changed.");
 				$result = false;
 			}
 
 			if ($role["name"] == "") {
-				$this->output->add_message("The name cannot be empty.");
+				$this->view->add_message("The name cannot be empty.");
 				$result = false;
 			}
 
@@ -103,9 +103,11 @@
 			foreach ($keys as $key) {
 				$role[$key] = $this->role_value($role[$key]);
 			}
-			array_unshift($keys, "id", "name");
+
+			array_unshift($keys, "id", "name", "non_admins");
 
 			$role["id"] = null;
+			$role["non_admins"] = is_true($role["non_admins"]) ? YES : NO;
 
 			return $this->db->insert("roles", $role, $keys) !== false;
 		}
@@ -118,7 +120,9 @@
 				$role[$key] = $this->role_value($role[$key]);
 			}
 
-			array_unshift($keys, "name");
+			array_unshift($keys, "name", "non_admins");
+
+			$role["non_admins"] = is_true($role["non_admins"]) ? YES : NO;
 
 			return $this->db->update("roles", $role["id"], $role, $keys) !== false;
 		}

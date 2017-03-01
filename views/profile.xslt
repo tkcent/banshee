@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="banshee/main.xslt" />
+<xsl:import href="banshee/main.xslt" />
 
 <!--
 //
@@ -17,14 +17,14 @@
 <label for="current">Current password:</label>
 <input type="password" id="current" name="current" class="form-control" />
 <label for="password">New password:</label> <span class="blank" style="font-size:10px">(will not be changed when left blank)</span>
-<input type="password" id="password" name="password" class="form-control" onKeyUp="javascript:password_strength()" />
+<input type="password" id="password" name="password" class="form-control" />
 <label for="repeat">Repeat password:</label>
 <input type="password" id="repeat" name="repeat" class="form-control" />
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Update profile" class="btn btn-default" />
 <xsl:if test="cancel">
-<a href="{cancel/@url}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
+<a href="/{cancel/@previous}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
 </xsl:if>
 </div>
 </form>

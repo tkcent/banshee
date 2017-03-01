@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../../banshee/main.xslt" />
-<xsl:include href="../../banshee/pagination.xslt" />
+<xsl:import href="../../banshee/main.xslt" />
+<xsl:import href="../../banshee/pagination.xslt" />
 
 <!--
 //
@@ -54,7 +54,7 @@
 <xsl:template match="edit">
 <xsl:call-template name="show_messages" />
 
-<div class="row list-group-item">
+<div class="row">
 <div class="col-sm-4">
 <div>Order ID: <xsl:value-of select="order/@id" /></div>
 <div>Order date: <xsl:value-of select="order/timestamp" /></div>

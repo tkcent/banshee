@@ -1,5 +1,5 @@
 <?php
-	class sitemap_model extends model {
+	class sitemap_model extends Banshee\model {
 		public function get_public_urls() {
 			/* Modules on disk
 			 */

@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class tablemanager_controller extends controller {
 		protected $name = "Table";
 		protected $pathinfo_offset = 1;
@@ -29,42 +31,42 @@
 		protected function show_overview() {
 			switch ($this->browsing) {
 				case "alphabetize":
-					$alphabet = new alphabetize($this->output, "tableadmin_".$this->model->table);
+					$alphabet = new alphabetize($this->view, "tableadmin_".$this->model->table);
 					if ($_POST["submit_button"] == "Search") {
 						$alphabet->reset();
 					}
 
 					if (($items = $this->model->get_items($alphabet->char)) === false) {
-						$this->output->add_tag("result", "Error while creating overview.");
+						$this->view->add_tag("result", "Error while creating overview.");
 						return;
 					}
 					break;
 				case "pagination":
 					if (($item_count = $this->model->count_items()) === false) {
-						$this->output->add_tag("result", "Error while counting items.");
+						$this->view->add_tag("result", "Error while counting items.");
 						return;
 					}
 
-					$paging = new pagination($this->output, "tableadmin_".$this->model->table, $this->page_size, $item_count);
+					$paging = new pagination($this->view, "tableadmin_".$this->model->table, $this->page_size, $item_count);
 					if ($_POST["submit_button"] == "Search") {
 						$paging->reset();
 					}
 
 					if (($items = $this->model->get_items($paging->offset, $paging->size)) === false) {
-						$this->output->add_tag("result", "Error while creating overview.");
+						$this->view->add_tag("result", "Error while creating overview.");
 						return;
 					}
 					break;
 				case "datatables":
-					$this->output->add_javascript("jquery/jquery.js");
-					$this->output->add_javascript("banshee/jquery.datatables.js");
-					$this->output->run_javascript("$(document).ready(function(){ $('table.datatable').dataTable(); });");
-					$this->output->add_css("banshee/datatables.css");
+					$this->view->add_javascript("jquery/jquery.js");
+					$this->view->add_javascript("banshee/jquery.datatables.js");
+					$this->view->run_javascript("$(document).ready(function(){ $('table.datatable').dataTable(); });");
+					$this->view->add_css("banshee/datatables.css");
 					$this->_table_class = "datatable";
 					$this->enable_search = false;
 				default:
 					if (($items = $this->model->get_items()) === false) {
-						$this->output->add_tag("result", "Error while creating overview.");
+						$this->view->add_tag("result", "Error while creating overview.");
 						return;
 					}
 			}
@@ -76,26 +78,26 @@
 			$params = array(
 				"class"        => $this->_table_class,
 				"allow_create" => show_boolean($this->model->allow_create));
-			$this->output->open_tag("overview", $params);
+			$this->view->open_tag("overview", $params);
 
 			/* Labels
 			 */
-			$this->output->open_tag("labels", array("name" => strtolower($this->name)));
+			$this->view->open_tag("labels", array("name" => strtolower($this->name)));
 			foreach ($this->model->elements as $name => $element) {
 				$args = array(
 					"name"     => $name,
 					"overview" => show_boolean($element["overview"]));
 				if ($element["overview"]) {
-					$this->output->add_tag("label", $element["label"], $args);
+					$this->view->add_tag("label", $element["label"], $args);
 				}
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Values
 			 */
-			$this->output->open_tag("items");
+			$this->view->open_tag("items");
 			foreach ($items as $item) {
-				$this->output->open_tag("item", array("id" => $item["id"]));
+				$this->view->open_tag("item", array("id" => $item["id"]));
 				foreach ($item as $name => $value) {
 					$element = $this->model->elements[$name];
 					if ($element["overview"]) {
@@ -125,12 +127,12 @@
 								}
 								break;
 						}
-						$this->output->add_tag("value", $value, array("name" => $name));
+						$this->view->add_tag("value", $value, array("name" => $name));
 					}
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			switch ($this->browsing) {
 				case "alphabetize":
@@ -142,10 +144,10 @@
 			}
 
 			if ($this->enable_search) {
-				$this->output->add_tag("search", $_SESSION["tablemanager_search_".$this->model->table]);
+				$this->view->add_tag("search", $_SESSION["tablemanager_search_".$this->model->table]);
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		/* Show create / update form
@@ -160,32 +162,32 @@
 				"allow_delete" => show_boolean($this->model->allow_delete));
 
 			if (isset($item["id"]) == false) {
-				if ($this->model->allow_create == false) {	
+				if ($this->model->allow_create == false) {
 					$this->show_overview();
 					return;
 				}
 			} else {
 				$args["id"] = $item["id"];
-				if ($this->model->allow_update == false) {	
+				if ($this->model->allow_update == false) {
 					$this->show_overview();
 					return;
 				}
 			}
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
-			$this->output->open_tag("form", $args);
+			$this->view->open_tag("form", $args);
 			foreach ($this->model->elements as $name => $element) {
 				if (($name == "id") || $element["readonly"]) {
 					continue;
 				}
 
-				$this->output->open_tag("element", array(
+				$this->view->open_tag("element", array(
 					"name" => $name,
 					"type" => $element["type"]));
 
 				if (isset($element["label"])) {
-					$this->output->add_tag("label", $element["label"]);
+					$this->view->add_tag("label", $element["label"]);
 				}
 
 				if ($element["type"] == "boolean") {
@@ -195,7 +197,7 @@
 				}
 
 				if ($element["type"] != "blob") {
-					$this->output->add_tag("value", $item[$name]);
+					$this->view->add_tag("value", $item[$name]);
 				}
 
 				if ($element["type"] == "foreignkey") {
@@ -224,35 +226,35 @@
 
 				switch ($element["type"]) {
 					case "date":
-						$this->output->add_javascript("jquery/jquery-ui.js");
-						$this->output->add_javascript("banshee/datepicker.js");
-						$this->output->add_css("jquery/jquery-ui.css");
+						$this->view->add_javascript("jquery/jquery-ui.js");
+						$this->view->add_javascript("banshee/datepicker.js");
+						$this->view->add_css("jquery/jquery-ui.css");
 						break;
 					case "timestamp":
-						$this->output->add_javascript("jquery/jquery-ui.js");
-						$this->output->add_javascript("banshee/jquery.timepicker.js");
-						$this->output->add_javascript("banshee/datetimepicker.js");
-						$this->output->add_css("jquery/jquery-ui.css");
-						$this->output->add_css("banshee/timepicker.css");
+						$this->view->add_javascript("jquery/jquery-ui.js");
+						$this->view->add_javascript("banshee/jquery.timepicker.js");
+						$this->view->add_javascript("banshee/datetimepicker.js");
+						$this->view->add_css("jquery/jquery-ui.css");
+						$this->view->add_css("banshee/timepicker.css");
 						break;
 					case "ckeditor":
-						$this->output->add_ckeditor("div.btn-group");
+						$this->view->add_ckeditor("div.btn-group");
 						break;
 				}
 
 				if (($element["type"] == "enum") || ($element["type"] == "foreignkey")) {
-					$this->output->open_tag("options");
+					$this->view->open_tag("options");
 					foreach ($element["options"] as $value => $label) {
-						$this->output->add_tag("option", $label, array("value" => $value));
+						$this->view->add_tag("option", $label, array("value" => $value));
 					}
-					$this->output->close_tag();
+					$this->view->close_tag();
 				}
 
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		/* Handle user submit
@@ -283,7 +285,7 @@
 					/* Create item
 					 */
 					if ($this->model->create_item($_POST) === false) {
-						$this->output->add_message("Error while creating ".$item.".");
+						$this->view->add_message("Error while creating ".$item.".");
 						$this->show_item_form($_POST);
 					} else {
 						$name = $this->db->last_insert_id;
@@ -298,7 +300,7 @@
 					/* Update item
 					 */
 					if ($this->model->update_item($_POST) === false) {
-						$this->output->add_message("Error while updating ".$item.".");
+						$this->view->add_message("Error while updating ".$item.".");
 						$this->show_item_form($_POST);
 					} else {
 						$name = $_POST["id"];
@@ -316,7 +318,7 @@
 				if ($this->model->delete_oke($_POST["id"]) == false) {
 					$this->show_item_form($_POST);
 				} else if ($this->model->delete_item($_POST["id"]) === false) {
-					$this->output->add_message("Error while deleting ".$item.".");
+					$this->view->add_message("Error while deleting ".$item.".");
 					$this->show_item_form($_POST);
 				} else {
 					$name = $_POST["id"];
@@ -349,9 +351,9 @@
 		 * ERROR:  false
 		 */
 		public function execute() {
-			$this->output->title = $this->name." administration";
+			$this->view->title = $this->name." administration";
 
-			if (is_a($this->model, "tablemanager_model") == false) {
+			if (is_a($this->model, "Banshee\\tablemanager_model") == false) {
 				print "Tablemanager model has not been defined.\n";
 				return false;
 			}
@@ -364,16 +366,16 @@
 
 			/* Start
 			 */
-			$this->output->add_css("banshee/tablemanager.css");
+			$this->view->add_css("banshee/tablemanager.css");
 
-			$this->output->open_tag("tablemanager");
+			$this->view->open_tag("tablemanager");
 
-			$this->output->add_tag("name", $this->name);
+			$this->view->add_tag("name", $this->name);
 			if ($this->back !== null) {
-				$this->output->add_tag("back", $this->back);
+				$this->view->add_tag("back", $this->back);
 			}
 			if ($this->icon !== null) {
-				$this->output->add_tag("icon", $this->icon);
+				$this->view->add_tag("icon", $this->icon);
 			}
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -398,7 +400,7 @@
 				/* Show form for existing item
 				 */
 				if (($item = $this->model->get_item($this->page->pathinfo[$this->pathinfo_offset])) == false) {
-					$this->output->add_tag("result", $this->name." not found.");
+					$this->view->add_tag("result", $this->name." not found.");
 				} else {
 					$this->show_item_form($item);
 				}
@@ -411,7 +413,7 @@
 				$this->show_overview();
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			return true;
 		}

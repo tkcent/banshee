@@ -1,5 +1,5 @@
 <?php
-	class cms_language_model extends tablemanager_model {
+	class cms_language_model extends Banshee\tablemanager_model {
 		protected $table = "languages";
 		protected $order = "page";
 		protected $elements = array(
@@ -46,7 +46,7 @@
 			$result = parent::save_oke($item);
 
 			if (valid_input($item["name"], VALIDATE_LETTERS."_", VALIDATE_NONEMPTY) == false) {
-				$this->output->add_message("Invalid name");
+				$this->view->add_message("Invalid name");
 				$result = false;
 			}
 
@@ -54,13 +54,13 @@
 		}
 
 		public function update_item($item) {
-			$this->output->remove_from_cache("language");
+			$this->view->remove_from_cache("language");
 
 			return parent::update_item($item);
 		}
 
 		public function delete_item($item_id) {
-			$this->output->remove_from_cache("language");
+			$this->view->remove_from_cache("language");
 
 			return parent::delete_item($item_id);
 		}

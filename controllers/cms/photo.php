@@ -1,5 +1,5 @@
 <?php
-	class cms_photo_controller extends controller {
+	class cms_photo_controller extends Banshee\controller {
 		private $modes = array("Normal", "Top / Left", "Center", "Bottom / Right");
 
 		private function show_overview() {
@@ -10,46 +10,60 @@
 				return false;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->add_javascript("jquery/jquery-ui.js");
+			$this->view->add_javascript("cms/photo.js");
 
-			$this->output->open_tag("albums", array("current" => $_SESSION["photo_album"]));
+			$this->view->open_tag("overview");
+
+			$this->view->open_tag("albums", array("current" => $_SESSION["photo_album"]));
 			foreach ($albums as $album) {
 				$label = $album["name"].", ".date("d M Y", $album["timestamp"]);
-				$this->output->add_tag("album", $label, array("id" => $album["id"]));
+				$this->view->add_tag("album", $label, array("id" => $album["id"]));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->open_tag("photos");
+			$this->view->open_tag("photos");
 			foreach ($photos as $photo) {
 				$photo["overview"] = show_boolean($photo["overview"]);
-				$this->output->record($photo, "photo");
+				$this->view->record($photo, "photo");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->open_tag("modes");
+			$this->view->open_tag("modes");
 			foreach ($this->modes as $mode) {
-				$this->output->add_tag("mode", $mode);
+				$this->view->add_tag("mode", $mode);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_edit_form($photo) {
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 			$photo["overview"] = show_boolean($photo["overview"]);
-			$this->output->record($photo, "photo");
+			$this->view->record($photo, "photo");
 
-			$this->output->open_tag("modes");
+			$this->view->open_tag("modes");
 			foreach ($this->modes as $mode) {
-				$this->output->add_tag("mode", $mode);
+				$this->view->add_tag("mode", $mode);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
+			if ($this->page->ajax_request) {
+				/* Set photo order
+				 */
+				if ($_SERVER["REQUEST_METHOD"] == "POST") {
+					$result = $this->model->position_photo($_POST["photo_id"], $_POST["position"]);
+					$this->view->add_tag("result", $result ? "ok" : "fail");
+				}
+
+				return;
+			}
+
 			$this->page_size = $this->settings->admin_page_size;
 
 			/* Work-around for the most fucking annoying crap browser in the world: IE
@@ -84,10 +98,10 @@
 			}
 
 			if (($album_count = $this->model->count_albums()) === false) {
-				$this->output->add_tag("result", "Error counting albums");
+				$this->view->add_tag("result", "Error counting albums");
 				return;
 			} else if ($album_count == 0) {
-				$this->output->add_tag("result", "No albums have been created. Click <a href=\"/cms/albums\">here</a> to create a new photo album.");
+				$this->view->add_tag("result", "No albums have been created. Click <a href=\"/cms/albums\">here</a> to create a new photo album.");
 				return;
 			}
 
@@ -98,14 +112,14 @@
 					if ($this->model->valid_album_id($_POST["album"])) {
 						$_SESSION["photo_album"] = (int)$_POST["album"];
 					} else {
-						$this->output->add_system_warning("Invalid album id");
+						$this->view->add_system_warning("Invalid album id");
 					}
 					$this->show_overview();
 				} else if ($_POST["submit_button"] == "Upload photos") {
 					/* Upload photos
 					 */
 					if ($this->model->upload_oke($_FILES["photos"]) == false) {
-						$this->show_overview();	
+						$this->show_overview();
 					} else if ($this->model->create_photos($_FILES["photos"], $_POST) == false) {
 					} else {
 						$this->show_overview();
@@ -124,7 +138,7 @@
 					/* Delete photo
 					 */
 					if ($this->model->delete_photo($_POST["id"]) == false) {
-						$this->output->add_message("Error while deleting photo.");
+						$this->view->add_message("Error while deleting photo.");
 						$this->show_edit_form($_POST);
 					} else {
 						$this->show_overview();
@@ -136,7 +150,7 @@
 				if (($photo = $this->model->get_photo($this->page->pathinfo[2])) != false) {
 					$this->show_edit_form($photo);
 				} else {
-					$this->output->add_tag("result", "Photo not found.");
+					$this->view->add_tag("result", "Photo not found.");
 				}
 			} else {
 				$this->show_overview();

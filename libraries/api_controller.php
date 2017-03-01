@@ -6,15 +6,33 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class api_controller extends controller {
+		/* Set error code
+		 *
+		 * INPUT:  int error code
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
 		protected function set_error($code) {
 			if ($code >= 400) {
-				$this->output->add_tag("error", $code);
+				$this->view->add_tag("error", $code);
 			}
-			$this->output->http_status = $code;
+			$this->view->http_status = $code;
 		}
 
+		/* Default execute function
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
 		public function execute() {
+			if (is_false(DEBUG_MODE) && ($this->page->ajax_request == false)) {
+				return;
+			}
+
 			$function = strtolower($_SERVER["REQUEST_METHOD"]);
 
 			if (count($this->page->parameters) > 0) {

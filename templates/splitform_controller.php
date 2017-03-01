@@ -1,5 +1,5 @@
 <?php
-	class XXX_controller extends splitform_controller {
+	class XXX_controller extends Banshee\splitform_controller {
 		protected $back = "demos";
 
 		protected function process_form_data($data) {

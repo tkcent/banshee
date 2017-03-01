@@ -1,5 +1,5 @@
 <?php
-	class cms_analytics_controller extends controller {
+	class cms_analytics_controller extends Banshee\controller {
 		private $height = 100;
 		private $page_width = 839;
 		private $list_limit = 15;
@@ -10,7 +10,7 @@
 			$id = $id + 1;
 			$max = $this->model->max_value($items, "count");
 
-			$this->output->open_tag("graph", array("title" => $title, "id" => $id, "max" => $max));
+			$this->view->open_tag("graph", array("title" => $title, "id" => $id, "max" => $max));
 			foreach ($items as $item) {
 				if ($max > 0) {
 					$item["height"] = round($this->height * ($item["count"] / $max));
@@ -22,9 +22,9 @@
 				$item["day"] = date("j F Y", $timestamp);
 				$item["weekend"] = show_boolean(date("N", $timestamp) >= 6);
 
-				$this->output->record($item, "item");
+				$this->view->record($item, "item");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_client_info($record) {
@@ -37,12 +37,12 @@
 				$total += $item["count"];
 			}
 
-			$this->output->open_tag("info");
+			$this->view->open_tag("info");
 			foreach ($record as $item) {
 				$item["percentage"] = sprintf("%0.1f", $item["count"] * 100 / $total);
-				$this->output->record($item, "item");
+				$this->view->record($item, "item");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -50,10 +50,10 @@
 				$this->model->delete_referers($_POST);
 			}
 
-			$this->output->add_tag("width", floor($this->page_width / LOG_DAYS) - 1);
-			$this->output->add_tag("height", $this->height);
+			$this->view->add_tag("width", floor($this->page_width / LOG_DAYS) - 1);
+			$this->view->add_tag("height", $this->height);
 
-			$this->output->add_javascript("cms/analytics.js");
+			$this->view->add_javascript("cms/analytics.js");
 
 			$day = valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS."-", VALIDATE_NONEMPTY) ? $this->page->pathinfo[2] : null;
 
@@ -74,7 +74,7 @@
 			/* Day deselect
 			 */
 			if ($day !== null) {
-				$this->output->add_tag("deselect", date("j F Y", strtotime($day)), array("date" => $day));
+				$this->view->add_tag("deselect", date("j F Y", strtotime($day)), array("date" => $day));
 			}
 
 			/* Top pages
@@ -83,11 +83,11 @@
 				return false;
 			}
 
-			$this->output->open_tag("pages");
+			$this->view->open_tag("pages");
 			foreach ($pages as $page) {
-				$this->output->record($page, "page");
+				$this->view->record($page, "page");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Search queries
 			 */
@@ -95,11 +95,11 @@
 				return false;
 			}
 
-			$this->output->open_tag("search");
+			$this->view->open_tag("search");
 			foreach ($queries as $query) {
-				$this->output->record($query, "query");
+				$this->view->record($query, "query");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Client information
 			 */
@@ -115,11 +115,11 @@
 				return false;
 			}
 
-			$this->output->open_tag("client");
+			$this->view->open_tag("client");
 			$this->show_client_info($browsers);
 			$this->show_client_info($oses);
 			$this->show_client_info($wb_os);
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Referers
 			 */
@@ -128,7 +128,7 @@
 				return false;
 			}
 
-			$this->output->open_tag("referers");
+			$this->view->open_tag("referers");
 			$hostname = null;
 			foreach ($referers as $hostname => $host) {
 				$total = 0;
@@ -139,13 +139,13 @@
 					"hostname" => $hostname,
 					"count"    => count($host),
 					"total"    => $total);
-				$this->output->open_tag("host", $params);
+				$this->view->open_tag("host", $params);
 				foreach ($host as $referer) {
-					$this->output->record($referer, "referer");
+					$this->view->record($referer, "referer");
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 	}
 ?>

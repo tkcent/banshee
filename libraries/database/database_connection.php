@@ -8,6 +8,8 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
+	namespace Banshee\Database;
+
 	abstract class database_connection {
 		protected $link = null;
 		protected $db_close = null;
@@ -44,7 +46,7 @@
 					$queries .= "\n\t".$query;
 				}
 
-				$logfile = new logfile("database");
+				$logfile = new \Banshee\logfile("database");
 				$logfile->add_entry($queries);
 			}
 		}
@@ -277,17 +279,15 @@
 		/* Fetch one item from result by resource
 		 *
 		 * INPUT:  mixed resource identifier
-		 * OUTPUT: array( string key => string value[, ...] )
+		 * OUTPUT: array( string key => string value[, ...] )|null
 		 * ERROR:  false
 		 */
 		public function fetch($resource) {
 			if (in_array($resource, array(null, false, true), true)) {
 				$result = false;
-			} else if (($result = call_user_func($this->db_fetch, $resource)) === null) {
-				$result = false;
 			}
 
-			return $result;
+			return call_user_func($this->db_fetch, $resource);
 		}
 
 		/* Free query result memory
@@ -322,7 +322,7 @@
 
 			if (in_array($statement, array("select", "show", "describe", "explain"))) {
 				$result = array();
-				while (($data = $this->fetch($resource)) !== false) {
+				while (($data = $this->fetch($resource)) != false) {
 					array_push($result, $data);
 				}
 				$this->free_result($resource);
@@ -346,7 +346,7 @@
 			$cache_db = array_unshift($args);
 			$hash = sha1(json_encode($args));
 
-			$cache = new cache($cache_db, "banshee_db_cache");
+			$cache = new \Banshee\Core\cache($cache_db, "banshee_db_cache");
 
 			if ($cache->$hash !== null) {
 				$result = $cache->$hash;
@@ -414,11 +414,11 @@
 			$type = (is_int($id) || ($col == "id")) ? "%d" : "%s";
 
 			$query = "select * from %S where %S=".$type." limit 1";
-			if (($resource = $this->query($query, $table, $col, $id)) != false) {
-				return $this->fetch($resource);
+			if (($resource = $this->query($query, $table, $col, $id)) === false) {
+				return false;
 			}
 
-			return false;
+			return $this->fetch($resource);
 		}
 
 		/* Insert new entry in table

@@ -1,5 +1,5 @@
 <?php
-	class photo_model extends model {
+	class photo_model extends Banshee\model {
 		public function count_albums() {
 			$query = "select count(*) as count from photo_albums where listed=%d";
 			$args = array(YES);
@@ -79,9 +79,9 @@
 
 		public function get_photo_info($album_id, $offset, $limit) {
 			$query = "select * from photos where photo_album_id=%d ".
-			         "order by title,id limit %d,%d";
+			         "order by %S limit %d,%d";
 
-			return $this->db->execute($query, $album_id, $offset, $limit);
+			return $this->db->execute($query, $album_id, "order", $offset, $limit);
 		}
 	}
 ?>

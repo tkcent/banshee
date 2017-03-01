@@ -1,5 +1,5 @@
 <?php
-	class password_model extends model {
+	class password_model extends Banshee\model {
 		public function get_user($username, $email) {
 			$query = "select * from users where username=%s and email=%s";
 
@@ -22,7 +22,7 @@
 				"PROTOCOL" => $_SERVER["HTTP_SCHEME"],
 				"KEY"      => $key);
 
-			$email = new email("Reset password at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\email("Reset password at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields($replace);
 			$email->message($message);
 			$email->send($user["email"], $user["fullname"]);
@@ -31,11 +31,10 @@
 		public function password_oke($username, $password) {
 			$result = true;
 
-			if (trim($password["password"]) == "") {
-				$this->output->add_message("Password can't be empty.");
+			if (is_secure_password($password["password"], $this->view) == false) {
 				$result = false;
 			} else if ($password["password"] != $password["repeat"]) {
-				$this->output->add_message("Passwords are not the same.");
+				$this->view->add_message("Passwords are not the same.");
 				$result = false;
 			}
 
@@ -46,7 +45,7 @@
 			if ($username == "") {
 				return false;
 			}
-				
+
 			$password["password"] = hash_password($password["password"], $username);
 
 			$query = "update users set password=%s where username=%s";

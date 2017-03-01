@@ -1,18 +1,18 @@
 <?php
-	class sitemap_controller extends controller {
+	class sitemap_controller extends Banshee\controller {
 		public function execute() {
-			$this->output->content_type = "application/xml";
+			$this->view->content_type = "application/xml";
 
-			if ($this->output->fetch_from_cache("sitemap")) {
+			if ($this->view->fetch_from_cache("sitemap")) {
 				return;
 			}
 
-			$this->output->start_caching("sitemap");
+			$this->view->start_caching("sitemap");
 
-			$this->output->add_tag("protocol", $_SERVER["HTTP_SCHEME"]);
-			$this->output->add_tag("hostname", $_SERVER["SERVER_NAME"]);
+			$this->view->add_tag("protocol", $_SERVER["HTTP_SCHEME"]);
+			$this->view->add_tag("hostname", $_SERVER["SERVER_NAME"]);
 
-			$this->output->open_tag("urls");
+			$this->view->open_tag("urls");
 
 			$urls = $this->model->get_public_urls();
 			foreach ($urls as $url) {
@@ -20,13 +20,13 @@
 					continue;
 				}
 
-				$this->output->open_tag("url");
-				$this->output->add_tag("loc", $url);
-				$this->output->close_tag();
+				$this->view->open_tag("url");
+				$this->view->add_tag("loc", $url);
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->stop_caching();
+			$this->view->stop_caching();
 		}
 	}
 ?>

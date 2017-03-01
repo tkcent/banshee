@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="functions.xslt" />
-<xsl:include href="layout_cms.xslt" />
-<xsl:include href="layout_demo.xslt" />
-<xsl:include href="layout_site.xslt" />
+<xsl:import href="functions.xslt" />
+<xsl:import href="layout_cms.xslt" />
+<xsl:import href="layout_demo.xslt" />
+<xsl:import href="layout_site.xslt" />
 
 <xsl:output method="html" encoding="utf-8" />
 

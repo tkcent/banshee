@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class splitform_controller extends controller {
 		protected $button_previous = "<< prev";
 		protected $button_next = "next >>";
@@ -31,7 +33,7 @@
 		 * ERROR:  false
 		 */
 		public function execute() {
-			if (is_a($this->model, "splitform_model") == false) {
+			if (is_a($this->model, "Banshee\\splitform_model") == false) {
 				print "Splitform model has not been defined.\n";
 				return false;
 			}
@@ -44,7 +46,7 @@
 
 			/* Start
 			 */
-			$this->output->add_css("banshee/splitform.css");
+			$this->view->add_css("banshee/splitform.css");
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["splitform_current"] != $this->model->current) {
@@ -79,12 +81,12 @@
 						} else {
 							/* Submit oke
 							 */
-							$this->output->open_tag("submit");
-							$this->output->add_tag("current", $this->model->max + 1, array("max" => $this->model->max, "percentage" => "100"));
+							$this->view->open_tag("submit");
+							$this->view->add_tag("current", $this->model->max + 1, array("max" => $this->model->max, "percentage" => "100"));
 							foreach ($this->model->values as $key => $value) {
-								$this->output->add_tag("value", $value, array("key" => $key));
+								$this->view->add_tag("value", $value, array("key" => $key));
 							}
-							$this->output->close_tag();
+							$this->view->close_tag();
 
 							unset($_SESSION["splitform"][$this->page->module]);
 							return true;
@@ -95,37 +97,37 @@
 				$this->model->load_form_data();
 			}
 
-			$this->output->open_tag("splitforms");
+			$this->view->open_tag("splitforms");
 			$percentage = round(100 * ($this->model->current + 1) / ($this->model->max + 2));
-			$this->output->add_tag("current", $this->model->current, array("max" => $this->model->max, "percentage" => $percentage));
+			$this->view->add_tag("current", $this->model->current, array("max" => $this->model->max, "percentage" => $percentage));
 
 			/* Show the webform
 			 */
 			$template = $this->model->forms[$this->model->current]["template"];
 
-			$this->output->open_tag("splitform");
-			$this->output->open_tag($template);
+			$this->view->open_tag("splitform");
+			$this->view->open_tag($template);
 			foreach ($_POST as $key => $value) {
-				$this->output->add_tag($key, $value);
+				$this->view->add_tag($key, $value);
 			}
 			if (method_exists($this, "prepare_".$template)) {
 				call_user_func(array($this, "prepare_".$template));
 			}
-			$this->output->close_tag();
-			$this->output->close_tag();
+			$this->view->close_tag();
+			$this->view->close_tag();
 
 			/* Show the button labels
 			 */
-			$this->output->open_tag("buttons");
-			$this->output->add_tag("previous", $this->button_previous);
-			$this->output->add_tag("next", $this->button_next);
-			$this->output->add_tag("submit", $this->button_submit);
+			$this->view->open_tag("buttons");
+			$this->view->add_tag("previous", $this->button_previous);
+			$this->view->add_tag("next", $this->button_next);
+			$this->view->add_tag("submit", $this->button_submit);
 			if ($this->back !== null) {
-				$this->output->add_tag("back", $this->button_back, array("link" => $this->back));
+				$this->view->add_tag("back", $this->button_back, array("link" => $this->back));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			return true;
 		}

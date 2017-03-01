@@ -14,7 +14,7 @@
 			<table style="height:{@height}px"><tr>
 				<xsl:for-each select="bar">
 				<td onMouseOver="javascript:show_info({../@id}, '{@text}', '{@value}')" onMouseOut="javascript:show_info({../@id}, '', '')">
-					<xsl:if test="@link">	
+					<xsl:if test="@link">
 						<xsl:attribute name="onClick">javascript:document.location='<xsl:value-of select="@link" />'</xsl:attribute>
 						<xsl:attribute name="class">clickable</xsl:attribute>
 					</xsl:if>

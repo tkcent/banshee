@@ -1,5 +1,5 @@
 <?php
-	class demos_validation_controller extends controller {
+	class demos_validation_controller extends Banshee\controller {
 		private $pattern = array(
 			"string" => array(
 				"type"     => "string",
@@ -18,14 +18,14 @@
 
 		public function execute() {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$validator = new validator($this->output);
+				$validator = new Banshee\validator($this->view);
 
 				if ($validator->execute($this->pattern)) {
-					$this->output->add_system_message("Data validation oke.");
+					$this->view->add_system_message("Data validation oke.");
 				}
 			}
 
-			$this->output->record($_POST);
+			$this->view->record($_POST);
 		}
 	}
 ?>

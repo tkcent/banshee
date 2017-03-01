@@ -1,16 +1,18 @@
 <?php
-	class links_controller extends controller {
+	class links_controller extends Banshee\controller {
 		public function execute() {
-			$this->output->title = "Links";
+			$this->view->title = "Links";
+			$this->view->keywords = "links";
+			$this->view->description = "Links naar websites over privacy";
 
-			if (($links = $this->model->get_links()) === false) {
-				$this->output->add_tag("result", "Database error.");
-			} else {
-				$this->output->open_tag("links");
+			if (($data = $this->model->get_links()) === false) {
+				$this->view->add_tag("result", "Database error.");
+			} else foreach ($data as $category => $links) {
+				$this->view->open_tag("links", array("category" => $category));
 				foreach ($links as $link) {
-					$this->output->add_tag("link", $link["text"], array("url" => $link["link"]));
+					$this->view->add_tag("link", $link["text"], array("url" => $link["link"]));
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 		}
 	}

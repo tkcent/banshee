@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class api_model extends model {
 	}
 ?>

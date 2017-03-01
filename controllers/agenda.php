@@ -1,8 +1,8 @@
 <?php
-	class agenda_controller extends controller {
+	class agenda_controller extends Banshee\controller {
 		private function show_month($month, $year) {
 			if (($appointments = $this->model->get_appointments_for_month($month, $year)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
@@ -11,7 +11,7 @@
 			$today = strtotime("today 00:00:00");
 
 			$months_of_year = config_array(MONTHS_OF_YEAR);
-			$this->output->open_tag("month", array("title" => $months_of_year[$month - 1]." ".$year));
+			$this->view->open_tag("month", array("title" => $months_of_year[$month - 1]." ".$year));
 
 			/* Links
 			 */
@@ -20,61 +20,61 @@
 				$m = 12;
 				$y--;
 			}
-			$this->output->add_tag("prev", $y."/".$m);
+			$this->view->add_tag("prev", $y."/".$m);
 
 			$y = $year;
 			if (($m = $month + 1) == 13) {
 				$m = 1;
 				$y++;
 			}
-			$this->output->add_tag("next", $y."/".$m);
+			$this->view->add_tag("next", $y."/".$m);
 
 			/* Days of week
 			 */
 			$days_of_week = config_array(DAYS_OF_WEEK);
-			$this->output->open_tag("days_of_week");
+			$this->view->open_tag("days_of_week");
 			foreach ($days_of_week as $dow) {
-				if ($this->output->mobile) {
+				if ($this->view->mobile) {
 					$dow = substr($dow, 0, 3);
 				}
-				$this->output->add_tag("day", $dow);
+				$this->view->add_tag("day", $dow);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Weeks
 			 */
 			while ($day < $last_day) {
-				$this->output->open_tag("week");
+				$this->view->open_tag("week");
 				for ($dow = 1; $dow <= 7; $dow++) {
 					$params = array("nr" => date("j", $day), "dow" => $dow);
 					if ($day == $today) {
 						$params["today"] = " today";
 					}
-					$this->output->open_tag("day", $params);
+					$this->view->open_tag("day", $params);
 
 					foreach ($appointments as $appointment) {
 						if (($appointment["begin"] >= $day) && ($appointment["begin"] < $day + DAY)) {
-							$this->output->add_tag("appointment", $appointment["title"], array("id" => $appointment["id"]));
+							$this->view->add_tag("appointment", $appointment["title"], array("id" => $appointment["id"]));
 						} else if (($appointment["begin"] < $day) && ($appointment["end"] >= $day)) {
-							$this->output->add_tag("appointment", "... ".$appointment["title"], array("id" => $appointment["id"]));
+							$this->view->add_tag("appointment", "... ".$appointment["title"], array("id" => $appointment["id"]));
 						}
 					}
-					$this->output->close_tag();
+					$this->view->close_tag();
 
 					$day = strtotime(date("d-m-Y", $day)." +1 day");
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_appointment($appointment_id) {
 			if (($appointment = $this->model->get_appointment($appointment_id)) == false) {
-				$this->output->add_tag("result", "Unknown appointment.");
+				$this->view->add_tag("result", "Unknown appointment.");
 				return;
 			}
 
-			$this->output->title = $appointment["title"]." - Agenda";
+			$this->view->title = $appointment["title"]." - Agenda";
 
 			$this->show_appointment_record($appointment);
 		}
@@ -83,13 +83,13 @@
 			$appointment["begin"] = date("l j F Y", $appointment["begin"]);
 			$appointment["end"] = date("l j F Y", $appointment["end"]);
 
-			$this->output->record($appointment, "appointment");
+			$this->view->record($appointment, "appointment");
 		}
 
 		public function execute() {
-			$this->output->description = "Agenda";
-			$this->output->keywords = "agenda";
-			$this->output->title = "Agenda";
+			$this->view->description = "Agenda";
+			$this->view->keywords = "agenda";
+			$this->view->title = "Agenda";
 
 			if (isset($_SESSION["calendar_month"]) == false) {
 				$_SESSION["calendar_month"] = (int)date("m");
@@ -100,13 +100,13 @@
 				/* Show appointment list
 				 */
 				if (($appointments = $this->model->get_appointments_from_today()) === false) {
-					$this->output->add_tag("result", "Database error.");
+					$this->view->add_tag("result", "Database error.");
 				} else {
-					$this->output->open_tag("list");
+					$this->view->open_tag("list");
 					foreach ($appointments as $appointment) {
 						$this->show_appointment_record($appointment);
 					}
-					$this->output->close_tag();
+					$this->view->close_tag();
 				}
 			} else if ($this->page->pathinfo[1] == "current") {
 				/* Show current month

@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Database;
+
 	class SQLite3_connection extends database_connection {
 		public function __construct($filename, $mode = null, $encryption_key = null) {
 			$this->db_close         = array($this, "db_close_wrapper");

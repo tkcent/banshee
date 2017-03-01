@@ -1,5 +1,5 @@
 <?php
-	class cms_webshop_category_model extends tablemanager_model {
+	class cms_webshop_category_model extends Banshee\tablemanager_model {
 		protected $table = "shop_categories";
 		protected $order = "name";
 		protected $elements = array(

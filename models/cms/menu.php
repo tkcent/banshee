@@ -1,5 +1,5 @@
 <?php
-	class cms_menu_model extends model {
+	class cms_menu_model extends Banshee\model {
 		private function structure_menu($menuitems, $parent_id) {
 			$menu = array();
 
@@ -35,7 +35,7 @@
 				$result = true;
 			} else foreach ($menu as $item) {
 				if ((trim($item["text"]) == "") || (trim($item["link"]) == "")) {
-					$this->output->add_message("The text or link of a menu item can't be empty.");
+					$this->view->add_message("The text or link of a menu item can't be empty.");
 					$result = false;
 				}
 

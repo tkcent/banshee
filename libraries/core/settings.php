@@ -1,5 +1,5 @@
 <?php
-	/* libraries/settings.php
+	/* libraries/core/settings.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -7,6 +7,8 @@
 	 *
 	 * Don't change this file, unless you know what you are doing.
 	 */
+
+	namespace Banshee\Core;
 
 	class settings {
 		private $db = null;

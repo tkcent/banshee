@@ -1,29 +1,29 @@
 <?php
-	class cms_dictionary_controller extends controller {
+	class cms_dictionary_controller extends Banshee\controller {
 		private function show_dictionary_overview() {
 			if (($word_count = $this->model->count_words()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$paging = new pagination($this->output, "admin_dictionary", $this->settings->admin_page_size, $word_count);
+			$paging = new Banshee\pagination($this->view, "admin_dictionary", $this->settings->admin_page_size, $word_count);
 
 			if (($words = $this->model->get_words($paging->offset, $paging->size)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("words");
+			$this->view->open_tag("words");
 			foreach ($words as $word) {
-				$this->output->record($word, "word");
+				$this->view->record($word, "word");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_word_form($word) {
@@ -31,9 +31,9 @@
 				$letter = strtolower($word["word"][0]);
 			}
 
-			$this->output->add_ckeditor("div.btn-group");
+			$this->view->add_ckeditor("div.btn-group");
 
-			$this->output->record($word, "edit");
+			$this->view->record($word, "edit");
 		}
 
 		public function execute() {
@@ -45,7 +45,7 @@
 						$this->show_word_form($_POST);
 					} else if (isset($_POST["id"]) == false) {
 						if ($this->model->create_word($_POST) == false) {
-							$this->output->add_message("Database error while creating word.");
+							$this->view->add_message("Database error while creating word.");
 							$this->show_word_form($_POST);
 						} else {
 							$this->user->log_action("dictionary word %d created", $this->db->last_insert_id);
@@ -53,7 +53,7 @@
 						}
 					} else {
 						if ($this->model->update_word($_POST) == false) {
-							$this->output->add_message("Database error while updating word.");
+							$this->view->add_message("Database error while updating word.");
 							$this->show_word_form($_POST);
 						} else {
 							$this->user->log_action("dictionary word %d updated", $_POST["id"]);
@@ -64,7 +64,7 @@
 					/* Delete word
 					 */
 					if ($this->model->delete_word($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Error while deleting word.");
+						$this->view->add_tag("result", "Error while deleting word.");
 					} else {
 						$this->user->log_action("dictionary word %d deleted", $_POST["id"]);
 						$this->show_dictionary_overview();
@@ -81,7 +81,7 @@
 				/* Edit word
 				 */
 				if (($word = $this->model->get_word($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Word not found.");
+					$this->view->add_tag("result", "Word not found.");
 				} else {
 					$this->show_word_form($word);
 				}

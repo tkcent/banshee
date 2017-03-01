@@ -1,5 +1,5 @@
 <?php
-	class cms_agenda_model extends model {
+	class cms_agenda_model extends Banshee\model {
 		public function get_appointments() {
 			$query = "select * from agenda order by begin,end";
 
@@ -20,23 +20,23 @@
 			$result = true;
 
 			if (valid_date($appointment["begin"]) == false) {
-				$this->output->add_message("Invalid start time.");
+				$this->view->add_message("Invalid start time.");
 				$result = false;
 			}
 			if (valid_date($appointment["end"]) == false) {
-				$this->output->add_message("Invalid end time.");
+				$this->view->add_message("Invalid end time.");
 				$result = false;
 			}
 
 			if ($result) {
 				if (strtotime($appointment["begin"]) > strtotime($appointment["end"])) {
-					$this->output->add_message("Begin date must lie before end date.");
+					$this->view->add_message("Begin date must lie before end date.");
 					$result = false;
 				}
 			}
 
 			if (trim($appointment["title"]) == "") {
-				$this->output->add_message("Empty short description not allowed.");
+				$this->view->add_message("Empty short description not allowed.");
 				$result = false;
 			}
 

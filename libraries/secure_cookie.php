@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class secure_cookie {
 		private $expire = null;
 

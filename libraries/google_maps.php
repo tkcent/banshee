@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class Google_Maps {
 		const GOOGLE_MAPS_HOSTNAME = "maps.google.com";
 
@@ -33,8 +35,8 @@
 		 * ERROR:  -
 		 */
 		public function __construct($db) {
-			$this->maps_api = new HTTP(self::GOOGLE_MAPS_HOSTNAME);
-			$this->cache = new cache($db, "googlemaps");
+			$this->maps_api = new HTTPS(self::GOOGLE_MAPS_HOSTNAME);
+			$this->cache = new Core\cache($db, "googlemaps");
 		}
 
 		/* Magic method get
@@ -202,7 +204,7 @@
 		 * ERROR:  -
 		 */
 		public function generate_url($size_x, $size_y = null) {
-			return "http://".self::GOOGLE_MAPS_HOSTNAME.$this->generate_path($size_x, $size_y);
+			return "https://".self::GOOGLE_MAPS_HOSTNAME.$this->generate_path($size_x, $size_y);
 		}
 
 		/* Send static map to client

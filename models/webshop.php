@@ -1,5 +1,5 @@
 <?php
-	class webshop_model extends model {
+	class webshop_model extends Banshee\model {
 		public function count_articles($search = null, $category_id = null) {
 			$query = "select count(*) as count from shop_articles where visible=%d";
 			$args = array(YES);

@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class AES256 {
 		private $mode = "aes-256-";
 		private $crypto_key = null;
@@ -17,7 +19,7 @@
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($crypto_key, $mode = "cbc") {
+		public function __construct($crypto_key, $mode = "ctr") {
 			if (strlen($crypto_key) < 32) {
 				$crypto_key .= hash("sha256", $crypto_key);
 			}
@@ -77,7 +79,7 @@
 				return false;
 			}
 
-			$data = base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT)); 
+			$data = base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
 			$data = json_decode($data, true);
 
 			if (is_array($data) == false) {

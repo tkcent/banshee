@@ -40,7 +40,7 @@ For Apache, there is a .htaccess file in the 'public' directory which contains t
 
 Configure PHP
 -------------
-Banshee needs PHP's MySQL, XSL and GD module. Use the following PHP settings:
+Banshee needs PHP's MySQL, XML/XSLT and GD module. Use the following PHP settings:
 
 	allow_url_include = Off
 	cgi.fix_pathinfo = 0 (when using FastCGI PHP), 1 (otherwise)
@@ -58,4 +58,4 @@ Configure cronjob to run the script database/backup_database once per day.
 
 Configure Banshee
 -----------------
-Go to the Settings page in the CMS and replace the present e-mail addresses with your own. Before going live, set the DEBUG_MODE flag in settings/website.conf to 'no' and make sure you've changed the administrator password.
+Go to the Settings page in the CMS and replace the present e-mail addresses with your own. Before going live, set the DEBUG_MODE flag in settings/website.conf to 'no'.

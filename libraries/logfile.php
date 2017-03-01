@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class logfile {
 		private $type = null;
 		private $entries = array();
@@ -25,7 +27,11 @@
 			}
 		}
 
-		private function flush() {
+		public function flush() {
+			if (count($this->entries) == 0) {
+				return;
+			}
+
 			if (($fp = fopen(__DIR__."/../logfiles/".$this->type.".log", "a")) == false) {
 				return;
 			}

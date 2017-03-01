@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="main.xslt" />
+<xsl:import href="main.xslt" />
 
 <!--
 //
@@ -25,7 +25,7 @@
 </input></p>
 <div class="btn-group">
 <input type="submit" value="Login" class="btn btn-default" />
-<a href="{cancel}" class="btn btn-default">Cancel</a>
+<a href="/{previous}" class="btn btn-default">Cancel</a>
 </div>
 </form>
 

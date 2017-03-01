@@ -1,5 +1,5 @@
 <?php
-	class cms_weblog_comment_controller extends tablemanager_controller {
+	class cms_weblog_comment_controller extends Banshee\tablemanager_controller {
 		protected $name = "Weblog comment";
 		protected $pathinfo_offset = 3;
 		protected $back = "cms/weblog";

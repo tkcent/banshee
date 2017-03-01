@@ -1,15 +1,15 @@
 <?php
-	class cms_newsletter_model extends model {
+	class cms_newsletter_model extends Banshee\model {
 		public function newsletter_oke($info) {
 			$result = true;
 
 			if ($info["title"] == "") {
-				$this->output->add_message("No title has been entered.");
+				$this->view->add_message("No title has been entered.");
 				$result = false;
 			}
 
 			if ($info["content"] == "") {
-				$this->output->add_message("No content has been entered.");
+				$this->view->add_message("No content has been entered.");
 				$result = false;
 			}
 
@@ -17,7 +17,7 @@
 		}
 
 		public function send_newsletter($info) {
-			$newsletter = new newsletter($info["title"], $this->settings->newsletter_email, $this->settings->newsletter_name);
+			$newsletter = new Banshee\newsletter($info["title"], $this->settings->newsletter_email, $this->settings->newsletter_name);
 			$newsletter->message($info["content"]);
 
 			$query = "select * from subscriptions";
@@ -41,7 +41,7 @@
 		}
 
 		public function preview_newsletter($info) {
-			$newsletter = new newsletter($info["title"], $this->settings->newsletter_email, $this->settings->newsletter_name);
+			$newsletter = new Banshee\newsletter($info["title"], $this->settings->newsletter_email, $this->settings->newsletter_name);
 			$newsletter->message($info["content"]);
 
 			return $newsletter->send($this->user->email);

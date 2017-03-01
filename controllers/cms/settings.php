@@ -1,5 +1,5 @@
 <?php
-	class cms_settings_controller extends tablemanager_controller {
+	class cms_settings_controller extends Banshee\tablemanager_controller {
 		protected $name = "Setting";
 		protected $pathinfo_offset = 2;
 		protected $back = "cms";
@@ -12,16 +12,16 @@
 		protected function show_item_form($item) {
 			if ((is_true(DEBUG_MODE) == false) && isset($item["id"])) {
 				if (($current = $this->model->get_item($item["id"])) === false) {
-					$this->output->add_tag("result", "Database error.");
+					$this->view->add_tag("result", "Database error.");
 					return false;
 				}
 
-				$this->output->add_javascript("cms/settings.js");
+				$this->view->add_javascript("cms/settings.js");
 
-				$this->output->open_tag("label");
-				$this->output->add_tag("key", $current["key"]);
-				$this->output->add_tag("type", $current["type"]);
-				$this->output->close_tag();
+				$this->view->open_tag("label");
+				$this->view->add_tag("key", $current["key"]);
+				$this->view->add_tag("type", $current["type"]);
+				$this->view->close_tag();
 			}
 
 			parent::show_item_form($item);
@@ -30,7 +30,7 @@
 		protected function handle_submit() {
 			parent::handle_submit();
 
-			$cache = new cache($this->db, "banshee_settings");
+			$cache = new Banshee\Core\cache($this->db, "banshee_settings");
 			$cache->store("last_updated", time(), 365 * DAY);
 		}
 	}

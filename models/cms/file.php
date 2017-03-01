@@ -1,11 +1,15 @@
 <?php
-	class cms_file_model extends model {
-		public function filename_oke($file) {
+	class cms_file_model extends Banshee\model {
+		private function filename_oke($file) {
 			if (trim($file) == "") {
 				return false;
 			}
 
 			return valid_input($file, VALIDATE_NUMBERS.VALIDATE_LETTERS."/-_. ");
+		}
+
+		private function dirname_oke($file) {
+			return valid_input($file, VALIDATE_NUMBERS.VALIDATE_LETTERS."-_.", VALIDATE_NONEMTPY);
 		}
 
 		public function directory_listing($directory) {
@@ -51,24 +55,24 @@
 
 		public function upload_oke($file, $directory) {
 			if ($file["error"] !== 0) {
-				$this->output->add_message("Error while uploading file.");
+				$this->view->add_message("Error while uploading file.");
 				return false;
 			}
 
 			if ($this->filename_oke($directory."/".$file["name"]) == false) {
-				$this->output->add_message("Invalid filename.");
+				$this->view->add_message("Invalid filename.");
 				return false;
 			}
 			if (($ext = strrchr($file["name"], ".")) === false) {
-				$this->output->add_message("File has no extension.");
+				$this->view->add_message("File has no extension.");
 				return false;
 			}
 			if (in_array(substr($ext, 1), config_array(ALLOWED_UPLOADS)) == false) {
-				$this->output->add_message("Invalid file extension.");
+				$this->view->add_message("Invalid file extension.");
 				return false;
 			}
 			if (file_exists($directory."/".$file["name"])) {
-				$this->output->add_message("File already exists.");
+				$this->view->add_message("File already exists.");
 				return false;
 			}
 
@@ -109,11 +113,11 @@
 		public function directory_oke($subdir, $directory) {
 			$result = true;
 
-			if ($this->filename_oke($subdir) == false) {
-				$this->output->add_message("Invalid directory name.");
+			if ($this->dirname_oke($subdir) == false) {
+				$this->view->add_message("Invalid directory name.");
 				$result = false;
 			} else if (file_exists($directory."/".$subdir)) {
-				$this->output->add_message("Directory already exists.");
+				$this->view->add_message("Directory already exists.");
 				$result = false;
 			}
 

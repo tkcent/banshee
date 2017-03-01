@@ -3,7 +3,7 @@
 	error_reporting(E_ALL & ~E_NOTICE);
 
 	chdir(__DIR__);
-	require("../libraries/banshee.php");
+	require("../libraries/core/banshee.php");
 	require("../libraries/helpers/http.php");
 
 	class verify_referer_log {
@@ -66,7 +66,7 @@
 
 	/* Connect to database
 	 */
-	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 	if ($db->connected == false) {
 		exit("Internal error: database not available.\n");
 	}

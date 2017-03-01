@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class message {
 		private $message = null;
 		private $bbcodes = null;
@@ -202,7 +204,7 @@
 				 */
 				if (($open = strrpos($message, "[".$bbcode."]")) !== false) {
 					$open_end = $open + $bblen + 1;
-				} else if (($open = strrpos($message, "[".$bbcode."=")) === false) {	
+				} else if (($open = strrpos($message, "[".$bbcode."=")) === false) {
 					break;
 				} else if (($open_end = strpos($message, "]", $open)) === false) {
 					break;

@@ -1,10 +1,12 @@
 <?php
-	/* libraries/cache.php
+	/* libraries/core/cache.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
+
+	namespace Banshee\Core;
 
 	class cache {
 		private $db = null;

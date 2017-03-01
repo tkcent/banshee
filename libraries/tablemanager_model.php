@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class tablemanager_model extends model {
 		private $valid_types = array("integer", "varchar", "text", "ckeditor",
 			"boolean", "date", "timestamp", "enum", "foreignkey", "blob", "float");
@@ -34,7 +36,7 @@
 			if (isset($_SESSION[$key]) == false) {
 				$_SESSION[$key] = $this->order;
 				$_SESSION[$key."_desc"] = $this->desc_order;
-            }
+			}
 			$this->order = &$_SESSION[$key];
 			$this->desc_order = &$_SESSION[$key."_desc"];
 
@@ -315,11 +317,11 @@
 			$result = true;
 
 			if (isset($item["id"]) == false) {
-				if ($this->allow_create == false) {	
+				if ($this->allow_create == false) {
 					return false;
 				}
 			} else {
-				if ($this->allow_update == false) {	
+				if ($this->allow_update == false) {
 					return false;
 				}
 			}
@@ -331,7 +333,7 @@
 
 				if (($element["required"]) && ($element["type"] != "boolean") && (trim($item[$name]) == "")) {
 					if (($element["type"] != "blob") || (isset($item["id"]) == false)) {
-						$this->output->add_message("The field ".$element["label"]." cannot be empty.");
+						$this->view->add_message("The field ".$element["label"]." cannot be empty.");
 						$result = false;
 					}
 				}
@@ -340,25 +342,25 @@
 					switch ($element["type"]) {
 						case "date":
 							if (valid_date($item[$name]) == false) {
-								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid date.");
+								$this->view->add_message("The field ".$element["label"]." doesn't contain a valid date.");
 								$result = false;
 							}
 							break;
 						case "timestamp":
 							if (valid_timestamp($item[$name]) == false) {
-								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
+								$this->view->add_message("The field ".$element["label"]." doesn't contain a valid timestamp.");
 								$result = false;
 							}
 							break;
 						case "enum":
 							if (in_array($item[$name], array_keys($element["options"])) == false) {
-								$this->output->add_message("The field ".$element["label"]." doesn't contain a valid value.");
+								$this->view->add_message("The field ".$element["label"]." doesn't contain a valid value.");
 								$result = false;
 							}
 							break;
 						case "integer":
 							if (is_numeric($item[$name]) == false) {
-								$this->output->add_message("The field ".$element["label"]." should be numerical.");
+								$this->view->add_message("The field ".$element["label"]." should be numerical.");
 								$result = false;
 							}
 							break;
@@ -373,9 +375,9 @@
 						array_push($args, $item["id"]);
 					}
 					if (($current = $this->db->execute($query, $args)) == false) {
-						$this->output->add_message("Error checking item uniqueness.");
+						$this->view->add_message("Error checking item uniqueness.");
 					} else if ($current[0]["count"] > 0) {
-						$this->output->add_message($element["label"]." already exists.");
+						$this->view->add_message($element["label"]." already exists.");
 						$result = false;
 					}
 				}
@@ -391,13 +393,13 @@
 		 * ERROR:  false
 		 */
 		public function delete_oke($item_id) {
-			if ($this->allow_delete == false) {	
-				$this->output->add_message("You are not allowed to delete items.");
+			if ($this->allow_delete == false) {
+				$this->view->add_message("You are not allowed to delete items.");
 				return false;
 			}
 
 			if (valid_input($item_id, VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
-				$this->output->add_message("Invalid item id.");
+				$this->view->add_message("Invalid item id.");
 				return false;
 			}
 

@@ -6,10 +6,12 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class RSS {
 		const CONTENT_TYPE = "application/rss+xml; charset=utf-8";
 
-		private $output = null;
+		private $view = null;
 		private $protocol = null;
 		private $cache_id = null;
 		private $title = null;
@@ -19,12 +21,12 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  object output
+		 * INPUT:  object view
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($output) {
-			$this->output = $output;
+		public function __construct($view) {
+			$this->view = $view;
 
 			if (isset($_SERVER["HTTP_SCHEME"])) {
 				$this->protocol = $_SERVER["HTTP_SCHEME"];
@@ -58,10 +60,10 @@
 		 * ERROR:  -
 		 */
 		public function fetch_from_cache($cache_id) {
-			$this->output->content_type = self::CONTENT_TYPE;
+			$this->view->content_type = self::CONTENT_TYPE;
 			$this->cache_id = $cache_id;
 
-			return $this->output->fetch_from_cache($cache_id);
+			return $this->view->fetch_from_cache($cache_id);
 		}
 
 		/* Add RSS item
@@ -89,34 +91,34 @@
 		 * ERROR:  -
 		 */
 		public function to_output() {
-			$this->output->content_type = self::CONTENT_TYPE;
+			$this->view->content_type = self::CONTENT_TYPE;
 
 			if ($this->cache_id !== null) {
-				$this->output->start_caching($this->cache_id);
+				$this->view->start_caching($this->cache_id);
 			}
 
-			$this->output->open_tag("rss_feed");
+			$this->view->open_tag("rss_feed");
 
 			if ($this->title !== null) {
-				$this->output->add_tag("title", $this->title);
+				$this->view->add_tag("title", $this->title);
 			}
 			if ($this->description !== null) {
-				$this->output->add_tag("description", $this->description);
+				$this->view->add_tag("description", $this->description);
 			}
 			if ($this->url !== null) {
-				$this->output->add_tag("url", $this->url);
+				$this->view->add_tag("url", $this->url);
 			}
 
-			$this->output->open_tag("items");
+			$this->view->open_tag("items");
 			foreach ($this->items as $item) {
-				$this->output->record($item, "item");
+				$this->view->record($item, "item");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			if ($this->cache_id !== null) {
-				$this->output->stop_caching();
+				$this->view->stop_caching();
 			}
 		}
 	}

@@ -23,8 +23,8 @@ h3 {
 
 img.title_icon {
 	float:right;
-	margin-top:-20px;
-	margin-bottom:-20px;
+	margin-top:-15px;
+	margin-bottom:-15px;
 }
 
 div.left {
@@ -211,7 +211,7 @@ table.table-hover tbody tr:hover {
 }
 
 input[type=checkbox] {
-    margin-left:5px;
+	margin-left:5px;
 }
 
 div.well {

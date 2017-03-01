@@ -1,5 +1,5 @@
 <?php
-	class cms_collection_model extends model {
+	class cms_collection_model extends Banshee\model {
 		public function get_collections() {
 			$query = "select * from collections order by name";
 
@@ -33,7 +33,7 @@
 			$result = true;
 
 			if (trim($collection["name"]) == "") {
-				$this->output->add_message("Name cannot be empty.");
+				$this->view->add_message("Name cannot be empty.");
 				$result = false;
 			}
 

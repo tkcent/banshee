@@ -8,14 +8,19 @@
 	 */
 
 	chdir(__DIR__);
-	require("libraries/banshee.php");
-	require("libraries/security.php");
+	require("libraries/core/banshee.php");
+	require("libraries/core/security.php");
 	require("libraries/helpers/console.php");
 
 	/* Show help and exit
 	 */
 	function help_exit() {
 		printf("Usage: %s public|private <module name> [tm|sf|db|api]\n", $GLOBALS["argv"][0]);
+		printf("  - tm: create a TableManager module.\n");
+		printf("  - sf: create a SplitForm module.\n");
+		printf("  - db: create a CRUD module.\n");
+		printf("  - api: create an API module.\n");
+		printf("  Look inside the templates directory for the module templates.\n");
 		exit;
 	}
 
@@ -41,9 +46,9 @@
 		return true;
 	}
 
-	/* Fix include path in XSLT file
+	/* Fix import path in XSLT file
 	 */
-	function fix_view_include_path($module) {
+	function fix_view_import_path($module) {
 		$filename = "views/".$module.".xslt";
 
 		if (($count = substr_count($module, "/")) == 0) {
@@ -53,10 +58,10 @@
 		}
 
 		foreach ($file as $i => $line) {
-			if (substr($line, 0, 12) != "<xsl:include") {
+			if (substr($line, 0, 11) != "<xsl:import") {
 				continue;
 			}
-			$file[$i] = substr($line, 0, 19).str_repeat("../", $count).substr($line, 19);
+			$file[$i] = substr($line, 0, 18).str_repeat("../", $count).substr($line, 18);
 		}
 
 		if (($fp = fopen($filename, "w")) == false) {
@@ -115,7 +120,7 @@
 	 */
 	chdir("settings");
 
-	if (module_exists($module, true)) {	
+	if (module_exists($module, true)) {
 		exit;
 	}
 
@@ -158,7 +163,7 @@
 	 */
 	if ($type != "api") {
 		print "Fixing include paths in view.\n";
-		fix_view_include_path($module);
+		fix_view_import_path($module);
 	}
 
 	/* Add to configuration file

@@ -6,35 +6,44 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class controller {
 		protected $model = null;
 		protected $db = null;
 		protected $settings = null;
 		protected $user = null;
 		protected $page = null;
-		protected $output = null;
+		protected $view = null;
 		protected $language = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object settings, object user, object page, object output[, object language]
+		 * INPUT:  object database, object settings, object user, object page, object view[, object language]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($database, $settings, $user, $page, $output, $language = null) {
+		public function __construct($database, $settings, $user, $page, $view, $language = null) {
 			$this->db = $database;
 			$this->settings = $settings;
 			$this->user = $user;
 			$this->page = $page;
-			$this->output = $output;
+			$this->view = $view;
 			$this->language = $language;
 
+			/* Prevent Cross-Site Request Forgery
+			 */
+			$prevent_csrf = new prevent_CSRF($page, $user, $view);
+			$prevent_csrf->execute();
+
+			/* Load model
+			 */
 			$model_class = str_replace("/", "_", $page->module)."_model";
 			if (class_exists($model_class)) {
-				if (is_subclass_of($model_class, "model") == false) {
-					print "Model class '".$model_class."' does not extend class 'model'.\n";
+				if (is_subclass_of($model_class, "Banshee\\model") == false) {
+					print "Model class '".$model_class."' does not extend Banshee's model class.\n";
 				} else {
-					$this->model = new $model_class($database, $settings, $user, $page, $output, $language);
+					$this->model = new $model_class($database, $settings, $user, $page, $view, $language);
 				}
 			}
 		}

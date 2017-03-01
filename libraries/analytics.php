@@ -5,6 +5,9 @@
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
+
+	namespace Banshee;
+
 	class analytics {
 		private $db = null;
 		private $page = null;

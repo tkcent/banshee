@@ -12,7 +12,7 @@
 <meta name="copyright" content="COPYRIGHT" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
-<meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (http://www.banshee-php.org/)" />
+<meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (https://www.banshee-php.org/)" />
 <link rel="apple-touch-icon" href="/images/iphone.png" />
 <title><xsl:if test="title/@page!='' and title/@page!=title"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
@@ -79,7 +79,7 @@
 			<span>Logged in as <a href="/profile"><xsl:value-of select="/output/user" /></a></span>
 			<span><a href="/session">Session manager</a></span>
 			</xsl:if>
-			<span>Built upon the <a href="http://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
+			<span>Built upon the <a href="https://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
 			<span><a href="/cms">CMS</a></span>
 		</div>
 	</div>

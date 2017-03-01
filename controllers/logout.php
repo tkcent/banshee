@@ -1,5 +1,5 @@
 <?php
-	class logout_controller extends controller {
+	class logout_controller extends Banshee\controller {
 		public function execute() {
 			if ($this->user->logged_in) {
 				header("Status: 401");
@@ -14,9 +14,9 @@
 					$url = "cms/switch";
 				}
 
-				$this->output->add_tag("result", "You are now logged out.", array("url" => $url));
+				$this->view->add_tag("result", "You are now logged out.", array("url" => $url));
 			} else {
-				$this->output->add_tag("result", "You are not logged in.", array("url" => $this->settings->start_page));
+				$this->view->add_tag("result", "You are not logged in.", array("url" => $this->settings->start_page));
 			}
 		}
 	}

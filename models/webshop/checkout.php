@@ -1,5 +1,5 @@
 <?php
-	class webshop_checkout_model extends splitform_model {
+	class webshop_checkout_model extends Banshee\splitform_model {
 		protected $forms = array(
 			array(
 				"template" => "address",
@@ -24,14 +24,14 @@
 
 			if ($this->current == 1) {
 				if ($this->validate_payment($data["creditcard"]) == false) {
-					$this->output->add_message("Invalid creditcard number.");
+					$this->view->add_message("Invalid creditcard number.");
 					$result = false;
 				}
 			}
 
 			foreach ($this->forms[$this->current]["elements"] as $element) {
 				if (trim($data[$element]) == "") {
-					$this->output->add_message("The ".$element." cannot be empty.");
+					$this->view->add_message("The ".$element." cannot be empty.");
 					$result = false;
 				}
 			}
@@ -79,8 +79,8 @@
 			return $this->db->query("commit") !== false;
 		}
 
-		public function send_notification($data) {	
-			$notification = new email("Order placed", $this->settings->webmaster_email, $this->settings->head_title." webshop");
+		public function send_notification($data) {
+			$notification = new Banshee\email("Order placed", $this->settings->webmaster_email, $this->settings->head_title." webshop");
 			$notification->message("Your order has been placed successfully.");
 
 			$notification->send($this->user->email, $this->user->fullname);

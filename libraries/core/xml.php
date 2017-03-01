@@ -1,10 +1,12 @@
 <?php
-	/* libraries/xml.php
+	/* libraries/core/xml.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
+
+	namespace Banshee\Core;
 
 	class XML {
 		const XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
@@ -188,7 +190,7 @@
 				if (in_array($key, $skip_tags, true)) {
 					continue;
 				}
-				
+
 				if (is_array($record[$key]) == false) {
 					$this->add_tag(is_numeric($key) ? "item" : $key, $record[$key]);
 				} else if ($recursive) {
@@ -296,8 +298,8 @@
 		 * ERROR:  false
 		 */
 		public function transform($xslt_file) {
-			$xslt = new domdocument;
-			$xml = new domdocument;
+			$xslt = new \domdocument;
+			$xml = new \domdocument;
 
 			if ((file_exists($xslt_file)) == false) {
 				return false;
@@ -309,7 +311,7 @@
 				return false;
 			}
 
-			$processor = new xsltprocessor();
+			$processor = new \xsltprocessor();
 			$processor->importstylesheet($xslt);
 
 			foreach ($this->xslt_parameters as $key => $value) {

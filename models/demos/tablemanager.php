@@ -1,5 +1,5 @@
 <?php
-	class demos_tablemanager_model extends tablemanager_model {
+	class demos_tablemanager_model extends Banshee\tablemanager_model {
 		protected $table = "dummy";
 		protected $elements = array(
 			"number" => array(

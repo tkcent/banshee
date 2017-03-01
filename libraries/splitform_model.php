@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class splitform_model extends model {
 		private $current = null;
 		private $values = null;

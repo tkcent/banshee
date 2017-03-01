@@ -42,7 +42,7 @@
 		}
 
 		$_page->select_module($next_page);
-		$_output->set_layout();
+		$_view->set_layout();
 		if ($_page->module != LOGIN_MODULE) {
 			if (file_exists($file = "../models/".$_page->module.".php")) {
 				include($file);
@@ -56,7 +56,7 @@
 			if (($result = $_database->execute($query, $_user->id, "read", NO)) !== false) {
 				$count = $result[0]["count"];
 				if ($count > 0) {
-					$_output->add_system_message("You have %d unread message(s) in your mailbox.", $count);
+					$_view->add_system_message("You have %d unread message(s) in your mailbox.", $count);
 				}
 			}
 		}

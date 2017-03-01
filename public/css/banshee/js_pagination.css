@@ -42,17 +42,17 @@ ul.simplePagerNav li a{
 
 li.currentPage {
 	background: red;
-    background: #FF9500;	
+    background: #FF9500;
 }
 
 ul.simplePagerNav li.currentPage a {
-	color: #fff;	
+	color: #fff;
 }
 
 table.pageme {
     border-collapse: collapse;
     border: 1px solid #ccc;
-}  
+}
 
 table.pageme td {
     border-collapse: collapse;

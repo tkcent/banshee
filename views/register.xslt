@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="banshee/main.xslt" />
+<xsl:import href="banshee/main.xslt" />
 
 <!--
 //
@@ -22,7 +22,7 @@
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Register" class="btn btn-default" />
-<a href="{@cancel}" class="btn btn-default">Cancel</a>
+<a href="/{@previous}" class="btn btn-default">Cancel</a>
 </div>
 </form>
 </xsl:template>

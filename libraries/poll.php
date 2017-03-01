@@ -6,22 +6,23 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class poll {
 		private $db = null;
-		private $output = null;
+		private $view = null;
 		private $settings = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object output
+		 * INPUT:  object database, object view, object settings
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $output) {
+		public function __construct($db, $view, $settings) {
 			$this->db = $db;
-			$this->output = $output;
-
-			$this->settings = new settings($this->db);
+			$this->view = $view;
+			$this->settings = $settings;
 		}
 
 		/* Get active poll
@@ -132,7 +133,7 @@
 		 * ERROR:  false
 		 */
 		public function to_output() {
-			$this->output->add_css("banshee/poll.css");
+			$this->view->add_css("banshee/poll.css");
 
 			if (($poll = $this->get_active_poll()) == false) {
 				return false;
@@ -141,9 +142,9 @@
 			$today = strtotime("today 00:00:00");
 			$poll_open = ($poll["end"] >= $today) && $this->user_may_vote($poll["id"]);
 
-			$this->output->open_tag("active_poll", array("can_vote" => show_boolean($poll_open)));
-			$this->output->add_tag("question", $poll["question"]);
-			$this->output->add_tag("end_date", date_string("d F", $poll["end"]));
+			$this->view->open_tag("active_poll", array("can_vote" => show_boolean($poll_open)));
+			$this->view->add_tag("question", $poll["question"]);
+			$this->view->add_tag("end_date", date_string("d F", $poll["end"]));
 
 			$query = "select * from poll_answers where poll_id=%d order by answer";
 			if (($answers = $this->db->execute($query, $poll["id"])) != false) {
@@ -154,21 +155,21 @@
 					}
 				}
 
-				$this->output->open_tag("answers", $poll_open ? array() : array("votes" => $votes));
+				$this->view->open_tag("answers", $poll_open ? array() : array("votes" => $votes));
 				$poll_id = 0;
 				foreach ($answers as $answer) {
 					if ($poll_open) {
-						$this->output->add_tag("answer", $answer["answer"], array("id" => $poll_id++));
+						$this->view->add_tag("answer", $answer["answer"], array("id" => $poll_id++));
 					} else {
 						unset($answer["poll_id"]);
 						$answer["percentage"] = ($votes > 0) ? round(100 * (int)$answer["votes"] / $votes) : 0;
-						$this->output->record($answer, "answer");
+						$this->view->record($answer, "answer");
 					}
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			return true;
 		}

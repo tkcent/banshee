@@ -1,9 +1,9 @@
 <?php
-	class demos_poll_controller extends controller {
+	class demos_poll_controller extends Banshee\controller {
 		public function execute() {
-			$this->output->title = "Poll demo";
+			$this->view->title = "Poll demo";
 
-			$poll = new poll($this->db, $this->output);
+			$poll = new Banshee\poll($this->db, $this->view, $this->settings);
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$poll->vote($_POST["vote"]);

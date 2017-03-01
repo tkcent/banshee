@@ -1,10 +1,10 @@
 <?php
-	class cms_webshop_order_controller extends controller {
+	class cms_webshop_order_controller extends Banshee\controller {
 		private function show_order_overview() {
-			$closed = $_SESSION["webshop_orders_closed"];
+			$closed = $_SESSION["admin_webshop_orders_closed"];
 
 			if (($order_count = $this->model->count_orders($closed)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
@@ -12,38 +12,38 @@
 			if ($closed) {
 				$paging_id .= "_closed";
 			}
-			$paging = new pagination($this->output, $paging_id, $this->settings->admin_page_size, $order_count);
+			$paging = new Banshee\pagination($this->view, $paging_id, $this->settings->admin_page_size, $order_count);
 
 			if (($orders = $this->model->get_orders($closed, $paging->offset, $paging->size)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("orders", array("currency" => WEBSHOP_CURRENCY, "closed" => show_boolean($closed)));
+			$this->view->open_tag("orders", array("currency" => WEBSHOP_CURRENCY, "closed" => show_boolean($closed)));
 			foreach ($orders as $order) {
 				$order["timestamp"] = date("j F Y, H:i:s", $order["timestamp"]);
-				$this->output->record($order, "order");
+				$this->view->record($order, "order");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_order($order_id) {
 			if (($order = $this->model->get_order($order_id)) == false) {
-				$this->output->add_tag("result", "Order not found.");
+				$this->view->add_tag("result", "Order not found.");
 				return;
 			}
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
 			$order["timestamp"] = date("j F Y, H:i:s", $order["timestamp"]);
 			$order["closed"] = show_boolean($order["closed"]);
-			$this->output->record($order, "order");
+			$this->view->record($order, "order");
 
 			$total = 0;
 			$count = 0;
@@ -52,28 +52,28 @@
 				$count += $article["quantity"];
 			}
 
-			$this->output->open_tag("articles", array(
+			$this->view->open_tag("articles", array(
 				"total"    => sprintf("%.2f", $total),
 				"quantity" => $count,
 				"currency" => WEBSHOP_CURRENCY));
 			foreach ($order["articles"] as $article) {
-				$this->output->record($article, "article");
+				$this->view->record($article, "article");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
-			if (isset($_SESSION["webshop_orders_closed"]) == false) {
-				$_SESSION["webshop_orders_closed"] = NO;
+			if (isset($_SESSION["admin_webshop_orders_closed"]) == false) {
+				$_SESSION["admin_webshop_orders_closed"] = NO;
 			}
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["submit_button"] == "type") {
 					/* Change overview type
 					 */
-					$_SESSION["webshop_orders_closed"] = is_true($_POST["type"]) ? YES : NO;
+					$_SESSION["admin_webshop_orders_closed"] = is_true($_POST["type"]) ? YES : NO;
 					$this->show_order_overview();
 				} else if (valid_input($_POST["id"], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
 					$this->show_order_overview();
@@ -81,7 +81,7 @@
 					/* Close order
 					 */
 					if ($this->model->close_order($_POST["id"]) == false) {
-						$this->output->add_message("Error while closing order.");
+						$this->view->add_message("Error while closing order.");
 						$this->show_order($_POST["id"]);
 					} else {
 						$this->user->log_action("order %d closed", $_POST["id"]);
@@ -91,7 +91,7 @@
 					/* Delete order
 					 */
 					if ($this->model->delete_order($_POST["id"]) == false) {
-						$this->output->add_message("Error while deleting order.");
+						$this->view->add_message("Error while deleting order.");
 						$this->show_order($_POST["id"]);
 					} else {
 						$this->user->log_action("order %d deleted", $_POST["id"]);

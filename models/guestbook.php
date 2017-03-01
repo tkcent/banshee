@@ -1,5 +1,5 @@
 <?php
-	class guestbook_model extends model {
+	class guestbook_model extends Banshee\model {
 		public function count_messages() {
 			$query = "select count(*) as count from guestbook";
 
@@ -21,17 +21,17 @@
 			$result = true;
 
 			if (trim($message["author"]) == "") {
-				$this->output->add_message("Please, fill in your name.");
+				$this->view->add_message("Please, fill in your name.");
 				$result = false;
 			}
 
 			if (trim($message["message"]) == "") {
-				$this->output->add_message("Please, leave a message.");
+				$this->view->add_message("Please, leave a message.");
 				$result = false;
 			} else {
-				$post = new message($message["message"]);
+				$post = new Banshee\message($message["message"]);
 				if ($post->is_spam) {
-					$this->output->add_message("Message seen as spam.");
+					$this->view->add_message("Message seen as spam.");
 					$result = false;
 				}
 			}
@@ -64,7 +64,7 @@
 
 			$guestbook_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module;
 
-			$email = new email("Guestbook message posted", $this->settings->webmaster_email);
+			$email = new Banshee\email("Guestbook message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
 				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/guestbook";

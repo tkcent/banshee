@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 
 <!--
@@ -8,9 +8,12 @@
 //
 //-->
 <xsl:template match="links">
-<ul class="links">
+<xsl:if test="@category!=''">
+<h2><xsl:value-of select="@category" /></h2>
+</xsl:if>
+<ul>
 <xsl:for-each select="link">
-<li><span class="text"><xsl:value-of select="." /></span><span class="link"><a href="{@url}" target="_blank"><xsl:value-of select="@url" /></a></span></li>
+<li><a href="{@url}" target="_blank"><xsl:value-of select="." /></a></li>
 </xsl:for-each>
 </ul>
 </xsl:template>

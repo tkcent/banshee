@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../banshee/main.xslt" />
+<xsl:import href="../banshee/main.xslt" />
 
 <!--
 //
@@ -19,12 +19,11 @@ Photo album: <select name="album" onChange="javascript:submit()">
 </form>
 </div>
 
-<div class="photos">
+<ul id="sortable" class="photos">
 <xsl:for-each select="photos/photo">
-<div><a href="/{/output/page}/{@id}"><img src="/photo/thumbnail_{@id}.{extension}" class="preview overview_{overview}" /></a><p><xsl:value-of select="title" /></p></div>
+<li id="p{@id}"><a href="/{/output/page}/{@id}"><img src="/photo/thumbnail_{@id}.{extension}" class="preview overview_{overview}" /></a><p><xsl:value-of select="title" /></p></li>
 </xsl:for-each>
-</div>
-<div style="clear:both"></div>
+</ul>
 
 <xsl:call-template name="show_messages" />
 <form action="/{/output/page}" method="post" enctype="multipart/form-data">

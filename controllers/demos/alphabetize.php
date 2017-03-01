@@ -1,14 +1,14 @@
 <?php
-	class demos_alphabetize_controller extends controller {
+	class demos_alphabetize_controller extends Banshee\controller {
 		public function execute() {
-			$alphabetize = new alphabetize($this->output, "demo");
+			$alphabetize = new Banshee\alphabetize($this->view, "demo");
 			$words = $this->model->get_words($alphabetize->char);
 
-			$this->output->open_tag("words");
+			$this->view->open_tag("words");
 			foreach ($words as $word) {
-				$this->output->add_tag("word", $word);
+				$this->view->add_tag("word", $word);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$alphabetize->show_browse_links();
 		}

@@ -6,12 +6,14 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class RSA {
 		private $private_key = null;
 		private $public_key = null;
 		private $bits = null;
 		private $type = null;
-		private $padding = OPENSSL_PKCS1_PADDING;
+		private $padding = OPENSSL_PKCS1_OAEP_PADDING;
 		private $max_length = null;
 
 		/* Constructor

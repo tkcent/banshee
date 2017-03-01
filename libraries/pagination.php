@@ -6,8 +6,10 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class pagination {
-		private $output = null;
+		private $view = null;
 		private $name = null;
 		private $page = 0;
 		private $max_page = null;
@@ -17,12 +19,12 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  object output, string name, int page size, int list size
+		 * INPUT:  object view, string name, int page size, int list size
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($output, $name, $page_size, $list_size) {
-			$this->output = $output;
+		public function __construct($view, $name, $page_size, $list_size) {
+			$this->view = $view;
 			$this->name = $name;
 			$this->page_size = $page_size;
 			$this->list_size = $list_size;
@@ -60,8 +62,6 @@
 					$this->page = $this->max_page;
 				}
 			}
-
-			#$this->output->add_css("banshee/pagination.css");
 		}
 
 		/* Magic method get
@@ -121,14 +121,14 @@
 
 			/* Generate XML for browse links
 			 */
-			$this->output->open_tag("pagination", array(
+			$this->view->open_tag("pagination", array(
 				"page" => $this->page,
 				"max"  => $this->max_page,
 				"step" => $step));
 			for ($page = $min; $page <= $max; $page++) {
-				$this->output->add_tag("page", $page);
+				$this->view->add_tag("page", $page);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			return true;
 		}

@@ -1,7 +1,7 @@
 <?php
 	require("../libraries/helpers/output.php");
 
-	class mailbox_model extends model {
+	class mailbox_model extends Banshee\model {
 		public function get_inbox() {
 			$query = "select m.id, m.from_user_id, m.subject, UNIX_TIMESTAMP(m.timestamp) as timestamp, m.read, u.fullname as user ".
 			         "from mailbox m, users u where m.from_user_id=u.id and m.to_user_id=%d and (m.deleted_by is null or m.deleted_by!=m.to_user_id) ".
@@ -56,17 +56,17 @@
 			$result = true;
 
 			if ($this->db->entry("users", $mail["to_user_id"]) == false) {
-				$this->output->add_message("Unknown recipient.");
+				$this->view->add_message("Unknown recipient.");
 				$result = false;
 			}
 
 			if (trim($mail["subject"]) == "") {
-				$this->output->add_message("Empty subject not allowed.");
+				$this->view->add_message("Empty subject not allowed.");
 				$result = false;
 			}
 
 			if (trim($mail["message"]) == "") {
-				$this->output->add_message("Empty message not allowed.");
+				$this->view->add_message("Empty message not allowed.");
 				$result = false;
 			}
 

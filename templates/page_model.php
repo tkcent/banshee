@@ -1,4 +1,4 @@
 <?php
-	class XXX_model extends model {
+	class XXX_model extends Banshee\model {
 	}
 ?>

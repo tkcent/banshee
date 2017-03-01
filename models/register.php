@@ -1,8 +1,18 @@
 <?php
-	class register_model extends model {
+	class register_model extends Banshee\model {
+		const ORGANISATION_ID = 1;
 		const MINIMUM_USERNAME_LENGTH = 4;
-		const MINIMUM_PASSWORD_LENGTH = 8;
 		const MINIMUM_FULLNAME_LENGTH = 4;
+
+		public function count_organisations() {
+			$query = "select count(*) as count from organisations";
+
+			if (($result = $this->db->execute($query)) === false) {
+				return false;
+			}
+
+			return (int)$result[0]["count"];
+		}
 
 		private function create_signature($data) {
 			return hash_hmac("sha256", json_encode($data), $this->settings->secret_website_code);
@@ -12,12 +22,12 @@
 			$result = true;
 
 			if ((strlen($data["username"]) < self::MINIMUM_USERNAME_LENGTH) || (valid_input($data["username"], VALIDATE_NONCAPITALS, VALIDATE_NONEMPTY) == false)) {
-				$this->output->add_message("Your username must consist of lowercase letters with a mimimum length of %d.", self::MINIMUM_USERNAME_LENGTH);
+				$this->view->add_message("Your username must consist of lowercase letters with a mimimum length of %d.", self::MINIMUM_USERNAME_LENGTH);
 				$result = false;
 			}
 
 			if (valid_email($data["email"]) == false) {
-				$this->output->add_message("Invalid e-mail address.");
+				$this->view->add_message("Invalid e-mail address.");
 				$result = false;
 			}
 
@@ -25,31 +35,30 @@
 				return false;
 			}
 
-			if (strlen($data["password"]) < self::MINIMUM_PASSWORD_LENGTH) {
-				$this->output->add_message("The length of your password must be equal or greater than %d.", self::MINIMUM_PASSWORD_LENGTH);
+			if (is_secure_password($data["password"], $this->view) == false) {
 				$result = false;
 			}
 
 			if (strlen($data["fullname"]) < self::MINIMUM_FULLNAME_LENGTH) {
-				$this->output->add_message("The length of your name must be equal or greater than %d.", self::MINIMUM_FULLNAME_LENGTH);
+				$this->view->add_message("The length of your name must be equal or greater than %d.", self::MINIMUM_FULLNAME_LENGTH);
 				$result = false;
 			}
 
 			$query = "select * from users where username=%s or email=%s";
 			if (($users = $this->db->execute($query, $data["username"], $data["email"])) === false) {
-				$this->output->add_message("Error while validating sign up.");
+				$this->view->add_message("Error while validating sign up.");
 				return false;
 			}
 
 			foreach ($users as $user) {
 				if ($user["username"] == $data["username"]) {
-					$this->output->add_message("This username is already taken.");
+					$this->view->add_message("The username is already taken.");
 					$result = false;
 				}
 
 				if ($data["email"] != "") {
 					if ($user["email"] == $data["email"]) {
-						$this->output->add_message("This e-mail address has already been used to register an account.");
+						$this->view->add_message("The e-mail address has already been used to register an account.");
 						$result = false;
 					}
 				}
@@ -69,12 +78,12 @@
 
 			$link = json_encode($data);
 
-			$aes = new AES256($this->settings->secret_website_code);
+			$aes = new Banshee\AES256($this->settings->secret_website_code);
 			if (($link = $aes->encrypt($link)) === false) {
 				return false;
 			}
 
-			$email = new email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
 				"HOSTNAME" => $_SERVER["SERVER_NAME"],
@@ -90,7 +99,7 @@
 		}
 
 		public function sign_up($data) {
-			$aes = new AES256($this->settings->secret_website_code);
+			$aes = new Banshee\AES256($this->settings->secret_website_code);
 			if (($data = $aes->decrypt($data)) === false) {
 				return false;
 			}
@@ -115,7 +124,7 @@
 
 			$user = array(
 				"id"                   => null,
-				"organisation_id"      => 1,
+				"organisation_id"      => self::ORGANISATION_ID,
 				"username"             => $data["username"],
 				"password"             => hash_password($data["password"], $data["username"]),
 				"one_time_key"         => null,
@@ -140,7 +149,7 @@
 				return false;
 			}
 
-			$email = new email("New account registered at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\email("New account registered at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
 				"EMAIL"    => $data["email"],

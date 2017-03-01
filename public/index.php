@@ -8,27 +8,23 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
-	ob_start();
-	require("../libraries/error.php");
-	require("../libraries/banshee.php");
-	require("../libraries/security.php");
+	namespace Banshee;
 
-	/* Abort on dangerous PHP settings
-	 */
-	check_PHP_setting("allow_url_include", 0);
-	check_PHP_setting("magic_quotes_gpc", 0);
-	check_PHP_setting("register_globals", 0);
+	ob_start();
+	require("../libraries/core/error.php");
+	require("../libraries/core/banshee.php");
+	require("../libraries/core/security.php");
 
 	/* Create core objects
 	 */
-	$_database = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
-	$_settings = new settings($_database);
-	$_session  = new session($_database, $_settings);
-	$_user     = new user($_database, $_settings, $_session);
-	$_page     = new page($_database, $_settings, $_user);
-	$_output   = new output($_database, $_settings, $_page);
+	$_database = new Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	$_settings = new Core\settings($_database);
+	$_session  = new Core\session($_database, $_settings);
+	$_user     = new Core\user($_database, $_settings, $_session);
+	$_page     = new Core\page($_database, $_settings, $_user);
+	$_view     = new Core\view($_database, $_settings, $_user, $_page);
 	if (is_true(MULTILINGUAL)) {
-		$_language = new language($_database, $_page, $_output);
+		$_language = new Core\language($_database, $_page, $_view);
 	}
 
 	/* Web Analytics
@@ -38,15 +34,11 @@
 		$analytics->execute();
 	}
 
-	/* Prevent Cross-Site Request Forgery
-	 */
-	prevent_csrf($_output, $_user);
-
 	/* User switch warning
 	 */
 	if (isset($_SESSION["user_switch"])) {
 		$real_user = $_database->entry("users", $_SESSION["user_switch"]);
-		$_output->add_system_warning("User switch active! Switched from '%s' to '%s'.", $real_user["fullname"], $_user->fullname);
+		$_view->add_system_warning("User switch active! Switched from '%s' to '%s'.", $real_user["fullname"], $_user->fullname);
 	}
 
 	/* Include the model
@@ -59,25 +51,25 @@
 		$model_class = str_replace("/", "_", $_page->module)."_model";
 		if (class_exists($model_class)) {
 			if (is_subclass_of($model_class, "api_model")) {
-				$_output->mode = API_OUTPUT_TYPE;
-				$_output->add_layout_data = false;
+				$_view->mode = API_OUTPUT_TYPE;
+				$_view->add_layout_data = false;
 			}
 		}
 	}
 
 	/* Add layout data to output XML
 	 */
-	$_output->open_tag("output");
+	$_view->open_tag("output");
 
-	if ($_output->add_layout_data) {
-		$_output->open_tag("banshee");
-		$_output->add_tag("version", BANSHEE_VERSION);
-		$_output->close_tag();
-		$_output->add_tag("website_url", $_SERVER["SERVER_NAME"]);
+	if ($_view->add_layout_data) {
+		$_view->open_tag("banshee");
+		$_view->add_tag("version", BANSHEE_VERSION);
+		$_view->close_tag();
+		$_view->add_tag("website_url", $_SERVER["SERVER_NAME"]);
 
 		/* Page information
 		 */
-		$_output->add_tag("page", $_page->page, array(
+		$_view->add_tag("page", $_page->page, array(
 			"base"     => $_SERVER["HTTP_SCHEME"]."://".$_SERVER["HTTP_HOST"],
 			"url"      => $_page->url,
 			"module"   => $_page->module,
@@ -88,7 +80,7 @@
 		 */
 		if ($_user->logged_in) {
 			$params = array("id" => $_user->id, "admin" => show_boolean($_user->is_admin));
-			$_output->add_tag("user", $_user->fullname, $params);
+			$_view->add_tag("user", $_user->fullname, $params);
 		}
 
 		/* Multilingual
@@ -102,27 +94,27 @@
 		if (($_SERVER["HTTPS"] != "on") && ($_SERVER["HTTP_SCHEME"] != "https")) {
 			$pages = array(LOGIN_MODULE, "register", "password");
 			if (in_array($_page->module, $pages) || (substr($_page->module, 0, 3) == "cms")) {
-				$_output->add_system_warning("Warning, the connection you are using is not secure!");
+				$_view->add_system_warning("Warning, the connection you are using is not secure!");
 			}
 		}
 
 		/* Main menu
 		 */
 		if (is_true(WEBSITE_ONLINE) || ($_SERVER["REMOTE_ADDR"] == WEBSITE_ONLINE)) {
-			if ((substr($_page->url, 0, 4) == "/cms") || ($_output->layout == LAYOUT_CMS)) {
+			if ((substr($_page->url, 0, 4) == "/cms") || ($_view->layout == LAYOUT_CMS)) {
 				/* CMS menu
 				 */
 				if (($_user->logged_in) && ($_page->page != "logout")) {
-					$_output->open_tag("menu");
-					$_output->record(array("link" => "/", "text" => "Website"), "item");
-					$_output->record(array("link" => "/cms", "text" => "CMS"), "item");
-					$_output->record(array("link" => "/logout", "text" => "Logout"), "item");
-					$_output->close_tag();
+					$_view->open_tag("menu");
+					$_view->record(array("link" => "/", "text" => "Website"), "item");
+					$_view->record(array("link" => "/cms", "text" => "CMS"), "item");
+					$_view->record(array("link" => "/logout", "text" => "Logout"), "item");
+					$_view->close_tag();
 				}
-			} else {
+			} else if ($_user->logged_in || is_false(HIDE_MENU_FOR_VISITORS)) {
 				/* Normal menu
 				 */
-				$menu = new menu($_database, $_output);
+				$menu = new menu($_database, $_view);
 				if (is_true(MENU_PERSONALIZED)) {
 					$menu->set_user($_user);
 				}
@@ -132,10 +124,10 @@
 
 		/* Add javascripts to output
 		 */
-		$_output->add_javascript("jquery/jquery.js");
-		$_output->add_javascript("banshee/bootstrap.js");
+		$_view->add_javascript("jquery/jquery.js");
+		$_view->add_javascript("banshee/bootstrap.js");
 
-		$_output->open_tag("content", array("mobile" => show_boolean($_output->mobile)));
+		$_view->open_tag("content", array("mobile" => show_boolean($_view->mobile)));
 	}
 
 	/* Include the controller
@@ -146,10 +138,10 @@
 		$controller_class = str_replace("/", "_", $_page->module)."_controller";
 		if (class_exists($controller_class) == false) {
 			print "Controller class '".$controller_class."' does not exist.\n";
-		} else if (is_subclass_of($controller_class, "controller") == false) {
-			print "Controller class '".$controller_class."' does not extend 'controller'.\n";
+		} else if (is_subclass_of($controller_class, "Banshee\\controller") == false) {
+			print "Controller class '".$controller_class."' does not extend Banshee's controller class.\n";
 		} else {
-			$_controller = new $controller_class($_database, $_settings, $_user, $_page, $_output, $_language);
+			$_controller = new $controller_class($_database, $_settings, $_user, $_page, $_view, $_language);
 			$method = "execute";
 
 			if (is_true(URL_PARAMETERS)) {
@@ -164,55 +156,54 @@
 			}
 			unset($_controller);
 
-			if ($_output->disabled) {
+			if ($_view->disabled) {
 				print ob_get_clean();
 				exit;
 			}
 
-			while ($_output->depth > 2) {
+			while ($_view->depth > 2) {
 				print "System error: controller didn't close an open tag.";
-				$_output->close_tag();
+				$_view->close_tag();
 			}
 		}
 	}
 
-	if ($_output->add_layout_data) {
+	if ($_view->add_layout_data) {
 		/* Prepend stylesheets to output
 		 */
-		$_output->add_css($_page->module.".css", true);
-		$_output->add_css("banshee/layout_".$_output->layout.".css", true);
-		$_output->add_css("banshee/bootstrap-theme.css", true);
-		$_output->add_css("banshee/bootstrap.css", true);
+		$_view->add_css($_page->module.".css", true);
+		$_view->add_css("banshee/layout_".$_view->layout.".css", true);
+		$_view->add_css("banshee/bootstrap-theme.css", true);
+		$_view->add_css("banshee/bootstrap.css", true);
 
-		$_output->close_tag();
+		$_view->close_tag();
 	}
 
 	/* Handle errors
 	 */
-	$errors = ob_get_contents();
-	ob_clean();
-
-	if ($errors != "") {
-		$error_handler = new website_error_handler($_output, $_settings, $_user);
+	if (($errors = ob_get_contents()) != "") {
+		$error_handler = new Core\website_error_handler($_view, $_settings, $_user);
 		$error_handler->execute($errors);
-		unset($error_handler);
 	}
+	ob_clean();
 
 	/* Close output
 	 */
-	$_output->close_tag();
+	$_view->close_tag();
 
 	/* Output content
 	 */
-	$output = $_output->generate();
-    if ((($last_errors = ob_get_clean()) != "") && ($_page->module != "setup")) {
+	$view = $_view->generate();
+	if ((($last_errors = ob_get_clean()) != "") && ($_page->module != "setup")) {
 		$last_errors = "Fatal errors:\n".$last_errors;
 
-		header_remove("Content-Encoding");
-		header("Content-Length: ".strlen($last_errors));
-		header("Content-Type: text/plain");
-		print $last_errors;
+		if (is_true(DEBUG_MODE)) {
+			header_remove("Content-Encoding");
+			header_remove("Content-Length");
+			header("Content-Type: text/html");
+		}
+		throw new \Exception($last_errors);
 	} else {
-		print $output;
+		print $view;
 	}
 ?>

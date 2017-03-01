@@ -3,7 +3,6 @@
 div.albums div.album {
 	margin:0 30px 20px 0;
 	width:280px;
-	float:left;
 }
 
 @media (max-width:767px) {
@@ -16,12 +15,15 @@ div.albums div.album div.name {
 	border-bottom:1px solid #ff0000;
 	width:100%;
 	margin-bottom:5px;
-	letter-spacing:1px;
+	letter-spacing:0.14em;
+	height:20px;
+	overflow:hidden;
+	white-space:nowrap;
 }
 
 div.albums div.album div.image {
 	width:100%;
-	height:140px;
+	height:130px;
 	overflow:hidden;
 	padding:0;
 	border-radius:0;
@@ -30,7 +32,7 @@ div.albums div.album div.image {
 
 div.albums div.album div.image img {
 	position:relative;
-	top:-40px;
+	top:-20px;
 	width:100%;
 }
 
@@ -55,15 +57,12 @@ div.albums div.album div.description {
 
 /* Photos
  */
-div.photos {
-	margin-bottom:15px;
+div.photos div.photo {
+	height:130px;
+	margin:0 10px;
+	float:left;
 }
 
-div.photos div.photo {
-	float:left;
-	height:120px;
-	width:120px;
-}
 div.photos div.photo img {
 	border:1px solid #000000;
 	padding:1px;
@@ -80,8 +79,15 @@ div.photos div.photo div.box {
 	background-color:#f0f0f0;
 }
 
-div.photos p span:first-child:after {
+div.info span:first-child {	
+	float:left;
+}
+div.info span:first-child:after {
 	content:"|";
 	margin:0 20px;
 	color:#a0a0a0;
+}
+div.info span:nth-child(2) {
+	display:block;
+	margin-left:125px;
 }

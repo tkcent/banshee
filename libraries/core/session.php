@@ -1,5 +1,5 @@
 <?php
-	/* libraries/session.php
+	/* libraries/core/session.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -8,7 +8,12 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
+	namespace Banshee\Core;
+
 	final class session {
+		const SESSION_NAME = "banshee_session_id";
+		const SESSION_LOGIN = "banshee_login_id";
+
 		private $db = null;
 		private $settings = null;
 		private $id = null;
@@ -54,9 +59,10 @@
 				return;
 			}
 
-			$session_data = array(
-				"content" => json_encode($_SESSION),
-				"expire"  => date("Y-m-d H:i:s", time() + $this->settings->session_timeout));
+			$session_data = array("content" => json_encode($_SESSION));
+			if ($this->settings->session_persistent == false) {
+				$session_data["expire"] = date("Y-m-d H:i:s", time() + $this->settings->session_timeout);
+			}
 
 			$this->db->update("sessions", $this->id, $session_data);
 
@@ -86,14 +92,14 @@
 		 * ERROR:  false
 		 */
 		private function start() {
-			if (isset($_COOKIE[SESSION_NAME]) == false) {
+			if (isset($_COOKIE[self::SESSION_NAME]) == false) {
 				/* New session
 				 */
 				return $this->new_session();
 			}
 
 			$query = "select * from sessions where session_id=%s";
-			if (($sessions = $this->db->execute($query, $_COOKIE[SESSION_NAME])) == false) {
+			if (($sessions = $this->db->execute($query, $_COOKIE[self::SESSION_NAME])) == false) {
 				/* Unknown session
 				 */
 				return $this->new_session();
@@ -111,7 +117,7 @@
 			}
 
 			if ($session["user_id"] !== null) {
-				if ($_COOKIE[SESSION_LOGIN] != $session["login_id"]) {
+				if ($_COOKIE[self::SESSION_LOGIN] != $session["login_id"]) {
 					$this->deny_session($session["user_id"]);
 					return false;
 				}
@@ -119,7 +125,7 @@
 			}
 
 			$this->id = (int)$session["id"];
-			$this->session_id = $_COOKIE[SESSION_NAME];
+			$this->session_id = $_COOKIE[self::SESSION_NAME];
 			$_SESSION = json_decode($session["content"], true);
 
 			return true;
@@ -152,7 +158,6 @@
 				}
 
 				$session_data["session_id"] = hash("sha512", random_string(128));
-
 				$result = $this->db->insert("sessions", $session_data);
 			} while ($result == false);
 
@@ -160,8 +165,8 @@
 			$this->session_id = $session_data["session_id"];
 
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
-			setcookie(SESSION_NAME, $this->session_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
-			$_COOKIE[SESSION_NAME] = $this->session_id;
+			setcookie(self::SESSION_NAME, $this->session_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
+			$_COOKIE[self::SESSION_NAME] = $this->session_id;
 
 			return true;
 		}
@@ -184,7 +189,7 @@
 			$_POST = array();
 			$_COOKIE = array();
 
-			$logfile = new logfile("actions");
+			$logfile = new \Banshee\logfile("actions");
 			$logfile->user_id = $user_id;
 			$logfile->add_entry("session hijack attempt");
 
@@ -205,9 +210,8 @@
 			}
 
 			$login_id = hash("sha512", random_string(128));
-
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
-			setcookie(SESSION_LOGIN, $login_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
+			setcookie(self::SESSION_LOGIN, $login_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
 
 			$user_data = array(
 				"user_id"    => (int)$user_id,

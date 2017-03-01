@@ -8,12 +8,12 @@
 	 */
 
 	chdir(__DIR__);
-	require("libraries/banshee.php");
+	require("libraries/core/banshee.php");
 	require("libraries/helpers/console.php");
 
 	print "Remove Banshee Module\n\n";
 
-	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 
 	$banshee_modules = array(
 		"agenda" => array(
@@ -52,8 +52,9 @@
 			"tables"      => array("guestbook"),
 			"settings"    => array("guestbook\_%")),
 		"links" => array(
-			"pages"       => array("links", "cms/links"),
-			"tables"      => array("links")),
+			"pages"       => array("links", "cms/link", "cms/link/category"),
+			"tables"      => array("links", "link_categories"),
+			"directories" => array("cms/link")),
 		"mailbox" => array(
 			"pages"       => array("mailbox"),
 			"tables"      => array("mailbox")),
@@ -137,7 +138,7 @@
 			}
 		}
 		print "\n";
-		
+
 		return;
 	}
 
@@ -229,7 +230,7 @@
 		if (isset($module["directories"])) {
 			foreach ($locations as $paths) {
 				foreach ($paths as $path) {
-					foreach ($module["directories"] as $directory) {	
+					foreach ($module["directories"] as $directory) {
 						$directory = $path."/".$directory;
 						printf("Deleting directory %s.\n", $directory);
 						if (file_exists($directory)) {

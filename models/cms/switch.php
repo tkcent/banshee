@@ -1,5 +1,5 @@
 <?php
-	class cms_switch_model extends model {
+	class cms_switch_model extends Banshee\model {
 		public function get_user($user_id) {
 			return $this->db->entry("users", $user_id);
 		}

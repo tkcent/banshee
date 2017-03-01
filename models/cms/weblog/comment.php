@@ -1,5 +1,5 @@
 <?php
-	class cms_weblog_comment_model extends tablemanager_model {
+	class cms_weblog_comment_model extends Banshee\tablemanager_model {
 		protected $table = "weblog_comments";
 		protected $order = "id";
 		protected $desc_order = true;

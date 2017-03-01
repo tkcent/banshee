@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class NMA {
 		const NMA_SERVER = "www.notifymyandroid.com";
 

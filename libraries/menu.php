@@ -6,22 +6,24 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class menu {
 		private $db = null;
-		private $output = null;
+		private $view = null;
 		private $parent_id = 0;
 		private $depth = 1;
 		private $user = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object output
+		 * INPUT:  object database, object view
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $output) {
+		public function __construct($db, $view) {
 			$this->db = $db;
-			$this->output = $output;
+			$this->view = $view;
 		}
 
 		/* Set menu start point
@@ -117,23 +119,23 @@
 				return;
 			}
 
-			$this->output->open_tag("menu", array("id" => $menu["id"]));
+			$this->view->open_tag("menu", array("id" => $menu["id"]));
 			foreach ($menu["items"] as $item) {
 				$args = array("id" => $item["id"]);
 				if (isset($item["current"])) {
 					$args["current"] = $item["current"];
 				}
 
-				$this->output->open_tag("item", $args);
-				$this->output->add_tag("link", $item["link"]);
-				$this->output->add_tag("text", $item["text"]);
-				$this->output->add_tag("class", str_replace("/", "_", substr($item["link"], 1)));
+				$this->view->open_tag("item", $args);
+				$this->view->add_tag("link", $item["link"]);
+				$this->view->add_tag("text", $item["text"]);
+				$this->view->add_tag("class", str_replace("/", "_", substr($item["link"], 1)));
 				if (isset($item["submenu"])) {
 					$this->show_menu($item["submenu"]);
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		/* Appent menu to XML output
@@ -150,7 +152,7 @@
 			if ($this->user !== null) {
 				/* Create user specific menu
 				 */
-				$cache = new cache($this->db, "banshee_menu");
+				$cache = new Core\cache($this->db, "banshee_menu");
 				if ($cache->last_updated === null) {
 					$cache->store("last_updated", time(), 365 * DAY);
 				}
@@ -183,14 +185,14 @@
 			} else if ($this->depth > 1) {
 				/* Create cached generic menu
 				 */
-				if ($this->output->fetch_from_cache("banshee_menu") == false) {
+				if ($this->view->fetch_from_cache("banshee_menu") == false) {
 					if (($menu = $this->get_menu($this->parent_id, $this->depth, $current_url)) === false) {
 						return false;
 					}
 
-					$this->output->start_caching("banshee_menu");
+					$this->view->start_caching("banshee_menu");
 					$this->show_menu($menu);
-					$this->output->stop_caching();
+					$this->view->stop_caching();
 				}
 			} else {
 				/* Create generic menu

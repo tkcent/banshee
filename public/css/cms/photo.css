@@ -1,15 +1,21 @@
-div.photos {
-	margin-top:20px;
+ul.photos {
+	margin:20px 0 40px 0;
+	padding:0;
+	list-style-type:none;
 }
 
-div.photos div {
-	float:left;
+ul.photos li {
+	display:inline-block;
+	vertical-align:top;
 	padding:0 20px 0 0;
 	height:130px;
 }
 
-div.photos div p {
+ul.photos li p {
 	width:120px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 img.preview {

@@ -1,9 +1,16 @@
-function enable_new() {
-	document.getElementById("input_new").style.display = 'block';
-	document.getElementById("input_existing").style.display = 'none';
-}
+$(document).ready(function() {
+	set_section_type();
+});
 
-function enable_existing() {
-	document.getElementById("input_new").style.display = 'none';
-	document.getElementById("input_existing").style.display = 'block';
+function set_section_type() {
+	var type = $('input[name=select]:checked').val();
+	if (type == 'new') {
+		$('input#input_new').show();
+		$('select#input_existing').hide();
+	} else if (type == 'existing') {
+		$('input#input_new').hide();
+		$('select#input_existing').show();
+	} else {
+		alert('Internal error!');
+	}
 }

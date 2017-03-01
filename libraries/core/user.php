@@ -1,5 +1,5 @@
 <?php
-	/* libraries/user.php
+	/* libraries/core/user.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -7,6 +7,8 @@
 	 *
 	 * Don't change this file, unless you know what you are doing.
 	 */
+
+	namespace Banshee\Core;
 
 	final class user {
 		private $db = null;
@@ -121,19 +123,19 @@
 			}
 			$user = $data[0];
 
-			usleep(rand(0, 10000));
-
 			if (is_false(USE_AUTHENTICATOR)) {
 				$auth_code_ok = true;
 			} else if ($user["authenticator_secret"] === null) {
 				$auth_code_ok = true;
 			} else {
-				$authenticator = new authenticator;
+				$authenticator = new \Banshee\authenticator;
 				$auth_code_ok = $authenticator->verify_code($user["authenticator_secret"], $code);
 			}
 
-			if (($user["password"] === hash_password($password, $username)) && $auth_code_ok) {
-				$this->login((int)$user["id"]);
+			if (strlen($password) <= PASSWORD_MAX_LENGTH) {
+				if (hash_equals($user["password"], hash_password($password, $username)) && $auth_code_ok) {
+					$this->login((int)$user["id"]);
+				}
 			}
 
 			if ($this->logged_in == false) {
@@ -155,7 +157,7 @@
 				return false;
 			}
 
-			usleep(rand(0, 100000));
+			usleep(rand(0, 10000));
 
 			$query = "select * from users where one_time_key=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $key, USER_STATUS_DISABLED)) == false) {
@@ -247,7 +249,7 @@
 
 			/* Cached?
 			 */
-			if (isset($access[$page])) {	
+			if (isset($access[$page])) {
 				return $access[$page];
 			}
 
@@ -316,7 +318,7 @@
 			static $logfile = null;
 
 			if ($logfile === null) {
-				$logfile = new logfile("actions");
+				$logfile = new \Banshee\logfile("actions");
 			}
 
 			if ($this->logged_in == false) {

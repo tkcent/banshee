@@ -5,7 +5,7 @@
 <ul class="pagination pagination-sm">
 <xsl:for-each select="char">
 <xsl:choose>
-    <xsl:when test="@link=../@char">
+	<xsl:when test="@link=../@char">
 		<li class="disabled"><a href="#"><xsl:value-of select="." /></a></li>
 	</xsl:when>
 	<xsl:otherwise>

@@ -1,14 +1,14 @@
 <?php
-	class cms_poll_controller extends controller {
+	class cms_poll_controller extends Banshee\controller {
 		private function show_poll_overview() {
 			if (($polls = $this->model->get_polls()) === false) {
-				$this->output->add_tag("result", "Database error");
+				$this->view->add_tag("result", "Database error");
 			} else {
 				$today = strtotime("today 00:00:00");
 
-				$this->output->open_tag("overview");
+				$this->view->open_tag("overview");
 
-				$this->output->open_tag("polls");
+				$this->view->open_tag("polls");
 				foreach ($polls as $poll) {
 					$edit = $poll["begin"] > $today;
 					$args = array("edit" => show_boolean($edit));
@@ -17,11 +17,11 @@
 					}
 					$poll["begin"] = date("j F Y", $poll["begin"]);
 					$poll["end"] = date("j F Y", $poll["end"]);
-					$this->output->record($poll, "poll", $args);
+					$this->view->record($poll, "poll", $args);
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 		}
 
@@ -32,29 +32,29 @@
 				$params = array("id" => $poll["id"]);
 			}
 
-			$this->output->add_javascript("jquery/jquery-ui.js");
-			$this->output->add_javascript("banshee/datepicker.js");
+			$this->view->add_javascript("jquery/jquery-ui.js");
+			$this->view->add_javascript("banshee/datepicker.js");
 
-			$this->output->add_css("jquery/jquery-ui.css");
+			$this->view->add_css("jquery/jquery-ui.css");
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
-			$this->output->open_tag("poll", $params);
-			$this->output->add_tag("question", $poll["question"]);
-			$this->output->add_tag("begin", $poll["begin"]);
-			$this->output->add_tag("begin_show", date("j F Y", strtotime($poll["begin"])));
-			$this->output->add_tag("end", $poll["end"]);
-			$this->output->add_tag("end_show", date("j F Y", strtotime($poll["end"])));
+			$this->view->open_tag("poll", $params);
+			$this->view->add_tag("question", $poll["question"]);
+			$this->view->add_tag("begin", $poll["begin"]);
+			$this->view->add_tag("begin_show", date("j F Y", strtotime($poll["begin"])));
+			$this->view->add_tag("end", $poll["end"]);
+			$this->view->add_tag("end_show", date("j F Y", strtotime($poll["end"])));
 
-			$this->output->open_tag("answers");
+			$this->view->open_tag("answers");
 			for ($i = 0; $i < $this->settings->poll_max_answers; $i++) {
-				$this->output->add_tag("answer", $poll["answers"][$i], array("nr" => $i + 1));
+				$this->view->add_tag("answer", $poll["answers"][$i], array("nr" => $i + 1));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -69,7 +69,7 @@
 							/* Create poll
 							 */
 							if ($this->model->create_poll($_POST) == false) {
-								$this->output->add_message("Error while creating poll.");
+								$this->view->add_message("Error while creating poll.");
 								$this->show_poll_form($_POST);
 							} else {
 								$this->user->log_action("poll %d created", $this->db->last_insert_id);
@@ -79,7 +79,7 @@
 							/* Update poll
 							 */
 							if ($this->model->update_poll($_POST) == false) {
-								$this->output->add_message("Error while updating poll.");
+								$this->view->add_message("Error while updating poll.");
 								$this->show_poll_form($_POST);
 							} else {
 								$this->user->log_action("poll %d updated", $_POST["id"]);
@@ -92,7 +92,7 @@
 					/* Delete poll
 					 */
 					if ($this->model->delete_poll($_POST["id"]) == false) {
-						$this->output->add_system_warming("Error while deleting poll.");
+						$this->view->add_system_warming("Error while deleting poll.");
 					} else {
 						$this->user->log_action("poll %d deleted", $_POST["id"]);
 					}
@@ -101,7 +101,7 @@
 					/* Close poll
 					 */
 					if ($this->model->close_poll($_POST["id"]) == false) {
-						$this->output->add_system_warning("Error while closing poll.");
+						$this->view->add_system_warning("Error while closing poll.");
 					} else {
 						$this->user->log_action("poll %d closed", $_POST["id"]);
 					}
@@ -113,7 +113,7 @@
 				/* Edit existing poll
 				 */
 				if (($poll = $this->model->get_poll($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Poll not found or not available for editing.");
+					$this->view->add_tag("result", "Poll not found or not available for editing.");
 				} else {
 					$this->show_poll_form($poll);
 				}

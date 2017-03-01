@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="alphabetize.xslt" />
-<xsl:include href="pagination.xslt" />
+<xsl:import href="alphabetize.xslt" />
+<xsl:import href="pagination.xslt" />
 
 <!--
 //
@@ -11,11 +11,14 @@
 <xsl:template match="overview">
 <xsl:if test="search">
 <form action="" method="post" class="search">
-<div class="input-group search">
+<div class="search">
+<div>
+<xsl:if test="search!=''"><xsl:attribute name="class">input-group</xsl:attribute></xsl:if>
 <input type="text" id="search" name="search" value="{search}" placeholder="Search" class="form-control" />
 <xsl:if test="search!=''">
 <span class="input-group-btn"><input type="button" name="submit_button" value="X" class="btn btn-default reset" onClick="$('input#search').val(''); $('form.search').submit();" /></span>
 </xsl:if>
+</div>
 </div>
 <input type="hidden" name="submit_button" value="Search" />
 </form>

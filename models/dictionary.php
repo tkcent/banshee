@@ -1,5 +1,5 @@
 <?php
-	class dictionary_model extends model {
+	class dictionary_model extends Banshee\model {
 		public function get_first_letters() {
 			$query = "select distinct lower(substring(word, 1, 1)) as %S from dictionary order by %S";
 

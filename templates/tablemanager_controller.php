@@ -1,5 +1,5 @@
 <?php
-	class XXX_controller extends tablemanager_controller {
+	class XXX_controller extends Banshee\tablemanager_controller {
 		protected $name = "Table";
 		protected $pathinfo_offset = 1;
 		protected $back = null;

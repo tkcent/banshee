@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Database;
+
 	class MySQL_PDO_connection extends PDO_connection {
 		protected $type = "mysql";
 		protected $id_delim = "`";
@@ -18,7 +20,7 @@
 			call_user_func_array(array("parent", "__construct"), $args);
 
 			if ($this->link !== null) {
-				$this->query("set names %s", "utf8");
+				$this->link->set_charset("utf8");
 			}
 		}
 	}

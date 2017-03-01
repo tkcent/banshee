@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="banshee/main.xslt" />
+<xsl:import href="banshee/main.xslt" />
 
 <!--
 //
@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <xsl:for-each select="session">
-<tr onClick="javascript:document.location='/session/{@id}'"><xsl:if test="@owner='yes'"><xsl:attribute name="class">info</xsl:attribute></xsl:if>
+<tr onClick="javascript:document.location='/session/{@id}'"><xsl:if test="@owner='yes'"><xsl:attribute name="class">warning</xsl:attribute></xsl:if>
 <td><xsl:value-of select="ip_address" /></td>
 <td><xsl:value-of select="expire" /></td>
 <td><xsl:value-of select="bind_to_ip" /></td>
@@ -37,10 +37,10 @@
 
 <label for="name">Name:</label>
 <input type="text" id="name" name="name" value="{session/name}" class="form-control" />
-<label for="ipaddr">IP address:</label>
-<input id="ipaddr" class="form-control" disabled="disabled" value="{session/ip_address}" />
+<xsl:if test="@persistent='yes'">
 <label for="expire">Expire date:</label>
-<input id="expire" class="form-control" disabled="disabled" value="{session/expire}" />
+<input type="text" id="expire" name="expire" value="{session/expire}" class="form-control datetimepicker" />
+</xsl:if>
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Update session" class="btn btn-default" />

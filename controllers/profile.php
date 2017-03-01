@@ -1,58 +1,63 @@
 <?php
-	class profile_controller extends controller {
+	class profile_controller extends Banshee\controller {
 		private function show_profile_form($profile) {
-			$this->output->add_javascript("profile.js");
+			$this->view->open_tag("edit");
 
-			$this->output->open_tag("edit");
-
-			$this->output->add_tag("username", $this->user->username);
-			$this->output->add_tag("fullname", $profile["fullname"]);
-			$this->output->add_tag("email", $profile["email"]);
+			$this->view->add_tag("username", $this->user->username);
+			$this->view->add_tag("fullname", $profile["fullname"]);
+			$this->view->add_tag("email", $profile["email"]);
 			if ($this->user->status == USER_STATUS_CHANGEPWD) {
-				$this->output->add_tag("cancel", "Logout", array("url" => "/".LOGOUT_MODULE));
+				$this->view->add_tag("cancel", "Logout", array("previous" => LOGOUT_MODULE));
 			} else {
-				$this->output->add_tag("cancel", "Back", array("url" => cancel_url()));
+				$this->view->add_tag("cancel", "Back", array("previous" => $this->page->previous));
 			}
 
 			/* Action log
 			 */
 			if (($actionlog = $this->model->last_account_logs()) !== false) {
-				$this->output->open_tag("actionlog");
+				$this->view->open_tag("actionlog");
 				foreach ($actionlog as $log) {
-					$this->output->record($log, "log");
+					$this->view->record($log, "log");
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
 			if ($this->user->logged_in == false) {
-				$this->output->add_tag("result", "You are not logged in!", array("url" => ""));
+				$this->view->add_tag("result", "You are not logged in!", array("url" => $this->settings->start_page));
 				return;
 			}
 
-			$this->output->description = "Profile";
-			$this->output->keywords = "profile";
-			$this->output->title = "Profile";
+			$this->view->description = "Profile";
+			$this->view->keywords = "profile";
+			$this->view->title = "Profile";
 
 			if ($this->user->status == USER_STATUS_CHANGEPWD) {
-				$this->output->add_message("Please, change your password.");
+				$this->view->add_message("Please, change your password.");
+			}
+
+			if (isset($_SESSION["profile_next"]) == false) {
+				if ($this->page->pathinfo[0] == "profile") {
+					$_SESSION["profile_next"] = $this->settings->start_page;
+				} else {
+					$_SESSION["profile_next"] = substr($_SERVER["REQUEST_URI"], 1);
+				}
 			}
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				/* Update profile
 				 */
-				$_POST["hashed"] = hash_password($_POST["password"], $this->user->username);
-
 				if ($this->model->profile_oke($_POST) == false) {
 					$this->show_profile_form($_POST);
 				} else if ($this->model->update_profile($_POST) === false) {
-					$this->output->add_tag("result", "Error while updating profile.", array("url" => "profile"));
+					$this->view->add_tag("result", "Error while updating profile.", array("url" => "profile"));
 				} else {
-					$this->output->add_tag("result", "Profile has been updated.", array("url" => $this->settings->start_page));
+					$this->view->add_tag("result", "Profile has been updated.", array("url" => $_SESSION["profile_next"]));
 					$this->user->log_action("profile updated");
+					unset($_SESSION["profile_next"]);
 				}
 			} else {
 				$user = array(

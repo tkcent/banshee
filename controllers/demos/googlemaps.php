@@ -1,10 +1,10 @@
 <?php
-	class demos_googlemaps_controller extends controller {
+	class demos_googlemaps_controller extends Banshee\controller {
 		private $origin = "Amsterdam, NL";
 		private $destination = "Paris, FR";
 
 		private function show_static_map() {
-			$google_map = new Google_Maps($this->db);
+			$google_map = new Banshee\Google_Maps($this->db);
 
 			$google_map->add_route($this->origin, $this->destination);
 
@@ -14,9 +14,8 @@
 
 			$google_map->set_visibility("Stuttgart, DE");
 
+			$this->view->disable();
 			$google_map->show_static_map(640, 350);
-
-			$this->output->disable();
 		}
 
 		public function execute() {
@@ -25,7 +24,7 @@
 				return;
 			}
 
-			$google_map = new Google_Maps($this->db);
+			$google_map = new Banshee\Google_Maps($this->db);
 
 			$google_map->add_route($this->origin, $this->destination);
 			$steps = $google_map->route_description;
@@ -35,20 +34,20 @@
 			$hours = $duration / 3600;
 			$minutes = ($duration % 3600) / 60;
 
-			$this->output->open_tag("route");
+			$this->view->open_tag("route");
 
-			$this->output->add_tag("origin", $this->origin);
-			$this->output->add_tag("destination", $this->destination);
-			$this->output->add_tag("distance", sprintf("%2.1f km", $distance / 1000));
-			$this->output->add_tag("duration", sprintf("%d:%2d", $hours, $minutes));
+			$this->view->add_tag("origin", $this->origin);
+			$this->view->add_tag("destination", $this->destination);
+			$this->view->add_tag("distance", sprintf("%2.1f km", $distance / 1000));
+			$this->view->add_tag("duration", sprintf("%d:%2d", $hours, $minutes));
 
 			foreach ($steps as $step) {
-				$this->output->add_tag("step", $step["description"], array(
+				$this->view->add_tag("step", $step["description"], array(
 					"distance" => $step["distance"],
 					"duration" => $step["duration"]));
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 	}
 ?>

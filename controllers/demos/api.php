@@ -1,14 +1,15 @@
 <?php
-	class demos_api_controller extends api_controller {
+	class demos_api_controller extends Banshee\api_controller {
 		public function get() {
-			$this->output->add_tag("demo", "api");
+			$this->view->add_tag("demo", "api");
 		}
 
 		public function get_0() {
-			$this->output->add_tag("demo", "test");
+			$this->view->add_tag("demo", "test");
 		}
 
 		public function post() {
+			$this->view->add_tag("result", "Hello ".$_POST["name"]);
 		}
 	}
 ?>

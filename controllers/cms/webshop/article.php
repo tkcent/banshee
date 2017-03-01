@@ -1,49 +1,49 @@
 <?php
-	class cms_webshop_article_controller extends controller {
+	class cms_webshop_article_controller extends Banshee\controller {
 		private function show_overview() {
 			if (($article_count = $this->model->count_articles()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$paging = new pagination($this->output, "articles", $this->settings->admin_page_size, $article_count);
+			$paging = new Banshee\pagination($this->view, "articles", $this->settings->admin_page_size, $article_count);
 
 			if (($articles = $this->model->get_articles($paging->offset, $paging->size)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("articles", array("currency" => WEBSHOP_CURRENCY));
+			$this->view->open_tag("articles", array("currency" => WEBSHOP_CURRENCY));
 			foreach ($articles as $article) {
-				$this->output->record($article, "article");
+				$this->view->record($article, "article");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_article_form($article) {
 			if (($categories = $this->model->get_categories()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return false;
 			}
 
-			$this->output->open_tag("edit", array("currency" => WEBSHOP_CURRENCY));
+			$this->view->open_tag("edit", array("currency" => WEBSHOP_CURRENCY));
 
 			$article["visible"] = show_boolean($article["visible"]);
-			$this->output->record($article, "article");
+			$this->view->record($article, "article");
 
-			$this->output->open_tag("categories");
+			$this->view->open_tag("categories");
 			foreach ($categories as $category) {
-				$this->output->add_tag("category", $category["name"], array("id" => $category["id"]));
+				$this->view->add_tag("category", $category["name"], array("id" => $category["id"]));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -61,7 +61,7 @@
 						/* Create article
 						 */
 						if ($this->model->create_article($_POST) === false) {
-							$this->output->add_message("Error creating article.");
+							$this->view->add_message("Error creating article.");
 							$this->show_article_form($_POST);
 						} else {
 							$this->user->log_action("article created");
@@ -71,7 +71,7 @@
 						/* Update article
 						 */
 						if ($this->model->update_article($_POST) === false) {
-							$this->output->add_message("Error updating article.");
+							$this->view->add_message("Error updating article.");
 							$this->show_article_form($_POST);
 						} else {
 							$this->user->log_action("article updated");
@@ -84,7 +84,7 @@
 					if ($this->model->delete_oke($_POST) == false) {
 						$this->show_article_form($_POST);
 					} else if ($this->model->delete_article($_POST["id"]) === false) {
-						$this->output->add_message("Error deleting article.");
+						$this->view->add_message("Error deleting article.");
 						$this->show_article_form($_POST);
 					} else {
 						$this->user->log_action("article deleted");
@@ -107,7 +107,7 @@
 				/* Edit article
 				 */
 				if (($article = $this->model->get_article($this->page->pathinfo[3])) === false) {
-					$this->output->add_tag("result", "article not found.\n");
+					$this->view->add_tag("result", "article not found.\n");
 				} else {
 					$this->show_article_form($article);
 				}

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../banshee/main.xslt" />
+<xsl:import href="../banshee/main.xslt" />
 
 <!--
 //
@@ -45,6 +45,14 @@
 	<xsl:attribute name="disabled">disabled</xsl:attribute>
 </xsl:if>
 </input>
+<div>Allow for non-admins: <input type="checkbox" name="non_admins">
+<xsl:if test="role/@non_admins='yes'">
+	<xsl:attribute name="checked">checked</xsl:attribute>
+</xsl:if>
+<xsl:if test="role/@editable='no'">
+	<xsl:attribute name="disabled">disabled</xsl:attribute>
+</xsl:if>
+</input></div>
 
 <xsl:for-each select="pages/page">
 	<div class="role">

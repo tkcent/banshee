@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class email {
 		protected $to = array();
 		protected $cc = array();
@@ -43,21 +45,19 @@
 		* ERROR:  -
 		*/
 		public static function valid_address($email) {
-			$forbidden = array("10minutemail.com", "burnthespam.info", "deadaddress.com", "e4ward.com",
-				"eyepaste.com", "armyspy.com", "cuvox.de", "dayrep.com", "einrot.com", "fleckens.hu",
-				"gustr.com", "jourrapide.com", "rhyta.com", "superrito.com", "teleworm.us", "filzmail.com",
-				"getairmail.com", "gishpuppy.com", "guerrillamail.com", "incognitomail.org", "jetable.org",
-				"mailcatch.com", "mailexpire.com", "mailinator.com", "mailmoat.com", "meltmail.com",
-				"trbvm.com", "temp-mail.org", "mt2014.com", "mytrashmail.com", "trashymail.com",
-				"no-spam.ws", "onewaymail.com", "shitmail.org", "crapmail.org", "spambox.us",
-				"spamgourmet.com", "tempemail.net", "yopmail.com");
+			$forbidden = array("10minutemail.com", "e4ward.com", "eyepaste.com", "armyspy.com",
+				"cuvox.de", "dayrep.com", "einrot.com", "fleckens.hu", "gustr.com", "jourrapide.com",
+				"rhyta.com", "superrito.com", "teleworm.us", "getairmail.com", "gishpuppy.com",
+				"guerrillamail.com", "jetable.org", "mailcatch.com", "mailinator.com", "mailmoat.com",
+				"temp-mail.org", "mt2015.com", "no-spam.ws", "onewaymail.com", "shitmail.org",
+				"crapmail.org", "spamgourmet.com", "tempemail.net", "yopmail.com");
 
 			list(, $domain) = explode("@", $email, 2);
 			if (in_array(strtolower($domain), $forbidden)) {
 				return false;
 			}
 
-			return preg_match("/^[0-9A-Za-z]([-_.~]?[0-9A-Za-z])*@[0-9A-Za-z]([-.]?[0-9A-Za-z])*\\.[A-Za-z]{2,4}$/", $email) === 1;
+			return preg_match("/^[0-9A-Za-z]([-+_.~]?[0-9A-Za-z])*@[0-9A-Za-z]([-.]?[0-9A-Za-z])*\\.[A-Za-z]{2,4}$/", $email) === 1;
 		}
 
 		/* Combine name and e-mail address
@@ -416,7 +416,7 @@
 
 				/* Add attachments
 				 */
-				$format .= 
+				$format .=
 					"--%s\n".
 					"Content-Disposition: attachment;\n".
 					"\tfilename=\"%s\"\n".
@@ -460,14 +460,6 @@
 			 */
 			if (count($this->bcc) > 0) {
 				array_push($headers, "BCC: ".implode(", ", $this->bcc));
-			}
-
-			/* Secure mail headers
-			 */
-			foreach ($headers as &$header) {
-				$header = str_replace("\n", "", $header);
-				$header = str_replace("\r", "", $header);
-				unset($header);
 			}
 
 			/* Send the e-mail

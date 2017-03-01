@@ -1,29 +1,31 @@
 <?php
-	/* libraries/language.php
+	/* libraries/core/language.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Core;
+
 	class language {
 		private $db = null;
 		private $page = null;
-		private $output = null;
+		private $view = null;
 		private $global_texts = array();
 		private $page_texts = array();
 		private $supported = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object output, object page, string language
+		 * INPUT:  object database, object page, object view
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $page, $output) {
+		public function __construct($db, $page, $view) {
 			$this->db = $db;
 			$this->page = $page;
-			$this->output = $output;
+			$this->view = $view;
 
 			$this->supported = config_array(SUPPORTED_LANGUAGES);
 
@@ -55,7 +57,7 @@
 			$result = array();
 
 			$query = "select name,%S as content from languages where page=%s";
-			if (($messages = $this->db->execute($query, $this->output->language, $page)) != false) {
+			if (($messages = $this->db->execute($query, $this->view->language, $page)) != false) {
 				foreach ($messages as $message) {
 					$result[$message["name"]] = $message["content"];
 				}
@@ -99,21 +101,21 @@
 		 * ERROR:  -
 		 */
 		public function to_output() {
-			$this->output->open_tag("language", array("code" => $this->output->language));
+			$this->view->open_tag("language", array("code" => $this->view->language));
 
-			$this->output->open_tag("global");
+			$this->view->open_tag("global");
 			foreach ($this->global_texts as $name => $content) {
-				$this->output->add_tag($name, $content);
+				$this->view->add_tag($name, $content);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->open_tag("page");
+			$this->view->open_tag("page");
 			foreach ($this->page_texts as $name => $content) {
-				$this->output->add_tag($name, $content);
+				$this->view->add_tag($name, $content);
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 	}
 ?>

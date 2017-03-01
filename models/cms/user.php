@@ -1,5 +1,5 @@
 <?php
-	class cms_user_model extends model {
+	class cms_user_model extends Banshee\model {
 		public function count_users() {
 			$query = "select count(*) as count from users ".
 				($this->user->is_admin ? "" : "where organisation_id=%d ").
@@ -79,9 +79,13 @@
 		}
 
 		public function get_roles() {
-			$query = "select * from roles order by name";
+			$query = "select * from roles";
+			if ($this->user->is_admin == false) {
+				$query .= " where non_admins=%d";
+			}
+			$query .= " order by name";
 
-			return $this->db->execute($query);
+			return $this->db->execute($query, YES);
 		}
 
 		public function access_allowed_for_non_admin($user) {
@@ -101,7 +105,7 @@
 
 			if (isset($user["id"])) {
 				if (($current = $this->get_user($user["id"])) == false) {
-					$this->output->add_message("User not found.");
+					$this->view->add_message("User not found.");
 					return false;
 				}
 
@@ -109,7 +113,7 @@
 				 */
 				if ($this->user->is_admin == false) {
 					if ($this->access_allowed_for_non_admin($current) == false) {
-						$this->output->add_message("You are not allowed to edit this user.");
+						$this->view->add_message("User not found.");
 						$this->user->log_action("unauthorized update attempt of user %d", $user["id"]);
 						return false;
 					}
@@ -118,22 +122,22 @@
 				/* Username changed need password to be reset
 				 */
 				if (($user["username"] != $current["username"]) && ($user["password"] == "")) {
-					$this->output->add_message("Username change needs password to be re-entered.");
+					$this->view->add_message("Username change needs password to be re-entered.");
 					$result = false;
 				}
 			}
 
 			/* Check username
 			 */
-			if (($user["username"] == "") || ($user["fullname"] == "")) {
-				$this->output->add_message("The username and full name cannot be empty.");
+			if (($user["username"] == "") || (trim($user["fullname"]) == "")) {
+				$this->view->add_message("The username and full name cannot be empty.");
 				$result = false;
 			} else if (valid_input($user["username"], VALIDATE_LETTERS.VALIDATE_NUMBERS) == false) {
-				$this->output->add_message("Invalid characters in username.");
+				$this->view->add_message("Invalid characters in username.");
 				$result = false;
 			} else if (($check = $this->db->entry("users", $user["username"], "username")) != false) {
 				if ($check["id"] != $user["id"]) {
-					$this->output->add_message("Username already exists.");
+					$this->view->add_message("Username already exists.");
 					$result = false;
 				}
 			}
@@ -142,7 +146,7 @@
 			 */
 			if (isset($user["id"]) == false) {
 				if (($user["password"] == "") && is_false($user["generate"])) {
-					$this->output->add_message("Fill in the password or let Banshee generate one.");
+					$this->view->add_message("Fill in the password or let Banshee generate one.");
 					$result = false;
 				}
 			}
@@ -150,11 +154,11 @@
 			/* Check e-mail
 			 */
 			if (valid_email($user["email"]) == false) {
-				$this->output->add_message("Invalid e-mail address.");
+				$this->view->add_message("Invalid e-mail address.");
 				$result = false;
 			} else if (($check = $this->db->entry("users", $user["email"], "email")) != false) {
 				if ($check["id"] != $user["id"]) {
-					$this->output->add_message("E-mail address already exists.");
+					$this->view->add_message("E-mail address already exists.");
 					$result = false;
 				}
 			}
@@ -162,7 +166,7 @@
 			/* Check certificate serial
 			 */
 			if (valid_input($user["cert_serial"], VALIDATE_NUMBERS) == false) {
-				$this->output->add_message("The certificate serial must be a number.");
+				$this->view->add_message("The certificate serial must be a number.");
 				$result = false;
 			}
 
@@ -171,7 +175,7 @@
 			if (is_true(USE_AUTHENTICATOR) && is_true($user["set_secret"])) {
 				if (strlen($user["authenticator_secret"]) > 0) {
 					if (valid_input($user["authenticator_secret"], authenticator::BASE32_CHARS, 16) == false) {
-						$this->output->add_message("Invalid authenticator secret.");
+						$this->view->add_message("Invalid authenticator secret.");
 						$result = false;
 					}
 				}
@@ -181,21 +185,39 @@
 		}
 
 		private function assign_roles_to_user($user) {
+			if ($this->user->is_admin == false) {
+				if (($roles = $this->get_roles()) === false) {
+					return false;
+				}
+
+				$allowed_roles = array();
+				foreach ($roles as $role) {
+					array_push($allowed_roles, (int)$role["id"]);
+				}
+			}
+
 			if ($this->db->query("delete from user_role where user_id=%d", $user["id"]) == false) {
 				return false;
 			}
 
-			if (is_array($user["roles"])) {
-				foreach ($user["roles"] as $role_id) {
-					/* Non-admins can't assign the admin role
-					 */
-					if (($this->user->is_admin == false) && ($role_id == ADMIN_ROLE_ID)) {
-						$this->user->log_action("unauthorized admininstrator role assignment for user %d", $user["id"]);
+			if (is_array($user["roles"]) == false) {
+				return true;
+			}
+
+			foreach ($user["roles"] as $role_id) {
+				if ($this->user->is_admin == false) {
+					if ($role_id == ADMIN_ROLE_ID) {
+						$this->user->log_action("unauthorized admininstrator role assign attempt to user %d", $user["id"]);
 						continue;
 					}
-					if ($this->db->query("insert into user_role values (%d, %d)", $user["id"], $role_id) == false) {
-						return false;
+					if (in_array($role_id, $allowed_roles) == false) {
+						$this->user->log_action("unauthorized non-admin role (%d) assign attempt to user %d", $role_id, $user["id"]);
+						continue;
 					}
+				}
+
+				if ($this->db->query("insert into user_role values (%d, %d)", $user["id"], $role_id) == false) {
+					return false;
 				}
 			}
 
@@ -287,51 +309,23 @@
 			return $this->db->query("commit") != false;
 		}
 
-		private function table_exists($table) {
-			static $tables = null;
-
-			if ($tables === null) {
-				if (($result = $this->db->execute("show tables")) === false) {
-					return false;
-				}
-
-				$tables = array();
-				foreach ($result as $entry) {
-					array_push ($tables, $entry["Tables_in_".DB_DATABASE]);
-				}
-			}
-
-			return in_array($table, $tables);
-		}
-
 		public function delete_oke($user_id) {
 			$result = true;
 
 			if ($user_id == $this->user->id) {
-				$this->output->add_message("You are not allowed to delete your own account.");
+				$this->view->add_message("You are not allowed to delete your own account.");
 				$result = false;
 			}
 
 			if ($this->user->is_admin == false) {
 				if (($current = $this->get_user($user_id)) == false) {
-					$this->output->add_message("User not found.");
+					$this->view->add_message("User not found.");
 					$result = false;
 				}
 
 				if ($this->access_allowed_for_non_admin($current) == false) {
-					$this->output->add_message("You are not allowed to delete this user.");
+					$this->view->add_message("You are not allowed to delete this user.");
 					$this->user->log_action("unauthorized delete attempt of user %d", $user_id);
-					$result = false;
-				}
-			}
-
-			if ($this->table_exists("weblogs")) {
-				$query = "select count(*) as count from weblogs where user_id=%d";
-				if (($result = $this->db->execute($query, $user_id)) === false) {
-					$this->output->add_message("Database error.");
-					$result = false;
-				} else if ($result[0]["count"] > 0) {
-					$this->output->add_message("This user has weblog messages to its name.");
 					$result = false;
 				}
 			}
@@ -342,18 +336,39 @@
 		public function delete_user($user_id) {
 			$queries = array();
 
-			/* Forum last view
+			/* Mailbox
 			 */
-			if ($this->table_exists("forum_last_view")) {
+			if (table_exists($this->db, "mailbox")) {
+				array_push($queries, array("delete from mailbox where to_user_id=%d", $user_id));
+				array_push($queries, array("delete from mailbox where from_user_id=%d", $user_id));
+			}
+
+			/* Forum
+			 */
+			if (table_exists($this->db, "forum_last_view")) {
 				array_push($queries, array("delete from forum_last_view where user_id=%d", $user_id));
 			}
 
-			/* Forum messages
-			 */
-			if ($this->table_exists("forum_messages")) {
+			if (table_exists($this->db, "forum_messages")) {
 				$query = "update forum_messages set user_id=null, username=".
 				         "(select fullname from users where id=%d limit 1) where user_id=%d";
 				array_push($queries, array($query, $user_id, $user_id));
+			}
+
+			/* Weblog
+			 */
+			if (table_exists($this->db, "weblogs")) {
+				array_push($queries, array("delete from weblog_comments where weblog_id in ".
+				                           "(select id from weblogs where user_id=%d)", $user_id));
+				array_push($queries, array("delete from weblogs where user_id=%d", $user_id));
+			}
+
+			/* Webshop
+			 */
+			if (table_exists($this->db, "shop_orders")) {
+				array_push($queries, array("delete from shop_order_article where shop_order_id in ".
+				                           "(select id from shop_orders where user_id=%d)", $user_id));
+				array_push($queries, array("delete from shop_orders where user_id=%d", $user_id));
 			}
 
 			array_push($queries,
@@ -383,7 +398,7 @@
 				"PROTOCOL" => $_SERVER["HTTP_SCHEME"],
 				"TITLE"    => $this->settings->head_title);
 
-			$email = new email("Account ".$type." at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\email("Account ".$type." at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields($replace);
 			$email->message($message);
 

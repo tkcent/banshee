@@ -1,7 +1,7 @@
 <?php
-	class demos_help_controller extends controller {
+	class demos_help_controller extends Banshee\controller {
 		public function execute() {
-			$this->output->add_help_button();
+			$this->view->add_help_button();
 		}
 	}
 ?>

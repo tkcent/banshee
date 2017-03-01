@@ -1,5 +1,5 @@
 <?php
-	/* libraries/output.php
+	/* libraries/core/view.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -8,8 +8,11 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
-	final class output extends XML {
+	namespace Banshee\Core;
+
+	final class view extends XML {
 		private $settings = null;
+		private $user = null;
 		private $page = null;
 		private $mode = null;
 		private $language = null;
@@ -34,21 +37,24 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object settings, object page
+		 * INPUT:  object database, object settings, object user, object page
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $settings, $page) {
+		public function __construct($db, $settings, $user, $page) {
 			parent::__construct($db, is_true(SECURE_XML_DATA));
 			$this->settings = $settings;
+			$this->user = $user;
 			$this->page = $page;
 
 			if ($this->page->ajax_request) {
 				$this->mode = "xml";
 				$this->add_layout_data = false;
 			} else if (isset($_GET["output"])) {
-				if (($this->mode = $_GET["output"]) == "raw") {
+				if (($this->mode = $_GET["output"]) == "xml_all") {
 					$this->mode = "xml";
+				} else if (($this->mode = $_GET["output"]) == "json_all") {
+					$this->mode = "json";
 				} else {
 					$this->add_layout_data = false;
 				}
@@ -63,15 +69,15 @@
 			 */
 			$mobiles = array("iPhone", "Android");
 			foreach ($mobiles as $mobile) {
-        		if (strpos($_SERVER["HTTP_USER_AGENT"], $mobile) !== false) {
+				if (strpos($_SERVER["HTTP_USER_AGENT"], $mobile) !== false) {
 		            $this->mobile = true;
 				}
 			}
 		}
 
-		/* Constructor
+		/* Destructor
 		 *
-		 * INPUT:  object database, boolean AJAX request
+		 * INPUT:  -
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
@@ -125,7 +131,7 @@
 			}
 		}
 
-		/* Disable the output library
+		/* Disable the view library
 		 *
 		 * INPUT:  -
 		 * OUTPUT: -
@@ -134,6 +140,12 @@
 		public function disable() {
 			$this->disabled = true;
 			parent::clear_buffer();
+
+			if (($errors = ob_get_clean()) != "") {
+				$error_handler = new website_error_handler($this, $this->settings, $this->user);
+				$error_handler->execute($errors);
+			}
+			ob_clean();
 		}
 
 		/* Allow caching of output by Hiawatha
@@ -171,7 +183,7 @@
 				$result = false;
 			} else if ($this->hiawatha_cache_time === null) {
 				$result = false;
-			} else if (isset($_SESSION["user_switch"])) {	
+			} else if (isset($_SESSION["user_switch"])) {
 				$result = false;
 			} else if (is_true(DEBUG_MODE)) {
 				$result = false;
@@ -245,7 +257,8 @@
 		 * ERROR:  -
 		 */
 		public function run_javascript($code) {
-			array_push($this->onload_javascript, rtrim($code, ";").";");
+			$code = str_replace('"', '\\"', $code);
+			array_push($this->onload_javascript, rtrim($code, ";"));
 		}
 
 		/* Add alternate link
@@ -265,7 +278,7 @@
 		 */
 		public function add_ckeditor($button_selector = null, $textarea_selector = "editor") {
 			if (file_exists("js/ckeditor/ckeditor.js") == false) {
-				if ($button_selector === null) {	
+				if ($button_selector === null) {
 					$this->add_system_warning("The CKEditor library was not found. Run the script extra/download_ckeditor to download and install it.");
 				}
 				return;
@@ -434,7 +447,7 @@
 				 */
 				$params = array();
 				if (count($this->onload_javascript) > 0) {
-					$params["onload"] = implode(" ", $this->onload_javascript);
+					$params["onload"] = implode("; ", $this->onload_javascript);
 				}
 				$this->open_tag("javascripts", $params);
 				foreach ($this->javascripts as $javascript) {
@@ -526,7 +539,7 @@
 		 * ERROR:  -
 		 */
 		private function can_gzip_output($data) {
-			if (headers_sent()) {	
+			if (headers_sent()) {
 				return false;
 			} else if (($encodings = $_SERVER["HTTP_ACCEPT_ENCODING"]) === null) {
 				return false;
@@ -570,10 +583,6 @@
 					header("Content-Type: text/xml");
 					$result = $this->document;
 					break;
-				case "data":
-					header("Content-Type: text/plain");
-					$result = $this->document;
-					break;
 				case null:
 					$xslt_file = "../views/".$this->page->view.".xslt";
 					if (($result = parent::transform($xslt_file)) === false) {
@@ -593,6 +602,9 @@
 					if (headers_sent() == false) {
 						header("X-Frame-Options: sameorigin");
 						header("X-Xss-Protection: 1; mode=block");
+						header("X-Content-Type-Options: nosniff");
+						header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src *");
+						header("Referrer-Policy: same-origin");
 
 						if ($this->activate_hiawatha_cache()) {
 							header("X-Hiawatha-Cache: ".$this->hiawatha_cache_time);

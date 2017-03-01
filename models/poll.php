@@ -1,5 +1,5 @@
 <?php
-	class poll_model extends model {
+	class poll_model extends Banshee\model {
 		public function get_active_poll_id() {
 			$query = "select *, UNIX_TIMESTAMP(begin) as begin, UNIX_TIMESTAMP(end) as end ".
 					 "from polls where begin<=now() and end>now() order by begin desc limit 1";

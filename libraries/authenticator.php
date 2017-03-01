@@ -8,6 +8,8 @@
 	 * This library implements RFC 6238.
 	 */
 
+	namespace Banshee;
+
 	class authenticator {
 		const BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
 
@@ -36,7 +38,7 @@
 
 			$result = "";
 			for ($i = 0; $i < $secret_length; $i++) {
-				$result .= $this->base32_chars[mt_rand(0, $max_pos)];
+				$result .= $this->base32_chars[random_int(0, $max_pos)];
 			}
 
 			return $result;
@@ -87,7 +89,7 @@
 				if ($this->get_code($secret, $time_slice - $i) == $code) {
 					return true;
 				}
-				
+
 				if ($this->get_code($secret, $time_slice + $i) == $code) {
 					return true;
 				}

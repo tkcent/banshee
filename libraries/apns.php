@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class APNS {
 		const GATEWAY_HOST = "gateway.push.apple.com";
 		const GATEWAY_PORT = 2195;

@@ -1,7 +1,7 @@
 <?php
-	class demos_graph_controller extends controller {
+	class demos_graph_controller extends Banshee\controller {
 		public function execute() {
-			$graph = new graph($this->output);
+			$graph = new Banshee\graph($this->view);
 			$graph->title = "Demo graph";
 			$graph->width = 600;
 			$graph->height = 200;

@@ -1,5 +1,5 @@
 <?php
-	class cms_faq_model extends model {
+	class cms_faq_model extends Banshee\model {
 		public function get_all_sections() {
 			$query = "select * from faq_sections order by label";
 
@@ -22,22 +22,22 @@
 			$result = true;
 
 			if (trim($faq["question"]) == "") {
-				$this->output->add_message("Fill in the question.");
+				$this->view->add_message("Fill in the question.");
 				$result = false;
 			}
 
 			if (trim($faq["answer"]) == "") {
-				$this->output->add_message("Fill in the answer.");
+				$this->view->add_message("Fill in the answer.");
 				$result = false;
 			}
 
 			if ($faq["select"] == "new") {
 				if (trim($faq["label"]) == "") {
-					$this->output->add_message("Fill in the section.");
+					$this->view->add_message("Fill in the section.");
 					$result = false;
 				}
-			} else if (($faq["select"] != "old") && ($faq["select"] != "")) {
-				$this->output->add_message("Unknown section type.");
+			} else if (($faq["select"] != "existing") && ($faq["select"] != "")) {
+				$this->view->add_message("Unknown section type.");
 				$result = false;
 			}
 
@@ -89,7 +89,7 @@
 					$this->db->query("rollback");
 					return false;
 				}
-			} else if ($faq["select"] == "old") {
+			} else if ($faq["select"] == "existing") {
 				$faq["section_id"] = (int)$faq["section_id"];
 			} else {
 				return false;
@@ -115,7 +115,7 @@
 					$this->db->query("rollback");
 					return false;
 				}
-			} else if ($faq["select"] == "old") {
+			} else if ($faq["select"] == "existing") {
 				$faq["section_id"] = (int)$faq["section_id"];
 			} else {
 				return false;

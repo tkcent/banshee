@@ -17,9 +17,9 @@
 	var l_link =        '<span class="link label">Link:</span>';
 	var new_node =      '<li>' + l_text + '<input type="text" class="form-control">' + l_link + '<input type="text" class="form-control"></li>';
 	var h_insert_node = '<input type="button" value="Insert" class="insert btn btn-default">';
-	var h_add_node =    '<input type="button" value="+" class="add_node">';
-	var h_delete_node = '<input type="button" value="-" class="delete_node">';
-	var h_add_branch =  '<input type="button" value="&gt;" class="add_branch">';
+	var h_add_node =    '<input type="button" value="+" class="btn btn-default btn-xs add_node">';
+	var h_delete_node = '<input type="button" value="-" class="btn btn-default btn-xs delete_node">';
+	var h_add_branch =  '<input type="button" value="&gt;" class="btn btn-default btn-xs add_branch">';
 
 	/* Constructor
 	 */

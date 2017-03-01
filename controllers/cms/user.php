@@ -1,43 +1,43 @@
 <?php
-	class cms_user_controller extends controller {
+	class cms_user_controller extends Banshee\controller {
 		private function show_user_overview() {
 			if (($user_count = $this->model->count_users()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
 			handle_table_sort("adminuser_order", array("id", "username", "fullname", "email", "status"), array("username", "id"));
-			$paging = new pagination($this->output, "admin_users", $this->settings->admin_page_size, $user_count);
+			$paging = new Banshee\pagination($this->view, "admin_users", $this->settings->admin_page_size, $user_count);
 
 			$users = $this->model->get_users($_SESSION["adminuser_order"], $paging->offset, $paging->size);
 			$roles = $this->model->get_roles();
 			if (($users === false) || ($roles === false)) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
 			$status = array("Disabled", "Change password", "Active");
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("users");
+			$this->view->open_tag("users");
 			foreach ($users as $user) {
 				$user["status"] = $status[$user["status"]];
 
-				$this->output->open_tag("user", array(
+				$this->view->open_tag("user", array(
 					"id"    => $user["id"],
 					"admin" => show_boolean($user["is_admin"])));
-				$this->output->add_tag("username", $user["username"]);
-				$this->output->add_tag("fullname", $user["fullname"]);
-				$this->output->add_tag("email", $user["email"]);
-				$this->output->add_tag("status", $user["status"]);
-				$this->output->close_tag();
+				$this->view->add_tag("username", $user["username"]);
+				$this->view->add_tag("fullname", $user["fullname"]);
+				$this->view->add_tag("email", $user["email"]);
+				$this->view->add_tag("status", $user["status"]);
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_user_form($user) {
@@ -46,12 +46,12 @@
 			}
 
 			if (($roles = $this->model->get_roles()) == false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 			if ($this->user->is_admin) {
 				if (($organisations = $this->model->get_organisations()) == false) {
-					$this->output->add_tag("result", "Database error.");
+					$this->view->add_tag("result", "Database error.");
 					return;
 				}
 			}
@@ -61,36 +61,36 @@
 			if (isset($user["id"]) && ($this->user->is_admin == false)) {
 				if ($this->model->access_allowed_for_non_admin($user) == false) {
 					$this->user->log_action("unauthorized edit attempt of user %d", $user["id"]);
-					$this->output->add_tag("result", "You are not allowed to edit this user.");
+					$this->view->add_tag("result", "You are not allowed to edit this user.");
 					return;
 				}
 			}
 
-			$this->output->add_javascript("cms/user.js");
+			$this->view->add_javascript("cms/user.js");
 
-			$this->output->open_tag("edit", array("authenticator" => show_boolean(USE_AUTHENTICATOR)));
+			$this->view->open_tag("edit", array("authenticator" => show_boolean(USE_AUTHENTICATOR)));
 
-			$this->output->open_tag("status");
+			$this->view->open_tag("status");
 			$status = array(
 				USER_STATUS_DISABLED =>  "Disabled",
 				USER_STATUS_CHANGEPWD => "Change password",
 				USER_STATUS_ACTIVE =>    "Active");
 			foreach ($status as $id => $stat) {
-				$this->output->add_tag("status", $stat, array("id" => $id));
+				$this->view->add_tag("status", $stat, array("id" => $id));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->record($user, "user");
+			$this->view->record($user, "user");
 
 			if ($this->user->is_admin) {
-				$this->output->open_tag("organisations");
+				$this->view->open_tag("organisations");
 				foreach ($organisations as $organisation) {
-					$this->output->add_tag("organisation", $organisation["name"], array("id" => $organisation["id"]));
+					$this->view->add_tag("organisation", $organisation["name"], array("id" => $organisation["id"]));
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 
-			$this->output->open_tag("roles");
+			$this->view->open_tag("roles");
 			foreach ($roles as $role) {
 				/* Non-admins cannot assign the admin role
 				 */
@@ -101,14 +101,14 @@
 				$checked = in_array($role["id"], $user["roles"]);
 				$enabled = ($this->user->id != $user["id"]) || ($role["id"] != ADMIN_ROLE_ID); /* Don't disable yourself */
 
-				$this->output->add_tag("role", $role["name"], array(
+				$this->view->add_tag("role", $role["name"], array(
 					"id"      => $role["id"],
 					"checked" => show_boolean($checked),
 					"enabled" => show_boolean($enabled)));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -117,7 +117,11 @@
 					/* Fix password
 					 */
 					if (is_true($_POST["generate"])) {
-						$_POST["password"] = random_string(10);
+						if (($_POST["password"] = random_string(10)) == false) {
+							$this->view->add_message("Error while generating password.");
+							$this->show_user_form($_POST);
+							return;
+						}
 					}
 
 					/* Save user
@@ -128,7 +132,7 @@
 						/* Create user
 						 */
 						if ($this->model->create_user($_POST) === false) {
-							$this->output->add_message("Database error while creating user.");
+							$this->view->add_message("Database error while creating user.");
 							$this->show_user_form($_POST);
 						} else {
 							$this->user->log_action("user %s created", $_POST["username"]);
@@ -143,7 +147,7 @@
 						$username = $this->model->get_username($_POST["id"]);
 
 						if ($this->model->update_user($_POST) === false) {
-							$this->output->add_message("Database error while updating user.");
+							$this->view->add_message("Database error while updating user.");
 							$this->show_user_form($_POST);
 						} else {
 							if ($_POST["username"] == $username) {
@@ -166,7 +170,7 @@
 					if ($this->model->delete_oke($_POST["id"]) == false) {
 						$this->show_user_form($_POST);
 					} else if ($this->model->delete_user($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Database error while deleting user.");
+						$this->view->add_tag("result", "Database error while deleting user.");
 					} else {
 						$this->user->log_action("user %s deleted", $username);
 						$this->show_user_overview();
@@ -183,14 +187,14 @@
 					"status"          => USER_STATUS_CHANGEPWD);
 				$this->show_user_form($user);
 			} else if (($this->page->pathinfo[2] == "authenticator") && $this->page->ajax_request) {
-				$authenticator = new authenticator;
-				$this->output->add_tag("secret", $authenticator->create_secret());
+				$authenticator = new Banshee\authenticator;
+				$this->view->add_tag("secret", $authenticator->create_secret());
 			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show the user webform
 				 */
 				if (($user = $this->model->get_user($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "User not found.");
-				} else {	
+					$this->view->add_tag("result", "User not found.");
+				} else {
 					$user["authenticator_secret"] = null;
 					$this->show_user_form($user);
 				}

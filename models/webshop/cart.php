@@ -1,5 +1,5 @@
 <?php
-	class webshop_cart_model extends model {
+	class webshop_cart_model extends Banshee\model {
 		public function get_articles($article_ids) {
 			if (is_array($article_ids) == false) {
 				return array();

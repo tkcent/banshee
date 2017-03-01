@@ -8,6 +8,8 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
+	namespace Banshee\Database;
+
 	abstract class PDO_connection extends database_connection {
 		protected $type = null;
 		protected $options = null;

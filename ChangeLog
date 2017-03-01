@@ -1,3 +1,16 @@
+banshee (6.0) stable; urgency=low
+
+  * Banshee now requires PHP 7.
+  * Improved error handling for PHP 7.
+  * Usage of Banshee namespace.
+  * Improved CSRF protection.
+  * Renamed output library to view. Use $this->view instead of
+    $this->output in controllers and models.
+  * Support for installing libraries via Composer.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Fri, 24 Feb 2017 12:36:13 +0100
+
 banshee (5.4) stable; urgency=low
 
   * Support for authenticator app (RFC 6238) added.

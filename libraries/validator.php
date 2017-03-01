@@ -1,13 +1,15 @@
 <?php
-    /* libraries/validator.php
+	/* libraries/validator.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class validator {
-		private $output = null;
+		private $view = null;
 		private $messages = array(
 			"boolean"   => "The field [label] should contain a boolean.",
 			"charset"   => "The field [label] contains invalid characters.",
@@ -24,12 +26,12 @@
 
 		/* Constructor
 		 *
-		 * INPUT:  object output
+		 * INPUT:  object view
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($output) {
-			$this->output = $output;
+		public function __construct($view) {
+			$this->view = $view;
 		}
 
 		/* Add validation feedback to output
@@ -48,7 +50,7 @@
 				}
 			}
 
-			$this->output->add_message($message);
+			$this->view->add_message($message);
 		}
 
 		/* Start validation process
@@ -154,7 +156,7 @@
 						}
 						break;
 					default:
-						$this->output->add_message("No or invalid type set for ".$rule["label"].".");
+						$this->view->add_message("No or invalid type set for ".$rule["label"].".");
 				}
 			}
 

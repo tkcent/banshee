@@ -1,5 +1,5 @@
 <?php
-	class cms_forum_section_model extends tablemanager_model {
+	class cms_forum_section_model extends Banshee\tablemanager_model {
 		protected $table = "forums";
 		protected $order = "order";
 		protected $elements = array(
@@ -25,7 +25,7 @@
 			}
 
 			if ($section[0]["count"] > 0) {
-				$this->output->add_message("This forum section contains topics.");
+				$this->view->add_message("This forum section contains topics.");
 				return false;
 			}
 

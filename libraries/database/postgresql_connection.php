@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Database;
+
 	class PostgreSQL_connection extends database_connection {
 		private $last_query_resource = null;
 

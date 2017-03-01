@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class flags {
 		private $flags = array();
 
@@ -18,7 +20,7 @@
 		public function __construct($db, $user, $page) {
 			$query = "select * from flags f, user_role r ".
 			         "where f.role_id=r.role_id and r.user_id=%d and f.module=%s";
-			if (($flags = $db->execute($query, $user->id, $page->module)) === false) {	
+			if (($flags = $db->execute($query, $user->id, $page->module)) === false) {
 				return;
 			}
 

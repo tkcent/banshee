@@ -13,7 +13,7 @@
 
 	error_reporting(E_ALL & ~E_NOTICE);
 	chdir(__DIR__);
-	require("libraries/banshee.php");
+	require("libraries/core/banshee.php");
 	require("libraries/helpers/console.php");
 
 	function help_exit() {
@@ -25,8 +25,10 @@
 	if ($banshee_dir == "") {
 		help_exit();
 	} else if (file_exists($banshee_dir."/libraries/banshee.php") == false) {
-		print "No Banshee installation detected in directory.\n";
-		exit;
+		if (file_exists($banshee_dir."/libraries/core/banshee.php") == false) {
+			print "No Banshee installation detected in directory.\n";
+			exit;
+		}
 	}
 
 	if (($name = $argv[3]) == "") {
@@ -100,6 +102,25 @@
 			foreach ($paths as $path) {
 				$file = $path."/".$name.".".$extension;
 				safe_copy($banshee_dir."/".$file, $file);
+			}
+		}
+
+		foreach ($locations["php"] as $path) {
+			$file = $path."/".$name.".php";
+			if (file_exists($file) == false) {
+				continue;
+			}
+			$content = file_get_contents($file);
+			if (($fp = fopen($file, "w")) != false) {
+				if (strpos($content, "_controller extends Banshee") === false) {
+					$content = str_replace("_controller extends ", "_controller extends Banshee\\", $content);
+				}
+				if (strpos($content, " = new Banshee") === false) {
+					$content = str_replace(" = new ", " = new Banshee\\", $content);
+				}
+				$content = str_replace("this->output", "this->view", $content);
+				fputs($fp, $content);
+				fclose($fp);
 			}
 		}
 

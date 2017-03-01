@@ -1,25 +1,25 @@
 <?php
-	class cms_collection_controller extends controller {
+	class cms_collection_controller extends Banshee\controller {
 		private function show_collection_overview() {
 			if (($collections = $this->model->get_collections()) === false) {
 				$this->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("collections");
+			$this->view->open_tag("collections");
 			foreach ($collections as $collection) {
-				$this->output->record($collection, "collection");
+				$this->view->record($collection, "collection");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_collection_form($collection) {
 			if (($albums = $this->model->get_albums()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
@@ -27,23 +27,23 @@
 				$collection["albums"] = array();
 			}
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
 			$params = isset($collection["id"]) ? array("id" => $collection["id"]) : array();
 
-			$this->output->open_tag("collection", $params);
-			$this->output->record($collection);
+			$this->view->open_tag("collection", $params);
+			$this->view->record($collection);
 
-			$this->output->open_tag("albums");
+			$this->view->open_tag("albums");
 			foreach ($albums as $album) {
-				$this->output->add_tag("album", $album["name"], array(
+				$this->view->add_tag("album", $album["name"], array(
 					"id"      => $album["id"],
 					"checked" => show_boolean(in_array($album["id"], $collection["albums"]))));
 			}
-			$this->output->close_tag();
-			$this->output->close_tag();
+			$this->view->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -74,7 +74,7 @@
 					/* Delete collection
 					 */
 					if ($this->model->delete_collection($_POST["id"]) == false) {
-						$this->output->add_message("Error deleting collection.");
+						$this->view->add_message("Error deleting collection.");
 						$this->show_collection_form($_POST);
 					} else {
 						$this->show_collection_overview();
@@ -87,7 +87,7 @@
 				$this->show_collection_form($collection);
 			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				if (($collection = $this->model->get_collection($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Collection not found.");
+					$this->view->add_tag("result", "Collection not found.");
 				} else {
 					$this->show_collection_form($collection);
 				}

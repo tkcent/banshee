@@ -1,5 +1,5 @@
 <?php
-	class agenda_model extends model {
+	class agenda_model extends Banshee\model {
 		public function get_appointments_from_today() {
 			$query = "select *, UNIX_TIMESTAMP(begin) as begin, UNIX_TIMESTAMP(end) as end ".
 			         "from agenda where (begin>=%s) order by begin";

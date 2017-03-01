@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class csvfile {
 		private $data = array();
 		private $separator = ",";

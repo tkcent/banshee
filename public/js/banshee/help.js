@@ -3,14 +3,21 @@ $(document).ready(function() {
 		return;
 	}
 
-	var help_button = 
-		'<button type="button" class="btn btn-default btn-xs help" data-toggle="modal" data-target="#help_message">Help</button>';
-	var content = $("body div.content");
-	var container = $(content).find("div.container");
+	var help_button = '<button type="button" class="btn btn-default btn-xs help" data-toggle="modal" data-target="#help_message">Help</button>';
+	var content = $('body div.content');
+	var container = $(content).find('div.container');
 	if (container.length != 0) {
 		content = container;
 	}
-	$(help_button).prependTo(content);
+	var icon = $(content).find('img.title_icon');
+	var mesg = $(content).find('div.alert');
+	if (icon.length != 0) {
+		$(help_button).insertAfter(icon);
+	} else if (mesg.length != 0) {
+		$(help_button).insertAfter(mesg);
+	} else {
+		$(help_button).prependTo(content);
+	}
 
 	var help_content =
 		'<div id="help_message" class="modal fade" role="dialog">' +

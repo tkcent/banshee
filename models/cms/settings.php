@@ -1,5 +1,5 @@
 <?php
-	class cms_settings_model extends tablemanager_model {
+	class cms_settings_model extends Banshee\tablemanager_model {
 		protected $table = "settings";
 		protected $order = "key";
 		protected $elements = array(
@@ -89,7 +89,7 @@
 
 		public function save_oke($item) {
 			if (in_array($item["key"], $this->hidden_keys)) {
-				$this->output->add_message("You are not allowed to change this setting.");
+				$this->view->add_message("You are not allowed to change this setting.");
 				return false;
 			}
 
@@ -110,7 +110,7 @@
 			}
 
 			if (in_array($item["key"], $this->hidden_keys)) {
-				$this->output->add_message("You are not allowed to delete this setting.");
+				$this->view->add_message("You are not allowed to delete this setting.");
 				return false;
 			}
 

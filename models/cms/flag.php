@@ -1,5 +1,5 @@
 <?php
-	class cms_flag_model extends tablemanager_model {
+	class cms_flag_model extends Banshee\tablemanager_model {
 		protected $table = "flags";
 		protected $order = array("role_id", "module", "flag");
 		protected $module_flags = array();
@@ -82,7 +82,7 @@
 				return false;
 			}
 			if ($result[0]["count"] > 0) {
-				$this->output->add_message("This combination already exists.");
+				$this->view->add_message("This combination already exists.");
 				return false;
 			}
 

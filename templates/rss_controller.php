@@ -1,10 +1,10 @@
 <?php
-	class rss_controller extends controller {
+	class rss_controller extends Banshee\controller {
 		public function execute() {
 			if ($this->page->type == "xml") {
 				/* RSS feed
 				 */
-				$rss = new RSS($this->output);
+				$rss = new Banshee\RSS($this->view);
 				if ($rss->fetch_from_cache("rss_cache_id") == false) {
 					$rss->title = "RSS title";
 					$rss->description = "RSS description";

@@ -1,33 +1,33 @@
 <?php
-	class cms_menu_controller extends controller {
+	class cms_menu_controller extends Banshee\controller {
 		private function show_menu($menu) {
 			if (is_array($menu) == false) {
 				$menu = array();
 			}
 
-			$this->output->open_tag("branch");
+			$this->view->open_tag("branch");
 			foreach ($menu as $item) {
-				$this->output->open_tag("item");
-				$this->output->add_tag("text", $item["text"]);
-				$this->output->add_tag("link", $item["link"]);
+				$this->view->open_tag("item");
+				$this->view->add_tag("text", $item["text"]);
+				$this->view->add_tag("link", $item["link"]);
 				if (isset($item["submenu"])) {
 					$this->show_menu($item["submenu"]);
 				}
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_menu_form($menu) {
-			$this->output->add_javascript("jquery/jquery-ui.js");
-			$this->output->add_javascript("banshee/jquery.menueditor.js");
-			$this->output->add_javascript("cms/menu.js");
+			$this->view->add_javascript("jquery/jquery-ui.js");
+			$this->view->add_javascript("banshee/jquery.menueditor.js");
+			$this->view->add_javascript("cms/menu.js");
 
-			$this->output->add_css("banshee/menueditor.css");
+			$this->view->add_css("banshee/menueditor.css");
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 			$this->show_menu($menu);
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -37,14 +37,14 @@
 				if ($this->model->menu_oke($_POST["menu"]) == false) {
 					$this->show_menu_form($_POST["menu"]);
 				} else if ($this->model->update_menu($_POST["menu"]) == false) {
-					$this->output->add_tag("result", "Error while updating menu.");
+					$this->view->add_tag("result", "Error while updating menu.");
 				} else {
-					$this->output->add_tag("result", "The menu has been updated.");
+					$this->view->add_tag("result", "The menu has been updated.");
 					$this->user->log_action("menu updated");
 					header("X-Hiawatha-Cache-Remove: all");
 
 					if (is_true(MENU_PERSONALIZED)) {
-						$cache = new cache($this->db, "banshee_menu");
+						$cache = new Banshee\Core\cache($this->db, "banshee_menu");
 						$cache->store("last_updated", time(), 365 * DAY);
 					}
 				}
@@ -52,8 +52,8 @@
 				/* Show menu
 				 */
 				if (($menu = $this->model->get_menu()) === false) {
-					$this->output->add_tag("result", "Error loading menu.");
-				} else {	
+					$this->view->add_tag("result", "Error loading menu.");
+				} else {
 					$this->show_menu_form($menu);
 				}
 			}

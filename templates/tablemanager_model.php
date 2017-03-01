@@ -1,5 +1,5 @@
 <?php
-	class XXX_model extends tablemanager_model {
+	class XXX_model extends Banshee\tablemanager_model {
 		protected $table = "table";
 		protected $order = "id";
 		protected $elements = array(
@@ -23,7 +23,7 @@
 				"overview" => true),
 			"timestamp" => array(
 				"label"    => "Timestamp",
-				"type"     => "datetime",
+				"type"     => "timestamp",
 				"overview" => true),
 			"enum" => array(
 				"label"    => "Enum",

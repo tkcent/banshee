@@ -1,5 +1,5 @@
 <?php
-	class cms_dictionary_model extends model {
+	class cms_dictionary_model extends Banshee\model {
 		public function count_words() {
 			$query = "select count(*) as count from dictionary";
 
@@ -24,14 +24,14 @@
 			$result = true;
 
 			if (valid_input($word["word"], VALIDATE_LETTERS.VALIDATE_NUMBERS." -_", VALIDATE_NONEMPTY) == false) {
-				$this->output->add_message("Word contains invalid characters or is empty.");
+				$this->view->add_message("Word contains invalid characters or is empty.");
 				$result = false;
 			} else if (valid_input($word["word"], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				$this->output->add_message("Word must contain letters.");
+				$this->view->add_message("Word must contain letters.");
 				$result = false;
 			}
 			if (trim($word["short_description"]) == "") {
-				$this->output->add_message("The short description cannot be empty.");
+				$this->view->add_message("The short description cannot be empty.");
 				$result = false;
 			}
 

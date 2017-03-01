@@ -1,5 +1,5 @@
 <?php
-	class cms_poll_model extends model {
+	class cms_poll_model extends Banshee\model {
 		public function get_polls() {
 			$query = "select id, question, UNIX_TIMESTAMP(begin) as begin, UNIX_TIMESTAMP(end) as end ".
 					 "from polls order by begin desc";
@@ -35,7 +35,7 @@
 			$result = true;
 
 			if (trim($poll["question"]) == "") {
-				$this->output->add_message("Fill in the question.");
+				$this->view->add_message("Fill in the question.");
 				$result = false;
 			}
 
@@ -46,15 +46,15 @@
 				}
 			}
 			if ($answers < 2) {
-				$this->output->add_message("Fill in at least 2 answers.");
+				$this->view->add_message("Fill in at least 2 answers.");
 				$result = false;
 			} else if ($answers > $this->settings->poll_max_answers) {
-				$this->output->add_message("Too many answers given.");
+				$this->view->add_message("Too many answers given.");
 				$result = false;
 			}
 
 			if ((valid_date($poll["begin"]) == false) || (valid_date($poll["end"]) == false)) {
-				$this->output->add_message("Invalid begin or end date.");
+				$this->view->add_message("Invalid begin or end date.");
 				$result = false;
 			} else {
 				$begin = strtotime($poll["begin"]);
@@ -62,11 +62,11 @@
 				$today = strtotime("today 00:00:00");
 
 				if ($begin < $today) {
-					$this->output->add_message("Begin date must not be in the past.");
+					$this->view->add_message("Begin date must not be in the past.");
 					$result = false;
 				}
 				if ($begin > $end) {
-					$this->output->add_message("End date must not be before begin date.");
+					$this->view->add_message("End date must not be before begin date.");
 					$result = false;
 				}
 			}
@@ -151,7 +151,7 @@
 
 		public function close_poll($poll_id) {
 			$query = "update polls set end=%s where id=%d";
-			
+
 			return $this->db->query($query, date("Y-m-d", strtotime("yesterday")), $poll_id) != false;
 		}
 

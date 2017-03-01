@@ -1,5 +1,5 @@
 <?php
-	class session_model extends model {
+	class session_model extends Banshee\model {
 		public function get_sessions() {
 			$query = "select id, session_id, UNIX_TIMESTAMP(expire) as expire, ip_address, bind_to_ip, name from sessions ".
 			         "where user_id=%d and expire>=now() order by name, ip_address";
@@ -18,10 +18,31 @@
 			return $result[0];
 		}
 
-		public function update_session($session) {
-			$query = "update sessions set name=%s where id=%d and user_id=%d";
+		public function session_oke($session) {
+			$result = true;
 
-			return $this->db->execute($query, $session["name"], $session["id"], $this->user->id);
+			if ($this->settings->session_persistent) {
+				if (strtotime($session["expire"]) < time()) {
+					$this->view->add_message("The expire time lies in the past.");
+					$result = false;
+				}
+			}
+
+			return $result;
+		}
+
+		public function update_session($session) {
+			$query = "update sessions set name=%s";
+			$values = array("name" => $session["name"]);
+
+			if ($this->settings->session_persistent) {
+				$query .= ", expire=%s";
+				$values["expire"] = $session["expire"];
+			}
+
+			$query .= " where id=%d and user_id=%d";
+
+			return $this->db->execute($query, $values, $session["id"], $this->user->id);
 		}
 
 		public function delete_session($id) {

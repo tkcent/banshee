@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Database;
+
 	class MSSQL_connection extends database_connection {
 		public function __construct($hostname, $database, $username, $password) {
 			$this->db_close         = "mssql_close";

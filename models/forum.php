@@ -1,5 +1,5 @@
 <?php
-	class forum_model extends model {
+	class forum_model extends Banshee\model {
 		public function get_forums() {
 			$query = "select *,(select count(*) from forum_topics where forum_id=f.id) as topics ".
 					 "from forums f order by %S";
@@ -94,7 +94,7 @@
 			$result = $this->response_oke($topic);
 
 			if (trim($topic["subject"]) == "") {
-				$this->output->add_message("Empty subject not allowed.");
+				$this->view->add_message("Empty subject not allowed.");
 				$result = false;
 			}
 
@@ -106,25 +106,25 @@
 
 			if ($this->user->logged_in == false) {
 				if (trim($topic["username"]) == "") {
-					$this->output->add_message("Fill in your name.");
+					$this->view->add_message("Fill in your name.");
 					$result = false;
 				} else {
 					$name = preg_replace('/  */', " ", trim($topic["username"]));
 					$query = "select * from users where fullname=%s";
 					if (($x = $this->db->execute($query, $name)) != false) {
-						$this->output->add_message("That name is not allowed.");
+						$this->view->add_message("That name is not allowed.");
 						$result = false;
 					}
 				}
 			}
 
 			if (trim($topic["content"]) == "") {
-				$this->output->add_message("Empty message not allowed.");
+				$this->view->add_message("Empty message not allowed.");
 				$result = false;
 			} else {
-				$message = new message($topic["content"]);
+				$message = new Banshee\message($topic["content"]);
 				if ($message->is_spam) {
-					$this->output->add_message("Message seen as spam.");
+					$this->view->add_message("Message seen as spam.");
 					$result = false;
 				}
 			}
@@ -189,7 +189,7 @@
 				$topic_url .= "#".$message_id;
 			}
 
-			$email = new email("Forum message posted", $this->settings->webmaster_email);
+			$email = new Banshee\email("Forum message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
 				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/forum";

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="banshee/main.xslt" />
 <xsl:include href="banshee/pagination.xslt" />
 
@@ -9,9 +9,9 @@
 //
 //-->
 <xsl:template match="overview">
-<div class="albums">
+<div class="albums row">
 <xsl:for-each select="albums/album">
-<div class="album row">
+<div class="album col-lg-3 col-md-6 col-xs-12">
 	<div class="name"><xsl:value-of select="name" /></div>
 	<div class="image"><a href="/{/output/page}/{@id}"><img src="/{/output/page}/image_{thumbnail}.{extension}" alt="thumbnail {thumbnail}" /></a></div>
 	<div class="timestamp"><xsl:value-of select="timestamp" /></div>
@@ -19,8 +19,6 @@
 </div>
 </xsl:for-each>
 </div>
-
-<div class="clear" />
 
 <div class="right">
 <xsl:apply-templates select="pagination" />
@@ -33,13 +31,13 @@
 //
 //-->
 <xsl:template match="photos">
-<div class="photos" id="gallery">
+<div class="photos row" id="gallery">
 <xsl:for-each select="photo">
 <div class="photo"><a href="/{/output/page}/image_{@id}.{extension}" title="{title}"><div class="box"><img src="/{/output/page}/thumbnail_{@id}.{extension}" alt="{title}" /></div></a></div>
 </xsl:for-each>
-<div class="clear" />
-<p><span><xsl:value-of select="@timestamp" /></span><span><xsl:value-of select="@info" /></span></p>
 </div>
+
+<div class="info"><span><xsl:value-of select="@timestamp" /></span><span><xsl:value-of select="@info" /></span></div>
 
 <div class="right">
 <xsl:apply-templates select="pagination" />
@@ -62,7 +60,6 @@
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="photos" />
 <xsl:apply-templates select="result" />
-<xsl:apply-templates select="website_error" />
 </xsl:template>
 
 </xsl:stylesheet>

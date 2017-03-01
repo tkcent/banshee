@@ -1,5 +1,5 @@
 <?php
-	class cms_file_controller extends controller {
+	class cms_file_controller extends Banshee\controller {
 		public function execute() {
 			$base_dir = FILES_PATH;
 			if (($sub_dir = implode("/", $this->page->parameters)) != "") {
@@ -12,17 +12,17 @@
 					/* Create directory
 					 */
 					if ($this->model->directory_oke($_POST["create"], $directory) == false) {
-						$this->output->add_tag("create", $_POST["create"]);
+						$this->view->add_tag("create", $_POST["create"]);
 					} else if ($this->model->create_directory($_POST["create"], $directory) == false) {
-						$this->output->add_tag("create", $_POST["create"]);
-						$this->output->add_message("Error creating directory.");
+						$this->view->add_tag("create", $_POST["create"]);
+						$this->view->add_message("Error creating directory.");
 					}
 				} else if ($_POST["submit_button"] == "Upload") {
 					/* Upload file
 					 */
 					if ($this->model->upload_oke($_FILES["file"], $directory)) {
 						if ($this->model->import_uploaded_file($_FILES["file"], $directory) == false) {
-							$this->output->add_message("Error while importing file.");
+							$this->view->add_message("Error while importing file.");
 						} else {
 							$this->user->log_action("file '%s' uploaded", $_FILES["file"]["name"]);
 						}
@@ -31,7 +31,7 @@
 					/* Delete file
 					 */
 					if ($this->model->delete_file($_POST["filename"], $directory) == false) {
-						$this->output->add_message("Error while deleting file.");
+						$this->view->add_message("Error while deleting file.");
 					} else {
 						$this->user->log_action("file '%s' deleted", $_POST["filename"]);
 					}
@@ -39,9 +39,9 @@
 			}
 
 			if (($files = $this->model->directory_listing($directory)) === false) {
-				$this->output->add_tag("result", "Error reading directory");
+				$this->view->add_tag("result", "Error reading directory");
 			} else {
-				$this->output->open_tag("files", array("dir" => $sub_dir));
+				$this->view->open_tag("files", array("dir" => $sub_dir));
 
 				/* One directory up
 				 */
@@ -51,7 +51,7 @@
 					if (($back = implode("/", $back)) != "") {
 						$back = "/".$back;
 					}
-					$this->output->add_tag("back", "/".$this->page->module.$back);
+					$this->view->add_tag("back", "/".$this->page->module.$back);
 				}
 
 				/* Directories
@@ -62,7 +62,7 @@
 						"link"   => "/".$this->page->module.$sub_dir."/".$filename,
 						"size"   => $this->model->get_file_size($directory."/".$filename),
 						"delete" => show_boolean($this->model->directory_empty($filename, $directory)));
-					$this->output->record($file, "dir");
+					$this->view->record($file, "dir");
 				}
 
 				/* Files
@@ -73,10 +73,10 @@
 						"link"   => "/".$directory."/".rawurlencode($filename),
 						"size"   => $this->model->get_file_size($directory."/".$filename),
 						"delete" => "yes");
-					$this->output->record($file, "file");
+					$this->view->record($file, "file");
 				}
 
-				$this->output->close_tag();
+				$this->view->close_tag();
 			}
 		}
 	}

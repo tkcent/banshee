@@ -1,5 +1,5 @@
 <?php
-	class weblog_model extends model {
+	class weblog_model extends Banshee\model {
 		private $show_user = null;
 
 		public function limit_to_user($user) {
@@ -150,17 +150,17 @@
 			$result = true;
 
 			if (trim($comment["author"]) == "") {
-				$this->output->add_message("Please, fill in your name.");
+				$this->view->add_message("Please, fill in your name.");
 				$result = false;
 			}
 
 			if (trim($comment["content"]) == "") {
-				$this->output->add_message("Empty comments are not allowed.");
+				$this->view->add_message("Empty comments are not allowed.");
 				$result = false;
 			} else {
-				$message = new message($comment["content"]);
+				$message = new Banshee\message($comment["content"]);
 				if ($message->is_spam) {
-					$this->output->add_message("Message seen as spam.");
+					$this->view->add_message("Message seen as spam.");
 					$result = false;
 				}
 			}
@@ -185,9 +185,9 @@
 		}
 
 		private function send_notification($weblog_id, $comment) {
-			if (($weblog = $this->db->entry("weblogs", $weblog_id)) === false) {
+			if (($weblog = $this->db->entry("weblogs", $weblog_id)) == false) {
 				return false;
-			} else if (($author = $this->db->entry("users", $weblog["user_id"])) === false) {
+			} else if (($author = $this->db->entry("users", $weblog["user_id"])) == false) {
 				return false;
 			}
 
@@ -205,7 +205,7 @@
 				"<p>Click <a href=\"".$weblog_url."\">here</a> to visit the weblog page or <a href=\"".$cms_url."\">here</a> to visit the weblog CMS page.</p>".
 				"</body>";
 
-			$email = new email("Weblog comment posted", $this->settings->webmaster_email);
+			$email = new Banshee\email("Weblog comment posted", $this->settings->webmaster_email);
 			$email->message($message);
 			$email->send($author["email"], $author["fullname"]);
 		}

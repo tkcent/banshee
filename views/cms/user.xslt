@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../banshee/main.xslt" />
-<xsl:include href="../banshee/pagination.xslt" />
+<xsl:import href="../banshee/main.xslt" />
+<xsl:import href="../banshee/pagination.xslt" />
 
 <!--
 //
@@ -43,7 +43,6 @@
 <a href="/{/output/page}/new" class="btn btn-default">New user</a>
 <a href="/cms" class="btn btn-default">Back</a>
 </div>
-<div class="clear"></div>
 </xsl:template>
 
 <!--

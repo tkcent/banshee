@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class image {
 		public $resource = null;
 		protected $load_image = null;
@@ -185,16 +187,16 @@
 
 		/* Send image to client
 		 *
-		 * INPUT:  object output
+		 * INPUT:  object view
 		 * OUTPUT: true
 		 * ERROR:  false
 		 */
-		public function to_output($output) {
+		public function to_output($view) {
 			if (headers_sent()) {
 				return false;
 			}
 
-			$output->disable();
+			$view->disable();
 
 			header("Content-Type: ".$this->mime_type);
 			return call_user_func($this->save_image, $this->resource);

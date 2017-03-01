@@ -1,5 +1,5 @@
 <?php
-	class webshop_orders_model extends model {
+	class webshop_orders_model extends Banshee\model {
 		public function count_orders($closed) {
 			$query = "select count(*) as count from shop_orders where user_id=%d and closed=%d";
 

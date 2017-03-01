@@ -1,5 +1,5 @@
 <?php
-	class cms_album_model extends tablemanager_model {
+	class cms_album_model extends Banshee\tablemanager_model {
 		protected $table = "photo_albums";
 		protected $elements = array(
 			"name" => array(
@@ -37,10 +37,10 @@
 			$query = "select count(*) as count from photos where photo_album_id=%d";
 
 			if (($result = $this->db->execute($query, $item_id)) === false) {
-				$this->output->add_message("Error counting photos in album.");
+				$this->view->add_message("Error counting photos in album.");
 				return false;
 			} else if ($result[0]["count"] > 0) {
-				$this->output->add_message("Photo album contains photos. Delete them first.");
+				$this->view->add_message("Photo album contains photos. Delete them first.");
 				return false;
 			}
 

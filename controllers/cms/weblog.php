@@ -1,44 +1,44 @@
 <?php
 	require_once("../libraries/helpers/output.php");
 
-	class cms_weblog_controller extends controller {
+	class cms_weblog_controller extends Banshee\controller {
 		private function show_weblog_overview() {
 			if (($weblog_count = $this->model->count_weblogs()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$paging = new pagination($this->output, "admin_forum", $this->settings->admin_page_size, $weblog_count);
+			$paging = new Banshee\pagination($this->view, "admin_forum", $this->settings->admin_page_size, $weblog_count);
 
 			if (($weblogs = $this->model->get_weblogs($paging->offset, $paging->size)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("weblogs");
+			$this->view->open_tag("weblogs");
 			foreach ($weblogs as $weblog) {
 				$weblog["visible"] = show_boolean($weblog["visible"]);
 				$weblog["timestamp"] = date("j F Y, H:i", $weblog["timestamp"]);
-				$this->output->record($weblog, "weblog");
+				$this->view->record($weblog, "weblog");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->add_tag("comments", show_boolean($this->user->access_allowed("cms/weblog/comment")));
+			$this->view->add_tag("comments", show_boolean($this->user->access_allowed("cms/weblog/comment")));
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_weblog_form($weblog) {
-			$this->output->add_ckeditor("div.btn-group");
+			$this->view->add_ckeditor("div.btn-group");
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
 			$weblog["visible"] = show_boolean($weblog["visible"]);
-			$this->output->record($weblog, "weblog");
+			$this->view->record($weblog, "weblog");
 
 			/* Tags
 			 */
@@ -51,35 +51,35 @@
 				}
 			}
 
-			$this->output->open_tag("tags");
+			$this->view->open_tag("tags");
 			if (($tags = $this->model->get_tags()) != false) {
 				foreach ($tags as $tag) {
-					$this->output->add_tag("tag", $tag["tag"], array(
+					$this->view->add_tag("tag", $tag["tag"], array(
 						"id" => $tag["id"],
 						"selected" => show_boolean(in_array($tag["id"], $tagged))));
 				}
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Comments
 			 */
-			$this->output->open_tag("comments");
+			$this->view->open_tag("comments");
 			if (($weblog_comments = $this->model->get_weblog_comments($weblog["id"])) != false) {
 				foreach ($weblog_comments as $comment) {
 					$comment["content"] = truncate_text($comment["content"], 100);
-					$this->output->record($comment, "comment");
+					$this->view->record($comment, "comment");
 				}
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				/* Remove weblog RSS from cache
 				 */
-				$this->output->remove_from_cache("weblog_rss");
+				$this->view->remove_from_cache("weblog_rss");
 
 				if ($_POST["submit_button"] == "Save weblog") {
 					/* Save weblog
@@ -90,7 +90,7 @@
 						/* Create weblog
 						 */
 						if ($this->model->create_weblog($_POST) == false) {
-							$this->output->add_message("Database error while creating weblog.");
+							$this->view->add_message("Database error while creating weblog.");
 							$this->show_weblog_form($_POST);
 						} else {
 							$this->user->log_action("weblog %d created", $this->db->last_insert_id);
@@ -100,7 +100,7 @@
 						/* Update weblog
 						 */
 						if ($this->model->update_weblog($_POST) == false) {
-							$this->output->add_message("Database error while updating weblog.");
+							$this->view->add_message("Database error while updating weblog.");
 							$this->show_weblog_form($_POST);
 						} else {
 							$this->user->log_action("weblog %d updated", $_POST["id"]);
@@ -111,7 +111,7 @@
 					/* Delete weblog
 					 */
 					if ($this->model->delete_weblog($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Error while deleting weblog.");
+						$this->view->add_tag("result", "Error while deleting weblog.");
 					} else {
 						$this->user->log_action("weblog %d deleted", $_POST["id"]);
 						$this->show_weblog_overview();
@@ -123,7 +123,7 @@
 				/* Show weblog
 				 */
 				if (($weblog = $this->model->get_weblog($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Weblog not found.");
+					$this->view->add_tag("result", "Weblog not found.");
 				} else {
 					$this->show_weblog_form($weblog);
 				}

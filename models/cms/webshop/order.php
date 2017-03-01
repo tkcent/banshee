@@ -1,5 +1,5 @@
 <?php
-	class cms_webshop_order_model extends model {
+	class cms_webshop_order_model extends Banshee\model {
 		public function count_orders($closed) {
 			$query = "select count(*) as count from shop_orders where closed=%d";
 

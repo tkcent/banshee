@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class HTTP {
 		protected $host = null;
 		protected $port = null;
@@ -95,11 +97,12 @@
 			/* Add HTTP headers
 			 */
 			$this->add_header("Host", $this->host);
-			$this->add_header("Accept", "*/*");
+			$this->add_header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 			$this->add_header("Accept-Charset", "ISO-8859-1,utf-8");
-			$this->add_header("Accept-Language", "en-US");
+			$this->add_header("Accept-Language", "en-US,en;q=0.5");
 			$this->add_header("Connection", "close");
-			$this->add_header("User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)");
+			$this->add_header("Referer", "http".($this->protocol == "tls" ? "s" : "")."://".$this->host."/");
+			$this->add_header("User-Agent", "Mozilla/5.0 (compatible; MSIE 11.0; Windows NT 6.1; WOW64; Trident/6.0)");
 			if (function_exists("gzdecode")) {
 				$this->add_header("Accept-Encoding", "gzip");
 			}
@@ -271,7 +274,7 @@
 			}
 
 			if ($enable_crypto) {
-				if (stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) == false) {
+				if (stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT) == false) {
 					return false;
 				}
 			}

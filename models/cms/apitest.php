@@ -1,5 +1,5 @@
 <?php
-	class cms_apitest_model extends model {
+	class cms_apitest_model extends Banshee\model {
 		private function indent_json($json) {
 			$result      = "";
 			$pos         = 0;
@@ -41,16 +41,31 @@
 			return $result;
 		}
 
+		private function make_post_data($data) {
+			$data = str_replace("\n", "&", $data);
+			$data = explode("&", $data);
+
+			$result = array();
+			foreach ($data as $item) {
+				list($key, $value) = explode("=", $item, 2);
+				$result[$key] = $value;
+			}
+
+			return $result;
+		}
+
 		public function request_result($data) {
 			if ($data["url"][0] != "/") {
 				return false;
 			}
 
 			if ($_SERVER["HTTPS"] == "on") {
-				$http = new HTTPS($_SERVER["HTTP_HOST"]);
+				$http = new Banshee\HTTPS($_SERVER["HTTP_HOST"]);
 			} else {
-				$http = new HTTP($_SERVER["HTTP_HOST"]);
+				$http = new Banshee\HTTP($_SERVER["HTTP_HOST"]);
 			}
+
+			$http->add_header("Referer", $_SERVER["HTTP_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 
 			/* Determine URL path
 			 */
@@ -60,20 +75,13 @@
 			} else {
 				$url .= "&";
 			}
-			$url .= "output=";
-
-			switch ($data["type"]) {
-				case "ajax": $url .= "ajax"; break;
-				case "xml": $url .= "restxml"; break;
-				case "json": $url .= "restjson"; break;
-				default: return false;
-			}
+			$url .= "output=".$data["type"];
 
 			/* Restore cookies
 			 */
 			if (isset($_SESSION["apitest_cookies"])) {
 				if (($cookies = json_decode($_SESSION["apitest_cookies"], true)) !== null) {
-					foreach ($cookies as $key => $value) {	
+					foreach ($cookies as $key => $value) {
 						$http->add_cookie($key, $value);
 					}
 				}
@@ -90,8 +98,8 @@
 			 */
 			switch ($data["method"]) {
 				case "GET": $result = $http->GET($url); break;
-				case "POST": $result = $http->POST($url, $data["postdata"]); break;
-				case "PUT": $result = $http->PUT($url, $data["postdata"]); break;
+				case "POST": $result = $http->POST($url, $this->make_post_data($data["postdata"])); break;
+				case "PUT": $result = $http->PUT($url, $this->make_post_data($data["postdata"])); break;
 				case "DELETE": $result = $http->DELETE($url); break;
 				default: return false;
 			}

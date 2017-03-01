@@ -1,5 +1,5 @@
 <?php
-	class cms_action_model extends model {
+	class cms_action_model extends Banshee\model {
 		public function get_log_size() {
 			if (($fp = fopen("../logfiles/actions.log", "r")) == false) {
 				return false;

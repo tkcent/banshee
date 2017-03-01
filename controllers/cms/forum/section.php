@@ -1,5 +1,5 @@
 <?php
-	class cms_forum_section_controller extends tablemanager_controller {
+	class cms_forum_section_controller extends Banshee\tablemanager_controller {
 		protected $name = "Forum section";
 		protected $pathinfo_offset = 3;
 		protected $back = "cms/forum";

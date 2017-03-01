@@ -2,9 +2,9 @@
 	/* Get width in characters of current terminal
 	 */
 	function get_terminal_width() {
-		$output = explode(";", exec("stty -a | grep columns"));
+		$view = explode(";", exec("stty -a | grep columns"));
 
-		foreach ($output as $line) {
+		foreach ($view as $line) {
 			list($key, $value) = explode(" ", ltrim($line), 2);
 			if ($key == "columns") {
 				return (int)$value;
@@ -46,10 +46,10 @@
 		foreach ($file as $i => $line) {
 			$text = chop($line);
 
-			if (substr($text, 0, 12) == "<xsl:include") {
+			if (substr($text, 0, 11) == "<xsl:import") {
 				$include = true;
 			} else if (($text == "") && $include) {
-				fputs($fp, "<xsl:include href=\"layout_".$name.".xslt\" />\n");
+				fputs($fp, "<xsl:import href=\"layout_".$name.".xslt\" />\n");
 				$include = false;
 			} else if ($text == "</xsl:template>") {
 				fputs($fp, "<xsl:apply-templates select=\"layout_".$name."\" />\n");

@@ -1,5 +1,5 @@
 <?php
-	class cms_album_controller extends tablemanager_controller {
+	class cms_album_controller extends Banshee\tablemanager_controller {
 		protected $name = "Photo album";
 		protected $pathinfo_offset = 2;
 		protected $back = "cms";
@@ -10,7 +10,7 @@
 		protected $foreign_null = "---";
 
 		public function show_overview() {
-			$this->output->add_javascript("cms/album.js");
+			$this->view->add_javascript("cms/album.js");
 			parent::show_overview();
 		}
 	}

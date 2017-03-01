@@ -1,58 +1,58 @@
 <?php
 	require_once("../libraries/helpers/output.php");
 
-	class cms_faq_controller extends controller {
+	class cms_faq_controller extends Banshee\controller {
 		public function show_faq_overview() {
 			if (($sections = $this->model->get_all_sections()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			} else if (($faqs = $this->model->get_all_faqs()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("sections");
+			$this->view->open_tag("sections");
 			foreach ($sections as $section) {
-				$this->output->add_tag("section", $section["label"], array("id" => $section["id"]));
+				$this->view->add_tag("section", $section["label"], array("id" => $section["id"]));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->open_tag("faqs");
+			$this->view->open_tag("faqs");
 			foreach ($faqs as $faq) {
 				$faq["question"] = truncate_text($faq["question"], 140);
-				$this->output->record($faq, "faq");
+				$this->view->record($faq, "faq");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function show_faq_form($faq) {
 			if (($sections = $this->model->get_all_sections()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
 			if (isset($faq["select"]) == false) {
-				$faq["select"] = count($sections) == 0 ? "new" : "old";
+				$faq["select"] = count($sections) == 0 ? "new" : "existing";
 			}
 
-			$this->output->add_ckeditor("div.btn-group");
-			$this->output->add_javascript("cms/faq.js");
+			$this->view->add_ckeditor("div.btn-group");
+			$this->view->add_javascript("cms/faq.js");
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
-			$this->output->open_tag("sections");
+			$this->view->open_tag("sections");
 			foreach ($sections as $section) {
-				$this->output->add_tag("section", $section["label"], array("id" => $section["id"]));
+				$this->view->add_tag("section", $section["label"], array("id" => $section["id"]));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->record($faq, "faq");
+			$this->view->record($faq, "faq");
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -66,7 +66,7 @@
 						/* Create FAQ
 						 */
 						if ($this->model->create_faq($_POST) == false) {
-							$this->output->add_message("Error while creating F.A.Q.");
+							$this->view->add_message("Error while creating F.A.Q.");
 							$this->show_faq_form($_POST);
 						} else {
 							$this->user->log_action("faq %d created", $this->db->last_insert_id);
@@ -76,7 +76,7 @@
 						/* Update FAQ
 						 */
 						if ($this->model->update_faq($_POST) == false) {
-							$this->output->add_message("Error while updating F.A.Q.");
+							$this->view->add_message("Error while updating F.A.Q.");
 							$this->show_faq_form($_POST);
 						} else {
 							$this->user->log_action("faq %d updated", $_POST["id"]);
@@ -87,7 +87,7 @@
 					/* Delete FAQ
 					 */
 					if ($this->model->delete_faq($_POST["id"]) == false) {
-						$this->output->add_message("Error while deleting F.A.Q.");
+						$this->view->add_message("Error while deleting F.A.Q.");
 						$this->show_faq_form($_POST);
 					} else {
 						$this->user->log_action("faq %d deleted", $_POST["id"]);
@@ -105,7 +105,7 @@
 				/* Edit existing FAQ
 				 */
 				if (($faq = $this->model->get_faq($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "FAQ not found.");
+					$this->view->add_tag("result", "FAQ not found.");
 				} else {
 					$this->show_faq_form($faq);
 				}

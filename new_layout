@@ -8,8 +8,8 @@
 	 */
 
 	chdir(__DIR__);
-	require("libraries/banshee.php");
-	require("libraries/security.php");
+	require("libraries/core/banshee.php");
+	require("libraries/core/security.php");
 	require("libraries/helpers/console.php");
 
 	/* Show help and exit

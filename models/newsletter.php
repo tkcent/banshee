@@ -1,5 +1,5 @@
 <?php
-	class newsletter_model extends model {
+	class newsletter_model extends Banshee\model {
 		private function create_signature($data) {
 			return hash_hmac("sha256", json_encode($data), $this->settings->secret_website_code);
 		}
@@ -12,7 +12,7 @@
 			} else if (($data = json_decode($data, true)) === null) {
 				return false;
 			}
-			
+
 			if ((int)$data["expires"] < (int)date("YmdHis")) {
 				return false;
 			}
@@ -30,7 +30,7 @@
 			$info["email"] = strtolower($info["email"]);
 
 			if (valid_email($info["email"]) == false) {
-				$this->output->add_message("Invalid e-mail address");
+				$this->view->add_message("Invalid e-mail address");
 				return false;
 			}
 
@@ -62,7 +62,7 @@
 				}
 				$title = "unsubscription";
 				$action = "unsubscribe from";
-			} else {	
+			} else {
 				return false;
 			}
 
@@ -75,7 +75,7 @@
 			$code = strtr($code, "/+", "_-");
 
 			$subject = "Confirm ".$this->settings->head_title." newsletter ".$title;
-			$newsletter = new newsletter($subject, $this->settings->newsletter_email, $this->settings->newsletter_name);
+			$newsletter = new Banshee\newsletter($subject, $this->settings->newsletter_email, $this->settings->newsletter_name);
 			$url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/newsletter/".$code;
 			$message  = "You recieve this e-mail because your e-mail address has been entered at the newsletter ".
 						"form at the ".$this->settings->head_title." website. Subscribing to or unsubscribing from this ".

@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 	chdir(__DIR__);
-	require("../libraries/banshee.php");
+	require("../libraries/core/banshee.php");
 
 	/* Returns database table structure
 	 */
@@ -10,10 +10,9 @@
 			return false;
 		}
 
-		$skip = array("id", "name");
 		$structure = array();
 		foreach ($columns as $column) {
-			if (in_array($column["Field"], $skip) == false) {
+			if (strstr($column["Type"], "tinyint") !== false) {
 				array_push($structure, $column["Field"]);
 			}
 		}
@@ -36,7 +35,7 @@
 
 	/* Connect to the database
 	 */
-	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 	if ($db->connected == false) {
 		exit("Internal error: database not available.\n");
 	}

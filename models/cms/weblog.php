@@ -1,5 +1,5 @@
 <?php
-	class cms_weblog_model extends model {
+	class cms_weblog_model extends Banshee\model {
 		public function count_weblogs() {
 			$query = "select count(*) as count from weblogs";
 			if ($this->user->is_admin == false) {
@@ -63,12 +63,12 @@
 			$result = true;
 
 			if (trim($weblog["title"]) == "") {
-				$this->output->add_message("Title can't be empty.");
+				$this->view->add_message("Title can't be empty.");
 				$result = false;
 			}
 
 			if (trim($weblog["content"]) == "") {
-				$this->output->add_message("Weblog content can't be empty.");
+				$this->view->add_message("Weblog content can't be empty.");
 				$result = false;
 			}
 

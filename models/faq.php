@@ -1,5 +1,5 @@
 <?php
-	class faq_model extends model {
+	class faq_model extends Banshee\model {
 		public function get_all_sections() {
 			$query = "select * from faq_sections order by label";
 

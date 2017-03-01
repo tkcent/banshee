@@ -1,5 +1,5 @@
 <?php
-	class collection_model extends model {
+	class collection_model extends Banshee\model {
 		public function get_collections() {
 			$query = "select * from collections order by %S";
 

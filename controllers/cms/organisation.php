@@ -1,5 +1,5 @@
 <?php
-	class cms_organisation_controller extends tablemanager_controller {
+	class cms_organisation_controller extends Banshee\tablemanager_controller {
 		protected $name = "Organisation";
 		protected $back = "cms";
 		protected $pathinfo_offset = 2;
@@ -8,11 +8,11 @@
 		public function show_item_form($item) {
 			if (valid_input($item["id"], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				if (($users = $this->model->get_users($item["id"])) !== false) {
-					$this->output->open_tag("users");
+					$this->view->open_tag("users");
 					foreach ($users as $user) {
-						$this->output->record($user, "user");
+						$this->view->record($user, "user");
 					}
-					$this->output->close_tag();
+					$this->view->close_tag();
 				}
 			}
 

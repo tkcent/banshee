@@ -1,5 +1,5 @@
 <?php
-	class cms_news_model extends tablemanager_model {
+	class cms_news_model extends Banshee\tablemanager_model {
 		protected $table = "news";
 		protected $order = "timestamp";
 		protected $elements = array(

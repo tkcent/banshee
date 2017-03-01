@@ -1,5 +1,5 @@
 <?php
-	class search_model extends model {
+	class search_model extends Banshee\model {
 		private $text = null;
 		private $add_or = null;
 

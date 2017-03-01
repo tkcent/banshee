@@ -1,5 +1,5 @@
 <?php
-	class cms_page_model extends model {
+	class cms_page_model extends Banshee\model {
 		private $default_layout = "Default layout";
 
 		public function get_pages() {
@@ -63,7 +63,7 @@
 			$modules = page_to_module(config_file($config));
 
 			$url_parts = explode("/", $url);
-			while (count($url_parts) > 0) {	
+			while (count($url_parts) > 0) {
 				if (in_array(implode("/", $url_parts), $modules)) {
 					return true;
 				}
@@ -77,48 +77,48 @@
 			$result = true;
 
 			if (valid_input(trim($page["url"]), VALIDATE_URL, VALIDATE_NONEMPTY) == false) {
-				$this->output->add_message("URL is empty or contains invalid characters.");
+				$this->view->add_message("URL is empty or contains invalid characters.");
 				$result = false;
 			} else if ((strpos($page["url"], "//") !== false) || ($page["url"][0] !== "/")) {
-				$this->output->add_message("Invalid URL.");
+				$this->view->add_message("Invalid URL.");
 				$result = false;
 			}
 
 			if (in_array($page["language"], array_keys(config_array(SUPPORTED_LANGUAGES))) == false) {
-				$this->output->add_message("Language not supported.");
+				$this->view->add_message("Language not supported.");
 				$result = false;
 			}
 
 			if (($layouts = $this->get_layouts()) != false) {
 				if (in_array($page["layout"], $layouts) == false) {
-					$this->output->add_message("Invalid layout.");
+					$this->view->add_message("Invalid layout.");
 					$result = false;
 				}
 			}
 
 			if (trim($page["title"]) == "") {
-				$this->output->add_message("Empty title not allowed.");
+				$this->view->add_message("Empty title not allowed.");
 				$result = false;
 			}
 
 			if (valid_input($page["language"], VALIDATE_NONCAPITALS, 2) == false) {
-				$this->output->add_message("Invalid language code.");
+				$this->view->add_message("Invalid language code.");
 				$result = false;
 			}
 
 			if ($this->url_belongs_to_module($page["url"], "public_modules")) {
-				$this->output->add_message("The URL belongs to a public module.");
+				$this->view->add_message("The URL belongs to a public module.");
 				$result = false;
 			} else if ($this->url_belongs_to_module($page["url"], "private_modules")) {
-				$this->output->add_message("The URL belongs to a private module.");
+				$this->view->add_message("The URL belongs to a private module.");
 				$result = false;
 			} else {
 				$query = "select count(*) as count from pages where id!=%d and url=%s";
 				if (($page = $this->db->execute($query, $page["id"], $page["url"])) === false) {
-					$this->output->add_message("Error while verifying the URL.");
+					$this->view->add_message("Error while verifying the URL.");
 					$result = false;
 				} else if ($page[0]["count"] > 0) {
-					$this->output->add_message("The URL belongs to another page.");
+					$this->view->add_message("The URL belongs to another page.");
 					$result = false;
 				}
 			}

@@ -56,7 +56,7 @@
 <script type="text/javascript">
 &lt;!--
 	function redirect() {
-		document.location = "/<xsl:value-of select="$url" />";
+		document.location = '/<xsl:value-of select="$url" />';
 	}
 
 	setTimeout("redirect()", <xsl:value-of select="$seconds" />000);
@@ -73,7 +73,7 @@
 <xsl:template match="system_messages">
 <div class="alert alert-info" role="alert">
 <xsl:for-each select="message">
-    <p>&#187; <xsl:value-of select="." /></p>
+	<p>&#187; <xsl:value-of select="." /></p>
 </xsl:for-each>
 </div>
 </xsl:template>
@@ -86,7 +86,7 @@
 <xsl:template match="system_warnings">
 <div class="alert alert-danger" role="alert">
 <xsl:for-each select="warning">
-    <p>&#187; <xsl:value-of select="." /></p>
+	<p>&#187; <xsl:value-of select="." /></p>
 </xsl:for-each>
 </div>
 </xsl:template>

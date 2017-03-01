@@ -1,5 +1,5 @@
 <?php
-	class news_model extends model {
+	class news_model extends Banshee\model {
 		public function count_news() {
 			$query = "select count(*) as count from news";
 

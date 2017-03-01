@@ -23,3 +23,10 @@ ul.menu-editor ul.sortable {
 ul.menu-editor li {
 	margin-top:2px;
 }
+
+input.add_node, input.delete_node, input.add_branch {
+	padding:0 7px;
+	margin-left:2px;
+	position:relative;
+	top:-1px;
+}

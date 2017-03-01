@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="banshee/main.xslt" />
+<xsl:import href="banshee/main.xslt" />
 
 <!--
 //
@@ -13,6 +13,19 @@
 <xsl:for-each select="extension"><li><xsl:value-of select="." /></li></xsl:for-each>
 </ul>
 <p>Install and/or enable them and refresh this page.</p>
+
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Refresh</a>
+</div>
+</xsl:template>
+
+<!--
+//
+//  MySQL client template
+//
+//-->
+<xsl:template match="mysql_client">
+<p>The MySQL command line client is missing. Install it and refresh this page.</p>
 
 <div class="btn-group">
 <a href="/{/output/page}" class="btn btn-default">Refresh</a>
@@ -44,7 +57,7 @@
 <p>Enter the MySQL root credentials to create a database and a database user for your website as specified in settings/website.conf.</p>
 <form action="/{/output/page}" method="post">
 <label for="username">Username:</label>
-<input type="text" id="username" name="username" value="{username}" class="form-control" />
+<input type="text" id="username" name="username" value="{username}" class="form-control" autofocus="autofocus" />
 <label for="password">Password:</label>
 <input type="password" id="password" name="password" class="form-control" />
 
@@ -83,11 +96,34 @@
 
 <!--
 //
+//  Credentials template
+//
+//-->
+<xsl:template match="credentials">
+<xsl:call-template name="show_messages" />
+
+<form action="/{/output/page}" method="post">
+<label for="username">Enter the username for the administrator:</label>
+<input type="username" id="username" name="username" value="{username}" class="form-control" />
+<label for="password">Enter new password for this user:</label>
+<input type="password" id="password" name="password" class="form-control" autofocus="autofocus" />
+<label for="repeat">Repeat the password:</label>
+<input type="password" id="repeat" name="repeat" class="form-control" />
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Set password" class="btn btn-default" />
+</div>
+</form>
+</xsl:template>
+
+
+<!--
+//
 //  Done template
 //
 //-->
 <xsl:template match="done">
-<p>Done! You can now login with username 'admin' and password 'banshee'.</p>
+<p>Done! You can now login with your username and password.</p>
 <p>Don't forget to disable this setup module by removing it from settings/public_modules.conf.</p>
 
 <div class="btn-group">
@@ -102,13 +138,7 @@
 //-->
 <xsl:template match="content">
 <h1>Banshee setup</h1>
-<xsl:apply-templates select="php_extensions" />
-<xsl:apply-templates select="db_settings" />
-<xsl:apply-templates select="create_db" />
-<xsl:apply-templates select="import_sql" />
-<xsl:apply-templates select="update_db" />
-<xsl:apply-templates select="done" />
-<xsl:apply-templates select="result" />
+<xsl:apply-templates />
 </xsl:template>
 
 </xsl:stylesheet>

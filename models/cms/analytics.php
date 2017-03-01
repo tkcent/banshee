@@ -1,5 +1,5 @@
 <?php
-	class cms_analytics_model extends model {
+	class cms_analytics_model extends Banshee\model {
 		private function arrange_data($data) {
 			if ($data === false) {
 				return false;

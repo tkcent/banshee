@@ -8,7 +8,7 @@
 	 */
 
 	chdir(__DIR__);
-	require("libraries/banshee.php");
+	require("libraries/core/banshee.php");
 	require("libraries/helpers/console.php");
 
 	function show_directory_content($directory) {

@@ -8,9 +8,9 @@
 	 */
 
 	chdir(__DIR__);
-	require("libraries/banshee.php");
+	require("libraries/core/banshee.php");
 
-	$written_for = "5.4";
+	$written_for = "6.0";
 
 	/* Auditor class
 	 */
@@ -139,9 +139,7 @@
 
 				$this->scan_line(strtolower($line), $number);
 
-				$output = ob_get_clean();
-
-				if ($output == "") {
+				if (($output = ob_get_clean()) == "") {
 					continue;
 				}
 
@@ -193,18 +191,20 @@
 		private $variables = array();
 		private $continue_var = null;
 		protected $verified = array(
-			"libraries/database/mysqli_connection.php"     => array(36),
-			"libraries/database/postgresql_connection.php" => array(46),
-			"libraries/security.php"                       => array(201, 267),
-			"libraries/tablemanager_controller.php"        => array(214),
-			"libraries/tablemanager_model.php"             => array(285),
-			"libraries/user.php"                           => array(266, 275),
+			"libraries/database/mysqli_connection.php"     => array(38),
+			"libraries/database/postgresql_connection.php" => array(48),
+			"libraries/core/user.php"                      => array(268, 277),
+			"libraries/core/security.php"                  => array(192, 258),
+			"libraries/tablemanager_controller.php"        => array(216),
+			"libraries/tablemanager_model.php"             => array(287),
+			"models/cms/link.php"                          => array(37),
+			"models/cms/photo.php"                         => array(207),
 			"models/cms/settings.php"                      => array(54, 77),
-			"models/cms/user.php"                          => array(8),
+			"models/cms/user.php"                          => array(6),
 			"models/cms/webshop/article.php"               => array(39),
 			"models/search.php"                            => array(135),
-			"models/setup.php"                             => array(130),
-			"models/webshop/cart.php"                      => array(14));
+			"models/setup.php"                             => array(140),
+			"models/webshop/cart.php"                      => array(12));
 
 		protected function scan_line($line) {
 			/* PHP database query function calls
@@ -241,7 +241,7 @@
 
 				return;
 			}
-			
+
 			if (preg_match('/^\s*\$[A-Za-z0-9_]*\s*\.=/', $line) == 1) {
 				list($key, $value) = explode("=", $line, 2);
 				$key = substr(trim($key, " ."), 1);
@@ -313,7 +313,6 @@
 					if (isset($this->variables[$str]) == false) {
 						print "unknown variable for query string: ".$str."\n";
 					}
-					
 				} else {
 					/* Weird query string
 					 */
@@ -357,22 +356,23 @@
 
 	class integrity_auditor {
 		private $files = array(
+			"libraries/core" => array(
+				"banshee.php"    => "258520685efd76cb2566356a2182223c6c1924d4",
+				"security.php"   => "c23ca884dd672d2d64a418d3d11a87e6a0ce7646",
+				"session.php"    => "45c0bb5946a2bf1c9c5d581a2a59a11a94ff8924",
+				"settings.php"   => "655e1d443d532e6b4b537f38590889a7910c5fe1",
+				"page.php"       => "50f1dcd54d51f97ab237f46df08da591bc3fc50d",
+				"user.php"       => "7b4fad037b0ae1223e78d619c1d3ca4a3ccdfa65",
+				"view.php"       => "ce2501b81e52180d3ebda34b9816976a1fe35a89"),
 			"libraries/database" => array(
-				"database_connection.php" => "d0c1491476bb10f85ecc63cf059cf550099a7e82",
-				"mysqli_connection.php"   => "62b7bfb0126eef0246d8d046482c67a30ce2beb3"),
+				"database_connection.php" => "a2a4c55ad4a540b34bd7c7b6ddbdf7df05ebec9f",
+				"mysqli_connection.php"   => "9d80db1c20bec37ea5e3670580c33717dbfb3096"),
 			"libraries" => array(
-				"banshee.php"    => "2e0716b411a1343eb6a341dd6311ecefbaeb001b",
-				"controller.php" => "e53384e166afee3e943b423405ced65f7821aeda",
-				"email.php"      => "7f92eb195913c997150ac5dc532053066078d6cc",
-				"model.php"      => "4aab358bd92765255fb52c6b77d021396bd1ed12",
-				"output.php"     => "0fc9074311107e26706a2bcda7985391f0280bba",
-				"page.php"       => "579868719cc960528a843191af4c5da88200702e",
-				"security.php"   => "2fcb13b43e13993e9e48c7ef95ed639a8194455e",
-				"session.php"    => "0ca729a8891d57dbacf1cfd10825259cf5c5bd2c",
-				"settings.php"   => "9fb1b7ece5a20d50c308cbe9824e2a7235523571",
-				"user.php"       => "41c9c50ec40218c020ac435ba1d6360226ba0487"),
+				"controller.php" => "9a0cdb52990abe55484f80a1eb4929ae8d02f73c",
+				"email.php"      => "e3bc888ec871468ce2a00ac8eb7416c59902476a",
+				"model.php"      => "2b40815ff1b2af611fe5fb13dad5ea7fcb0f6395"),
 			"public" => array(
-				"index.php"      => "187a2f0982d2fc037dbcd9a0ea7aedee977eb034"));
+				"index.php"      => "d4101f2f4651a200dd4b5986647c22d062856f45"));
 
 		public function perform_audit() {
 			$total = 0;

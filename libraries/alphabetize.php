@@ -6,19 +6,21 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class alphabetize {
-		private $output = null;
+		private $view = null;
 		private $name = null;
 		private $char = "0";
 
 		/* Constructor
 		 *
-		 * INPUT:  object output, string name
+		 * INPUT:  object view, string name
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($output, $name) {
-			$this->output = $output;
+		public function __construct($view, $name) {
+			$this->view = $view;
 			$this->name = $name;
 
 			/* Initialize session storage
@@ -37,7 +39,7 @@
 				$this->char = $this->make_valid_char($_GET["char"]);
 			}
 
-			$this->output->add_css("banshee/alphabetize.css");
+			$this->view->add_css("banshee/alphabetize.css");
 		}
 
 		/* Magic method get
@@ -91,14 +93,14 @@
 		 * ERROR:  -
 		 */
 		public function show_browse_links() {
-			$this->output->open_tag("alphabetize", array("char" => $this->char));
+			$this->view->open_tag("alphabetize", array("char" => $this->char));
 
-			$this->output->add_tag("char", "#", array("link" => "0"));
+			$this->view->add_tag("char", "#", array("link" => "0"));
 			for ($c = ord("a"); $c <= ord("z"); $c++) {
-				$this->output->add_tag("char", chr($c), array("link" => chr($c)));
+				$this->view->add_tag("char", chr($c), array("link" => chr($c)));
 			}
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		/* Returns content of table for current start character

@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class POP3 {
 		private $resource = null;
 		private $message_count = null;

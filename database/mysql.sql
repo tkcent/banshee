@@ -1,8 +1,8 @@
--- MySQL dump   Distrib MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.29-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: banshee
+-- Host: localhost    Database: localhost
 -- ------------------------------------------------------
--- Server version	  MariaDB
+-- Server version	10.0.28-MariaDB-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -231,6 +231,16 @@ CREATE TABLE `forum_last_view` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `forum_last_view`
+--
+
+LOCK TABLES `forum_last_view` WRITE;
+/*!40000 ALTER TABLE `forum_last_view` DISABLE KEYS */;
+INSERT INTO `forum_last_view` VALUES (1,'2017-02-02 15:55:36');
+/*!40000 ALTER TABLE `forum_last_view` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `forum_messages`
 --
 
@@ -352,6 +362,40 @@ CREATE TABLE `languages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `languages`
+--
+
+LOCK TABLES `languages` WRITE;
+/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
+INSERT INTO `languages` VALUES (1,'*','test','Test','Test');
+/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_categories`
+--
+
+DROP TABLE IF EXISTS `link_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_categories` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `category` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_categories`
+--
+
+LOCK TABLES `link_categories` WRITE;
+/*!40000 ALTER TABLE `link_categories` DISABLE KEYS */;
+INSERT INTO `link_categories` VALUES (1,'Websites');
+/*!40000 ALTER TABLE `link_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `links`
 --
 
@@ -360,10 +404,13 @@ DROP TABLE IF EXISTS `links`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `links` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_id` int(10) unsigned NOT NULL,
   `text` varchar(100) NOT NULL,
   `link` tinytext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `links_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `link_categories` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -372,7 +419,7 @@ CREATE TABLE `links` (
 
 LOCK TABLES `links` WRITE;
 /*!40000 ALTER TABLE `links` DISABLE KEYS */;
-INSERT INTO `links` VALUES (1,'Hiawatha webserver','https://www.hiawatha-webserver.org/'),(2,'Banshee PHP framework','http://www.banshee-php.org/');
+INSERT INTO `links` VALUES (1,1,'Hiawatha webserver','https://www.hiawatha-webserver.org/'),(2,1,'Banshee PHP framework','https://www.banshee-php.org/');
 /*!40000 ALTER TABLE `links` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -475,19 +522,11 @@ CREATE TABLE `mailbox` (
   `deleted_by` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `from_user_id` (`from_user_id`),
-  KEY `to_user_id` (`to_user_id`)
+  KEY `to_user_id` (`to_user_id`),
+  CONSTRAINT `mailbox_ibfk_1` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `mailbox_ibfk_2` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mailbox`
---
-
-LOCK TABLES `mailbox` WRITE;
-/*!40000 ALTER TABLE `mailbox` DISABLE KEYS */;
-INSERT INTO `mailbox` VALUES (1,1,2,'Hello','Hi user,\r\n\r\nHow are you today?\r\n\r\nGreetings,\r\nAdministrator','2013-02-13 13:31:02',0,NULL);
-/*!40000 ALTER TABLE `mailbox` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `menu`
@@ -654,7 +693,7 @@ CREATE TABLE `photo_albums` (
 
 LOCK TABLES `photo_albums` WRITE;
 /*!40000 ALTER TABLE `photo_albums` DISABLE KEYS */;
-INSERT INTO `photo_albums` VALUES (1,'Wallpapers','Collection of wallpapers','2010-08-21',1,0);
+INSERT INTO `photo_albums` VALUES (1,'Star Wars wallpapers','Collection of wallpapers from the Star Wars movies.','2010-08-21',1,0);
 /*!40000 ALTER TABLE `photo_albums` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -672,6 +711,7 @@ CREATE TABLE `photos` (
   `extension` varchar(6) NOT NULL,
   `overview` tinyint(1) NOT NULL,
   `thumbnail_mode` tinyint(3) unsigned NOT NULL,
+  `order` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `photo_album_id` (`photo_album_id`),
   CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`photo_album_id`) REFERENCES `photo_albums` (`id`)
@@ -684,7 +724,7 @@ CREATE TABLE `photos` (
 
 LOCK TABLES `photos` WRITE;
 /*!40000 ALTER TABLE `photos` DISABLE KEYS */;
-INSERT INTO `photos` VALUES (1,'Hiawatha webserver',1,'png',1,0);
+INSERT INTO `photos` VALUES (1,'Snowspeeder',1,'jpg',1,0,0),(2,'Death Star',1,'jpg',0,0,1),(3,'X-Wing',1,'jpg',0,0,2);
 /*!40000 ALTER TABLE `photos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -738,7 +778,7 @@ CREATE TABLE `polls` (
 
 LOCK TABLES `polls` WRITE;
 /*!40000 ALTER TABLE `polls` DISABLE KEYS */;
-INSERT INTO `polls` VALUES (2,'The best webserver','2013-01-01','2015-08-25'),(3,'Best OS','2015-05-26','2015-06-28');
+INSERT INTO `polls` VALUES (2,'The best webserver','2017-01-01','2020-12-31'),(3,'Best OS','2015-05-26','2015-06-28');
 /*!40000 ALTER TABLE `polls` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -752,6 +792,7 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `non_admins` smallint(6) NOT NULL,
   `profile` tinyint(4) DEFAULT '0',
   `mailbox` tinyint(4) DEFAULT '0',
   `session` tinyint(4) DEFAULT '0',
@@ -770,7 +811,6 @@ CREATE TABLE `roles` (
   `cms/forum` tinyint(4) DEFAULT '0',
   `cms/forum/section` tinyint(4) DEFAULT '0',
   `cms/guestbook` tinyint(4) DEFAULT '0',
-  `cms/links` tinyint(4) DEFAULT '0',
   `cms/menu` tinyint(4) DEFAULT '0',
   `cms/news` tinyint(4) DEFAULT '0',
   `cms/newsletter` tinyint(4) DEFAULT '0',
@@ -792,6 +832,8 @@ CREATE TABLE `roles` (
   `webshop/orders` tinyint(4) DEFAULT '0',
   `cms/webshop/order` tinyint(4) DEFAULT '0',
   `cms/webshop/category` tinyint(4) DEFAULT '0',
+  `cms/link` tinyint(4) DEFAULT '0',
+  `cms/link/category` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -803,7 +845,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0);
+INSERT INTO `roles` VALUES (1,'Administrator',0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -854,7 +896,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(31,'photo_page_size','integer','10'),(5,'default_language','string','en'),(32,'photo_thumbnail_height','integer','100'),(9,'start_page','string','homepage'),(10,'webmaster_email','string','void@banshee-php.org'),(30,'forum_page_size','string','25'),(12,'forum_maintainers','string','Moderator'),(13,'guestbook_page_size','integer','10'),(14,'guestbook_maintainers','string','Publisher'),(15,'news_page_size','integer','5'),(16,'news_rss_page_size','string','30'),(17,'newsletter_bcc_size','integer','100'),(18,'newsletter_code_timeout','string','15 minutes'),(19,'newsletter_email','string','void@banshee-php.org'),(20,'newsletter_name','string','Hugo Leisink'),(36,'contact_email','string','void@banshee-php.org'),(22,'poll_max_answers','integer','10'),(44,'poll_bans','string\n',''),(24,'weblog_page_size','string','5'),(25,'weblog_rss_page_size','integer','30'),(26,'head_title','string','Banshee'),(27,'head_description','string','Secure PHP framework'),(28,'head_keywords','string','banshee, secure, php, framework'),(33,'photo_image_height','integer','450'),(35,'secret_website_code','string',''),(37,'photo_thumbnail_width','integer','100'),(38,'photo_image_width','integer','700'),(39,'hiawatha_cache_default_time','integer','3600'),(40,'photo_album_size','integer','18'),(41,'hiawatha_cache_enabled','boolean','false'),(42,'session_timeout','integer','1000'),(43,'session_persistent','boolean','false'),(46,'database_version','integer','1'),(47,'webshop_page_size','integer','15'),(48,'webshop_order_page_size','integer','5');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(2,'photo_page_size','integer','10'),(3,'default_language','string','en'),(4,'photo_thumbnail_height','integer','100'),(5,'start_page','string','homepage'),(6,'webmaster_email','string','void@banshee-php.org'),(7,'forum_page_size','string','25'),(8,'forum_maintainers','string','Moderator'),(9,'guestbook_page_size','integer','10'),(10,'guestbook_maintainers','string','Publisher'),(11,'news_page_size','integer','5'),(12,'news_rss_page_size','string','30'),(13,'newsletter_bcc_size','integer','100'),(14,'newsletter_code_timeout','string','15 minutes'),(15,'newsletter_email','string','void@banshee-php.org'),(16,'newsletter_name','string','Hugo Leisink'),(17,'contact_email','string','void@banshee-php.org'),(18,'poll_max_answers','integer','10'),(19,'poll_bans','string\n',''),(20,'weblog_page_size','string','5'),(21,'weblog_rss_page_size','integer','30'),(22,'head_title','string','Banshee'),(23,'head_description','string','Secure PHP framework'),(24,'head_keywords','string','banshee, secure, php, framework'),(25,'photo_image_height','integer','450'),(26,'secret_website_code','string',''),(27,'photo_thumbnail_width','integer','100'),(28,'photo_image_width','integer','700'),(29,'hiawatha_cache_default_time','integer','3600'),(30,'photo_album_size','integer','18'),(31,'hiawatha_cache_enabled','boolean','false'),(32,'session_timeout','integer','1000'),(33,'session_persistent','boolean','false'),(34,'database_version','integer','1'),(35,'webshop_page_size','integer','15'),(36,'webshop_order_page_size','integer','5');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -995,7 +1037,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,1),(2,2);
+INSERT INTO `user_role` VALUES (1,1);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1013,8 +1055,8 @@ CREATE TABLE `users` (
   `password` varchar(128) NOT NULL,
   `one_time_key` varchar(128) DEFAULT NULL,
   `cert_serial` int(10) unsigned DEFAULT NULL,
-  `authenticator_secret` varchar(16) DEFAULT NULL,
   `status` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `authenticator_secret` varchar(16) DEFAULT NULL,
   `fullname` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1031,7 +1073,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1,'admin','cc5491f3f6075377579ec9be075c710e9ece5e50ab4f4fa2477c7d201cf72998',NULL,NULL,NULL,1,'Administrator','admin@banshee-php.org'),(2,1,'user','68554aeee9e1b820869dc9073cb61d7439c4fb672d24f650ba689b2351942e41',NULL,NULL,NULL,1,'Normal user','user@banshee-php.org');
+INSERT INTO `users` VALUES (1,1,'admin','none',NULL,NULL,2,NULL,'Administrator','root@localhost');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1061,7 +1103,7 @@ CREATE TABLE `weblog_comments` (
 
 LOCK TABLES `weblog_comments` WRITE;
 /*!40000 ALTER TABLE `weblog_comments` DISABLE KEYS */;
-INSERT INTO `weblog_comments` VALUES (1,1,'Hugo','Test comment','2015-06-02 17:20:36','1.2.3.4'),(2,1,'Hugo','Another test comment.','2015-06-02 17:21:07','1.2.3.4');
+INSERT INTO `weblog_comments` VALUES (1,1,'Hugo','Test comment','2015-06-02 17:20:36','84.106.86.135'),(2,1,'Hugo','Another test comment.','2015-06-02 17:21:07','84.106.86.135');
 /*!40000 ALTER TABLE `weblog_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1156,4 +1198,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-22 14:55:59
+-- Dump completed on 2017-02-02 20:12:57

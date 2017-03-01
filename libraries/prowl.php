@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	class prowl extends HTTPS {
 		private $server = "api.prowlapp.com";
 		private $application = null;

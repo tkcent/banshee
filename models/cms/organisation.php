@@ -1,5 +1,5 @@
 <?php
-	class cms_organisation_model extends tablemanager_model {
+	class cms_organisation_model extends Banshee\tablemanager_model {
 		protected $table = "organisations";
 		protected $elements = array(
 			"name" => array(
@@ -23,12 +23,12 @@
 			$query = "select count(*) as count from users where organisation_id=%d";
 
 			if (($result = $this->db->execute($query, $item_id)) === false) {
-				$this->output->add_message("Database error.");
+				$this->view->add_message("Database error.");
 				return false;
 			}
 
 			if ((int)$result[0]["count"] > 0) {
-				$this->output->add_message("Organisation in use.");
+				$this->view->add_message("Organisation in use.");
 				return false;
 			}
 

@@ -6,26 +6,28 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee;
+
 	abstract class model {
 		protected $db = null;
 		protected $settings = null;
 		protected $user = null;
 		protected $page = null;
-		protected $output = null;
+		protected $view = null;
 		protected $language = null;
 
 		/* Constructor
 		 *
-		 * INPUT: object database, object settings, object user, object page, object output[, object language]
+		 * INPUT: object database, object settings, object user, object page, object view[, object language]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($database, $settings, $user, $page, $output, $language = null) {
+		public function __construct($database, $settings, $user, $page, $view, $language = null) {
 			$this->db = $database;
 			$this->settings = $settings;
 			$this->user = $user;
 			$this->page = $page;
-			$this->output = $output;
+			$this->view = $view;
 			$this->language = $language;
 		}
 
@@ -39,20 +41,20 @@
 			if (file_exists($file = "../models/".$module.".php") == false) {
 				header("Content-Type: text/plain");
 				printf("Can't borrow model '%s'.\n", $module);
-				print error_backtrace();
+				print Core\error_backtrace();
 				exit();
 			}
 
 			require_once($file);
 
-            $model_class = str_replace("/", "_", $module)."_model";
+			$model_class = str_replace("/", "_", $module)."_model";
 			if (class_exists($model_class) == false) {
 				return null;
-			} else if (is_subclass_of($model_class, "model") == false) {
+			} else if (is_subclass_of($model_class, "Banshee\\model") == false) {
 				return null;
 			}
 
-			return new $model_class($this->db, $this->settings, $this->user, $this->page, $this->output, $this->language);
+			return new $model_class($this->db, $this->settings, $this->user, $this->page, $this->view, $this->language);
 		}
 	}
 ?>

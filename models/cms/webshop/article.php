@@ -1,5 +1,5 @@
 <?php
-	class cms_webshop_article_model extends model {
+	class cms_webshop_article_model extends Banshee\model {
 		private $order_columns = array("article_nr", "title", "category", "price");
 		private $search_columns = array("article_nr", "title", "category", "short_description", "long_description", "price");
 
@@ -77,7 +77,7 @@
 			if (($result = $this->db->execute($query, $article["id"])) === false) {
 				$result = false;
 			} else if ($result[0]["count"] > 0) {
-				$this->output->add_message("Can't delete this article, because it's currently being ordered.");
+				$this->view->add_message("Can't delete this article, because it's currently being ordered.");
 				$result = false;
 			}
 

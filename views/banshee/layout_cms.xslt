@@ -12,7 +12,7 @@
 <meta name="copyright" content="Copyright (C) by Hugo Leisink" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
-<meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (http://www.banshee-php.org/)" />
+<meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (https://www.banshee-php.org/)" />
 <title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
 <link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
@@ -71,7 +71,7 @@
 		<xsl:if test="/output/user">
 		<span>Logged in as <a href="/profile"><xsl:value-of select="/output/user" /></a></span>
 		</xsl:if>
-		<span>Built upon the <a href="http://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
+		<span>Built upon the <a href="https://www.banshee-php.org/">Banshee PHP framework</a> v<xsl:value-of select="/output/banshee/version" /></span>
 	</div>
 </div>
 <xsl:apply-templates select="/output/internal_errors" />

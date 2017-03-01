@@ -1,24 +1,24 @@
 <?php
-	class cms_page_controller extends controller {
+	class cms_page_controller extends Banshee\controller {
 		private function show_page_overview() {
 			if (($pages = $this->model->get_pages()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 			} else {
 				list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
 
-				$this->output->open_tag("overview", array("hiawatha" => show_boolean($webserver == "Hiawatha")));
-				$this->output->open_tag("pages");
+				$this->view->open_tag("overview", array("hiawatha" => show_boolean($webserver == "Hiawatha")));
+				$this->view->open_tag("pages");
 				foreach ($pages as $page) {
 					$page["visible"] = show_boolean($page["visible"]);
-					$this->output->record($page, "page");
+					$this->view->record($page, "page");
 				}
-				$this->output->close_tag();
-				$this->output->close_tag();
+				$this->view->close_tag();
+				$this->view->close_tag();
 			}
 		}
 
 		private function show_page_form($page) {
-			$this->output->set_xslt_parameter("admin_role_id", ADMIN_ROLE_ID);
+			$this->view->set_xslt_parameter("admin_role_id", ADMIN_ROLE_ID);
 
 			$page["private"] = show_boolean($page["private"]);
 			$page["visible"] = show_boolean($page["visible"]);
@@ -29,46 +29,46 @@
 				$args["id"] = $page["id"];
 			}
 
-			$this->output->add_javascript("cms/page.js");
-			$this->output->add_ckeditor("div.btn-group");
+			$this->view->add_javascript("cms/page.js");
+			$this->view->add_ckeditor("div.btn-group");
 
-			$this->output->open_tag("edit");
+			$this->view->open_tag("edit");
 
 			/* Languages
 			 */
-			$this->output->open_tag("languages");
+			$this->view->open_tag("languages");
 			foreach (config_array(SUPPORTED_LANGUAGES) as $code => $lang) {
-				$this->output->add_tag("language", $lang, array("code" => $code));
+				$this->view->add_tag("language", $lang, array("code" => $code));
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Layouts
 			 */
-			$this->output->open_tag("layouts", array("current" => $page["layout"]));
+			$this->view->open_tag("layouts", array("current" => $page["layout"]));
 			if (($layouts = $this->model->get_layouts()) != false) {
 				foreach ($layouts as $layout) {
-					$this->output->add_tag("layout", $layout);
+					$this->view->add_tag("layout", $layout);
 				}
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Roles
 			 */
-			$this->output->open_tag("roles");
+			$this->view->open_tag("roles");
 			if (($roles = $this->model->get_roles()) != false) {
 				foreach ($roles as $role) {
-					$this->output->add_tag("role", $role["name"], array(
+					$this->view->add_tag("role", $role["name"], array(
 						"id"      => $role["id"],
 						"checked" => show_boolean($page["roles"][$role["id"]])));
 				}
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			/* Page data
 			 */
-			$this->output->record($page, "page", $args);
+			$this->view->record($page, "page", $args);
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -83,7 +83,7 @@
 						/* Create page
 						 */
 						if ($this->model->create_page($_POST) === false) {
-							$this->output->add_message("Database error while creating page.");
+							$this->view->add_message("Database error while creating page.");
 							$this->show_page_form($_POST);
 						} else {
 							$this->user->log_action("page %s created", $_POST["url"]);
@@ -95,7 +95,7 @@
 						$url = $this->model->get_url($_POST["id"]);
 
 						if ($this->model->update_page($_POST, $_POST["id"]) === false) {
-							$this->output->add_message("Database error while updating page.");
+							$this->view->add_message("Database error while updating page.");
 							$this->show_page_form($_POST);
 						} else {
 							if ($_POST["url"] == $url) {
@@ -123,14 +123,14 @@
 					$url = $this->model->get_url($_POST["id"]);
 
 					if ($this->model->delete_page($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Database error while deleting page.");
+						$this->view->add_tag("result", "Database error while deleting page.");
 					} else {
 						$this->user->log_action("page %s deleted", $url);
 						$this->show_page_overview();
 					}
 				} else if ($_POST["submit_button"] == "Clear Hiawatha cache") {
 					header("X-Hiawatha-Cache-Remove: all");
-					$this->output->add_system_message("Hiawatha webserver cache cleared.");
+					$this->view->add_system_message("Hiawatha webserver cache cleared.");
 					$this->show_page_overview();
 				} else {
 					$this->show_page_overview();
@@ -149,7 +149,7 @@
 				/* Show the user webform
 				 */
 				if (($page = $this->model->get_page($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Page not found.");
+					$this->view->add_tag("result", "Page not found.");
 				} else {
 					$this->show_page_form($page);
 				}

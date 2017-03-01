@@ -1,5 +1,5 @@
 <?php
-	class demos_splitform_model extends splitform_model {
+	class demos_splitform_model extends Banshee\splitform_model {
 		protected $forms = array(
 			array(
 				"template" => "form_1",
@@ -15,7 +15,7 @@
 			$result = true;
 			foreach ($this->forms[$this->current]["elements"] as $element) {
 				if (trim($data[$element]) == "") {
-					$this->output->add_message($element." cannot be empty.");
+					$this->view->add_message($element." cannot be empty.");
 					$result = false;
 				}
 			}

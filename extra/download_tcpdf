@@ -13,12 +13,12 @@ fi
 
 echo "Installing TCPDF."
 unzip -q tcpdf.zip
-mkdir -p libraries/tcpdf
-cat TCPDF-master/tcpdf.php | sed "s/require_once(dirname(__FILE__).'.*\//require_once(dirname(__FILE__).'\/tcpdf\//" > libraries/tcpdf.php
-cp -f TCPDF-master/tcpdf_barcodes*.php libraries/tcpdf
-cp -f TCPDF-master/tcpdf_autoconfig.php libraries/tcpdf
-cp -f TCPDF-master/include/*.php libraries/tcpdf
-chmod 644 libraries/tcpdf/*
+mkdir -p libraries/thirdparty/tcpdf
+cat TCPDF-master/tcpdf.php | sed "s/require_once(dirname(__FILE__).'.*\//require_once(dirname(__FILE__).'\/tcpdf\//" > libraries/thirdparty/tcpdf.php
+cp -f TCPDF-master/tcpdf_barcodes*.php libraries/thirdparty/tcpdf
+cp -f TCPDF-master/tcpdf_autoconfig.php libraries/thirdparty/tcpdf
+cp -f TCPDF-master/include/*.php libraries/thirdparty/tcpdf
+chmod 644 libraries/thirdparty/tcpdf/*
 
 echo "Installing fonts."
 mkdir -p extra/tcpdf_fonts

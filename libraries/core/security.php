@@ -1,5 +1,5 @@
 <?php
-	/* libraries/security.php
+	/* libraries/core/security.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -13,23 +13,10 @@
 	define("VALIDATE_LETTERS",      VALIDATE_CAPITALS.VALIDATE_NONCAPITALS);
 	define("VALIDATE_PHRASE",       VALIDATE_LETTERS." ,.?!:;-'");
 	define("VALIDATE_NUMBERS",      "0123456789");
-	define("VALIDATE_EMAIL",        VALIDATE_LETTERS.VALIDATE_NUMBERS."_-@.");
 	define("VALIDATE_SYMBOLS",      "!@#$%^&*()_-+={}[]|\:;\"'`~<>,./?");
 	define("VALIDATE_URL",          VALIDATE_LETTERS.VALIDATE_NUMBERS."-_/.=");
 
 	define("VALIDATE_NONEMPTY",     0);
-
-	/* Abort execution upon dangerous PHP setting
-	 *
-	 * INPUT:  string key, mixed value
-	 * OUTPUT: -
-	 * ERROR:  -
-	 */
-	function check_PHP_setting($key, $value) {
-		if (ini_get($key) != $value) {
-			exit("Please, set the PHP flag '".$key."' to '".$value."'!\n");
-		}
-	}
 
 	/* Secure password with PBKDF2
 	 *
@@ -39,52 +26,6 @@
 	 */
 	function hash_password($password, $salt) {
 		return hash_pbkdf2(PASSWORD_HASH, $password, hash(PASSWORD_HASH, $salt), PASSWORD_ITERATIONS, 0);
-	}
-
-	/* Prevent Cross-Site Request Forgery
-	 * Note that this protection is not 100% safe (browsers that hide this line).
-	 *
-	 * INPUT:  object output, object user
-	 * OUTPUT: -
-	 * ERROR:  -
-	 */
-	function prevent_csrf($output, $user) {
-		if ($_SERVER["REQUEST_METHOD"] != "POST") {
-			return false;
-		}
-
-		if (isset($_SERVER["HTTP_ORIGIN"]) != false) {
-			$referer = $_SERVER["HTTP_ORIGIN"];
-		} else if (isset($_SERVER["HTTP_REFERER"]) != false) {
-			$referer = $_SERVER["HTTP_REFERER"];
-		} else {
-			if ($_SESSION["csrf_warning_shown"] == false) {
-				$output->add_system_warning("Your browser hides the referrer HTTP header line. You are therefor vulnerable for CSRF attacks via this website!");
-				$_SESSION["csrf_warning_shown"] = true;
-			}
-			return false;
-		}
-
-		list($protocol,, $referer_host) = explode("/", $referer, 4);
-		list($referer_host) = explode(":", $referer_host);
-		if (($protocol != "http:") && ($protocol != "https:")) {
-			return false;
-		}
-
-		list($http_host) = explode(":", $_SERVER["HTTP_HOST"]);
-		if ($http_host == $referer_host) {
-			return false;
-		}
-
-		$message = "CSRF attempt from %s blocked";
-		$output->add_system_warning($message, $_SERVER["HTTP_REFERER"]);
-		$user->log_action($message, $_SERVER["HTTP_REFERER"]);
-		$user->logout();
-		$_SERVER["REQUEST_METHOD"] = "GET";
-		$_GET = array();
-		$_POST = array();
-
-		return true;
 	}
 
 	/* Validate input
@@ -130,7 +71,7 @@
 	 * ERROR:  -
 	 */
 	function valid_email($email) {
-		return email::valid_address($email);
+		return Banshee\email::valid_address($email);
 	}
 
 	/* Validate a date string
@@ -175,8 +116,58 @@
 	 * ERROR:  -
 	 */
 	function valid_phonenumber($phonenr) {
-		$phonenr = str_replace(" ", "", $phonenr);
-		return preg_match("/^(\+31|0)([0-9]{9}|6-?[0-9]{8}|[0-9]{2}-?[0-9]{7}|[0-9]{3}-?[0-9]{6})$/", $phonenr) === 1;
+		return preg_match("/^\+?(\(?\d+\)?[- ]?)*\d+$/", $phonenr) === 1;
+	}
+
+	/* Validate password security
+	 *
+	 * INPUT:  string password[, object view]
+	 * OUTPUT: boolean password secure
+	 * ERROR:  -
+	 */
+	function is_secure_password($password, $view = null) {
+		$result = true;
+
+		$pwd_len = strlen($password);
+
+		if ($pwd_len < PASSWORD_MIN_LENGTH) {
+			if ($view == null) {
+				return false;
+			}
+			$view->add_message("The password must be at least %d characters long.", PASSWORD_MIN_LENGTH);
+			$result = false;
+		} else if ($pwd_len > PASSWORD_MAX_LENGTH) {
+			if ($view == null) {
+				return false;
+			}
+			$view->add_message("The password is too long.");
+			$result = false;
+		}
+
+		$numbers = 0;
+		$letters = 0;
+		$symbols = 0;
+		for ($i = 0; $i < $pwd_len; $i++) {
+			$c = ord(strtolower(substr($password, $i, 1)));
+
+			if (($c >= 48) && ($c <= 57)) {
+				$numbers++;
+			} else if (($c >= 97) && ($c <= 122)) {
+				$letters++;
+			} else {
+				$symbols++;
+			}
+		}
+
+		if (($letters == 0) || (($numbers == 0) && ($symbols == 0))) {
+			if ($view == null) {
+				return false;
+			}
+			$view->add_message("The password must contain at least one letter and one number or special character.");
+			$result = false;
+		}
+
+		return $result;
 	}
 
 	/* Get users with a certain role
@@ -281,21 +272,17 @@
 
 	/* Generate random string
 	 *
-	 * INPUT:  [int length]
+	 * INPUT:  int length
 	 * OUTPUT: string random string
-	 * ERROR:  -
+	 * ERROR:  false
 	 */
-	function random_string($length = 32) {
-		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
+	function random_string($length) {
+		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$max_chars = strlen($characters) - 1;
 
-		$bytes = openssl_random_pseudo_bytes($length);
-
 		$result = "";
-		$pos = 0;
 		for ($i = 0; $i < $length; $i++) {
-			$pos = ($pos + ord($bytes[$i])) % $max_chars;
-			$result .= $characters[$pos];
+			$result .= $characters[random_int(0, $max_chars)];
 		}
 
 		return $result;
@@ -324,10 +311,10 @@
 				return false;
 			}
 
-			$key = random_string();
-
-			if (($result = $db->execute($query, $key)) === false) {
-				return false;
+			if (($key = random_string(32)) != false) {
+				if (($result = $db->execute($query, $key)) === false) {
+					return false;
+				}
 			}
 		} while ($result != false);
 

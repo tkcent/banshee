@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../banshee/main.xslt" />
+<xsl:import href="../banshee/main.xslt" />
 
 <!--
 //
@@ -47,26 +47,22 @@
 
 <label for="section">Section:</label>
 <xsl:if test="count(sections/section)>0">
-<span>new <input type="radio" id="select_new" name="select" value="new" onClick="javascript:enable_new()">
+<span>new <input type="radio" id="select_new" name="select" value="new" onChange="javascript:set_section_type()">
 <xsl:if test="faq/select='new'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 </input></span>
-<span>existing <input type="radio" id="select_existing" name="select" value="old" onClick="javascript:enable_existing()">
-<xsl:if test="faq/select='old'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+<span>existing <input type="radio" id="select_existing" name="select" value="existing" onClick="javascript:set_section_type()">
+<xsl:if test="faq/select='existing'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 </input></span>
 
 <xsl:if test="sections/section">
-<select id="input_existing" name="section_id" class="form-control" onFocus="javascript:document.getElementById('select_old').checked = true">
-<xsl:if test="faq/select='new'"><xsl:attribute name="style">display:none</xsl:attribute></xsl:if>
+<div><select id="input_existing" name="section_id" class="form-control">
 <xsl:for-each select="sections/section">
 <option value="{@id}"><xsl:if test="@id=../../faq/section_id"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if><xsl:value-of select="." /></option>
 </xsl:for-each>
-</select>
+</select></div>
 </xsl:if>
 </xsl:if>
-
-<input type="text" id="input_new" name="label" value="{faq/label}" class="form-control" onFocus="javascript:document.getElementById('select_new').checked = true">
-<xsl:if test="faq/select='old'"><xsl:attribute name="style">display:none</xsl:attribute></xsl:if>
-</input>
+<input type="text" id="input_new" name="label" value="{faq/label}" class="form-control" />
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Save FAQ" class="btn btn-default" />

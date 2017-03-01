@@ -6,6 +6,8 @@
 	 * http://www.banshee-php.org/
 	 */
 
+	namespace Banshee\Database;
+
 	class MySQLi_connection extends database_connection {
 		public function __construct($hostname, $database, $username, $password, $port = 3306) {
 			$this->db_close         = "mysqli_close";
@@ -23,7 +25,7 @@
 				if (($this->link = mysqli_connect($hostname, $username, $password, $database, $port)) == false) {
 					$this->link = null;
 				} else {
-					$this->query("set names %s", "utf8");
+					$this->link->set_charset("utf8");
 				}
 			}
 		}

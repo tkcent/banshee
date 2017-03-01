@@ -5,7 +5,7 @@
 
 	error_reporting(E_ALL & ~E_NOTICE);
 	chdir(__DIR__."/..");
-	require("libraries/banshee.php");
+	require("libraries/core/banshee.php");
 	require("libraries/helpers/console.php");
 
 	function delete_file($file) {
@@ -63,7 +63,7 @@
 
 	/* Demo page files
 	 */
-    $dirs = array("views/demos", "controllers/demos", "models/demos", "public/css/demos");
+	$dirs = array("views/demos", "controllers/demos", "models/demos", "public/css/demos");
 	foreach ($dirs as $dir) {
 		$dir .= "/";
 		if (($dp = @opendir($dir)) != false) {
@@ -84,16 +84,16 @@
 
 	/* Demo content in database
 	 */
-	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 	if ($db->connected == false) {
 		exit("Internal error: database not available.");
 	}
 
 	$tables = array("agenda", "dictionary", "cache", "collection_album", "collections",
 		"faqs", "faq_sections", "forum_last_view", "forum_messages", "forum_topics",
-		"forums", "guestbook", "languages", "links", "mailbox", "menu", "news",
-		"page_access", "pages", "photo_collections", "photos", "poll_answers", "polls",
-		"shop_order_article", "shop_categories", "shop_orders", "shop_articles",
+		"forums", "guestbook", "languages", "links", "link_categories", "mailbox", "menu",
+		"news", "page_access", "pages", "photo_collections", "photos", "poll_answers",
+		"polls", "shop_order_article", "shop_categories", "shop_orders", "shop_articles",
 		"subscriptions", "weblog_tagged", "weblog_tags", "weblog_comments", "weblogs");
 	$db->query("set foreign_key_checks=%d", 0);
 	foreach ($tables as $table) {

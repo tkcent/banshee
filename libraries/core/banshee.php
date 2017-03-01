@@ -1,5 +1,5 @@
 <?php
-	/* libraries/banshee.php
+	/* libraries/core/banshee.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
@@ -8,7 +8,7 @@
 	 * Don't change this file, unless you know what you are doing.
 	 */
 
-	define("BANSHEE_VERSION", "5.4");
+	define("BANSHEE_VERSION", "6.0");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -18,8 +18,8 @@
 	define("USER_STATUS_ACTIVE", 2);
 	define("PASSWORD_HASH", "sha256");
 	define("PASSWORD_ITERATIONS", 100000);
-	define("SESSION_NAME", "banshee_session_id");
-	define("SESSION_LOGIN", "banshee_login_id");
+	define("PASSWORD_MIN_LENGTH", 8);
+	define("PASSWORD_MAX_LENGTH", 1000);
 	define("HOUR", 3600);
 	define("DAY", 86400);
 	define("LOG_DAYS", 60);
@@ -41,25 +41,58 @@
 	 * ERROR:  -
 	 */
 	function __autoload($class_name) {
-		$rename = array(
-			"https"               => "http",
-			"jpeg_image"          => "image",
-			"png_image"           => "image",
-			"gif_image"           => "image",
-			"pop3s"               => "pop3",
-			"banshee_website_ssl" => "banshee_website");
+		$parts = explode("\\", $class_name);
+		$class = array_pop($parts);
 
-		$class_name = strtolower($class_name);
-		if (isset($rename[$class_name])) {
-			$class_name = $rename[$class_name];
+		if (strtolower($parts[0]) == "banshee") {
+			/* Load Banshee library
+			 */
+			array_shift($parts);
+			$class = strtolower($class);
+			$path = __DIR__."/../".strtolower(implode("/", $parts));
+
+			$rename = array(
+				"https"      => "http",
+				"jpeg_image" => "image",
+				"png_image"  => "image",
+				"gif_image"  => "image",
+				"pop3s"      => "pop3");
+
+			if (isset($rename[$class])) {
+				$class = $rename[$class];
+			}
+		} else {
+			/* Load third party library
+			 */
+			$path = null;
+
+			$composer = "../libraries/thirdparty/composer/autoload_psr4.php";
+			if (file_exists($composer)) {
+				$classes = require($composer);
+				$key = implode("\\", $parts)."\\";
+				if ($classes[$key][0] != null) {
+					$path = $classes[$key][0];
+				}
+			}
+
+			if ($path == null) {
+				array_unshift($parts, "thirdparty");
+				while (count($parts) > 0) {
+					$path = __DIR__."/../".strtolower(implode("/", $parts));
+					if (file_exists($path)) {
+						break;
+					}
+
+					$part = array_pop($parts);
+					$class = $part."/".$class;
+				}
+			}
 		}
 
-		$locations = array("/", "/database/");
-		foreach ($locations as $location) {
-			if (file_exists($file = __DIR__.$location.$class_name.".php")) {
-				include_once($file);
-				break;
-			}
+		if (file_exists($file = $path."/".strtolower($class).".php")) {
+			include_once($file);
+		} else if (file_exists($file = $path."/".$class.".php")) {
+			include_once($file);
 		}
 	}
 
@@ -135,24 +168,6 @@
 		return $page;
 	}
 
-	/* Generate URL for cancel button
-	 * INPUT:  -
-	 * OUTPUT: string url
-	 * ERROR:  -
-	 */
-	function cancel_url() {
-		$supported_modules = array("banshee/login", "register", "password", "profile");
-
-		if (in_array($_SESSION["previous_module"], $supported_modules) == false) {
-			list($protocol,,, $path) = explode("/", $_SERVER["HTTP_REFERER"], 4);
-			if (in_array($protocol, array("http:", "https:"))) {
-				$_SESSION["cancel_url"] = $path;
-			}
-		}
-
-		return "/".$_SESSION["cancel_url"];
-	}
-
 	/* Check for module existence
 	 *
 	 * INPUT:  string module
@@ -179,7 +194,7 @@
 	 * ERROR:  -
 	 */
 	function library_exists($library) {
-		return file_exists(__DIR__."/".$library.".php");
+		return file_exists(__DIR__."/../".$library.".php");
 	}
 
 	/* Check for table existence
@@ -245,12 +260,8 @@
 			$info = "array:\n".implode("\n", $info);
 		}
 
-		if (($fp = fopen("../logfiles/debug.log", "a")) == false) {
-			return false;
-		}
-
-		fputs($fp, sprintf("%s|%s|%s|%s\n", $_SERVER["REMOTE_ADDR"], date("D d M Y H:i:s"), $_SERVER["REQUEST_URI"], $info));
-		fclose($fp);
+		$logfile = new logfile("debug");
+		$logfile->add_entry("%s|%s|%s|%s", $_SERVER["REMOTE_ADDR"], date("D d M Y H:i:s"), $_SERVER["REQUEST_URI"], $info);
 
 		return true;
 	}
@@ -321,7 +332,7 @@
 
 		$first_char = substr($config_file, 0, 1);
 		if (($first_char != "/") && ($first_char != ".")) {
-			$config_file = __DIR__."/../settings/".$config_file.".conf";
+			$config_file = __DIR__."/../../settings/".$config_file.".conf";
 		}
 		if (file_exists($config_file) == false) {
 			return array();
@@ -391,8 +402,13 @@
 		define(trim($key), trim($value));
 	}
 
-	/* PHP settings
+	/* Check PHP version and settings
 	 */
-	ini_set("magic_quotes_runtime", 0);
+	if (version_compare(PHP_VERSION, "7") < 0) {
+		exit("This system uses an unsupported PHP version. Use at least PHP 7.");
+	}
 	ini_set("zlib.output_compression", "Off");
+	if (ini_get("allow_url_include") != 0) {
+		exit("Set 'allow_url_include' to 0.");
+	}
 ?>

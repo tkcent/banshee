@@ -1,0 +1,23 @@
+{
+	"name": "hsleisink/banshee",
+	"description": "The Banshee PHP Content Management Framework",
+	"homepage": "https://www.banshee-php.org/",
+	"license": "Banshee",
+	"type": "project",
+	"require": {
+		"php": ">=7.0.0"
+	},
+	"authors": [
+		{
+			"name": "Hugo Leisink",
+			"email": "hugo@leisink.net"
+		}
+	],
+	"support": {
+		"forum": "https://www.banshee-php.org/forum/1",
+		"docs": "https://www.banshee-php.org/documentation"
+	},
+	"config": {
+		"vendor-dir": "libraries/thirdparty"
+	}
+}

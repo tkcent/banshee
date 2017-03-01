@@ -1,5 +1,5 @@
 <?php
-	class cms_access_model extends model {
+	class cms_access_model extends Banshee\model {
 		public function get_all_users() {
 			$query = "select id,username from users order by username";
 			if (($users = $this->db->execute($query)) === false) {
@@ -55,9 +55,13 @@
 		}
 
 		public function get_all_roles() {
-			$query = "select * from roles r order by name";
+			$query = "select * from roles";
+			if ($this->user->is_admin == false) {
+				$query .= " where non_admins=%d";
+			}
+			$query .= " order by name";
 
-			return $this->db->execute($query);
+			return $this->db->execute($query, YES);
 		}
 	}
 ?>

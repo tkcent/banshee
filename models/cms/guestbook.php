@@ -1,5 +1,5 @@
 <?php
-	class cms_guestbook_model extends model {
+	class cms_guestbook_model extends Banshee\model {
 		public function count_messages() {
 			$query = "select count(*) as count from guestbook";
 

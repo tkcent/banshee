@@ -1,5 +1,5 @@
 <?php
-	class cms_forum_model extends model {
+	class cms_forum_model extends Banshee\model {
 		public function count_messages() {
 			$query = "select count(*) as count from forum_messages";
 
@@ -35,7 +35,7 @@
 			$result = true;
 
 			if (trim($message["content"]) == "") {
-				$this->output->add_message("Empty message not allowed.");
+				$this->view->add_message("Empty message not allowed.");
 				$result = false;
 			}
 

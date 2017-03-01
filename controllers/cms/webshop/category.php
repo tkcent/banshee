@@ -1,5 +1,5 @@
 <?php
-	class cms_webshop_category_controller extends tablemanager_controller {
+	class cms_webshop_category_controller extends Banshee\tablemanager_controller {
 		protected $name = "Shop category";
 		protected $pathinfo_offset = 3;
 		protected $back = "cms";

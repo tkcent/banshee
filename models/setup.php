@@ -1,5 +1,5 @@
 <?php
-	class setup_model extends model {
+	class setup_model extends Banshee\model {
 		private $required_php_extensions = array("gd", "libxml", "mysqli", "xsl");
 
 		/* Determine next step
@@ -10,9 +10,14 @@
 				return "php_extensions";
 			}
 
+			exec("which mysql", $output, $result);
+			if ($result != 0) {
+				return "mysql_client";
+			}
+
 			if ($this->db->connected == false) {
-				$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
-			} else { 
+				$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+			} else {
 				$db = $this->db;
 			}
 
@@ -22,7 +27,7 @@
 				if ((DB_HOSTNAME == "localhost") && (DB_DATABASE == "banshee") && (DB_USERNAME == "banshee") && (DB_PASSWORD == "banshee")) {
 					return "db_settings";
 				} else if (strpos(DB_PASSWORD, "'") !== false) {
-					$this->output->add_system_message("A single quote is not allowed in the password!");
+					$this->view->add_system_message("A single quote is not allowed in the password!");
 					return "db_settings";
 				}
 
@@ -36,6 +41,11 @@
 
 			if ($this->settings->database_version < $this->latest_database_version()) {
 				return "update_db";
+			}
+
+			$result = $db->execute("select password from users where username=%s", "admin");
+			if ($result[0]["password"] == "none") {
+				return "credentials";
 			}
 
 			return "done";
@@ -67,8 +77,8 @@
 			ob_clean();
 
 			foreach ($errors as $error) {
-				if (strtolower(substr($error, 0, 14)) != "mysqli_connect") {
-					print $error;
+				if (strpos(strtolower($error), "mysqli_connect") === false) {
+					print $error."\n";
 				}
 			}
 		}
@@ -76,10 +86,10 @@
 		/* Create the MySQL database
 		 */
 		public function create_database($username, $password) {
-			$db = new MySQLi_connection(DB_HOSTNAME, "mysql", $username, $password);
+			$db = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, "mysql", $username, $password);
 
 			if ($db->connected == false) {
-				$this->output->add_message("Error connecting to database.");
+				$this->view->add_message("Error connecting to database.");
 				return false;
 			}
 
@@ -90,7 +100,7 @@
 			$query = "create database if not exists %S character set utf8";
 			if ($db->query($query, DB_DATABASE) == false) {
 				$db->query("rollback");
-				$this->output->add_message("Error creating database.");
+				$this->view->add_message("Error creating database.");
 				return false;
 			}
 
@@ -99,7 +109,7 @@
 			$query = "select count(*) as count from user where User=%s";
 			if (($users = $db->execute($query, DB_USERNAME)) === false) {
 				$db->query("rollback");
-				$this->output->add_message("Error checking for user.");
+				$this->view->add_message("Error checking for user.");
 				return false;
 			}
 
@@ -107,14 +117,14 @@
 				$query = "create user %s@%s identified by %s";
 				if ($db->query($query, DB_USERNAME, DB_HOSTNAME, DB_PASSWORD) == false) {
 					$db->query("rollback");
-					$this->output->add_message("Error creating user.");
+					$this->view->add_message("Error creating user.");
 					return false;
 				}
 			} else {
-				$login_test = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+				$login_test = new Banshee\Database\MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 				if ($login_test->connected == false) {
 					$db->query("rollback");
-					$this->output->add_message("Invalid credentials in settings/website.conf.");
+					$this->view->add_message("Invalid credentials in settings/website.conf.");
 					return false;
 				}
 			}
@@ -129,7 +139,7 @@
 			$query = "grant ".implode(", ", $rights)." on %S.* to %s@%s";
 			if ($db->query($query, DB_DATABASE, DB_USERNAME, DB_HOSTNAME) == false) {
 				$db->query("rollback");
-				$this->output->add_message("Error setting access rights.");
+				$this->view->add_message("Error setting access rights.");
 				return false;
 			}
 
@@ -147,18 +157,18 @@
 		public function import_sql() {
 			$result = system("mysql --version");
 			if (substr($result, 0, 5) != "mysql") {
-				$this->output->add_message("The MySQL command line tool could not be found. Install it first.");
+				$this->view->add_message("The MySQL command line tool could not be found. Install it first.");
 				return false;
 			}
 
-			system("mysql -h '".DB_HOSTNAME."' -u '".DB_USERNAME."' --password='".DB_PASSWORD."' '".DB_DATABASE."' < ../database/mysql.sql", $result);
+			exec("mysql -h '".DB_HOSTNAME."' -u '".DB_USERNAME."' --password='".DB_PASSWORD."' '".DB_DATABASE."' < ../database/mysql.sql", $output, $result);
 			if ($result != 0) {
-				$this->output->add_message("Error while importing database tables.");
+				$this->view->add_message("Error while importing database tables.");
 				return false;
 			}
 
 			$this->db->query("update users set status=%d", USER_STATUS_CHANGEPWD);
-			$this->settings->secret_website_code = random_string();
+			$this->settings->secret_website_code = random_string(32);
 
 			return true;
 		}
@@ -211,12 +221,45 @@
 
 			return true;
 		}
+
+		/* Set administrator password
+		 */
+		public function set_admin_credentials($username, $password, $repeat) {
+			$result = true;
+
+			if (valid_input($username, VALIDATE_LETTERS, VALIDATE_NONEMPTY) == false) {
+				$this->view->add_message("The username must consist of lowercase letters.");
+				$result = false;
+			}
+
+			if ($password != $repeat) {
+				$this->view->add_message("The passwords do not match.");
+				$result = false;
+			}
+
+			if (is_secure_password($password, $this->view) == false) {
+				$result = false;
+			}
+
+			if ($result == false) {
+				return false;
+			}
+
+			$password = hash_password($password, $username);
+			$query = "update users set username=%s, password=%s, status=%d where username=%s";
+			if ($this->db->query($query, $username, $password, USER_STATUS_ACTIVE, "admin") === false) {
+				$this->view->add_message("Error while setting password.");
+				return false;
+			}
+
+			return true;
+		}
 	}
 
 	class dummy_object {
 		private $cache = array();
 
-		public function __set($key, $value) {	
+		public function __set($key, $value) {
 			$this->cache[$key] = $value;
 		}
 

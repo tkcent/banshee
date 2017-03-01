@@ -1,4 +1,4 @@
 <?php
-	class demos_api_model extends api_model {
+	class demos_api_model extends Banshee\api_model {
 	}
 ?>

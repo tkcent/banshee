@@ -1,35 +1,35 @@
 <?php
-	class XXX_controller extends controller {
+	class XXX_controller extends Banshee\controller {
 		private function show_overview() {
 			if (($XXX_count = $this->model->count_XXXs()) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$paging = new pagination($this->output, "XXXs", $this->settings->admin_page_size, $XXX_count);
+			$paging = new Banshee\pagination($this->view, "XXXs", $this->settings->admin_page_size, $XXX_count);
 
 			if (($XXXs = $this->model->get_XXXs($paging->offset, $paging->size)) === false) {
-				$this->output->add_tag("result", "Database error.");
+				$this->view->add_tag("result", "Database error.");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("XXXs");
+			$this->view->open_tag("XXXs");
 			foreach ($XXXs as $XXX) {
-				$this->output->record($XXX, "XXX");
+				$this->view->record($XXX, "XXX");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
 			$paging->show_browse_links();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		private function show_XXX_form($XXX) {
-			$this->output->open_tag("edit");
-			$this->output->record($XXX, "XXX");
-			$this->output->close_tag();
+			$this->view->open_tag("edit");
+			$this->view->record($XXX, "XXX");
+			$this->view->close_tag();
 		}
 
 		public function execute() {
@@ -47,20 +47,20 @@
 						/* Create XXX
 						 */
 						if ($this->model->create_XXX($_POST) === false) {
-							$this->output->add_message("Error creating XXX.");
+							$this->view->add_message("Error creating XXX.");
 							$this->show_XXX_form($_POST);
 						} else {
-							$this->user->log_action("XXX created");
+							$this->user->log_action("XXX %d created", $this->db->last_insert_id);
 							$this->show_overview();
 						}
 					} else {
 						/* Update XXX
 						 */
 						if ($this->model->update_XXX($_POST) === false) {
-							$this->output->add_message("Error updating XXX.");
+							$this->view->add_message("Error updating XXX.");
 							$this->show_XXX_form($_POST);
 						} else {
-							$this->user->log_action("XXX updated");
+							$this->user->log_action("XXX %d updated", $_POST["id"]);
 							$this->show_overview();
 						}
 					}
@@ -70,10 +70,10 @@
 					if ($this->model->delete_oke($_POST) == false) {
 						$this->show_XXX_form($_POST);
 					} else if ($this->model->delete_XXX($_POST["id"]) === false) {
-						$this->output->add_message("Error deleting XXX.");
+						$this->view->add_message("Error deleting XXX.");
 						$this->show_XXX_form($_POST);
 					} else {
-						$this->user->log_action("XXX deleted");
+						$this->user->log_action("XXX %d deleted", $_POST["id"]);
 						$this->show_overview();
 					}
 				} else if ($_POST["submit_button"] == "search") {
@@ -93,7 +93,7 @@
 				/* Edit XXX
 				 */
 				if (($XXX = $this->model->get_XXX($this->page->pathinfo[1])) === false) {
-					$this->output->add_tag("result", "XXX not found.\n");
+					$this->view->add_tag("result", "XXX not found.");
 				} else {
 					$this->show_XXX_form($XXX);
 				}

@@ -1,35 +1,35 @@
 <?php
-	class cms_agenda_controller extends controller {
+	class cms_agenda_controller extends Banshee\controller {
 		public function show_agenda_overview() {
 			if (($appointments = $this->model->get_appointments()) === false) {
-				$this->output->add_tag("result", "Database error");
+				$this->view->add_tag("result", "Database error");
 				return;
 			}
 
-			$this->output->open_tag("overview");
+			$this->view->open_tag("overview");
 
-			$this->output->open_tag("appointments", array("now" => strtotime("yesterday 23:59:59")));
+			$this->view->open_tag("appointments", array("now" => strtotime("yesterday 23:59:59")));
 			foreach ($appointments as $appointment) {
-				if ($this->output->mobile == false) {
+				if ($this->view->mobile == false) {
 					$appointment["begin"] = date("l, j F Y", strtotime($appointment["begin"]));
 					$appointment["end"] = date("l, j F Y", strtotime($appointment["end"]));
 				}
 				$appointment["timestamp"] = strtotime($appointment["begin"]." 00:00:00");
-				$this->output->record($appointment, "appointment");
+				$this->view->record($appointment, "appointment");
 			}
-			$this->output->close_tag();
+			$this->view->close_tag();
 
-			$this->output->close_tag();
+			$this->view->close_tag();
 		}
 
 		public function show_appointment_form($appointment) {
-			$this->output->add_javascript("jquery/jquery-ui.js");
-			$this->output->add_javascript("banshee/datepicker.js");
-			$this->output->add_ckeditor("div.btn-group");
+			$this->view->add_javascript("jquery/jquery-ui.js");
+			$this->view->add_javascript("banshee/datepicker.js");
+			$this->view->add_ckeditor("div.btn-group");
 
-			$this->output->add_css("jquery/jquery-ui.css");
+			$this->view->add_css("jquery/jquery-ui.css");
 
-			$this->output->record($appointment, "edit");
+			$this->view->record($appointment, "edit");
 		}
 
 		public function execute() {
@@ -43,7 +43,7 @@
 						/* Create appointment
 						 */
 						if ($this->model->create_appointment($_POST) == false) {
-							$this->output->add_message("Error while creating appointment.");
+							$this->view->add_message("Error while creating appointment.");
 							$this->show_appointment_form($_POST);
 						} else {
 							$this->user->log_action("appointment %d created", $db->last_insert_id);
@@ -53,7 +53,7 @@
 						/* Update appointment
 						 */
 						if ($this->model->update_appointment($_POST) == false) {
-							$this->output->add_message("Error while updating appointment.");
+							$this->view->add_message("Error while updating appointment.");
 							$this->show_appointment_form($_POST);
 						} else {
 							$this->user->log_action("appointment %d updated", $_POST["id"]);
@@ -64,7 +64,7 @@
 					/* Delete appointment
 					 */
 					if ($this->model->delete_appointment($_POST["id"]) == false) {
-						$this->output->add_tag("result", "Error while deleting appointment.");
+						$this->view->add_tag("result", "Error while deleting appointment.");
 					} else {
 						$this->user->log_action("appointment %d deleted", $_POST["id"]);
 						$this->show_agenda_overview();
@@ -83,7 +83,7 @@
 				/* Edit appointment
 				 */
 				if (($appointment = $this->model->get_appointment($this->page->pathinfo[2])) == false) {
-					$this->output->add_tag("result", "Agendapunten niet gevonden.");
+					$this->view->add_tag("result", "Agendapunten niet gevonden.");
 				} else {
 					$this->show_appointment_form($appointment);
 				}
