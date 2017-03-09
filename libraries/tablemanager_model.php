@@ -10,7 +10,7 @@
 
 	abstract class tablemanager_model extends model {
 		private $valid_types = array("integer", "varchar", "text", "ckeditor",
-			"boolean", "date", "timestamp", "enum", "foreignkey", "blob", "float");
+			"boolean", "date", "timestamp", "enum", "foreignkey", "blob", "float", "checkbox");
 		protected $table = null;
 		protected $order = "id";
 		protected $desc_order = false;
@@ -338,7 +338,7 @@
 					}
 				}
 
-				if (trim($item[$name]) != "") {
+				if (($element["type"] != "checkbox") && (trim($item[$name]) != "")) {
 					switch ($element["type"]) {
 						case "date":
 							if (valid_date($item[$name]) == false) {
@@ -426,6 +426,9 @@
 
 			foreach ($keys as $key) {
 				$element = $this->elements[$key];
+				if ($element["type"] == "checkbox") {
+					$item[$key] = json_encode($item[$key]);
+				}
 
 				if (($element["type"] == "foreignkey") && ($element["required"] == false)) {
 					if ($item[$key] == "") {
@@ -463,6 +466,10 @@
 
 			foreach ($keys as $key) {
 				$element = $this->elements[$key];
+
+				if ($element["type"] == "checkbox") {
+					$item[$key] = json_encode($item[$key]);
+				}
 
 				if (($element["type"] == "foreignkey") && ($element["required"] == false)) {
 					if ($item[$key] == "") {
