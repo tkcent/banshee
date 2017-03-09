@@ -111,6 +111,26 @@
 							case "timestamp":
 								$value = date("j F Y H:i", strtotime($value));
 								break;
+							case "checkbox":
+								$checkboxes = json_decode($value);
+								$value = array();
+								if (is_array($checkboxes)) {
+									foreach ($checkboxes as $checkbox) {
+										if (($result = $this->db->entry($element["table"], $checkbox)) != false) {
+											if (is_array($element["column"]) == false) {
+												$value[] = $result[$element["column"]];
+											} else {
+												$values = array();
+												foreach ($element["column"] as $column) {
+													array_push($values, $result[$column]);
+												}
+												$value[] = implode(" ", $values);
+											}
+										}
+									}
+								}
+								$value = implode(", ", $value);
+								break;
 							case "foreignkey":
 								if ($value === null) {
 									$value = $this->foreign_null;
@@ -200,6 +220,27 @@
 					$this->view->add_tag("value", $item[$name]);
 				}
 
+				if ($element["type"] == "checkbox") {
+					$element["options"] = array();
+					if (is_array($element["column"]) == false) {
+						$cols = array($element["column"]);
+					} else {
+						$cols = $element["column"];
+					}
+					$qcols = implode(",", array_fill(1, count($cols), "%S"));
+
+					$query = "select id,".$qcols." from %S order by id";
+					if (($options = $this->db->execute($query, $cols, $element["table"])) != false) {
+						foreach ($options as $option) {
+							$values = array();
+							foreach ($cols as $col) {
+								array_push($values, $option[$col]);
+							}
+							$element["options"][$option["id"]] = implode(" ", $values);
+						}
+					}
+				}
+
 				if ($element["type"] == "foreignkey") {
 					$element["options"] = array();
 					if ($element["required"] == false) {
@@ -240,6 +281,24 @@
 					case "ckeditor":
 						$this->view->add_ckeditor("div.btn-group");
 						break;
+				}
+
+				if ($element["type"] == "checkbox") {
+					$checked = array();
+					if (is_array($item[$name]) && !empty($item[$name])) {
+						foreach ($item[$name] as $key => $value) {
+							$checked[] = $value;
+						}
+					}
+					$this->view->open_tag("options");
+					foreach ($element["options"] as $value => $label) {
+						$vars = array("value" => $value, "name" => $name);
+						if (in_array($value, $checked)) {
+							$vars["checked"] = "yes";
+						}
+						$this->view->add_tag("option", $label, $vars);
+					}
+					$this->view->close_tag();
 				}
 
 				if (($element["type"] == "enum") || ($element["type"] == "foreignkey")) {
@@ -402,6 +461,11 @@
 				if (($item = $this->model->get_item($this->page->pathinfo[$this->pathinfo_offset])) == false) {
 					$this->view->add_tag("result", $this->name." not found.");
 				} else {
+					foreach($this->model->elements as $element) {
+						if ($element["type"] == "checkbox") {
+							$item[$element["table"]] = json_decode($item[$element["table"]]);
+						}
+					}
 					$this->show_item_form($item);
 				}
 			} else {
