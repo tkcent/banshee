@@ -38,6 +38,13 @@
 				"table"    => "table",
 				"column"   => "column",
 				"overview" => true,
+				"required" => false)),
+			"checkbox" => array(
+				"label"    => "Checkbox",
+				"type"     => "checkbox",
+				"table"    => "table",
+				"column"   => "column",
+				"overview" => true,
 				"required" => false));
 	}
 ?>
