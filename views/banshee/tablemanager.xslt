@@ -99,15 +99,15 @@
 		</xsl:for-each>
 		</select>
 	</xsl:when>
-        <!-- Checkbox -->
-        <xsl:when test="@type='checkbox'">
-                <xsl:for-each select="options/option">
-                        <label>
-                        <input type="checkbox" name="{@name}[]" value="{@value}">
-                                <xsl:if test="@checked='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
-                        </input><span><xsl:value-of select="." /></span></label>
-                </xsl:for-each>
-        </xsl:when>
+	<!-- Checkbox -->
+	<xsl:when test="@type='checkbox'">
+		<xsl:for-each select="options/option">
+			<label>
+			<input type="checkbox" name="{@name}[]" value="{@value}">
+				<xsl:if test="@checked='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+			</input><span><xsl:value-of select="." /></span></label>
+		</xsl:for-each>
+	</xsl:when>
 	<!-- Text -->
 	<xsl:when test="@type='text' or @type='ckeditor'">
 		<textarea id="{@name}" name="{@name}" class="form-control">
