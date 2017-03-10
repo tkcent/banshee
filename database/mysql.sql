@@ -155,6 +155,7 @@ CREATE TABLE `dummy` (
   `timestamp` timestamp NULL DEFAULT NULL,
   `enum` enum('value1','value2','value3') NOT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
+  `color_type` mediumtext,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `dummy_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
