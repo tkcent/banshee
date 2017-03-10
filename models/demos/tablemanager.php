@@ -42,6 +42,12 @@
 				"table"    => "users",
 				"column"   => "fullname",
 				"overview" => true,
-				"required" => false));
+				"required" => false),
+			"color_type" => array(
+				"label"    => "Color",
+				"type"     => "checkbox",
+				"table"    => "color_type",
+				"column"   => "name",
+				"overview" => true));
 	}
 ?>
