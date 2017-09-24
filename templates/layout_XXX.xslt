@@ -12,11 +12,11 @@
 <meta name="copyright" content="COPYRIGHT" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
-<meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (https://www.banshee-php.org/)" />
+<meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (https://www.banshee-php.org/)" />
 <link rel="apple-touch-icon" href="/images/iphone.png" />
 <title><xsl:if test="title/@page!='' and title/@page!=title"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
-<link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
+<link rel="alternate" title="{.}" type="{@type}" href="{@url}" />
 </xsl:for-each>
 <xsl:for-each select="styles/style">
 <link rel="stylesheet" type="text/css" href="{.}" />

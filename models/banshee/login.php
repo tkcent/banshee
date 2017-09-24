@@ -1,18 +1,30 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	/* Because the model file is loaded before any output is generated,
 	 * it is used to handle the login submit.
 	 */
 
 	$login_successful = false;
-	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	if (($_SERVER["REQUEST_METHOD"] == "POST") && ($_POST["submit_button"] == "Login")) {
 		/* Login via password
 		 */
 		if ($_user->login_password($_POST["username"], $_POST["password"], $_POST["code"])) {
 			if (is_true($_POST["bind_ip"])) {
 				$_session->bind_to_ip();
 			}
-			$_SERVER["REQUEST_METHOD"] = "GET";
-			$_POST = array();
+
+			if (isset($_POST["postdata"]) == false) {
+				$_SERVER["REQUEST_METHOD"] = "GET";
+				$_POST = array();
+			} else {
+				$_POST = json_decode(base64_decode($_POST["postdata"]), true);
+			}
 
 			$login_successful = true;
 		} else {

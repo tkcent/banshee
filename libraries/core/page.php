@@ -1,11 +1,9 @@
 <?php
-	/* libraries/error/page.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
 	 *
-	 * Don't change this file, unless you know what you are doing.
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee\Core;
@@ -75,7 +73,11 @@
 			}
 
 			if ($this->module === null) {
-				$this->select_module($page);
+				if (($page == null) && is_true(DEBUG_MODE)) {
+					$this->module = "setup";
+				} else {
+					$this->select_module($page);
+				}
 			}
 		}
 

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	require_once("../libraries/helpers/output.php");
 
 	class cms_faq_controller extends Banshee\controller {
@@ -96,15 +103,15 @@
 				} else {
 					$this->show_faq_overview();
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* New FAQ
 				 */
 				$faq = array("section" => 1);
 				$this->show_faq_form($faq);
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit existing FAQ
 				 */
-				if (($faq = $this->model->get_faq($this->page->pathinfo[2])) == false) {
+				if (($faq = $this->model->get_faq($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "FAQ not found.");
 				} else {
 					$this->show_faq_form($faq);

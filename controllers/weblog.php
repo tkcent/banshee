@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class weblog_controller extends Banshee\controller {
 		private $url = null;
 
@@ -172,12 +179,12 @@
 				} else {
 					$this->show_weblog($_POST["weblog_id"]);
 				}
-			} else if (($this->page->pathinfo[1] == "tag") && (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY))) {
+			} else if (($this->page->parameters[0] == "tag") && (valid_input($this->page->parameters[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY))) {
 				/* Tagged weblogs
 				 */
-				if (($tag = $this->model->get_tag($this->page->pathinfo[2])) == false) {
+				if (($tag = $this->model->get_tag($this->page->parameters[1])) == false) {
 					$this->view->add_tag("result", "Unknown tag", $this->url);
-				} else if (($weblogs = $this->model->get_tagged_weblogs($this->page->pathinfo[2])) === false) {
+				} else if (($weblogs = $this->model->get_tagged_weblogs($this->page->parameters[1])) === false) {
 					$this->view->add_tag("result", "Error fetching tags", $this->url);
 				} else {
 					$this->view->title = "Tag ".$tag." - Weblog";
@@ -188,17 +195,17 @@
 					}
 					$this->view->close_tag();
 				}
-			} else if (($this->page->pathinfo[1] == "period") && valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) && valid_input($this->page->pathinfo[3], VALIDATE_NUMBERS)) {
+			} else if (($this->page->parameters[0] == "period") && valid_input($this->page->parameters[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) && valid_input($this->page->parameters[2], VALIDATE_NUMBERS)) {
 				/* Weblogs of certain period
 				 */
-				if (($weblogs = $this->model->get_weblogs_of_period($this->page->pathinfo[2], $this->page->pathinfo[3])) === false) {
+				if (($weblogs = $this->model->get_weblogs_of_period($this->page->parameters[1], $this->page->parameters[2])) === false) {
 					$this->view->add_tag("result", "Error fetching weblogs", $this->url);
 				} else {
-					if ($this->page->pathinfo[3] == null) {
-						$this->view->title = "Year ".$this->page->pathinfo[2]." - Weblog";
+					if ($this->page->parameters[2] == null) {
+						$this->view->title = "Year ".$this->page->parameters[1]." - Weblog";
 					} else {
-						$month = $months_of_year[$this->page->pathinfo[3] - 1];
-						$this->view->title = $month." ".$this->page->pathinfo[2]." - Weblog";
+						$month = $months_of_year[$this->page->parameters[2] - 1];
+						$this->view->title = $month." ".$this->page->parameters[1]." - Weblog";
 					}
 
 					$month = 0;
@@ -209,7 +216,7 @@
 								$this->view->close_tag();
 							}
 							if ($i < $count) {
-								$label = $months_of_year[$weblogs[$i]["month"] - 1]." ".$this->page->pathinfo[2];
+								$label = $months_of_year[$weblogs[$i]["month"] - 1]." ".$this->page->parameters[1];
 								$this->view->open_tag("list", array("label" => $label));
 							}
 						}
@@ -220,12 +227,12 @@
 						$this->view->close_tag();
 					}
 				}
-			} else if (($this->page->pathinfo[1] == "user") && (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY))) {
-				/* Tagged weblogs
+			} else if (($this->page->parameters[0] == "user") && (valid_input($this->page->parameters[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY))) {
+				/* User weblogs
 				 */
-				if (($user = $this->model->get_user($this->page->pathinfo[2])) == false) {
+				if (($user = $this->model->get_user($this->page->parameters[1])) == false) {
 					$this->view->add_tag("result", "Unknown user");
-				} else if (($weblogs = $this->model->get_weblogs_by_user($this->page->pathinfo[2])) === false) {
+				} else if (($weblogs = $this->model->get_weblogs_by_user($this->page->parameters[1])) === false) {
 					$this->view->add_tag("result", "Error fetching weblogs", $this->url);
 				} else {
 					$this->view->open_tag("list", array("label" => "Weblogs by ".$user["fullname"]));
@@ -234,10 +241,10 @@
 					}
 					$this->view->close_tag();
 				}
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show weblog
 				 */
-				$this->show_weblog($this->page->pathinfo[1]);
+				$this->show_weblog($this->page->parameters[0]);
 				if ($this->user->logged_in) {
 					$this->show_comment(array("author" => $this->user->fullname));
 				}

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class webshop_orders_controller extends Banshee\controller {
 		public function execute() {
 			if (isset($_SESSION["webshop_orders_closed"]) == false) {

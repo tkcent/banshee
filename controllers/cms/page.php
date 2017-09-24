@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_page_controller extends Banshee\controller {
 		private function show_page_overview() {
 			if (($pages = $this->model->get_pages()) === false) {
@@ -32,7 +39,12 @@
 			$this->view->add_javascript("cms/page.js");
 			$this->view->add_ckeditor("div.btn-group");
 
-			$this->view->open_tag("edit");
+			$args = array();
+			if ($page["preview"] != null) {
+				$args["preview"] = $page["preview"];
+			}
+
+			$this->view->open_tag("edit", $args);
 
 			/* Languages
 			 */
@@ -117,6 +129,26 @@
 							$this->show_page_overview();
 						}
 					}
+				} else if ($_POST["submit_button"] == "Preview page") {
+					/* Preview page
+					 */
+					$preview = $_POST;
+					$preview["url"] .= "-".random_string(32);
+					$preview["visible"] = NO;
+					$preview["private"] = NO;
+					$preview["roles"] = null;
+
+					if ($this->model->create_page($preview) === false) {
+						$this->view->add_message("Error while creating preview.");
+					} else {
+						$_POST["preview"] = $preview["url"];
+					}
+
+					$this->show_page_form($_POST);
+				} else if ($_POST["submit_button"] == "Delete preview") {
+					/* Delete previewed page
+					 */
+					$this->model->delete_preview($_POST["url"]);
 				} else if ($_POST["submit_button"] == "Delete page") {
 					/* Delete page
 					 */
@@ -135,7 +167,7 @@
 				} else {
 					$this->show_page_overview();
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* Show the user webform
 				 */
 				$page = array(
@@ -145,10 +177,10 @@
 					"visible"  => 1,
 					"roles"    => array());
 				$this->show_page_form($page);
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show the user webform
 				 */
-				if (($page = $this->model->get_page($this->page->pathinfo[2])) == false) {
+				if (($page = $this->model->get_page($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Page not found.");
 				} else {
 					$this->show_page_form($page);

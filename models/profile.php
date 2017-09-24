@@ -1,6 +1,21 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class profile_model extends Banshee\model {
 		private $hashed = null;
+
+		public function get_organisation() {
+			if (($result = $this->db->entry("organisations", $this->user->organisation_id)) == false) {
+				return false;
+			}
+
+			return $result["name"];
+		}
 
 		public function last_account_logs() {
 			if (($fp = fopen("../logfiles/actions.log", "r")) == false) {

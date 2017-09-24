@@ -10,7 +10,12 @@
 //-->
 <xsl:template match="overview">
 <form action="/{/output/page}" method="post" class="search">
-<input type="text" id="search" name="search" placeholder="Search" class="form-control" />
+<div class="input-group">
+<input type="text" id="search" name="search" value="{@search}" class="form-control" placeholder="Search" />
+<span class="input-group-btn">
+<input type="button" class="btn btn-default" value="x" onClick="javascript:$('input#search').val(''); submit();" />
+</span>
+</div>
 <input type="hidden" name="submit_button" value="search" />
 </form>
 

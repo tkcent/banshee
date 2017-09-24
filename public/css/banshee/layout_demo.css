@@ -21,46 +21,6 @@ ul {
 	padding-left:15px;
 }
 
-div.left {
-	float:left;
-}
-
-div.right {
-	float:right;
-}
-
-div.clear {
-	clear:both;
-}
-
-img.title_icon {
-	float:right;
-	margin-top:-15px;
-	margin-bottom:-15px;
-}
-
-div.input-group input.btn {
-	padding:6px 25px;
-}
-
-@media (max-width:767px) {
-	table.table-xs > thead > tr > th,
-	table.table-xs > tbody > tr > td,
-	table.table-xs > tfoot > tr > td {
-		display:block;
-	}
-
-	table.table-xs > thead > tr > th:last-child {
-		border:none;
-	}
-
-	table.table-xs > thead > tr > th:first-child,
-	table.table-xs > tbody > tr > td:first-child,
-	table.table-xs > tfoot > tr > td:first-child {
-		border-top:2px solid #808080;
-	}
-}
-
 /* Header
  */
 div.header {
@@ -99,41 +59,6 @@ body > div.content {
 	body > div.content {
 		padding:40px 20px 30px 20px;
 	}
-}
-
-input.form-control, textarea.form-control, select.form-control {
-	max-width:500px;
-	margin-bottom:5px;
-}
-
-@media (max-width:767px) {
-	input.form-control, textarea.form-control, select.form-control {
-		font-size:16px;
-	}
-}
-
-input[type=checkbox] {
-	margin-left:5px;
-}
-
-textarea.form-control {
-	height:75px;
-}
-
-div.btn-group {
-	margin:15px 10px 10px 0;
-}
-
-.btn {
-	padding:4px 24px;
-}
-
-.btn-xs {
-	padding:0 16px;
-}
-
-table.table-hover tbody tr:hover {
-	cursor:pointer;
 }
 
 /* Footer

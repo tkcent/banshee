@@ -1,5 +1,12 @@
 <?php
-	class cms_collection_model extends Banshee\model {
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
+	class cms_photos_collection_model extends Banshee\model {
 		public function get_collections() {
 			$query = "select * from collections order by name";
 
@@ -11,7 +18,7 @@
 
 			$query = "select p.id, p.name from photo_albums p, collection_album k ".
 			         "where p.id=k.album_id and k.collection_id=%d";
-			if (($albums = $this->db->execute($query, $collection_id)) === false) {
+			if (($albums = $this->db->execute($query, $collection_id)) == false) {
 				return false;
 			}
 

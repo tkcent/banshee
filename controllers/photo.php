@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class photo_controller extends Banshee\controller {
 		private $title = "Photos";
 		private $extensions = array(
@@ -105,10 +112,10 @@
 		}
 
 		public function execute() {
-			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				$this->show_album($this->page->pathinfo[1]);
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."_.", VALIDATE_NONEMPTY)) {
-				if ($this->show_photo($this->page->pathinfo[1]) == false) {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				$this->show_album($this->page->parameters[0]);
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."_.", VALIDATE_NONEMPTY)) {
+				if ($this->show_photo($this->page->parameters[0]) == false) {
 					header("Result: 404");
 					$this->view->add_tag("result", "This image could not be found.");
 				}

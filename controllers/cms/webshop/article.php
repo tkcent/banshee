@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_webshop_article_controller extends Banshee\controller {
 		private function show_overview() {
 			if (($article_count = $this->model->count_articles()) === false) {
@@ -30,6 +37,11 @@
 			if (($categories = $this->model->get_categories()) === false) {
 				$this->view->add_tag("result", "Database error.");
 				return false;
+			}
+
+			if (count($categories) == 0) {
+				$this->view->add_tag("result", "No article categories available. Add some first.", array("url" => "cms/webshop/category/new"));
+				return true;
 			}
 
 			$this->view->open_tag("edit", array("currency" => WEBSHOP_CURRENCY));
@@ -98,16 +110,16 @@
 				} else {
 					$this->show_overview();
 				}
-			} else if ($this->page->pathinfo[3] === "new") {
+			} else if ($this->page->parameters[0] === "new") {
 				/* New article
 				 */
 				$article = array("visible" => true);
 				$this->show_article_form($article);
-			} else if (valid_input($this->page->pathinfo[3], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit article
 				 */
-				if (($article = $this->model->get_article($this->page->pathinfo[3])) === false) {
-					$this->view->add_tag("result", "article not found.\n");
+				if (($article = $this->model->get_article($this->page->parameters[0])) == false) {
+					$this->view->add_tag("result", "Article not found.\n");
 				} else {
 					$this->show_article_form($article);
 				}

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_poll_controller extends Banshee\controller {
 		private function show_poll_overview() {
 			if (($polls = $this->model->get_polls()) === false) {
@@ -109,15 +116,15 @@
 				} else {
 					$this->show_poll_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit existing poll
 				 */
-				if (($poll = $this->model->get_poll($this->page->pathinfo[2])) == false) {
+				if (($poll = $this->model->get_poll($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Poll not found or not available for editing.");
 				} else {
 					$this->show_poll_form($poll);
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* Create new poll
 				 */
 				$poll = array(

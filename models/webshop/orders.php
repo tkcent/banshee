@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class webshop_orders_model extends Banshee\model {
 		public function count_orders($closed) {
 			$query = "select count(*) as count from shop_orders where user_id=%d and closed=%d";

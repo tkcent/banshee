@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="banshee/main.xslt" />
 
@@ -14,6 +23,8 @@
 <input type="text" id="fullname" name="fullname" value="{fullname}" class="form-control" />
 <label for="email">E-mail address:</label>
 <input type="text" id="email" name="email" value="{email}" class="form-control" />
+<label>Organisation:</label>
+<input type="text" disabled="disabled" value="{organisation}" class="form-control" />
 <label for="current">Current password:</label>
 <input type="password" id="current" name="current" class="form-control" />
 <label for="password">New password:</label> <span class="blank" style="font-size:10px">(will not be changed when left blank)</span>

@@ -1,11 +1,9 @@
 <?php
-	/* libraries/core/user.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
 	 *
-	 * Don't change this file, unless you know what you are doing.
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee\Core;
@@ -153,27 +151,30 @@
 		 * ERROR:  -
 		 */
 		public function login_one_time_key($key) {
-			if ($key == "") {
+			if (strlen($key) != ONE_TIME_KEY_SIZE) {
 				return false;
 			}
 
-			usleep(rand(0, 10000));
+			list($user_id, $secret) = explode("x", $key, 2);
 
-			$query = "select * from users where one_time_key=%s and status!=%d limit 1";
-			if (($data = $this->db->execute($query, $key, USER_STATUS_DISABLED)) == false) {
+			$query = "select * from users where id=%d and one_time_key!=%s and status!=%d limit 1";
+			if (($data = $this->db->execute($query, $user_id, "", USER_STATUS_DISABLED)) != false) {
+				$user = $data[0];
+				if (hash_equals($user["one_time_key"], $secret)) {
+					$query = "update users set one_time_key=null where id=%d";
+					$this->db->query($query, $user["id"]);
+
+					$this->login((int)$user["id"]);
+					$this->session->bind_to_ip();
+				}
+			}
+
+			if ($this->logged_in == false) {
 				header("X-Hiawatha-Monitor: failed_login");
 				sleep(1);
-				return false;
 			}
-			$user = $data[0];
 
-			$query = "update users set one_time_key=null where id=%d";
-			$this->db->query($query, $user["id"]);
-
-			$this->login((int)$user["id"]);
-			$this->session->bind_to_ip();
-
-			return true;
+			return $this->logged_in;
 		}
 
 		/* Login via SSL client authentication

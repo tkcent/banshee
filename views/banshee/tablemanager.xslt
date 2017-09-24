@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="alphabetize.xslt" />
 <xsl:import href="pagination.xslt" />
@@ -48,7 +57,7 @@
 <xsl:apply-templates select="pagination" />
 </div>
 
-<div class="btn-group left">
+<div class="left btn-group">
 <xsl:if test="@allow_create='yes'">
 <a href="/{/output/page}/new" class="new btn btn-default">New <xsl:value-of select="labels/@name" /></a>
 </xsl:if>

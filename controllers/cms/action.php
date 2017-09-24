@@ -1,10 +1,17 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_action_controller extends Banshee\controller {
 		public function execute() {
-			if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
 				$offset = 0;
 			} else {
-				$offset = $this->page->pathinfo[2];
+				$offset = $this->page->parameters[0];
 			}
 
 			if (isset($_SESSION["admin_actionlog_size"]) == false) {

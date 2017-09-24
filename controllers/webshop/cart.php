@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class webshop_cart_controller extends Banshee\controller {
 		private function add($article_id) {
 			if (($article = $this->model->get_article($article_id)) == false) {
@@ -29,8 +36,8 @@
 			}
 
 			if ($this->page->ajax_request) {
-				if ($this->page->pathinfo[2] == "add") {
-					$this->add($this->page->pathinfo[3]);
+				if ($this->page->parameters[0] == "add") {
+					$this->add($this->page->parameters[1]);
 				}
 				return;
 			}

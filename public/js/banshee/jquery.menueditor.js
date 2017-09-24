@@ -2,8 +2,10 @@
  *
  * Copyright (C) by Hugo Leisink <hugo@leisink.net>
  * This file is part of the Banshee PHP framework
- * http://www.banshee-php.org/
-*/
+ * https://www.banshee-php.org/
+ *
+ * Licensed under The MIT License
+ */
 
 (function($) {
 	var pluginName = "menuEditor";
@@ -15,7 +17,7 @@
 
 	var l_text =        '<span class="label">Text:</span>';
 	var l_link =        '<span class="link label">Link:</span>';
-	var new_node =      '<li>' + l_text + '<input type="text" class="form-control">' + l_link + '<input type="text" class="form-control"></li>';
+	var new_node =      '<li>' + l_text + '<input type="text" placeholder="Text" class="form-control">' + l_link + '<input type="text" placeholder="Link" class="form-control"></li>';
 	var h_insert_node = '<input type="button" value="Insert" class="insert btn btn-default">';
 	var h_add_node =    '<input type="button" value="+" class="btn btn-default btn-xs add_node">';
 	var h_delete_node = '<input type="button" value="-" class="btn btn-default btn-xs delete_node">';

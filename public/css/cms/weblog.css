@@ -19,6 +19,9 @@ input[type=checkbox] {
 table.comments th:first-child {
 	width:20px;
 }
+table.comments th:nth-child(4) {
+	width:40px;
+}
 
 div.tags span {
 	display:inline-block;

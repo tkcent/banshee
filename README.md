@@ -1,7 +1,7 @@
 Banshee
 =======
 
-Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
+This application has been built upon the Banshee PHP framework. Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
 
 Configure your webserver
 ------------------------
@@ -40,13 +40,7 @@ For Apache, there is a .htaccess file in the 'public' directory which contains t
 
 Configure PHP
 -------------
-Banshee needs PHP's MySQL, XML/XSLT and GD module. Use the following PHP settings:
-
-	allow_url_include = Off
-	cgi.fix_pathinfo = 0 (when using FastCGI PHP), 1 (otherwise)
-	date.timezone = <your timezone>
-	magic_quotes_gpc = Off
-	register_globals = Off
+Banshee needs PHP's MySQL, XML/XSLT and GD module.
 
 Configure your database
 -----------------------

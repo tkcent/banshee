@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_webshop_order_model extends Banshee\model {
 		public function count_orders($closed) {
 			$query = "select count(*) as count from shop_orders where closed=%d";
@@ -23,7 +30,7 @@
 			$query = "select o.*, u.email, UNIX_TIMESTAMP(timestamp) as timestamp ".
 			         "from shop_orders o, users u where o.user_id=u.id and o.id=%d";
 
-			if (($result = $this->db->execute($query, $order_id)) === false) {
+			if (($result = $this->db->execute($query, $order_id)) == false) {
 				return false;
 			}
 			$order = $result[0];

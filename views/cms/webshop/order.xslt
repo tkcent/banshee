@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="../../banshee/main.xslt" />
 <xsl:import href="../../banshee/pagination.xslt" />
@@ -19,11 +28,7 @@
 
 <table class="table table-condensed table-striped table-hover overview">
 <thead>
-<th>ID</th>
-<th>Customer</th>
-<th>Timetamp</th>
-<th>Amount</th>
-<th>Articles</th>
+<th>ID</th><th>Customer</th><th>Timetamp</th><th>Amount</th><th>Articles</th>
 </thead>
 <tbody>
 <xsl:for-each select="orders/order">

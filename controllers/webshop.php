@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class webshop_controller extends Banshee\controller {
 		public function show_articles($search, $category) {
 			if (($article_count = $this->model->count_articles($search, $category)) === false) {
@@ -69,16 +76,16 @@
 				if ($_POST["submit_button"] == "search") {
 					$_SESSION["webshop_search"] = $_POST["search"];
 				}
-			} else if (($this->page->pathinfo[1] == null) && ($_SESSION["webshop_search_count"] === 1)) {
+			} else if (($this->page->parameters[0] == null) && ($_SESSION["webshop_search_count"] === 1)) {
 				$_SESSION["webshop_search"] = null;
 				$_SESSION["webshop_search_count"] = null;
 			}
 
-			if ($this->page->pathinfo[1] == "category") {
-				if ($this->page->pathinfo[2] == 0) {
+			if ($this->page->parameters[0] == "category") {
+				if ($this->page->parameters[1] == 0) {
 					$_SESSION["webshop_category"] = null;
-				} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-					$_SESSION["webshop_category"] = $this->page->pathinfo[2];
+				} else if (valid_input($this->page->parameters[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+					$_SESSION["webshop_category"] = $this->page->parameters[1];
 				} else {
 					$_SESSION["webshop_category"] = null;
 				}
@@ -92,11 +99,11 @@
 
 			$this->view->add_tag("search", $_SESSION["webshop_search"]);
 
-			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				if (($article = $this->model->get_article($this->page->pathinfo[1])) !== false) {
-					$this->show_article($article);
-				} else {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if (($article = $this->model->get_article($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Article not found.");
+				} else {
+					$this->show_article($article);
 				}
 			} else {
 				$this->show_articles($_SESSION["webshop_search"], $_SESSION["webshop_category"]);

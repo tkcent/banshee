@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class forum_controller extends Banshee\controller {
 		private $url = null;
 
@@ -150,20 +157,20 @@
 				} else {
 					$this->show_forum_overview();
 				}
-			} else if ($this->page->pathinfo[1] == "topic") {
+			} else if ($this->page->parameters[0] == "topic") {
 				/* Show topic
 				 */
-				$this->show_topic($this->page->pathinfo[2]);
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				if ($this->page->pathinfo[2] == "new") {
+				$this->show_topic($this->page->parameters[1]);
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if ($this->page->parameters[1] == "new") {
 					/* Start new topic
 					 */
-					$topic = array("forum_id" => $this->page->pathinfo[1]);
+					$topic = array("forum_id" => $this->page->parameters[0]);
 					$this->show_topic_form($topic);
 				} else {
 					/* Show forum
 					 */
-					$this->show_forum($this->page->pathinfo[1]);
+					$this->show_forum($this->page->parameters[0]);
 				}
 			} else {
 				/* Show forums

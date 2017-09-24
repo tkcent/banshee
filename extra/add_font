@@ -1,10 +1,10 @@
 #!/usr/bin/php
 <?php
-	/* extra/add_font
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 *
 	 * Example: add_font Open Sans:400i
 	 */

@@ -1,11 +1,9 @@
 <?php
-	/* libraries/core/view.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
 	 *
-	 * Don't change this file, unless you know what you are doing.
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee\Core;
@@ -605,6 +603,7 @@
 						header("X-Content-Type-Options: nosniff");
 						header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src *");
 						header("Referrer-Policy: same-origin");
+						#header("Expect-CT: max-age=0; report-uri=\"".$_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/report_ct_error\"");
 
 						if ($this->activate_hiawatha_cache()) {
 							header("X-Hiawatha-Cache: ".$this->hiawatha_cache_time);

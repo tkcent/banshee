@@ -1,3 +1,16 @@
+banshee (6.1) stable; urgency=low
+
+  * License changed to MIT license.
+  * Keep post data through login after session expired.
+  * Preview option for pages.
+  * Usage of $this->page->parameters instead of ->pathinfo.
+  * jQuery updated to 3.2.1.
+  * DataTables updated to 1.10.15.
+  * Small bugfixes, some related to changes in PHP 7.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed, 13 Sep 2017 21:48:02 +0200
+
 banshee (6.0) stable; urgency=low
 
   * Banshee now requires PHP 7.

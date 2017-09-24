@@ -1,26 +1,22 @@
-Banshee PHP framework - Copyright (C) by Hugo Leisink <hugo@leisink.net>
+The MIT License
 
-You are allowed to use the Banshee PHP framework under the following conditions:
+Banshee PHP framework (https://www.banshee-php.org/)
+Copyright (c) 2017 Hugo Leisink
 
-	1) You must leave the copyright messages inside the files which are part of
-	   the Banshee PHP framework unchanged.
-	2) If you use (parts of) the Banshee PHP framework to build a website which
-	   you sell or rent to other people or organisations, you must inform them
-	   that "you built the website upon (parts of) the Banshee PHP framework,
-	   which is a free and open source framework".
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-In no event shall the author of Banshee be liable for any bug in this software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-The following files are not part of the Banshee PHP framework:
-
-	- Bootstrap         : public/(css|js)/banshee/bootstrap*
-	- DataTables        : public/js/banshee/jquery.datatables.js
-	- FPDF              : libraries/thirdparty/fpdf.php
-	- jQuery            : public/(css|js)/jquery/*
-	- jsencrypt         : public/js/banshee/jsencrypt.js
-	- Notify.js         : public/js/banshee/notify.js
-	- Magnific Popup    : public/js/banshee/jquery.magnific-popup.js
-	- SHA256 javascript : public/js/banshee/sha256.js
-	- ZIP library       : libraries/thirdparty/zipfile.php
-
-Look for copyright messages inside those files.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

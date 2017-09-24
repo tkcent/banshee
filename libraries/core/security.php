@@ -1,9 +1,9 @@
 <?php
-	/* libraries/core/security.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	/* Pre-defined validation strings for valid_input()
@@ -274,7 +274,7 @@
 	 *
 	 * INPUT:  int length
 	 * OUTPUT: string random string
-	 * ERROR:  false
+	 * ERROR:  -
 	 */
 	function random_string($length) {
 		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -311,7 +311,7 @@
 				return false;
 			}
 
-			if (($key = random_string(32)) != false) {
+			if (($key = random_string(ONE_TIME_KEY_SIZE - strlen((string)$user_id) - 1)) != false) {
 				if (($result = $db->execute($query, $key)) === false) {
 					return false;
 				}
@@ -322,6 +322,6 @@
 			return false;
 		}
 
-		return $key;
+		return $user_id."x".$key;
 	}
 ?>

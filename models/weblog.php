@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class weblog_model extends Banshee\model {
 		private $show_user = null;
 
@@ -179,21 +186,21 @@
 				return false;
 			}
 
-			$this->send_notification($comment["weblog_id"], $comment["content"]);
+			$this->send_notification($comment);
 
 			return true;
 		}
 
-		private function send_notification($weblog_id, $comment) {
-			if (($weblog = $this->db->entry("weblogs", $weblog_id)) == false) {
+		private function send_notification($comment) {
+			if (($weblog = $this->db->entry("weblogs", $comment["weblog_id"])) == false) {
 				return false;
 			} else if (($author = $this->db->entry("users", $weblog["user_id"])) == false) {
 				return false;
 			}
 
-			$weblog_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/".$weblog_id;
+			$weblog_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module."/".$comment["weblog_id"];
 
-			$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/weblog/".$weblog_id;
+			$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/weblog/".$comment["weblog_id"];
 			if (($key = one_time_key($this->db, $author["id"])) !== false) {
 				$cms_url .= "?login=".$key;
 			}
@@ -201,7 +208,7 @@
 			$message =
 				"<body>".
 				"<p>The following comment has been added to your weblog post on the '".$this->settings->head_title."' website.</p>".
-				"<p>\"<i>".$comment."</i>\"</p>".
+				"<p>".$comment["author"].": \"<i>".$comment["content"]."</i>\"</p>".
 				"<p>Click <a href=\"".$weblog_url."\">here</a> to visit the weblog page or <a href=\"".$cms_url."\">here</a> to visit the weblog CMS page.</p>".
 				"</body>";
 

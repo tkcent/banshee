@@ -1,7 +1,13 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_settings_controller extends Banshee\tablemanager_controller {
 		protected $name = "Setting";
-		protected $pathinfo_offset = 2;
 		protected $back = "cms";
 		protected $icon = "settings.png";
 		protected $page_size = 25;

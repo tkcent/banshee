@@ -1,9 +1,9 @@
 <?php
-	/* libraries/nma.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;

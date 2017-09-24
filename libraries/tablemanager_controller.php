@@ -1,16 +1,15 @@
 <?php
-	/* libraries/tablemanager_controller.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;
 
 	abstract class tablemanager_controller extends controller {
 		protected $name = "Table";
-		protected $pathinfo_offset = 1;
 		protected $back = null;
 		protected $icon = null;
 		protected $page_size = 25;
@@ -382,7 +381,7 @@
 				/* Handle forum submit
 				 */
 				$this->handle_submit();
-			} else if ($this->page->pathinfo[$this->pathinfo_offset] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* Show form for new item
 				 */
 				$item = array();
@@ -396,10 +395,10 @@
 					}
 				}
 				$this->show_item_form($item);
-			} else if (valid_input($this->page->pathinfo[$this->pathinfo_offset], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show form for existing item
 				 */
-				if (($item = $this->model->get_item($this->page->pathinfo[$this->pathinfo_offset])) == false) {
+				if (($item = $this->model->get_item($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", $this->name." not found.");
 				} else {
 					$this->show_item_form($item);

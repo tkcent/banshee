@@ -1,9 +1,9 @@
 <?php
-	/* libraries/prevent_csrf.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;
@@ -106,7 +106,7 @@
 				$referer = $_SERVER["HTTP_REFERER"];
 				$csrf_attack = $this->detected_via_referer($referer);
 			} else {
-				$referer = "<unknown>";
+				$referer = "previous visited website";
 				$csrf_attack = $this->detected_via_token();
 			}
 

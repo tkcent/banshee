@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="../../banshee/main.xslt" />
 <xsl:import href="../../banshee/pagination.xslt" />
@@ -39,7 +48,7 @@
 <xsl:apply-templates select="pagination" />
 </div>
 
-<div class="btn-group left">
+<div class="left btn-group">
 <a href="/{/output/page}/new" class="btn btn-default">New article</a>
 <a href="/cms" class="btn btn-default">Back</a>
 </div>
@@ -75,7 +84,7 @@
 <input type="text" id="image" name="image" value="{article/image}" class="form-control" />
 <label for="price">Price:</label>
 <div class="input-group">
-<span class="input-group-addon" id="basic-addon1"><xsl:value-of disable-output-escaping="yes" select="@currency" /></span>
+<span class="input-group-addon"><xsl:value-of disable-output-escaping="yes" select="@currency" /></span>
 <input type="text" id="price" name="price" value="{article/price}" class="form-control" />
 </div>
 <label for="visible">Visible:</label>

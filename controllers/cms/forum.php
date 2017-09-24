@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	require_once("../libraries/helpers/output.php");
 
 	class cms_forum_controller extends Banshee\controller {
@@ -68,10 +75,10 @@
 				} else {
 					$this->show_message_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit existing message
 				 */
-				if (($message = $this->model->get_message($this->page->pathinfo[2])) == false) {
+				if (($message = $this->model->get_message($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Message not found.");
 				} else {
 					$this->show_message_form($message);

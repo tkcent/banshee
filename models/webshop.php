@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class webshop_model extends Banshee\model {
 		public function count_articles($search = null, $category_id = null) {
 			$query = "select count(*) as count from shop_articles where visible=%d";

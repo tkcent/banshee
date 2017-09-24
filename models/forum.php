@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class forum_model extends Banshee\model {
 		public function get_forums() {
 			$query = "select *,(select count(*) from forum_topics where forum_id=f.id) as topics ".

@@ -1,5 +1,12 @@
 <?php
-	class cms_collection_controller extends Banshee\controller {
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
+	class cms_photos_collection_controller extends Banshee\controller {
 		private function show_collection_overview() {
 			if (($collections = $this->model->get_collections()) === false) {
 				$this->add_tag("result", "Database error.");
@@ -82,11 +89,11 @@
 				} else {
 					$this->show_collection_overview();
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				$collection = array();
 				$this->show_collection_form($collection);
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				if (($collection = $this->model->get_collection($this->page->pathinfo[2])) == false) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if (($collection = $this->model->get_collection($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Collection not found.");
 				} else {
 					$this->show_collection_form($collection);

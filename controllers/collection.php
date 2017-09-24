@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class collection_controller extends Banshee\controller {
 		private $title = "Photo album collections";
 
@@ -33,9 +40,9 @@
 		}
 
 		public function execute() {
-			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY) == false) {
 				$this->show_collection_overview();
-			} else if (($collection = $this->model->get_collection($this->page->pathinfo[1])) == false) {
+			} else if (($collection = $this->model->get_collection($this->page->parameters[0])) == false) {
 				$this->view->add_tag("result", "Collection not found.");
 			} else {
 				$this->show_collection($collection);

@@ -1,7 +1,13 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_language_controller extends Banshee\tablemanager_controller {
 		protected $name = "Language";
-		protected $pathinfo_offset = 2;
 		protected $icon = "language.png";
 		protected $back = "cms";
 

@@ -1,16 +1,16 @@
 #!/usr/bin/php
 <?php
-	/* security_audit
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	chdir(__DIR__);
 	require("libraries/core/banshee.php");
 
-	$written_for = "6.0";
+	$written_for = "6.1";
 
 	/* Auditor class
 	 */
@@ -193,18 +193,18 @@
 		protected $verified = array(
 			"libraries/database/mysqli_connection.php"     => array(38),
 			"libraries/database/postgresql_connection.php" => array(48),
-			"libraries/core/user.php"                      => array(268, 277),
+			"libraries/core/user.php"                      => array(269, 278),
 			"libraries/core/security.php"                  => array(192, 258),
-			"libraries/tablemanager_controller.php"        => array(216),
+			"libraries/tablemanager_controller.php"        => array(215),
 			"libraries/tablemanager_model.php"             => array(287),
-			"models/cms/link.php"                          => array(37),
-			"models/cms/photo.php"                         => array(207),
-			"models/cms/settings.php"                      => array(54, 77),
-			"models/cms/user.php"                          => array(6),
-			"models/cms/webshop/article.php"               => array(39),
-			"models/search.php"                            => array(135),
-			"models/setup.php"                             => array(140),
-			"models/webshop/cart.php"                      => array(12));
+			"models/cms/link.php"                          => array(44),
+			"models/cms/photos/photo.php"                  => array(214),
+			"models/cms/settings.php"                      => array(61, 84),
+			"models/cms/user.php"                          => array(15),
+			"models/cms/webshop/article.php"               => array(46),
+			"models/search.php"                            => array(142),
+			"models/setup.php"                             => array(147),
+			"models/webshop/cart.php"                      => array(21));
 
 		protected function scan_line($line) {
 			/* PHP database query function calls
@@ -327,25 +327,25 @@
 	class output_auditor extends auditor {
 		protected $extension = "xslt";
 		protected $verified = array(
-			"views/agenda.xslt"                    => array(25, 86),
-			"views/banshee/functions.xslt"         => array(15),
-			"views/banshee/main.xslt"              => array(11),
-			"views/banshee/page.xslt"              => array(12),
-			"views/cms/webshop/order.xslt"         => array(34, 83, 91),
-			"views/cms/webshop/article.xslt"       => array(32, 78),
+			"views/agenda.xslt"                    => array(34, 95),
+			"views/banshee/functions.xslt"         => array(24),
+			"views/banshee/main.xslt"              => array(20),
+			"views/banshee/page.xslt"              => array(21),
+			"views/cms/webshop/order.xslt"         => array(39, 88, 96),
+			"views/cms/webshop/article.xslt"       => array(41, 87),
 			"views/demos/googlemaps.xslt"          => array(14),
 			"views/demos/posting.xslt"             => array(19),
-			"views/dictionary.xslt"                => array(60),
-			"views/faq.xslt"                       => array(18),
-			"views/forum.xslt"                     => array(83),
-			"views/guestbook.xslt"                 => array(21),
-			"views/mailbox.xslt"                   => array(42),
-			"views/news.xslt"                      => array(20),
-			"views/weblog.xslt"                    => array(27, 57),
-			"views/webshop.xslt"                   => array(24, 48),
-			"views/webshop/checkout.xslt"          => array(80, 88),
-			"views/webshop/cart.xslt"              => array(25, 35),
-			"views/webshop/orders.xslt"            => array(40, 48));
+			"views/dictionary.xslt"                => array(69),
+			"views/faq.xslt"                       => array(27),
+			"views/forum.xslt"                     => array(92),
+			"views/guestbook.xslt"                 => array(30),
+			"views/mailbox.xslt"                   => array(51),
+			"views/news.xslt"                      => array(29),
+			"views/weblog.xslt"                    => array(36, 66),
+			"views/webshop.xslt"                   => array(33, 57),
+			"views/webshop/checkout.xslt"          => array(89, 97),
+			"views/webshop/cart.xslt"              => array(34, 44),
+			"views/webshop/orders.xslt"            => array(49, 57));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
@@ -357,22 +357,22 @@
 	class integrity_auditor {
 		private $files = array(
 			"libraries/core" => array(
-				"banshee.php"    => "258520685efd76cb2566356a2182223c6c1924d4",
-				"security.php"   => "c23ca884dd672d2d64a418d3d11a87e6a0ce7646",
-				"session.php"    => "45c0bb5946a2bf1c9c5d581a2a59a11a94ff8924",
-				"settings.php"   => "655e1d443d532e6b4b537f38590889a7910c5fe1",
-				"page.php"       => "50f1dcd54d51f97ab237f46df08da591bc3fc50d",
-				"user.php"       => "7b4fad037b0ae1223e78d619c1d3ca4a3ccdfa65",
-				"view.php"       => "ce2501b81e52180d3ebda34b9816976a1fe35a89"),
+				"banshee.php"    => "9939f02d68b0d0aaa9c23959a3a371f6f0a2df5b",
+				"security.php"   => "60258091ae5fa3781ffdaa1df0b3e5cbaa0d38b4",
+				"session.php"    => "4478776517de2663e958af9f3980491471ff89fe",
+				"settings.php"   => "c07c539e7015cc2d2b365f3af6b15f8e1c8720d5",
+				"page.php"       => "3680941682959b23beeecd2f52ba1b7bb86daf38",
+				"user.php"       => "830e8f27d9a1d85f11d9181247788b882807d379",
+				"view.php"       => "b8d5642a496ba9a46f150d9ea878aa3a13f3c40f"),
 			"libraries/database" => array(
-				"database_connection.php" => "a2a4c55ad4a540b34bd7c7b6ddbdf7df05ebec9f",
-				"mysqli_connection.php"   => "9d80db1c20bec37ea5e3670580c33717dbfb3096"),
+				"database_connection.php" => "51e18c9b5f934d6995ab7c7be3bef03a0ce34fd9",
+				"mysqli_connection.php"   => "487c90773f3d13c9d3e9b751e8974437d674c4a5"),
 			"libraries" => array(
-				"controller.php" => "9a0cdb52990abe55484f80a1eb4929ae8d02f73c",
-				"email.php"      => "e3bc888ec871468ce2a00ac8eb7416c59902476a",
-				"model.php"      => "2b40815ff1b2af611fe5fb13dad5ea7fcb0f6395"),
+				"controller.php" => "72f57a6b65f2d0c263e166d0ef42957f4079f35d",
+				"email.php"      => "f1488d7ed47cf4479bc2100def8ab645e5b1d1b7",
+				"model.php"      => "493fc2b0884b18e6211aad8071557ef5267d101b"),
 			"public" => array(
-				"index.php"      => "d4101f2f4651a200dd4b5986647c22d062856f45"));
+				"index.php"      => "7be0f552f1bb689af0b2136fbff8f7d3c3e777c9"));
 
 		public function perform_audit() {
 			$total = 0;

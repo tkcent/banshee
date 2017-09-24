@@ -1,10 +1,10 @@
 #!/usr/bin/php
 <?php
-	/* remove_module
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	chdir(__DIR__);
@@ -72,11 +72,11 @@
 			"pages"       => array("password"),
 			"files"       => array("extra/password.txt")),
 		"photo" => array(
-			"pages"       => array("photo", "collection", "cms/photo", "cms/album", "cms/collection"),
+			"pages"       => array("photo", "collection", "cms/photos/photo", "cms/photos/album", "cms/photos/collection"),
 			"libraries"   => array("image"),
 			"tables"      => array("collection_album", "collections", "photos", "photo_albums"),
 			"settings"    => array("photo\_%"),
-			"directories" => array("public/photo")),
+			"directories" => array("cms/photos", "public/photos")),
 		"poll" => array(
 			"pages"       => array("poll", "cms/poll"),
 			"libraries"   => array("poll"),
@@ -228,14 +228,19 @@
 		/* Directories
 		 */
 		if (isset($module["directories"])) {
-			foreach ($locations as $paths) {
-				foreach ($paths as $path) {
-					foreach ($module["directories"] as $directory) {
-						$directory = $path."/".$directory;
-						printf("Deleting directory %s.\n", $directory);
-						if (file_exists($directory)) {
-							if (rmdir($directory) == false) {
-								printf("Error while deleting directory %s\n", $directory);
+			foreach ($module["directories"] as $directory) {
+				if (file_exists($directory)) {
+					printf("Deleting directory %s.\n", $directory);
+					if (rmdir($directory) == false) {
+						printf("Error while deleting directory %s\n", $directory);
+					}
+				} else foreach ($locations as $paths) {
+					foreach ($paths as $path) {
+						$dir = $path."/".$directory;
+						if (file_exists($dir)) {
+							printf("Deleting directory %s.\n", $dir);
+							if (rmdir($dir) == false) {
+								printf("Error while deleting directory %s\n", $dir);
 							}
 						}
 					}

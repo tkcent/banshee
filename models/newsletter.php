@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class newsletter_model extends Banshee\model {
 		private function create_signature($data) {
 			return hash_hmac("sha256", json_encode($data), $this->settings->secret_website_code);

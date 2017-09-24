@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class newsletter_controller extends Banshee\controller {
 		private function show_form($info) {
 			$this->view->run_javascript("document.getElementById('email').focus()");
@@ -30,10 +37,10 @@
 					$info = array();
 					$this->show_form($info);
 				}
-			} else if (isset($this->page->pathinfo[1])) {
+			} else if (isset($this->page->parameters[0])) {
 				/* (Un)subscribe to the newsletter
 				 */
-				if (($data = $this->model->extract_data($this->page->pathinfo[1])) == false) {
+				if (($data = $this->model->extract_data($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "The supplied confirmation code is invalid.");
 				} else if ($data["mode"] == "subscribe") {
 					if ($this->model->subscribe($data["email"]) == false) {

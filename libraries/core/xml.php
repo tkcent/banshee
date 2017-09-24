@@ -1,9 +1,9 @@
 <?php
-	/* libraries/core/xml.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee\Core;
@@ -17,6 +17,7 @@
 		private $open_tags = array();
 		private $cache = null;
 		private $cache_key = null;
+		private $cache_timeout = null;
 		private $cache_buffer = "";
 		private $tag_eol = true;
 
@@ -323,16 +324,17 @@
 
 		/* Start caching XML additions done after this call
 		 *
-		 * INPUT:  string cache key
+		 * INPUT:  string cache key[, int cache timeout]
 		 * OUTPUT: true
 		 * ERROR:  false
 		 */
-		public function start_caching($key) {
+		public function start_caching($key, $timeout = null) {
 			if (($this->cache === null) || ($this->cache_key !== null)) {
 				return false;
 			}
 
 			$this->cache_key = $key;
+			$this->cache_timeout = $timeout;
 
 			return true;
 		}
@@ -348,8 +350,9 @@
 				return false;
 			}
 
-			$this->cache->{$this->cache_key} = $this->cache_buffer;
+			$this->cache->store($this->cache_key, $this->cache_buffer, $this->cache_timeout);
 			$this->cache_key = null;
+			$this->cache_timeout = null;
 			$this->cache_buffer = "";
 
 			return true;
@@ -367,6 +370,7 @@
 			}
 
 			$this->cache_key = null;
+			$this->cache_timeout = null;
 			$this->cache_buffer = "";
 
 			return true;

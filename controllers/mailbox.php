@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class mailbox_controller extends Banshee\controller {
 		private $title = "Mailbox";
 
@@ -105,28 +112,28 @@
 						$this->show_sentbox();
 					}
 				}
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show mail message
 				 */
-				if (($mail = $this->model->get_mail($this->page->pathinfo[1])) == false) {
+				if (($mail = $this->model->get_mail($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Mail not found.");
 				} else {
 					$this->show_mail($mail);
 				}
-			} else if ($this->page->pathinfo[1] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* New mail
 				 */
 				$mail = array();
 				$this->write_mail($mail);
-			} else if ($this->page->pathinfo[1] == "reply") {
+			} else if ($this->page->parameters[0] == "reply") {
 				/* Reply
 				 */
-				if (($mail = $this->model->get_reply_mail($this->page->pathinfo[2])) == false) {
+				if (($mail = $this->model->get_reply_mail($this->page->parameters[1])) == false) {
 					$this->view->add_tag("result", "Error replying to mail.");
 				} else {
 					$this->write_mail($mail);
 				}
-			} else if ($this->page->pathinfo[1] == "sent") {
+			} else if ($this->page->parameters[0] == "sent") {
 				/* Show sentbox
 				 */
 				$this->show_sentbox();

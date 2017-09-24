@@ -13,9 +13,9 @@
 			list($protocol,, $hostname, $path) = explode("/", $url, 4);
 
 			if ($protocol == "http:") {
-				$http = new HTTP($hostname);
+				$http = new Banshee\HTTP($hostname);
 			} else if ($protocol == "https:") {
-				$http = new HTTPS($hostname);
+				$http = new Banshee\HTTPS($hostname);
 			} else {
 				break;
 			}

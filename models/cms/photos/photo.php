@@ -1,5 +1,12 @@
 <?php
-	class cms_photo_model extends Banshee\model {
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
+	class cms_photos_photo_model extends Banshee\model {
 		const THUMBNAIL_MODE_NORMAL = 0;
 		const THUMBNAIL_MODE_TOP_LEFT = 1;
 		const THUMBNAIL_MODE_CENTER = 2;

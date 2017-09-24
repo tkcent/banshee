@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!--
@@ -9,7 +18,7 @@
 <xsl:template match="internal_errors">
 <div id="internal_errors" class="panel panel-danger">
 <div class="panel-heading">
-	<h3 class="panel-title">Internal errors <span title="Close message box" alt="Close" class="close" onClick="javascript:document.getElementById('internal_errors').style.display = 'none'">x</span></h3>
+	<h3 class="panel-title">Internal errors <span title="Close message box" alt="Close" class="close" onClick="javascript:$(this).parent().parent().parent().remove()">x</span></h3>
 </div>
 <div class="panel-body">
 	<xsl:value-of disable-output-escaping="yes" select="/output/internal_errors" />

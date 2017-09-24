@@ -1,7 +1,6 @@
 <?php
 	class XXX_controller extends Banshee\tablemanager_controller {
 		protected $name = "Table";
-		protected $pathinfo_offset = 1;
 		protected $back = null;
 		protected $icon = null;
 		protected $page_size = 25;

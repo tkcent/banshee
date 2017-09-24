@@ -12,7 +12,7 @@
 			return $result[0]["count"];
 		}
 
-		public function get_XXXs($offset, $limit) {
+		public function get_XXXs($offset = null, $limit = null) {
 			if (isset($_SESSION["XXX_order"]) == false) {
 				$_SESSION["XXX_order"] = array("yyy", "zzz");
 			}
@@ -23,18 +23,22 @@
 
 			$query = "select * from XXXs";
 
-			$search = array();
+			$search_columns = $search_values = array();
 			if ($_SESSION["XXX_search"] != null) {
 				foreach ($this->columns as $i => $column) {
-					$this->columns[$i] = $column." like %s";
-					array_push($search, "%".$_SESSION["XXX_search"]."%");
+					array_push($search_columns, $column." like %s");
+					array_push($search_values, "%".$_SESSION["XXX_search"]."%");
 				}
-				$query .= " having (".implode(" or ", $this->columns).")";
+				$query .= " having (".implode(" or ", $search_columns).")";
 			}
 
-			$query .= " order by %S,%S limit %d,%d";
+			$query .= " order by %S,%S";
 
-			return $this->db->execute($query, $search, $_SESSION["XXX_order"], $offset, $limit);
+			if ($offset !== null) {
+				$query .= " limit %d,%d";
+			}
+
+			return $this->db->execute($query, $search_values, $_SESSION["XXX_order"], $offset, $limit);
 		}
 
 		public function get_XXX($XXX_id) {

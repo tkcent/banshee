@@ -1,11 +1,9 @@
 <?php
-	/* public/index.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
 	 *
-	 * Don't change this file, unless you know what you are doing.
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;
@@ -173,6 +171,7 @@
 		 */
 		$_view->add_css($_page->module.".css", true);
 		$_view->add_css("banshee/layout_".$_view->layout.".css", true);
+		$_view->add_css("banshee/banshee.css", true);
 		$_view->add_css("banshee/bootstrap-theme.css", true);
 		$_view->add_css("banshee/bootstrap.css", true);
 

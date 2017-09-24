@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="main.xslt" />
 
@@ -24,9 +33,12 @@
 </xsl:if>
 </input></p>
 <div class="btn-group">
-<input type="submit" value="Login" class="btn btn-default" />
+<input type="submit" name="submit_button" value="Login" class="btn btn-default" />
 <a href="/{previous}" class="btn btn-default">Cancel</a>
 </div>
+<xsl:if test="postdata">
+<input type="hidden" name="postdata" value="{postdata}" />
+</xsl:if>
 </form>
 
 <xsl:if test="@password='yes'"><p>If you have forgotten your password, click <a href="/password">here</a>.</p></xsl:if>

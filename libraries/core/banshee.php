@@ -1,14 +1,12 @@
 <?php
-	/* libraries/core/banshee.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
 	 *
-	 * Don't change this file, unless you know what you are doing.
+	 * Licensed under The MIT License
 	 */
 
-	define("BANSHEE_VERSION", "6.0");
+	define("BANSHEE_VERSION", "6.1");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -20,6 +18,8 @@
 	define("PASSWORD_ITERATIONS", 100000);
 	define("PASSWORD_MIN_LENGTH", 8);
 	define("PASSWORD_MAX_LENGTH", 1000);
+	define("ONE_TIME_KEY_SIZE", 32);
+	define("EURO", html_entity_decode("&euro;"));
 	define("HOUR", 3600);
 	define("DAY", 86400);
 	define("LOG_DAYS", 60);

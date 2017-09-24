@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class setup_model extends Banshee\model {
 		private $required_php_extensions = array("gd", "libxml", "mysqli", "xsl");
 
@@ -10,7 +17,7 @@
 				return "php_extensions";
 			}
 
-			exec("which mysql", $output, $result);
+			exec("type mysql", $output, $result);
 			if ($result != 0) {
 				return "mysql_client";
 			}
@@ -193,32 +200,9 @@
 			return $version;
 		}
 
-		/* Add setting when missing
-		 */
-		private function ensure_setting($key, $type, $value) {
-			if ($this->db->entry("settings", $key, "key") != false) {
-				return true;
-			}
-
-			$entry = array(
-				"key"   => $key,
-				"type"  => $type,
-				"value" => $value);
-			return $this->db->insert("settings", $entry) !== false;
-		}
-
 		/* Update database
 		 */
 		public function update_database() {
-			if ($this->settings->database_version < 1) {
-				$this->ensure_setting("hiawatha_cache_enabled", "boolean", "false");
-				$this->ensure_setting("hiawatha_cache_default_time", "integer", "3600");
-				$this->ensure_setting("session_timeout", "integer", "3600");
-				$this->ensure_setting("session_persistent", "boolean", "false");
-
-				$this->settings->database_version = 1;
-			}
-
 			return true;
 		}
 

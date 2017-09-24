@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_agenda_controller extends Banshee\controller {
 		public function show_agenda_overview() {
 			if (($appointments = $this->model->get_appointments()) === false) {
@@ -72,17 +79,17 @@
 				} else {
 					$this->show_agenda_overview();
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* New appointment
 				 */
 				$appointment = array(
 					"begin" => date("Y-m-d"),
 					"end"   => date("Y-m-d"));
 				$this->show_appointment_form($appointment);
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit appointment
 				 */
-				if (($appointment = $this->model->get_appointment($this->page->pathinfo[2])) == false) {
+				if (($appointment = $this->model->get_appointment($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Agendapunten niet gevonden.");
 				} else {
 					$this->show_appointment_form($appointment);

@@ -1,9 +1,9 @@
 <?php
-	/* libraries/pagination.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;
@@ -15,7 +15,7 @@
 		private $max_page = null;
 		private $page_size = null;
 		private $list_size = null;
-		private $error = false;
+		private $disabled = false;
 
 		/* Constructor
 		 *
@@ -30,7 +30,7 @@
 			$this->list_size = $list_size;
 
 			if (($this->page_size <= 0) || ($this->list_size <= 0)) {
-				$this->error = true;
+				$this->disabled = true;
 				return;
 			}
 
@@ -71,12 +71,24 @@
 		 * ERROR:  null
 		 */
 		public function __get($key) {
-			switch ($key) {
-				case "offset": return $this->page * $this->page_size;
-				case "size": return $this->page_size;
+			if ($this->disabled == false) {
+				switch ($key) {
+					case "offset": return $this->page * $this->page_size;
+					case "size": return $this->page_size;
+				}
 			}
 
 			return null;
+		}
+
+		/* Disable library
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function disable() {
+			$this->disabled = true;
 		}
 
 		/* Set active page to 0
@@ -96,9 +108,10 @@
 		 * ERROR:  -
 		 */
 		public function show_browse_links($max_links = 7, $step = 7) {
-			if ($this->error) {
+			if ($this->disabled) {
 				return false;
 			}
+
 			$max_links = (floor($max_links / 2) * 2) + 1;
 
 			/* Calculate minimum and maximum page number

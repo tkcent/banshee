@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class banshee_login_controller extends Banshee\controller {
 		public function execute() {
 			header("Status: 401");
@@ -28,11 +35,21 @@
 			$this->view->add_tag("remote_addr", $_SERVER["REMOTE_ADDR"]);
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				if (strpos($_POST["username"], "'") !== false) {
-					$this->view->add_message("Sorry, this application does not support SQL injection.");
-					header("X-Hiawatha-Monitor: exploit_attempt");
+				if ($_POST["submit_button"] == "Login") {
+					if (strpos($_POST["username"], "'") !== false) {
+						$this->view->add_message("Sorry, this application does not support SQL injection.");
+						$this->user->log_action("SQL injection attempt");
+						header("X-Hiawatha-Monitor: exploit_attempt");
+					} else {
+						$this->view->add_message("Login incorrect");
+					}
 				} else {
-					$this->view->add_message("Login incorrect");
+					$this->view->add_message("Session expired. Login to continue your previous submit.");
+					$_POST["postdata"] = base64_encode(json_encode($_POST));
+				}
+
+				if (isset($_POST["postdata"])) {
+					$this->view->add_tag("postdata", $_POST["postdata"]);
 				}
 			}
 

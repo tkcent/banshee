@@ -1,19 +1,26 @@
 <?php
 	class XXX_controller extends Banshee\controller {
 		private function show_overview() {
-			if (($XXX_count = $this->model->count_XXXs()) === false) {
-				$this->view->add_tag("result", "Database error.");
-				return;
+			if ($_SESSION["XXX_search"] == "") {
+				if (($XXX_count = $this->model->count_XXXs()) === false) {
+					$this->view->add_tag("result", "Database error.");
+					return;
+				}
+
+				$paging = new Banshee\pagination($this->view, "XXXs", $this->settings->admin_page_size, $XXX_count);
+
+				if (($XXXs = $this->model->get_XXXs($paging->offset, $paging->size)) === false) {
+					$this->view->add_tag("result", "Database error.");
+					return;
+				}
+			} else {
+				if (($XXXs = $this->model->get_XXXs()) === false) {
+					$this->view->add_tag("result", "Database error.");
+					return;
+				}
 			}
 
-			$paging = new Banshee\pagination($this->view, "XXXs", $this->settings->admin_page_size, $XXX_count);
-
-			if (($XXXs = $this->model->get_XXXs($paging->offset, $paging->size)) === false) {
-				$this->view->add_tag("result", "Database error.");
-				return;
-			}
-
-			$this->view->open_tag("overview");
+			$this->view->open_tag("overview", array("search" => $_SESSION["XXX_search"]));
 
 			$this->view->open_tag("XXXs");
 			foreach ($XXXs as $XXX) {
@@ -21,7 +28,9 @@
 			}
 			$this->view->close_tag();
 
-			$paging->show_browse_links();
+			if ($_SESSION["XXX_search"] == "") {
+				$paging->show_browse_links();
+			}
 
 			$this->view->close_tag();
 		}
@@ -33,10 +42,6 @@
 		}
 
 		public function execute() {
-			if ($_GET["order"] == null) {
-				$_SESSION["XXX_search"] = null;
-			}
-
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["submit_button"] == "Save XXX") {
 					/* Save XXX
@@ -84,15 +89,15 @@
 				} else {
 					$this->show_overview();
 				}
-			} else if ($this->page->pathinfo[1] === "new") {
+			} else if ($this->page->parameters[0] === "new") {
 				/* New XXX
 				 */
 				$XXX = array();
 				$this->show_XXX_form($XXX);
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit XXX
 				 */
-				if (($XXX = $this->model->get_XXX($this->page->pathinfo[1])) === false) {
+				if (($XXX = $this->model->get_XXX($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "XXX not found.");
 				} else {
 					$this->show_XXX_form($XXX);

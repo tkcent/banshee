@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_link_category_model extends Banshee\tablemanager_model {
 		protected $table = "link_categories";
 		protected $order = "id";
@@ -22,7 +29,7 @@
 				$this->view->add_message("This category is in use.");
 				return false;
 			}
-				
+
 			return true;
 		}
 	}

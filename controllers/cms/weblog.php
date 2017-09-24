@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	require_once("../libraries/helpers/output.php");
 
 	class cms_weblog_controller extends Banshee\controller {
@@ -119,15 +126,15 @@
 				} else {
 					$this->show_weblog_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show weblog
 				 */
-				if (($weblog = $this->model->get_weblog($this->page->pathinfo[2])) == false) {
+				if (($weblog = $this->model->get_weblog($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Weblog not found.");
 				} else {
 					$this->show_weblog_form($weblog);
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* New weblog
 				 */
 				$weblog = array(

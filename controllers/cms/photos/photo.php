@@ -1,5 +1,12 @@
 <?php
-	class cms_photo_controller extends Banshee\controller {
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
+	class cms_photos_photo_controller extends Banshee\controller {
 		private $modes = array("Normal", "Top / Left", "Center", "Bottom / Right");
 
 		private function show_overview() {
@@ -11,7 +18,7 @@
 			}
 
 			$this->view->add_javascript("jquery/jquery-ui.js");
-			$this->view->add_javascript("cms/photo.js");
+			$this->view->add_javascript("cms/photos/photo.js");
 
 			$this->view->open_tag("overview");
 
@@ -101,7 +108,7 @@
 				$this->view->add_tag("result", "Error counting albums");
 				return;
 			} else if ($album_count == 0) {
-				$this->view->add_tag("result", "No albums have been created. Click <a href=\"/cms/albums\">here</a> to create a new photo album.");
+				$this->view->add_tag("result", "No albums available. Add some first.", array("url" => "cms/photos/album/new"));
 				return;
 			}
 
@@ -146,8 +153,8 @@
 				} else {
 					$this->show_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				if (($photo = $this->model->get_photo($this->page->pathinfo[2])) != false) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if (($photo = $this->model->get_photo($this->page->parameters[0])) != false) {
 					$this->show_edit_form($photo);
 				} else {
 					$this->view->add_tag("result", "Photo not found.");

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_link_controller extends Banshee\controller {
 		private function show_overview() {
 			if (($link_count = $this->model->count_links()) === false) {
@@ -102,16 +109,16 @@
 				} else {
 					$this->show_overview();
 				}
-			} else if ($this->page->pathinfo[2] === "new") {
+			} else if ($this->page->parameters[0] === "new") {
 				/* New link
 				 */
 				$link = array("category_type" => "existing");
 				$this->show_link_form($link);
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Edit link
 				 */
-				if (($link = $this->model->get_link($this->page->pathinfo[2])) === false) {
-					$this->view->add_tag("result", "link not found.");
+				if (($link = $this->model->get_link($this->page->parameters[0])) == false) {
+					$this->view->add_tag("result", "Link not found.");
 				} else {
 					$link["category_type"] = "existing";
 					$this->show_link_form($link);

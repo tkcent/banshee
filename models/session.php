@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class session_model extends Banshee\model {
 		public function get_sessions() {
 			$query = "select id, session_id, UNIX_TIMESTAMP(expire) as expire, ip_address, bind_to_ip, name from sessions ".

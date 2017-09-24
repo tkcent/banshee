@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class poll_controller extends Banshee\controller {
 		public function show_active_poll() {
 			$poll = new Banshee\poll($this->db, $this->view, $this->settings);
@@ -14,10 +21,10 @@
 			$this->view->description = "Poll";
 			$this->view->keywords = "poll";
 
-			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show poll
 				 */
-				if (($poll = $this->model->get_poll($this->page->pathinfo[1])) == false) {
+				if (($poll = $this->model->get_poll($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Poll not found");
 				} else {
 					$this->view->title = $poll["question"]." - Poll";

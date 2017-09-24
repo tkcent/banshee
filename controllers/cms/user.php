@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_user_controller extends Banshee\controller {
 		private function show_user_overview() {
 			if (($user_count = $this->model->count_users()) === false) {
@@ -178,21 +185,21 @@
 				} else {
 					$this->show_user_overview();
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* Show the user webform
 				 */
 				$user = array(
 					"organisation_id" => $this->user->organisation_id,
-					"roles"           => array(ADMIN_ROLE_ID + 1),
+					"roles"           => array(USER_ROLE_ID),
 					"status"          => USER_STATUS_CHANGEPWD);
 				$this->show_user_form($user);
-			} else if (($this->page->pathinfo[2] == "authenticator") && $this->page->ajax_request) {
+			} else if (($this->page->parameters[0] == "authenticator") && $this->page->ajax_request) {
 				$authenticator = new Banshee\authenticator;
 				$this->view->add_tag("secret", $authenticator->create_secret());
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show the user webform
 				 */
-				if (($user = $this->model->get_user($this->page->pathinfo[2])) == false) {
+				if (($user = $this->model->get_user($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "User not found.");
 				} else {
 					$user["authenticator_secret"] = null;

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class dictionary_controller extends Banshee\controller {
 		private function show_letters($letters, $first_letter) {
 			$this->view->open_tag("letters", array("selected" => $first_letter));
@@ -16,10 +23,10 @@
 
 			$this->view->description = "Dictionary";
 
-			if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show word
 				 */
-				if (($word = $this->model->get_word($this->page->pathinfo[1])) == false) {
+				if (($word = $this->model->get_word($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Unknown word");
 					return;
 				}
@@ -39,10 +46,10 @@
 				$this->view->keywords = "dictionary";
 				$this->view->title = "Dictionary";
 
-				if (valid_input($this->page->pathinfo[1], VALIDATE_NONCAPITALS, 1) == false) {
+				if (valid_input($this->page->parameters[0], VALIDATE_NONCAPITALS, 1) == false) {
 					$first_letter = $letters[0]["char"];
 				} else {
-					$first_letter = $this->page->pathinfo[1];
+					$first_letter = $this->page->parameters[0];
 				}
 
 				if (($words = $this->model->get_words($first_letter)) === false) {

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_webshop_order_controller extends Banshee\controller {
 		private function show_order_overview() {
 			$closed = $_SESSION["admin_webshop_orders_closed"];
@@ -100,8 +107,8 @@
 				} else {
 					$this->show_order_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[3], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				$this->show_order($this->page->pathinfo[3]);
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				$this->show_order($this->page->parameters[0]);
 			} else {
 				$this->show_order_overview();
 			}

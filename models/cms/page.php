@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_page_model extends Banshee\model {
 		private $default_layout = "Default layout";
 
@@ -211,13 +218,23 @@
 			return $this->db->query("commit") != false;
 		}
 
-
 		public function delete_page($page_id) {
 			$queries = array(
 				array("delete from page_access where page_id=%d", $page_id),
 				array("delete from pages where id=%d", $page_id));
 
 			return $this->db->transaction($queries);
+		}
+
+		public function delete_preview($url) {
+			if (strlen($url) <= 33) {
+				return false;
+			} else if (substr($url, -33, 1) != "-") {
+				return false;
+			}
+
+			$query = "delete from pages where url=%s";
+			return $this->db->query($query, $url) !== false;
 		}
 	}
 ?>

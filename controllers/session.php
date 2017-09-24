@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class session_controller extends Banshee\controller {
 		private function show_sessions() {
 			if (($sessions = $this->model->get_sessions()) === false) {
@@ -56,10 +63,10 @@
 				} else {
 					$this->show_sessions();
 				}
-			} else if (isset($this->page->pathinfo[1])) {
+			} else if (isset($this->page->parameters[0])) {
 				/* Edit session
 				 */
-				if (($session = $this->model->get_session($this->page->pathinfo[1])) == false) {
+				if (($session = $this->model->get_session($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Session not found.");
 				} else {
 					$session["expire"] = date("Y-m-d H:i:s", $session["expire"]);

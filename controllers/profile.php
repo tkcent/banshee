@@ -1,10 +1,23 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class profile_controller extends Banshee\controller {
 		private function show_profile_form($profile) {
+			if (($organisation = $this->model->get_organisation()) === false) {
+				$this->view->add_tag("result", "Database error.");
+				return false;
+			}
+
 			$this->view->open_tag("edit");
 
 			$this->view->add_tag("username", $this->user->username);
 			$this->view->add_tag("fullname", $profile["fullname"]);
+			$this->view->add_tag("organisation", $organisation);
 			$this->view->add_tag("email", $profile["email"]);
 			if ($this->user->status == USER_STATUS_CHANGEPWD) {
 				$this->view->add_tag("cancel", "Logout", array("previous" => LOGOUT_MODULE));

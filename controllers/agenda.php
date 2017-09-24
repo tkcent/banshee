@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class agenda_controller extends Banshee\controller {
 		private function show_month($month, $year) {
 			if (($appointments = $this->model->get_appointments_for_month($month, $year)) === false) {
@@ -96,7 +103,7 @@
 				$_SESSION["calendar_year"]  = (int)date("Y");
 			}
 
-			if ($this->page->pathinfo[1] == "list") {
+			if ($this->page->parameters[0] == "list") {
 				/* Show appointment list
 				 */
 				if (($appointments = $this->model->get_appointments_from_today()) === false) {
@@ -108,16 +115,16 @@
 					}
 					$this->view->close_tag();
 				}
-			} else if ($this->page->pathinfo[1] == "current") {
+			} else if ($this->page->parameters[0] == "current") {
 				/* Show current month
 				 */
 				$_SESSION["calendar_month"] = (int)date("m");
 				$_SESSION["calendar_year"]  = (int)date("Y");
 				$this->show_month($_SESSION["calendar_month"], $_SESSION["calendar_year"]);
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-				if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
-					$m = (int)$this->page->pathinfo[2];
-					$y = (int)$this->page->pathinfo[1];
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+				if (valid_input($this->page->parameters[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+					$m = (int)$this->page->parameters[1];
+					$y = (int)$this->page->parameters[0];
 
 					if (($m >= 1) && ($m <= 12) && ($y > 1902) && ($y <= 2037)) {
 						$_SESSION["calendar_month"] = $m;
@@ -127,7 +134,7 @@
 				} else {
 					/* Show appointment
 					 */
-					$this->show_appointment($this->page->pathinfo[1]);
+					$this->show_appointment($this->page->parameters[0]);
 				}
 			} else {
 				/* Show month

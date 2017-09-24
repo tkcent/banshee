@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_role_controller extends Banshee\controller {
 		public function show_role_overview() {
 			if (($roles = $this->model->get_all_roles()) === false) {
@@ -106,15 +113,15 @@
 				} else {
 					$this->show_role_overview();
 				}
-			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show the role webform
 				 */
-				if (($role = $this->model->get_role($this->page->pathinfo[2])) != false) {
+				if (($role = $this->model->get_role($this->page->parameters[0])) != false) {
 					$this->show_role_form($role);
 				} else {
 					$this->view->add_tag("result", "Role not found.");
 				}
-			} else if ($this->page->pathinfo[2] == "new") {
+			} else if ($this->page->parameters[0] == "new") {
 				/* Show the role webform
 				 */
 				$role = array("profile" => true);

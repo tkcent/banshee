@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="layout_cms">
@@ -9,13 +18,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="author" content="Hugo Leisink" />
 <meta name="publisher" content="Hugo Leisink" />
-<meta name="copyright" content="Copyright (C) by Hugo Leisink" />
+<meta name="copyright" content="Copyright (c) by Hugo Leisink" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (https://www.banshee-php.org/)" />
 <title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
-<link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
+<link rel="alternate" title="{.}" type="{@type}" href="{@url}" />
 </xsl:for-each>
 <xsl:for-each select="styles/style">
 <link rel="stylesheet" type="text/css" href="{.}" />

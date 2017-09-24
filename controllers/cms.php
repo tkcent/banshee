@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_controller extends Banshee\controller {
 		public function execute() {
 			$menu = array(
@@ -24,9 +31,9 @@
 					"Polls"         => array("cms/poll", "poll.png"),
 					"Weblog"        => array("cms/weblog", "weblog.png")),
 				"Photo album" => array(
-					"Albums"        => array("cms/album", "album.png"),
-					"Collections"   => array("cms/collection", "collection.png"),
-					"Photos"        => array("cms/photo", "photo.png")),
+					"Albums"        => array("cms/photos/album", "album.png"),
+					"Collections"   => array("cms/photos/collection", "collection.png"),
+					"Photos"        => array("cms/photos/photo", "photo.png")),
 				"Webshop" => array(
 					"Articles"      => array("cms/webshop/article", "articles.png"),
 					"Categories"    => array("cms/webshop/category", "categories.png"),
@@ -52,8 +59,8 @@
 				}
 			}
 
-			if ($this->page->pathinfo[1] != null) {
-				$this->view->add_system_warning("The administration module '%s' does not exist.", $this->page->pathinfo[1]);
+			if ($this->page->parameters[0] != null) {
+				$this->view->add_system_warning("The administration module '%s' does not exist.", $this->page->parameters[0]);
 			}
 
 			/* Show icons

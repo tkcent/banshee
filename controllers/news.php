@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class news_controller extends Banshee\controller {
 		public function execute() {
 			$this->view->description = "News";
@@ -22,10 +29,10 @@
 					}
 					$rss->to_output();
 				}
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
+			} else if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* News item
 				 */
-				if (($item = $this->model->get_news_item($this->page->pathinfo[1])) == false) {
+				if (($item = $this->model->get_news_item($this->page->parameters[0])) == false) {
 					$this->view->add_tag("result", "Unknown news item");
 				} else {
 					$this->view->title = $item["title"]." - News";

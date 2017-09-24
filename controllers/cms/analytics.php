@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class cms_analytics_controller extends Banshee\controller {
 		private $height = 100;
 		private $page_width = 839;
@@ -55,7 +62,7 @@
 
 			$this->view->add_javascript("cms/analytics.js");
 
-			$day = valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS."-", VALIDATE_NONEMPTY) ? $this->page->pathinfo[2] : null;
+			$day = valid_input($this->page->parameters[0], VALIDATE_NUMBERS."-", VALIDATE_NONEMPTY) ? $this->page->parameters[0] : null;
 
 			/* Visits
 			 */

@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class news_model extends Banshee\model {
 		public function count_news() {
 			$query = "select count(*) as count from news";
@@ -18,7 +25,17 @@
 		}
 
 		public function get_news_item($id) {
-			return $this->db->entry("news", $id);
+			$query = "select * from news where id=%d";
+
+			if ($this->user->access_allowed("cms/news") == false) {
+				$query .= " and timestamp<now()";
+			}
+
+			if (($result = $this->db->execute($query, $id)) === false) {
+				return false;
+			}
+
+			return $result[0];
 		}
 	}
 ?>

@@ -19,7 +19,7 @@
 		}
 
 		public function execute() {
-			if ($this->page->pathinfo[2] == "image") {
+			if ($this->page->parameters[0] == "image") {
 				$this->show_static_map();
 				return;
 			}

@@ -1,5 +1,12 @@
 <?php
-	class cms_album_model extends Banshee\tablemanager_model {
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
+	class cms_photos_album_model extends Banshee\tablemanager_model {
 		protected $table = "photo_albums";
 		protected $elements = array(
 			"name" => array(

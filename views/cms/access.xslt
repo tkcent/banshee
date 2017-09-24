@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="../banshee/main.xslt" />
 
@@ -10,8 +19,8 @@
 <xsl:template match="overview">
 <div class="access">
 <table class="table table-striped table-condensed table-xs">
-<thead>
-<tr><th class="user">user</th>
+<thead class="table-xs">
+<tr><th class="user">User</th>
 <xsl:for-each select="roles/role">
 	<th class="access"><xsl:value-of select="." /></th>
 </xsl:for-each>
@@ -19,9 +28,13 @@
 </thead>
 <tbody>
 <xsl:for-each select="users/user">
-	<tr><td><xsl:value-of select="@name" /></td>
+	<tr><td><span class="table-xs">User:</span><xsl:value-of select="@name" /></td>
 	<xsl:for-each select="role">
 		<td class="access">
+		<span class="table-xs">
+			<xsl:variable name="position" select="position()" />
+			<xsl:value-of select="../../../roles/role[position()=$position]" />:
+		</span>
 		<xsl:choose>
 			<xsl:when test=".=0">
 				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -38,10 +51,11 @@
 </table>
 </div>
 
+<h2>Modules</h2>
 <div class="access">
 <table class="table table-striped table-condensed table-xs">
-<thead>
-<tr><th class="module">module</th>
+<thead class="table-xs">
+<tr><th class="module">Module</th>
 <xsl:for-each select="roles/role">
 	<th class="access"><xsl:value-of select="." /></th>
 </xsl:for-each>
@@ -49,9 +63,13 @@
 </thead>
 <tbody>
 <xsl:for-each select="modules/module">
-	<tr><td><xsl:value-of select="@url" /></td>
+	<tr><td><span class="table-xs">Module:</span><xsl:value-of select="@url" /></td>
 	<xsl:for-each select="access">
 		<td class="access">
+		<span class="table-xs">
+			<xsl:variable name="position" select="position()" />
+			<xsl:value-of select="../../../roles/role[position()=$position]" />:
+		</span>
 		<xsl:choose>
 			<xsl:when test=".=0">
 				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -69,10 +87,11 @@
 </div>
 
 <xsl:if test="pages/page">
+	<h2>Pages</h2>
 	<div class="access">
 	<table class="table table-striped table-condensed table-xs">
-	<thead>
-	<tr><th class="module">url</th>
+	<thead class="table-xs">
+	<tr><th class="module">URL</th>
 	<xsl:for-each select="roles/role">
 		<th class="access"><xsl:value-of select="." /></th>
 	</xsl:for-each>
@@ -80,9 +99,13 @@
 	</thead>
 	<tbody>
 	<xsl:for-each select="pages/page">
-		<tr><td><xsl:value-of select="@url" /></td>
+		<tr><td><span class="table-xs">URL:</span><xsl:value-of select="@url" /></td>
 		<xsl:for-each select="access">
 			<td class="access">
+			<span class="table-xs">
+				<xsl:variable name="position" select="position()" />
+				<xsl:value-of select="../../../roles/role[position()=$position]" />:
+			</span>
 			<xsl:choose>
 				<xsl:when test=".=0">
 					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

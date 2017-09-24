@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="../banshee/main.xslt" />
 
@@ -41,7 +50,7 @@
 </table>
 
 <form action="/{/output/page}" method="post" class="clear">
-<div class="btn-group btn-responsive">
+<div class="btn-group">
 <a href="/{/output/page}/new" class="btn btn-default">New page</a>
 <a href="/cms" class="btn btn-default">Back</a>
 <xsl:if test="@hiawatha='yes'">
@@ -61,6 +70,14 @@
 <form action="/{/output/page}" method="post">
 <xsl:if test="page/@id">
 <input type="hidden" name="id" value="{page/@id}" />
+</xsl:if>
+
+<label for="preview">Preview:</label>
+<xsl:if test="@preview">
+<div id="preview" class="preview">
+<div class="preview-heading">Preview of <xsl:value-of select="page/url" /><span onClick="javascript:close_preview(this, '{@preview}')">X</span></div>
+<div class="preview-body"><iframe src="{@preview}" onLoad="javascript:preview_loaded('{@preview}')" /></div>
+</div>
 </xsl:if>
 
 <div class="row">
@@ -127,8 +144,9 @@
 <label for="editor">Content:</label>
 <textarea id="editor" name="content" class="form-control"><xsl:value-of select="page/content" /></textarea>
 
-<div class="btn-group btn-responsiv">
+<div class="btn-group">
 <input type="submit" name="submit_button" value="Save page" class="btn btn-default" />
+<input type="submit" name="submit_button" value="Preview page" class="btn btn-default" />
 <a href="/{/output/page}" class="btn btn-default">Cancel</a>
 <xsl:if test="page/@id">
 <input type="submit" name="submit_button" value="Delete page" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />

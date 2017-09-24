@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  Copyright (c) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  https://www.banshee-php.org/
+//
+//  Licensed under The MIT License
+//
+//-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:import href="../banshee/main.xslt" />
 <xsl:import href="../banshee/pagination.xslt" />
@@ -99,13 +108,17 @@
 <!-- Comments -->
 <h2>Comments</h2>
 <p>Selected comments will be deleted.</p>
-<table class="table table-striped table-hover table-condensed comments">
+<table class="table table-striped table-condensed comments">
 <thead>
-<tr><th></th><th>Author</th><th>Content</th></tr>
+<tr><th></th><th>Author</th><th>Content</th><th></th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="comments/comment">
-<tr><td><input type="checkbox" name="comment[]" value="{@id}" /></td><td><xsl:value-of select="author" /></td><td><xsl:value-of select="content" /></td></tr>
+<tr>
+<td><input type="checkbox" name="comment[]" value="{@id}" /></td>
+<td><xsl:value-of select="author" /></td><td><xsl:value-of select="content" /></td>
+<td><a href="/cms/weblog/comment/{@id}">edit</a></td>
+</tr>
 </xsl:for-each>
 </tbody>
 </table>

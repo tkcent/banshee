@@ -1,4 +1,11 @@
 <?php
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
+	 */
+
 	class register_controller extends Banshee\controller {
 		private function show_form($data) {
 			$this->view->record($data, "form", array("previous" => $this->page->previous));

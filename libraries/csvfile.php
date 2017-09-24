@@ -1,9 +1,9 @@
 <?php
-	/* libraries/csvfile.php
-	 *
-	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	/* Copyright (c) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
-	 * http://www.banshee-php.org/
+	 * https://www.banshee-php.org/
+	 *
+	 * Licensed under The MIT License
 	 */
 
 	namespace Banshee;
@@ -11,6 +11,7 @@
 	class csvfile {
 		private $data = array();
 		private $separator = ",";
+		private $linux = null;
 
 		/* Constructor
 		 *
@@ -22,6 +23,8 @@
 			if ($file !== null) {
 				$this->read($file);
 			}
+
+			$this->linux = strstr($_SERVER["HTTP_USER_AGENT"], "Linux") !== false;
 		}
 
 		/* Magic method set
@@ -130,6 +133,9 @@
 			foreach ($line as $i => $item) {
 				$item = str_replace("\r", "" , $item);
 				$item = str_replace("\n", " " , $item);
+				if ($this->linux) {
+					$item = utf8_encode($item);
+				}
 				$line[$i] = $item;
 			}
 
@@ -190,6 +196,18 @@
 			}
 
 			return $result;
+		}
+
+		/* Output CSV to client
+		 */
+		public function to_output($view, $filename = null) {
+			$view->disable();
+
+			header("Content-Type: text/csv");
+			if ($filename != null) {
+				header("Content-Disposition: attachment; filename=\"".$filename.".csv\"");
+			}
+			print $this->to_string();
 		}
 
 		/* Write CSV file
