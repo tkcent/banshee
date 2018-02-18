@@ -44,9 +44,9 @@
 				if ($this->model->menu_oke($_POST["menu"]) == false) {
 					$this->show_menu_form($_POST["menu"]);
 				} else if ($this->model->update_menu($_POST["menu"]) == false) {
-					$this->view->add_tag("result", "Error while updating menu.");
+					$this->view->add_system_warning("Error while updating menu.");
 				} else {
-					$this->view->add_tag("result", "The menu has been updated.");
+					$this->view->add_system_message("The menu has been updated.");
 					$this->user->log_action("menu updated");
 					header("X-Hiawatha-Cache-Remove: all");
 
@@ -54,6 +54,8 @@
 						$cache = new Banshee\Core\cache($this->db, "banshee_menu");
 						$cache->store("last_updated", time(), 365 * DAY);
 					}
+
+					$this->show_menu_form($_POST["menu"]);
 				}
 			} else {
 				/* Show menu

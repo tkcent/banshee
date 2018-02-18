@@ -45,7 +45,7 @@
 
 			$query = "select id,name from roles where name=%s";
 			if (($roles = $this->db->execute($query, $role["name"])) === false) {
-				$this->view->add_message("Error while checking name uniqueness.");
+				$this->view->add_system_warning("Error while checking name uniqueness.");
 				$result;
 			}
 			foreach ($roles as $current) {

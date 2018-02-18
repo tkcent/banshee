@@ -41,9 +41,17 @@ div.preview {
 	border-radius:5px;
 }
 
-div.preview div.preview-heading span {
-	position:absolute;
-	right:15px;
+div.preview div.preview-heading span.width {
+	margin-left:30px;
+}
+div.preview div.preview-heading span.width span {
+	margin-left:10px;
+	cursor:pointer;
+}
+
+div.preview div.preview-heading span.close_preview {
+	float:right;
+	font-size:140%;
 	cursor:pointer;
 }
 
@@ -55,6 +63,7 @@ div.preview div.preview-body {
 	right:10px;
 	border:2px solid #000000;
 	background-color:#f0f0f0;
+	margin:0 auto;
 }
 
 div.preview iframe {

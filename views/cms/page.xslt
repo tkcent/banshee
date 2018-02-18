@@ -75,7 +75,14 @@
 <label for="preview">Preview:</label>
 <xsl:if test="@preview">
 <div id="preview" class="preview">
-<div class="preview-heading">Preview of <xsl:value-of select="page/url" /><span onClick="javascript:close_preview(this, '{@preview}')">X</span></div>
+<div class="preview-heading">Preview of <xsl:value-of select="page/url" />
+	<span class="width">
+		<span class="glyphicon glyphicon-phone" aria-hidden="true" onClick="javascript:set_preview_width('320px')"></span>
+		<span class="glyphicon glyphicon-unchecked" onClick="javascript:set_preview_width('720px')"></span>
+		<span class="glyphicon glyphicon-blackboard" onClick="javascript:set_preview_width('')"></span>
+	</span>
+	<span class="glyphicon glyphicon-remove-circle close_preview" onClick="javascript:close_preview(this, '{@preview}')"></span>
+</div>
 <div class="preview-body"><iframe src="{@preview}" onLoad="javascript:preview_loaded('{@preview}')" /></div>
 </div>
 </xsl:if>

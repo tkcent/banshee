@@ -25,7 +25,7 @@
 			$this->base32_chars = str_split(self::BASE32_CHARS);
 		}
 
-		/* Create new secret
+		/* Create new secret (RFC 6238)
 		 *
 		 * INPUT:  int secret length
 		 * OUTPUT: string secret
@@ -68,7 +68,7 @@
 			return str_pad($value % $modulo, $this->code_length, "0", STR_PAD_LEFT);
 		}
 
-		/* Verify the code
+		/* Verify the code (RFC 6238)
 		 *
 		 * INPUT:  string secret, string code[, int time shift[, int time slice]]
 		 * OUTPUT: boolean code ok

@@ -107,8 +107,8 @@
 							case "date":
 								$value = date("j F Y", strtotime($value));
 								break;
-							case "timestamp":
-								$value = date("j F Y H:i", strtotime($value));
+							case "enum":
+								$value = $this->model->elements[$name]["options"][$item[$name]];
 								break;
 							case "foreignkey":
 								if ($value === null) {
@@ -124,6 +124,9 @@
 										$value = implode(" ", $values);
 									}
 								}
+								break;
+							case "timestamp":
+								$value = date("j F Y H:i", strtotime($value));
 								break;
 						}
 						$this->view->add_tag("value", $value, array("name" => $name));
@@ -284,7 +287,7 @@
 					/* Create item
 					 */
 					if ($this->model->create_item($_POST) === false) {
-						$this->view->add_message("Error while creating ".$item.".");
+						$this->view->add_system_warning("Error while creating ".$item.".");
 						$this->show_item_form($_POST);
 					} else {
 						$name = $this->db->last_insert_id;
@@ -299,7 +302,7 @@
 					/* Update item
 					 */
 					if ($this->model->update_item($_POST) === false) {
-						$this->view->add_message("Error while updating ".$item.".");
+						$this->view->add_system_warning("Error while updating ".$item.".");
 						$this->show_item_form($_POST);
 					} else {
 						$name = $_POST["id"];
@@ -317,7 +320,7 @@
 				if ($this->model->delete_oke($_POST["id"]) == false) {
 					$this->show_item_form($_POST);
 				} else if ($this->model->delete_item($_POST["id"]) === false) {
-					$this->view->add_message("Error while deleting ".$item.".");
+					$this->view->add_system_warning("Error while deleting ".$item.".");
 					$this->show_item_form($_POST);
 				} else {
 					$name = $_POST["id"];

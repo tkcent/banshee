@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	namespace Banshee;
+	namespace Banshee\Protocols;
 
 	class APNS {
 		const GATEWAY_HOST = "gateway.push.apple.com";

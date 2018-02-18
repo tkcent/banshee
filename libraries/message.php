@@ -220,7 +220,8 @@
 
 				if (($close = strpos($message, "[/".$bbcode."]", $open_end + 1)) !== false) {
 					$value = substr($message, $open_end + 1, $close - $open_end - 1);
-				} else if (strpos($html, "</".$bbcode.">") !== false) {
+				} else if (strpos($html, "</") !== false) {
+					$message = substr($message, 0, $open) . "&#91;" . substr($message, $open + 1);
 					continue;
 				}
 

@@ -15,7 +15,8 @@
 					"Organisations" => array("cms/organisation", "organisations.png"),
 					"Access"        => array("cms/access", "access.png"),
 					"Flags"         => array("cms/flag", "flags.png"),
-					"User switch"   => array("cms/switch", "switch.png")),
+					"User switch"   => array("cms/switch", "switch.png"),
+					"Action log"    => array("cms/action", "action.png")),
 				"Content" => array(
 					"Agenda"        => array("cms/agenda", "agenda.png"),
 					"Dictionary"    => array("cms/dictionary", "dictionary.png"),
@@ -43,8 +44,8 @@
 					"Subscriptions" => array("cms/subscriptions", "subscriptions.png")),
 				"System" => array(
 					"Analytics"     => array("cms/analytics", "analytics.png"),
-					"Action log"    => array("cms/action", "action.png"),
 					"Settings"      => array("cms/settings", "settings.png"),
+					"Reroute"       => array("cms/reroute", "reroute.png"),
 					"API test"      => array("cms/apitest", "apitest.png")));
 
 			/* Show warnings

@@ -62,7 +62,7 @@
 
 		public function upload_oke($file, $directory) {
 			if ($file["error"] !== 0) {
-				$this->view->add_message("Error while uploading file.");
+				$this->view->add_system_warning("Error while uploading file.");
 				return false;
 			}
 

@@ -9,6 +9,7 @@
 	namespace Banshee;
 
 	class secure_cookie {
+		private $settings = null;
 		private $expire = null;
 
 		/* Constructor
@@ -18,6 +19,7 @@
 		 * ERROR:  -
 		 */
 		public function __construct($settings) {
+			$this->settings = $settings;
 			$this->expire = time() + 30 * DAY;
 		}
 
@@ -30,7 +32,7 @@
 		public function __set($key, $value) {
 			$value = json_encode($value);
 
-			$crypto = new AES256($this->settings->secret_website_code);
+			$crypto = new Protocols\AES256($this->settings->secret_website_code);
 			if (($value = $crypto->encrypt($value)) === false) {
 				return;
 			}
@@ -50,7 +52,7 @@
 				return null;
 			}
 
-			$crypto = new AES256($this->settings->secret_website_code);
+			$crypto = new Protocols\AES256($this->settings->secret_website_code);
 			if (($value = $crypto->decrypt($data)) === false) {
 				return null;
 			}

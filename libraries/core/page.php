@@ -60,7 +60,35 @@
 				}
 			} else {
 				list($this->url) = explode("?", $_SERVER["REQUEST_URI"], 2);
-				$path = trim($this->url, "/");
+
+				/* Rerouting
+				 */
+				$query = "select replacement, type from reroute where original=%s";
+				if (($result = $this->db->execute($query, $this->url)) != false) {
+					$reroute = $result[0];
+					switch ($reroute["type"]) {
+						case 0:
+							$this->url = $reroute["replacement"];
+							break;
+						case 1:
+							header("Location: ".$reroute["replacement"]);
+							$this->module = ERROR_MODULE;
+							$this->http_code = 301;
+							break;
+						case 2:
+							header("Location: ".$reroute["replacement"]);
+							$this->module = ERROR_MODULE;
+							$this->http_code = 307;
+							break;
+					}
+				}
+
+				$path = $this->url;
+				if (substr($path, 0, 1) == "/") {
+					$path = substr($path, 1);
+				}
+				$path = rtrim($path, "/");
+
 				if ($path == "") {
 					$page = $this->settings->start_page;
 				} else if (valid_input($path, VALIDATE_URL, VALIDATE_NONEMPTY)) {

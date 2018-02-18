@@ -30,7 +30,7 @@
 			$query = "select count(*) as count from users where organisation_id=%d";
 
 			if (($result = $this->db->execute($query, $item_id)) === false) {
-				$this->view->add_message("Database error.");
+				$this->view->add_system_warming("Database error.");
 				return false;
 			}
 

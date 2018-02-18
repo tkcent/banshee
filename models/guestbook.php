@@ -71,7 +71,7 @@
 
 			$guestbook_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/".$this->page->module;
 
-			$email = new Banshee\email("Guestbook message posted", $this->settings->webmaster_email);
+			$email = new Banshee\Protocols\email("Guestbook message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
 				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/guestbook";

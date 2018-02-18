@@ -31,7 +31,7 @@
 <xsl:for-each select="articles/article">
 <div class="panel panel-default">
 <div class="panel-heading"><a href="/{/output/page}/{@id}"><xsl:value-of select="title" /></a> (<xsl:value-of select="article_nr" />)<span class="price"><span class="currency"><xsl:value-of select="../@currency" disable-output-escaping="yes" /></span><xsl:value-of select="price" /></span></div>
-<div class="panel-body"><xsl:if test="image!=''"><a href="/{/output/page}/{@id}"><img src="{image}" class="image small" /></a></xsl:if><xsl:value-of select="short_description" /></div>
+<div class="panel-body"><xsl:if test="image!=''"><a href="/{/output/page}/{@id}"><img src="{image}" alt="product" class="image small" /></a></xsl:if><xsl:value-of select="short_description" /></div>
 </div>
 </xsl:for-each>
 </div>
@@ -56,7 +56,7 @@
 <div class="panel panel-default">
 <div class="panel-heading"><xsl:value-of select="title" /> - <xsl:value-of select="article_nr" /><span class="price"><span class="currency"><xsl:value-of select="@currency" disable-output-escaping="yes" /></span><xsl:value-of select="price" /></span></div>
 <div class="panel-body">
-<div class="info"><xsl:if test="image!=''"><img src="{image}" class="image big" /></xsl:if><xsl:value-of select="long_description" /></div>
+<div class="info"><xsl:if test="image!=''"><img src="{image}" alt="product" class="image big" /></xsl:if><xsl:value-of select="long_description" /></div>
 <div class="add"><input type="button" value="Add to cart" class="btn btn-xs btn-primary" onClick="javascript:add_to_cart({@id})" /></div>
 </div>
 </div>

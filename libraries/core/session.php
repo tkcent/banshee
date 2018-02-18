@@ -185,6 +185,7 @@
 			$_SERVER["REQUEST_METHOD"] = "GET";
 			$_GET = array();
 			$_POST = array();
+			$_FILES = array();
 			$_COOKIE = array();
 
 			$logfile = new \Banshee\logfile("actions");

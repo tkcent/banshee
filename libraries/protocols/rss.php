@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	namespace Banshee;
+	namespace Banshee\Protocols;
 
 	class RSS {
 		const CONTENT_TYPE = "application/rss+xml; charset=utf-8";

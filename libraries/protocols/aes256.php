@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	namespace Banshee;
+	namespace Banshee\Protocols;
 
 	class AES256 {
 		private $mode = "aes-256-";

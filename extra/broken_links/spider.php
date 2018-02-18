@@ -17,8 +17,8 @@
 			}
 
 			switch ($protocol) {
-				case "http:": $this->website = new Banshee\HTTP($this->hostname); break;
-				case "https:": $this->website = new Banshee\HTTPS($this->hostname); break;
+				case "http:": $this->website = new Banshee\Protocols\HTTP($this->hostname); break;
+				case "https:": $this->website = new Banshee\Protocols\HTTPS($this->hostname); break;
 				default: exit("Invalid protocol.\n");
 			}
 
@@ -72,8 +72,8 @@
 			array_push($this->visited, $url);
 
 			switch ($protocol) {
-				case "http:": $website = new Banshee\HTTP($hostname); break;
-				case "https:": $website = new Banshee\HTTPS($hostname); break;
+				case "http:": $website = new Banshee\Protocols\HTTP($hostname); break;
+				case "https:": $website = new Banshee\Protocols\HTTPS($hostname); break;
 				default: exit("Invalid protocol.\n");
 			}
 

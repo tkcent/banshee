@@ -75,7 +75,7 @@ Photo album: <select name="album" onChange="javascript:submit()">
 </select>
 
 <div class="btn-group">
-<input type="submit" name="submit_button" value="Save photo" class="btn btn-default" />
+<input type="submit" name="submit_button" value="Update photo" class="btn btn-default" />
 <input type="submit" name="submit_button" value="Delete photo" class="btn btn-default" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 <a href="/{/output/page}" class="btn btn-default">Cancel</a>
 </div>

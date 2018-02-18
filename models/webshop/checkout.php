@@ -87,7 +87,7 @@
 		}
 
 		public function send_notification($data) {
-			$notification = new Banshee\email("Order placed", $this->settings->webmaster_email, $this->settings->head_title." webshop");
+			$notification = new Banshee\Protocols\email("Order placed", $this->settings->webmaster_email, $this->settings->head_title." webshop");
 			$notification->message("Your order has been placed successfully.");
 
 			$notification->send($this->user->email, $this->user->fullname);

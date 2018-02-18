@@ -128,11 +128,13 @@
 					if ($this->model->upload_oke($_FILES["photos"]) == false) {
 						$this->show_overview();
 					} else if ($this->model->create_photos($_FILES["photos"], $_POST) == false) {
+						$this->view->add_system_warning("Error uploading photo.");
+						$this->show_overview();
 					} else {
 						$this->show_overview();
 					}
-				} else if ($_POST["submit_button"] == "Save photo") {
-					/* Save photo
+				} else if ($_POST["submit_button"] == "Update photo") {
+					/* Update photo
 					 */
 					if ($this->model->edit_oke($_POST) == false) {
 						$this->show_edit_form($_POST);

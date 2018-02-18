@@ -18,3 +18,7 @@ function preview_loaded(url) {
 		$(this).attr('href', 'javascript:alert(\'Link to ' + href + '\')');
 	});
 }
+
+function set_preview_width(width) {
+	$('div.preview-body').css("width", width);
+}

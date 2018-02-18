@@ -54,7 +54,7 @@
 	<xsl:attribute name="disabled">disabled</xsl:attribute>
 </xsl:if>
 </input>
-<div>Allow for non-admins: <input type="checkbox" name="non_admins">
+<div>Allow non-admins to assign this role: <input type="checkbox" name="non_admins">
 <xsl:if test="role/@non_admins='yes'">
 	<xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>

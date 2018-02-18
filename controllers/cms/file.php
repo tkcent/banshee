@@ -23,6 +23,8 @@
 					} else if ($this->model->create_directory($_POST["create"], $directory) == false) {
 						$this->view->add_tag("create", $_POST["create"]);
 						$this->view->add_message("Error creating directory.");
+					} else {
+						$this->user->log_action("directory '%s' created", $_POST["create"]);
 					}
 				} else if ($_POST["submit_button"] == "Upload") {
 					/* Upload file
@@ -40,7 +42,7 @@
 					if ($this->model->delete_file($_POST["filename"], $directory) == false) {
 						$this->view->add_message("Error while deleting file.");
 					} else {
-						$this->user->log_action("file '%s' deleted", $_POST["filename"]);
+						$this->user->log_action("file / directory '%s' deleted", $_POST["filename"]);
 					}
 				}
 			}

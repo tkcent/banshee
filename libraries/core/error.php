@@ -122,7 +122,7 @@
 				"User-Agent: ".$_SERVER["HTTP_USER_AGENT"]."\n".
 				"\n".$errors;
 
-			$email = new \Banshee\email("Internal error at ".$_SERVER["SERVER_NAME"], "no-reply@".$_SERVER["SERVER_NAME"]);
+			$email = new \Banshee\Protocols\email("Internal error at ".$_SERVER["SERVER_NAME"], "no-reply@".$_SERVER["SERVER_NAME"]);
 			$email->message($message);
 			$email->send($this->settings->webmaster_email);
 			unset($email);
@@ -136,6 +136,8 @@
 		 */
 		public function execute($errors) {
 			$errors = str_replace("<br />", "", trim($errors));
+
+			debug_log($errors);
 
 			if (is_false(DEBUG_MODE) || $this->view->disabled) {
 				$this->send_via_email($errors);

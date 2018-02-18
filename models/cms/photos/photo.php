@@ -76,7 +76,7 @@
 			$count = count($photos["name"]);
 			for ($i = 0; $i < $count; $i++) {
 				if ($photos["error"][$i] != 0) {
-					$this->view->add_message("Error while uploading %s.", $photos["name"][$i]);
+					$this->view->add_system_warning("Error while uploading %s.", $photos["name"][$i]);
 					$result = false;
 				} else if (in_array($photos["type"][$i], $allowed_types) == false) {
 					$this->view->add_message("Incorrect file type for %s.", $photos["name"][$i]);

@@ -32,6 +32,7 @@
 			"enum" => array(
 				"label"    => "Enum",
 				"type"     => "enum",
+				"overview" => true,
 				"options"   => array(
 					"value1" => "Value one",
 					"value2" => "Value two",

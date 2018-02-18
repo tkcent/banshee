@@ -71,7 +71,7 @@
 	 * ERROR:  -
 	 */
 	function valid_email($email) {
-		return Banshee\email::valid_address($email);
+		return Banshee\Protocols\email::valid_address($email);
 	}
 
 	/* Validate a date string

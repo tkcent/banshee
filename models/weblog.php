@@ -212,7 +212,7 @@
 				"<p>Click <a href=\"".$weblog_url."\">here</a> to visit the weblog page or <a href=\"".$cms_url."\">here</a> to visit the weblog CMS page.</p>".
 				"</body>";
 
-			$email = new Banshee\email("Weblog comment posted", $this->settings->webmaster_email);
+			$email = new Banshee\Protocols\email("Weblog comment posted", $this->settings->webmaster_email);
 			$email->message($message);
 			$email->send($author["email"], $author["fullname"]);
 		}

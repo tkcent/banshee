@@ -67,9 +67,9 @@
 			}
 
 			if ($_SERVER["HTTPS"] == "on") {
-				$http = new Banshee\HTTPS($_SERVER["HTTP_HOST"]);
+				$http = new Banshee\Protocols\HTTPS($_SERVER["HTTP_HOST"]);
 			} else {
-				$http = new Banshee\HTTP($_SERVER["HTTP_HOST"]);
+				$http = new Banshee\Protocols\HTTP($_SERVER["HTTP_HOST"]);
 			}
 
 			$http->add_header("Referer", $_SERVER["HTTP_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);

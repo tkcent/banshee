@@ -35,7 +35,7 @@
 		 * ERROR:  -
 		 */
 		public function __construct($db) {
-			$this->maps_api = new HTTPS(self::GOOGLE_MAPS_HOSTNAME);
+			$this->maps_api = new Protocols\HTTPS(self::GOOGLE_MAPS_HOSTNAME);
 			$this->cache = new Core\cache($db, "googlemaps");
 		}
 

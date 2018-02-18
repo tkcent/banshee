@@ -85,12 +85,12 @@
 
 			$link = json_encode($data);
 
-			$aes = new Banshee\AES256($this->settings->secret_website_code);
+			$aes = new Banshee\Protocols\AES256($this->settings->secret_website_code);
 			if (($link = $aes->encrypt($link)) === false) {
 				return false;
 			}
 
-			$email = new Banshee\email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\Protocols\email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
 				"HOSTNAME" => $_SERVER["SERVER_NAME"],
@@ -106,7 +106,7 @@
 		}
 
 		public function sign_up($data) {
-			$aes = new Banshee\AES256($this->settings->secret_website_code);
+			$aes = new Banshee\protocols\AES256($this->settings->secret_website_code);
 			if (($data = $aes->decrypt($data)) === false) {
 				return false;
 			}
@@ -156,7 +156,7 @@
 				return false;
 			}
 
-			$email = new Banshee\email("New account registered at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
+			$email = new Banshee\Protocols\email("New account registered at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
 				"EMAIL"    => $data["email"],

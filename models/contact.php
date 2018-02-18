@@ -31,7 +31,7 @@
 		}
 
 		public function send_contact($contact) {
-			$email = new Banshee\email("Contact information - ".$_SERVER["SERVER_NAME"], $contact["email"], $contact["name"]);
+			$email = new Banshee\Protocols\email("Contact information - ".$_SERVER["SERVER_NAME"], $contact["email"], $contact["name"]);
 			$email->message("The following contact information has been sent via the ".$_SERVER["SERVER_NAME"]." website:\n\n".
 				"Name:      ".$contact["name"]."\n".
 				"E-mail:    ".$contact["email"]."\n".

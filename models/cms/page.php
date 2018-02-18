@@ -122,7 +122,7 @@
 			} else {
 				$query = "select count(*) as count from pages where id!=%d and url=%s";
 				if (($page = $this->db->execute($query, $page["id"], $page["url"])) === false) {
-					$this->view->add_message("Error while verifying the URL.");
+					$this->view->add_system_warning("Error while verifying the URL.");
 					$result = false;
 				} else if ($page[0]["count"] > 0) {
 					$this->view->add_message("The URL belongs to another page.");

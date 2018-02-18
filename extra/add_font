@@ -22,7 +22,7 @@
 	$font = implode(" ", $argv);
 	$font = str_replace(" ", "+", $font);
 
-	$font_api = new Banshee\HTTPS("fonts.googleapis.com");
+	$font_api = new Banshee\Protocols\HTTPS("fonts.googleapis.com");
 	if (($result = $font_api->GET("/css?family=".$font)) === false) {
 		exit("Fonts API error.\n");
 	}
@@ -57,9 +57,9 @@
 	$path = "/". $path;
 
 	if ($protocol == "http:") {
-		$http = new Banshee\HTTP($hostname);
+		$http = new Banshee\Protocols\HTTP($hostname);
 	} else if ($protocol == "https:") {
-		$http = new Banshee\HTTPS($hostname);
+		$http = new Banshee\Protocols\HTTPS($hostname);
 	} else {
 		printf("Unknow protocol (%s) in font url.\n", $protocol);
 		exit;

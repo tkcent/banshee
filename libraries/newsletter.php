@@ -8,7 +8,7 @@
 
 	namespace Banshee;
 
-	class newsletter extends email {
+	class newsletter extends Protocols\email {
 		private $footers = array();
 
 		/* Constructor

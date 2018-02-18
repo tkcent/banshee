@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	define("BANSHEE_VERSION", "6.1");
+	define("BANSHEE_VERSION", "6.2");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
@@ -40,7 +40,7 @@
 	 * OUTPUT: -
 	 * ERROR:  -
 	 */
-	function __autoload($class_name) {
+	function banshee_autoload($class_name) {
 		$parts = explode("\\", $class_name);
 		$class = array_pop($parts);
 
@@ -64,29 +64,7 @@
 		} else {
 			/* Load third party library
 			 */
-			$path = null;
-
-			$composer = "../libraries/thirdparty/composer/autoload_psr4.php";
-			if (file_exists($composer)) {
-				$classes = require($composer);
-				$key = implode("\\", $parts)."\\";
-				if ($classes[$key][0] != null) {
-					$path = $classes[$key][0];
-				}
-			}
-
-			if ($path == null) {
-				array_unshift($parts, "thirdparty");
-				while (count($parts) > 0) {
-					$path = __DIR__."/../".strtolower(implode("/", $parts));
-					if (file_exists($path)) {
-						break;
-					}
-
-					$part = array_pop($parts);
-					$class = $part."/".$class;
-				}
-			}
+			$path = __DIR__."/../thirdparty";
 		}
 
 		if (file_exists($file = $path."/".strtolower($class).".php")) {
@@ -260,7 +238,7 @@
 			$info = "array:\n".implode("\n", $info);
 		}
 
-		$logfile = new logfile("debug");
+		$logfile = new \Banshee\logfile("debug");
 		$logfile->add_entry("%s|%s|%s|%s", $_SERVER["REMOTE_ADDR"], date("D d M Y H:i:s"), $_SERVER["REQUEST_URI"], $info);
 
 		return true;
@@ -401,6 +379,13 @@
 		list($key, $value) = explode("=", chop($line), 2);
 		define(trim($key), trim($value));
 	}
+
+	/* Autoloaders
+	 */
+	if (file_exists($composer = "../libraries/thirdparty/autoload.php")) {
+		include($composer);
+	}
+	spl_autoload_register("banshee_autoload", true, true);
 
 	/* Check PHP version and settings
 	 */

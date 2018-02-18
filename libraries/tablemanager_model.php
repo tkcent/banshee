@@ -375,7 +375,7 @@
 						array_push($args, $item["id"]);
 					}
 					if (($current = $this->db->execute($query, $args)) == false) {
-						$this->view->add_message("Error checking item uniqueness.");
+						$this->view->add_system_warning("Error checking item uniqueness.");
 					} else if ($current[0]["count"] > 0) {
 						$this->view->add_message($element["label"]." already exists.");
 						$result = false;

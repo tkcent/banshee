@@ -54,7 +54,7 @@
 		 */
 		private function search_forum() {
 			$query = "select distinct concat(%s, t.id, %s, m.id) as url, ".
-			                         "concat(f.title, %s, t.subject) as text, m.content ".
+			                         "concat(f.title, %s, t.subject) as text, m.content, m.timestamp ".
 			         "from forums f, forum_topics t, forum_messages m ".
 			         "where f.id=t.forum_id and t.id=m.topic_id and (";
 			$args = array("/forum/topic/", "/#", " :: ");
@@ -149,7 +149,7 @@
 		/* Search polls
 		 */
 		private function search_polls() {
-			$query = "select distinct concat(%s, p.id) as url, p.question as text ".
+			$query = "select distinct concat(%s, p.id) as url, p.question as text, begin ".
 			         "from polls p, poll_answers a ".
 			         "where p.id=a.poll_id and now()>=end and (";
 			$args = array("/poll/");
@@ -193,7 +193,7 @@
 		/* Search weblog
 		 */
 		private function search_weblog() {
-			$query = "select distinct concat(%s, w.id) as url, w.title as text, w.content ".
+			$query = "select distinct concat(%s, w.id) as url, w.title as text, w.content, w.timestamp ".
 			         "from weblogs w left join weblog_comments c on w.id=c.weblog_id where (";
 			$args = array("/weblog/");
 			$this->add_selection("w.title", $query, $args);

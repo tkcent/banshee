@@ -44,7 +44,7 @@
 			$query = "select count(*) as count from photos where photo_album_id=%d";
 
 			if (($result = $this->db->execute($query, $item_id)) === false) {
-				$this->view->add_message("Error counting photos in album.");
+				$this->view->add_system_warning("Error counting photos in album.");
 				return false;
 			} else if ($result[0]["count"] > 0) {
 				$this->view->add_message("Photo album contains photos. Delete them first.");

@@ -16,7 +16,7 @@
 			if ($this->page->type == "xml") {
 				/* RSS feed
 				 */
-				$rss = new Banshee\RSS($this->view);
+				$rss = new Banshee\Protocols\RSS($this->view);
 				if ($rss->fetch_from_cache("news_rss") == false) {
 					$rss->title = $this->settings->head_title." news";
 					$rss->description = $this->settings->head_description;

@@ -19,7 +19,7 @@
 <xsl:template match="overview">
 <xsl:variable name="now" select="appointments/@now" />
 
-<h2>Appointment in the future</h2>
+<h2>Appointments in the future</h2>
 <table class="table table-striped table-hover table-condensed">
 <thead>
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>
@@ -36,7 +36,7 @@
 </tbody>
 </table>
 
-<h2>Appointment in the past</h2>
+<h2>Appointments in the past</h2>
 <table class="table table-striped table-hover table-condensed">
 <thead>
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>

@@ -1,55 +1,22 @@
 Banshee
 =======
 
-This application has been built upon the Banshee PHP framework. Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
+Banshee is a PHP website framework, which aims at being secure, fast and easy
+to use. It has a Model-View-Controller architecture (XSLT for the views).
+Although it was designed to use MySQL as the database, other database
+applications can be used as well with only little effort.
 
-Configure your webserver
-------------------------
-Use the directory 'public' as the webroot directory and allow PHP execution. If you use the Hiawatha webserver, you can use the following configuration:
+Ready to use modules like a forum, photo album, weblog, poll and a guestbook
+will save web developers a lot of work when creating a new website. Easy to use
+libraries for e-mail, pagination, HTTP requests, database management, images,
+cryptography and many more are also included.
 
-	UrlToolkit {
-		ToolkitID = banshee
-		RequestURI isfile Return
-		Match ^/(css|files|fonts|images|js)(/|$) Return
-		Match ^/(favicon.ico|robots.txt)$ Return
-		Match [^?]*(\?.*)? Rewrite /index.php$1
-	}
-
-	Directory {
-		DirectoryID = files
-		Path = /files
-		StartFile = index.html
-		ShowIndex = yes
-		ExecuteCGI = no
-	}
-
-	Directory {
-		DirectoryID = static
-		Path = /css, /fonts, /images, /js
-		ExpirePeriod = 2 weeks
-	}
-
-	VirtualHost {
-		...
-		UseToolkit = banshee
-		UseDirectory = static, files
-	}
-
-
-For Apache, there is a .htaccess file in the 'public' directory which contains the required URL rewriting rules.
-
-Configure PHP
--------------
-Banshee needs PHP's MySQL, XML/XSLT and GD module.
-
-Configure your database
------------------------
-Open the website in your browser and follow the instructions on your screen. In case of an error, add /setup to the URL.
-
-Configure Cronjob
------------------
-Configure cronjob to run the script database/backup_database once per day.
-
-Configure Banshee
------------------
-Go to the Settings page in the CMS and replace the present e-mail addresses with your own. Before going live, set the DEBUG_MODE flag in settings/website.conf to 'no'.
+Most software that can be used to create a website is either a framework or a
+Content Management System (CMS). The disadvantage of a framework is that it
+requires quite some time and work to build a website, because it has no
+ready-to-use interface. The disadvantage of a CMS is that it requires quite
+some knowledge about the CMS (and hacking) to extend its functionality. Banshee
+has none of these disadvantages as it is more of a hybrid, a framework with CMS
+functionality and ready-to-use modules. That makes Banshee actually a, what we
+call, Content Management Framework (CMF). The reason for still describing it as
+a framework is because more people are familiar with that term than with CMF.

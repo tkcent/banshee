@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	namespace Banshee;
+	namespace Banshee\Protocols;
 
 	class NMA {
 		const NMA_SERVER = "www.notifymyandroid.com";

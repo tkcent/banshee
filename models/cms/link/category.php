@@ -21,7 +21,7 @@
 			$query = "select count(*) as count from links where category_id=%d";
 
 			if (($result = $this->db->execute($query, $category_id)) === false) {
-				$this->view->add_message("Database error.");
+				$this->view->add_system_warning("Database error.");
 				return false;
 			}
 

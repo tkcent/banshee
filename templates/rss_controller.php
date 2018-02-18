@@ -4,7 +4,7 @@
 			if ($this->page->type == "xml") {
 				/* RSS feed
 				 */
-				$rss = new Banshee\RSS($this->view);
+				$rss = new Banshee\Protocols\RSS($this->view);
 				if ($rss->fetch_from_cache("rss_cache_id") == false) {
 					$rss->title = "RSS title";
 					$rss->description = "RSS description";

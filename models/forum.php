@@ -196,7 +196,7 @@
 				$topic_url .= "#".$message_id;
 			}
 
-			$email = new Banshee\email("Forum message posted", $this->settings->webmaster_email);
+			$email = new Banshee\Protocols\email("Forum message posted", $this->settings->webmaster_email);
 
 			foreach ($maintainers as $maintainer) {
 				$cms_url = $_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/cms/forum";

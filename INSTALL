@@ -1,0 +1,67 @@
+Installation
+============
+This application has been built upon the Banshee PHP framework. Use the
+following steps to install a Banshee based website.
+
+
+Configure your webserver
+------------------------
+Use the directory 'public' as the webroot directory and allow PHP execution.
+If you use the Hiawatha webserver, you can use the following configuration:
+
+	UrlToolkit {
+		ToolkitID = banshee
+		RequestURI isfile Return
+		Match ^/(css|files|fonts|images|js)(/|$) Return
+		Match ^/(favicon.ico|robots.txt)$ Return
+		Match [^?]*(\?.*)? Rewrite /index.php$1
+	}
+
+	Directory {
+		DirectoryID = files
+		Path = /files
+		StartFile = index.html
+		ShowIndex = yes
+		ExecuteCGI = no
+	}
+
+	Directory {
+		DirectoryID = static
+		Path = /css, /fonts, /images, /js
+		ExpirePeriod = 2 weeks
+	}
+
+	VirtualHost {
+		...
+		UseToolkit = banshee
+		UseDirectory = static, files
+	}
+
+
+For Apache, there is a .htaccess file in the 'public' directory which contains
+the required URL rewriting rules.
+
+
+Configure PHP
+-------------
+Banshee requires at least PHP v7.0 and needs PHP's MySQL and XML/XSLT module.
+If you use the Banshee image library, you need PHP's GD module. Make sure the
+date.timezone setting in php.ini has been set correctly.
+
+
+Configure your database
+-----------------------
+Open the website in your browser and follow the instructions on your screen. In
+case of an error, add /setup to the URL to continue the installation process.
+
+
+Configure Cronjob
+-----------------
+Configure cronjob to run the script database/backup_database once per day.
+
+
+Configure Banshee
+-----------------
+Go to the Settings administration page in Banshee's CMS and replace the present
+e-mail addresses with your own. Before going live, set the DEBUG_MODE flag in
+the file settings/website.conf to 'no'.

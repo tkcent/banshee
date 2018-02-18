@@ -27,7 +27,8 @@
 						$this->view->add_message("Error while sending newsletter.");
 						$this->show_newsletter_form($_POST);
 					} else {
-						$this->view->add_tag("result", "Newsletter has been sent.");
+						$this->view->add_system_message("Newsletter has been sent.");
+						$this->start_writing();
 					}
 				} else if ($_POST["submit_button"] == "Preview newsletter") {
 					if ($this->model->preview_newsletter($_POST) == false) {

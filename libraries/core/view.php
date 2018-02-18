@@ -360,7 +360,12 @@
 			$args = func_get_args();
 			$format = array_shift($args);
 
-			array_push($this->system_warnings, vsprintf($format, $args));
+			$warning = trim(vsprintf($format, $args));
+
+			if (is_false(DEBUG_MODE)) {
+				print $warning;
+			}
+			array_push($this->system_warnings, $warning);
 		}
 
 		/* Add message to message buffer
@@ -396,6 +401,8 @@
 						$this->add_tag("message", $message);
 					}
 					$this->close_tag();
+
+					$this->run_javascript("$('div.alert-info').delay(3000).slideUp('slow')");
 				}
 
 				/* System warnings
