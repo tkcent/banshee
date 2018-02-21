@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.29-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.33-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: localhost
+-- Host: localhost    Database: banshee_dev
 -- ------------------------------------------------------
--- Server version	10.0.28-MariaDB-0ubuntu0.16.04.1
+-- Server version	10.0.33-MariaDB-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -236,7 +236,7 @@ CREATE TABLE `forum_last_view` (
 
 LOCK TABLES `forum_last_view` WRITE;
 /*!40000 ALTER TABLE `forum_last_view` DISABLE KEYS */;
-INSERT INTO `forum_last_view` VALUES (1,'2017-02-02 15:55:36');
+INSERT INTO `forum_last_view` VALUES (1,'2018-01-26 13:43:48');
 /*!40000 ALTER TABLE `forum_last_view` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,6 +342,16 @@ CREATE TABLE `guestbook` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `guestbook`
+--
+
+LOCK TABLES `guestbook` WRITE;
+/*!40000 ALTER TABLE `guestbook` DISABLE KEYS */;
+INSERT INTO `guestbook` VALUES (1,'Piet','Hoi!','2017-08-22 10:49:41','46.144.3.66');
+/*!40000 ALTER TABLE `guestbook` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `languages`
@@ -576,7 +586,7 @@ CREATE TABLE `news` (
 
 LOCK TABLES `news` WRITE;
 /*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (1,'Lorum ipsum','<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac elit quam. Nullam aliquam justo et nisi dictum pretium interdum tellus hendrerit. Aenean tristique posuere dictum. Maecenas nec sapien ut magna suscipit euismod quis ut metus. Aenean sit amet metus a turpis iaculis mollis. Nam faucibus mauris vel ligula ultricies dapibus. Nullam quis orci ac sem convallis malesuada nec id nisi. Praesent quis tellus nec sapien viverra blandit at ut erat. Curabitur bibendum malesuada erat, in suscipit leo porta et. Cras quis arcu sit amet nibh molestie mollis eu eget nulla. Vivamus sed enim fringilla elit pretium feugiat. Nullam elementum fermentum nunc in sodales.</p>\r\n\r\n<p>Mauris nec nunc quis enim porttitor consectetur at et lorem. Vivamus ac rutrum sapien. Nullam metus lectus, lobortis sit amet vulputate sit amet, fermentum sed velit. Phasellus ac libero urna. Maecenas tellus massa, ultrices sed pretium non, faucibus ut lorem. Donec aliquam vehicula ante, eu sodales felis ullamcorper at. Sed sed odio ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam laoreet tristique est in molestie. Sed lacinia euismod porttitor. Praesent ullamcorper fringilla arcu sit amet viverra. Aliquam erat volutpat.</p>\r\n\r\n<p>Nulla vel eros quam. Nam nec turpis ac turpis pulvinar facilisis non non nunc. Nam bibendum nunc in velit cursus rutrum. Integer at ultricies orci. Suspendisse vitae sodales dui. Integer malesuada hendrerit dui, a ullamcorper mauris aliquam sit amet. Nulla dignissim tortor accumsan velit laoreet non eleifend massa aliquet. Quisque luctus dapibus viverra. Aliquam sed lorem diam. Phasellus condimentum lectus vitae ipsum molestie a vestibulum risus malesuada. Duis posuere urna a arcu facilisis sit amet blandit lacus tempus. Vestibulum vel arcu nunc, ut imperdiet massa. Donec congue risus nec urna laoreet et euismod magna semper. Fusce pharetra porttitor ultrices.</p>','2015-07-29 11:17:00');
+INSERT INTO `news` VALUES (1,'Lorum ipsum','<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac elit quam. Nullam aliquam justo et nisi dictum pretium interdum tellus hendrerit. Aenean tristique posuere dictum. Maecenas nec sapien ut magna suscipit euismod quis ut metus. Aenean sit amet metus a turpis iaculis mollis. Nam faucibus mauris vel ligula ultricies dapibus. Nullam quis orci ac sem convallis malesuada nec id nisi. Praesent quis tellus nec sapien viverra blandit at ut erat. Curabitur bibendum malesuada erat, in suscipit leo porta et. Cras quis arcu sit amet nibh molestie mollis eu eget nulla. Vivamus sed enim fringilla elit pretium feugiat. Nullam elementum fermentum nunc in sodales.</p>\r\n\r\n<p>Mauris nec nunc quis enim porttitor consectetur at et lorem. Vivamus ac rutrum sapien. Nullam metus lectus, lobortis sit amet vulputate sit amet, fermentum sed velit. Phasellus ac libero urna. Maecenas tellus massa, ultrices sed pretium non, faucibus ut lorem. Donec aliquam vehicula ante, eu sodales felis ullamcorper at. Sed sed odio ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam laoreet tristique est in molestie. Sed lacinia euismod porttitor. Praesent ullamcorper fringilla arcu sit amet viverra. Aliquam erat volutpat.</p>\r\n\r\n<p>Nulla vel eros quam. Nam nec turpis ac turpis pulvinar facilisis non non nunc. Nam bibendum nunc in velit cursus rutrum. Integer at ultricies orci. Suspendisse vitae sodales dui. Integer malesuada hendrerit dui, a ullamcorper mauris aliquam sit amet. Nulla dignissim tortor accumsan velit laoreet non eleifend massa aliquet. Quisque luctus dapibus viverra. Aliquam sed lorem diam. Phasellus condimentum lectus vitae ipsum molestie a vestibulum risus malesuada. Duis posuere urna a arcu facilisis sit amet blandit lacus tempus. Vestibulum vel arcu nunc, ut imperdiet massa. Donec congue risus nec urna laoreet et euismod magna semper. Fusce pharetra porttitor ultrices.</p>','2017-07-01 00:00:00');
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -665,7 +675,7 @@ CREATE TABLE `pages` (
 
 LOCK TABLES `pages` WRITE;
 /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
-INSERT INTO `pages` VALUES (1,'/homepage','en',NULL,0,'img.logo {\r\n  float:right;\r\n  margin-left:20px;\r\n}\r\n\r\n@media (max-width:767px) {\r\n  img.logo {\r\n    width:70px;\r\n  }\r\n}','Welcome to Banshee, the secure PHP framework','','','<p>Banshee is a PHP website framework, which aims at to be secure, fast and easy to use. It uses the Model-View-Control architecture with XSLT for the View. Although it was designed to use MySQL as the database, other database applications can be used as well with only little effort. For more information about Banshee, visit the <a href=\"https://www.banshee-php.org/\">Banshee website</a>.</p>\r\n\r\n<img src=\"https://www.banshee-php.org/logo.php\" class=\"logo\" alt=\"Banshee logo\">\r\n\r\n<p>In this default installation, there are two users available: \'admin\' and \'user\'. Both have the password \'banshee\'.</p>\r\n\r\n<p>If security is a high priority for your website, you should take a look at the <a href=\"https://www.hiawatha-webserver.org/\">Hiawatha webserver</a>.</p>',1,0),(2,'/modules','en',NULL,0,NULL,'Banshee modules','Modules in Banshee','modules','<ul>\r\n<li><a href=\"/agenda\">Agenda</a></li>\r\n<li><a href=\"/contact\">Contact form</a></li>\r\n<li><a href=\"/dictionary\">Dictionary</a></li>\r\n<li><a href=\"/faq\">F.A.Q.</a></li>\r\n<li><a href=\"/forum\">Forum</a></li>\r\n<li><a href=\"/guestbook\">Guestbook</a></li>\r\n<li><a href=\"/links\">Links</a></li>\r\n<li><a href=\"/mailbox\">Mailbox</a></li>\r\n<li><a href=\"/news\">News</a></li>\r\n<li><a href=\"/newsletter\">Newsletter</a></li>\r\n<li><a href=\"/photo\">Photo album</a></li>\r\n<li><a href=\"/collection\">Photo album collections</a></li>\r\n<li><a href=\"/poll\">Poll</a></li>\r\n<li><a href=\"/profile\">Profile manager</a></li>\r\n<li><a href=\"/search\">Search</a></li>\r\n<li><a href=\"/session\">Session manager</a></li>\r\n<li><a href=\"/weblog\">Weblog</a></li>\r\n<li><a href=\"/webshop\">Webshop</a></li>\r\n</ul>',1,0),(3,'/demos','en',NULL,0,NULL,'Banshee functionality demos','Banshee demos','banshee, demos','<ul>\r\n<li>The <a href=\"/demos/captcha\">captcha</a> library.</li>\r\n<li>This page shows <a href=\"/demos/errors\">errors and messages</a> generated by the framework.</li>\r\n<li>An <a href=\"/demos/invisible\">invisible</a> page, a <a href=\"/demos/private\">private</a> page and a <a href=\"/demos/void\">non-existing</a> page.</li>\r\n<li>The WYSIWYG <a href=\"/demos/ckeditor\">CKEditor</a>.</li>\r\n<li><a href=\"/demos/googlemaps\">GoogleMaps static map</a> demo.</a></li>\r\n<li>A <a href=\"/demos/pagination\">pagination</a> library.</li>\r\n<li>An <a href=\"/demos/alphabetize\">alphabetize</a> library.</li>\r\n<li>A <a href=\"/demos/pdf\">PDF</a> library.</li>\r\n<li>A <a href=\"/demos/graph\">graph</a> library.</li>\r\n<li>A <a href=\"/demos/poll\">poll</a> module.</li>\r\n<li>The <a href=\"/demos/posting\">posting</a> library.</li>\r\n<li>The <a href=\"/demos/tablemanager\">tablemanager</a> library.</li>\r\n<li>The <a href=\"/demos/splitform\">splitform</a> library.</li>\r\n<li><a href=\"/demos/utf8\">UTF-8</a> character encoding.</li>\r\n<li>A library for <a href=\"/demos/validation\">input validation</a>.</li>\r\n<li>Page with a <a href=\"/demos/help\">help</a> pop-up.</li>\r\n</ul>\r\n',1,0),(4,'/demos/private','en',NULL,1,NULL,'Private page','','','<p>This is a private page.</p>',1,1),(5,'/demos/invisible','en',NULL,0,NULL,'Invisible page','','','<p>This page is invisible to normal users and visitors. Only users with access to the page administration page can view this page.</p>\r\n<p>Page administrators can use this feature to verify a page before making it available to visitors.</p>',0,1),(6,'/demos/utf8','en',NULL,0,NULL,'UTF-8 demo','','','<p>這是一個測試頁，以顯示漢字。</p>',1,1);
+INSERT INTO `pages` VALUES (1,'/homepage','en',NULL,0,'img.logo {\r\n  float:right;\r\n  margin-left:20px;\r\n  width:250px;\r\n}\r\n\r\n@media (max-width:767px) {\r\n  img.logo {\r\n    display:block;\r\n    float:none;\r\n    width:100%;\r\n    max-width:400px;\r\n    margin:10px auto;\r\n  }\r\n}','Welcome to Banshee, the secure PHP framework','','','<p>Banshee is a PHP website framework, which aims at to be secure, fast and easy to use. It uses the Model-View-Control architecture with XSLT for the View. Although it was designed to use MySQL as the database, other database applications can be used as well with only little effort. For more information about Banshee, visit the <a href=\"http://www.banshee-php.org/\">Banshee website</a>.</p>\r\n\r\n<img src=\"https://www.banshee-php.org/logo.php\" class=\"logo\" alt=\"Banshee logo\">\r\n\r\n<p>In this default installation, there are two users available: \'admin\' and \'user\'. Both have the password \'banshee\'.</p>\r\n\r\n<p>If security is a high priority for your website, you should take a look at the <a href=\"http://www.hiawatha-webserver.org/\">Hiawatha webserver</a>.</p>',1,0),(3,'/demos','en',NULL,0,NULL,'Banshee functionality demos','Banshee demos','banshee, demos','<ul>\r\n<li>The <a href=\"/demos/captcha\">captcha</a> library.</li>\r\n<li>This page shows <a href=\"/demos/errors\">errors and messages</a> generated by the framework.</li>\r\n<li>An <a href=\"/demos/invisible\">invisible</a> page, a <a href=\"/demos/private\">private</a> page and a <a href=\"/demos/void\">non-existing</a> page.</li>\r\n<li>The WYSIWYG <a href=\"/demos/ckeditor\">CKEditor</a>.</li>\r\n<li><a href=\"/demos/googlemaps\">GoogleMaps static map</a> demo.</a></li>\r\n<li>A <a href=\"/demos/pagination\">pagination</a> library.</li>\r\n<li>An <a href=\"/demos/alphabetize\">alphabetize</a> library.</li>\r\n<li>A <a href=\"/demos/pdf\">PDF</a> library.</li>\r\n<li>A <a href=\"/demos/graph\">graph</a> library.</li>\r\n<li>A <a href=\"/demos/poll\">poll</a> module.</li>\r\n<li>The <a href=\"/demos/posting\">posting</a> library.</li>\r\n<li>The <a href=\"/demos/tablemanager\">tablemanager</a> library.</li>\r\n<li>The <a href=\"/demos/splitform\">splitform</a> library.</li>\r\n<li><a href=\"/demos/utf8\">UTF-8</a> character encoding.</li>\r\n<li>A library for <a href=\"/demos/validation\">input validation</a>.</li>\r\n<li>Page with a <a href=\"/demos/help\">help</a> pop-up.</li>\r\n</ul>',1,0),(4,'/demos/private','en',NULL,1,NULL,'Private page','','','<p>This is a private page.</p>',1,1),(5,'/demos/invisible','en',NULL,0,NULL,'Invisible page','','','<p>This page is invisible to normal users and visitors. Only users with access to the page administration page can view this page.</p>\r\n<p>Page administrators can use this feature to verify a page before making it available to visitors.</p>',0,1),(6,'/demos/utf8','en',NULL,0,NULL,'UTF-8 demo','','','<p>這是一個測試頁，以顯示漢字。</p>',1,1),(179,'/modules','en',NULL,0,NULL,'Banshee modules','Modules in Banshee','modules','<ul>\r\n<li><a href=\"/agenda\">Agenda</a></li>\r\n<li><a href=\"/contact\">Contact form</a></li>\r\n<li><a href=\"/dictionary\">Dictionary</a></li>\r\n<li><a href=\"/faq\">F.A.Q.</a></li>\r\n<li><a href=\"/forum\">Forum</a></li>\r\n<li><a href=\"/guestbook\">Guestbook</a></li>\r\n<li><a href=\"/links\">Links</a></li>\r\n<li><a href=\"/mailbox\">Mailbox</a></li>\r\n<li><a href=\"/news\">News</a></li>\r\n<li><a href=\"/newsletter\">Newsletter</a></li>\r\n<li><a href=\"/photo\">Photo album</a></li>\r\n<li><a href=\"/collection\">Photo album collections</a></li>\r\n<li><a href=\"/poll\">Poll</a></li>\r\n<li><a href=\"/profile\">Profile manager</a></li>\r\n<li><a href=\"/search\">Search</a></li>\r\n<li><a href=\"/session\">Session manager</a></li>\r\n<li><a href=\"/weblog\">Weblog</a></li>\r\n<li><a href=\"/webshop\">Webshop</a></li>\r\n</ul>',1,0);
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -783,6 +793,23 @@ INSERT INTO `polls` VALUES (2,'The best webserver','2017-01-01','2020-12-31'),(3
 UNLOCK TABLES;
 
 --
+-- Table structure for table `reroute`
+--
+
+DROP TABLE IF EXISTS `reroute`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reroute` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `original` varchar(100) NOT NULL,
+  `replacement` varchar(100) NOT NULL,
+  `type` tinyint(3) unsigned NOT NULL,
+  `description` tinytext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -793,47 +820,48 @@ CREATE TABLE `roles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `non_admins` smallint(6) NOT NULL,
-  `profile` tinyint(4) DEFAULT '0',
-  `mailbox` tinyint(4) DEFAULT '0',
-  `session` tinyint(4) DEFAULT '0',
-  `demos/tablemanager` tinyint(4) DEFAULT '0',
-  `cms` tinyint(4) DEFAULT '0',
-  `cms/access` tinyint(4) DEFAULT '0',
-  `cms/action` tinyint(4) DEFAULT '0',
-  `cms/agenda` tinyint(4) DEFAULT '0',
-  `cms/analytics` tinyint(4) DEFAULT '0',
-  `cms/apitest` tinyint(4) DEFAULT '0',
-  `cms/collection` tinyint(4) DEFAULT '0',
-  `cms/dictionary` tinyint(4) DEFAULT '0',
-  `cms/faq` tinyint(4) DEFAULT '0',
-  `cms/file` tinyint(4) DEFAULT '0',
-  `cms/flag` tinyint(4) DEFAULT '0',
-  `cms/forum` tinyint(4) DEFAULT '0',
-  `cms/forum/section` tinyint(4) DEFAULT '0',
-  `cms/guestbook` tinyint(4) DEFAULT '0',
-  `cms/menu` tinyint(4) DEFAULT '0',
-  `cms/news` tinyint(4) DEFAULT '0',
-  `cms/newsletter` tinyint(4) DEFAULT '0',
-  `cms/organisation` tinyint(4) DEFAULT '0',
-  `cms/page` tinyint(4) DEFAULT '0',
-  `cms/poll` tinyint(4) DEFAULT '0',
-  `cms/role` tinyint(4) DEFAULT '0',
-  `cms/settings` tinyint(4) DEFAULT '0',
-  `cms/subscriptions` tinyint(4) DEFAULT '0',
-  `cms/switch` tinyint(4) DEFAULT '0',
-  `cms/user` tinyint(4) DEFAULT '0',
-  `cms/weblog` tinyint(4) DEFAULT '0',
-  `cms/album` tinyint(4) DEFAULT '0',
-  `cms/language` tinyint(4) DEFAULT '0',
-  `cms/photo` tinyint(4) DEFAULT '0',
-  `cms/weblog/comment` tinyint(4) DEFAULT '0',
-  `cms/webshop/article` tinyint(4) DEFAULT '0',
-  `webshop/checkout` tinyint(4) DEFAULT '0',
-  `webshop/orders` tinyint(4) DEFAULT '0',
-  `cms/webshop/order` tinyint(4) DEFAULT '0',
-  `cms/webshop/category` tinyint(4) DEFAULT '0',
-  `cms/link` tinyint(4) DEFAULT '0',
-  `cms/link/category` tinyint(4) DEFAULT '0',
+  `profile` tinyint(1) NOT NULL,
+  `mailbox` tinyint(1) NOT NULL,
+  `session` tinyint(1) NOT NULL,
+  `demos/tablemanager` tinyint(1) NOT NULL,
+  `cms` tinyint(1) NOT NULL,
+  `cms/access` tinyint(1) NOT NULL,
+  `cms/action` tinyint(1) NOT NULL,
+  `cms/agenda` tinyint(1) NOT NULL,
+  `cms/analytics` tinyint(1) NOT NULL,
+  `cms/apitest` tinyint(1) NOT NULL,
+  `cms/dictionary` tinyint(1) NOT NULL,
+  `cms/faq` tinyint(1) NOT NULL,
+  `cms/file` tinyint(1) NOT NULL,
+  `cms/flag` tinyint(1) NOT NULL,
+  `cms/forum` tinyint(1) NOT NULL,
+  `cms/forum/section` tinyint(1) NOT NULL,
+  `cms/guestbook` tinyint(1) NOT NULL,
+  `cms/menu` tinyint(1) NOT NULL,
+  `cms/news` tinyint(1) NOT NULL,
+  `cms/newsletter` tinyint(1) NOT NULL,
+  `cms/organisation` tinyint(1) NOT NULL,
+  `cms/page` tinyint(1) NOT NULL,
+  `cms/poll` tinyint(1) NOT NULL,
+  `cms/role` tinyint(1) NOT NULL,
+  `cms/settings` tinyint(1) NOT NULL,
+  `cms/subscriptions` tinyint(1) NOT NULL,
+  `cms/switch` tinyint(1) NOT NULL,
+  `cms/user` tinyint(1) NOT NULL,
+  `cms/weblog` tinyint(1) NOT NULL,
+  `cms/language` tinyint(1) NOT NULL,
+  `cms/weblog/comment` tinyint(1) NOT NULL,
+  `cms/webshop/article` tinyint(1) NOT NULL,
+  `webshop/checkout` tinyint(1) NOT NULL,
+  `webshop/orders` tinyint(1) NOT NULL,
+  `cms/webshop/order` tinyint(1) NOT NULL,
+  `cms/webshop/category` tinyint(1) NOT NULL,
+  `cms/link` tinyint(1) NOT NULL,
+  `cms/link/category` tinyint(1) NOT NULL,
+  `cms/photos/album` tinyint(4) DEFAULT '0',
+  `cms/photos/collection` tinyint(4) DEFAULT '0',
+  `cms/photos/photo` tinyint(4) DEFAULT '0',
+  `reroute` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -845,7 +873,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Administrator',0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0);
+INSERT INTO `roles` VALUES (1,'Administrator',0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,0);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -896,7 +924,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(2,'photo_page_size','integer','10'),(3,'default_language','string','en'),(4,'photo_thumbnail_height','integer','100'),(5,'start_page','string','homepage'),(6,'webmaster_email','string','root@localhost'),(7,'forum_page_size','string','25'),(8,'forum_maintainers','string','Moderator'),(9,'guestbook_page_size','integer','10'),(10,'guestbook_maintainers','string','Publisher'),(11,'news_page_size','integer','5'),(12,'news_rss_page_size','string','30'),(13,'newsletter_bcc_size','integer','100'),(14,'newsletter_code_timeout','string','15 minutes'),(15,'newsletter_email','string','root@localhost'),(16,'newsletter_name','string','Hugo Leisink'),(17,'contact_email','string','root@localhost'),(18,'poll_max_answers','integer','10'),(19,'poll_bans','string\n',''),(20,'weblog_page_size','string','5'),(21,'weblog_rss_page_size','integer','30'),(22,'head_title','string','Banshee'),(23,'head_description','string','Secure PHP framework'),(24,'head_keywords','string','banshee, secure, php, framework'),(25,'photo_image_height','integer','450'),(26,'secret_website_code','string',''),(27,'photo_thumbnail_width','integer','100'),(28,'photo_image_width','integer','700'),(29,'hiawatha_cache_default_time','integer','3600'),(30,'photo_album_size','integer','18'),(31,'hiawatha_cache_enabled','boolean','false'),(32,'session_timeout','integer','1000'),(33,'session_persistent','boolean','false'),(34,'database_version','integer','1'),(35,'webshop_page_size','integer','15'),(36,'webshop_order_page_size','integer','5');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(2,'photo_page_size','integer','10'),(3,'default_language','string','en'),(4,'photo_thumbnail_height','integer','100'),(5,'start_page','string','homepage'),(6,'webmaster_email','string','info@banshee-php.org'),(7,'forum_page_size','string','25'),(8,'forum_maintainers','string','Moderator'),(9,'guestbook_page_size','integer','10'),(10,'guestbook_maintainers','string','Publisher'),(11,'news_page_size','integer','5'),(12,'news_rss_page_size','string','30'),(13,'newsletter_bcc_size','integer','100'),(14,'newsletter_code_timeout','string','15 minutes'),(15,'newsletter_email','string','void@banshee-php.org'),(16,'newsletter_name','string','Hugo Leisink'),(17,'contact_email','string','void@banshee-php.org'),(18,'poll_max_answers','integer','10'),(19,'poll_bans','string\n',''),(20,'weblog_page_size','string','5'),(21,'weblog_rss_page_size','integer','30'),(22,'head_title','string','Banshee'),(23,'head_description','string','Secure PHP framework'),(24,'head_keywords','string','banshee, secure, php, framework'),(25,'photo_image_height','integer','450'),(26,'secret_website_code','string','pCNRguvCpG3PnwFj0ASApXVa9OiBuoc9'),(27,'photo_thumbnail_width','integer','100'),(28,'photo_image_width','integer','700'),(29,'hiawatha_cache_default_time','integer','3600'),(30,'photo_album_size','integer','18'),(31,'hiawatha_cache_enabled','boolean','false'),(32,'session_timeout','integer','1000'),(33,'session_persistent','boolean','false'),(34,'database_version','integer','1'),(35,'webshop_page_size','integer','15'),(36,'webshop_order_page_size','integer','5');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -977,6 +1005,16 @@ CREATE TABLE `shop_order_article` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `shop_order_article`
+--
+
+LOCK TABLES `shop_order_article` WRITE;
+/*!40000 ALTER TABLE `shop_order_article` DISABLE KEYS */;
+INSERT INTO `shop_order_article` VALUES (2,1,1,799.95),(1,2,2,239.50);
+/*!40000 ALTER TABLE `shop_order_article` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `shop_orders`
 --
 
@@ -998,6 +1036,16 @@ CREATE TABLE `shop_orders` (
   CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_orders`
+--
+
+LOCK TABLES `shop_orders` WRITE;
+/*!40000 ALTER TABLE `shop_orders` DISABLE KEYS */;
+INSERT INTO `shop_orders` VALUES (1,1,'2016-10-31 16:05:42','Administrator','x','x','x','The Netherlands',1),(2,1,'2016-10-31 16:12:31','Administrator','x','x','x','The Netherlands',0);
+/*!40000 ALTER TABLE `shop_orders` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `subscriptions`
@@ -1037,7 +1085,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,1);
+INSERT INTO `user_role` VALUES (1,1),(2,2);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1198,4 +1246,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-02 20:12:57
+-- Dump completed on 2018-02-21 13:15:18
