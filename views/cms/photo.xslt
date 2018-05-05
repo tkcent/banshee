@@ -9,7 +9,7 @@
 //
 //-->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:import href="../../banshee/main.xslt" />
+<xsl:import href="../banshee/main.xslt" />
 
 <!--
 //
@@ -49,6 +49,10 @@ Photo album: <select name="album" onChange="javascript:submit()">
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Upload photos" class="btn btn-default" />
 <a href="/cms" class="btn btn-default">Back</a>
+</div>
+<div class="btn-group">
+<a href="/cms/photo/album" class="btn btn-default">Photo albums</a>
+<a href="/cms/photo/collection" class="btn btn-default">Collections</a>
 </div>
 </form>
 </xsl:template>

@@ -9,7 +9,7 @@ fi
 
 version=$1
 
-echo "Downloading jQuery version ${version}."
+echo "Downloading jQuery v${version}."
 wget -qO jquery-min.js http://code.jquery.com/jquery-${version}.min.js
 
 if [ ! -s jquery-min.js ]; then

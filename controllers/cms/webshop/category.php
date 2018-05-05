@@ -7,8 +7,8 @@
 	 */
 
 	class cms_webshop_category_controller extends Banshee\tablemanager_controller {
-		protected $name = "Shop category";
-		protected $back = "cms";
+		protected $name = "Article category";
+		protected $back = "cms/webshop/article";
 		protected $icon = "categories.png";
 		protected $page_size = 25;
 		protected $pagination_links = 7;

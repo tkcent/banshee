@@ -12,10 +12,12 @@
 		private $db = null;
 		private $page = null;
 		private $today = null;
+		private $required_headers = array("USER_AGENT", "ACCEPT_ENCODING", "ACCEPT_LANGUAGE");
 		private $search_bots = array("bot", "spider", "crawl", "feed", "rss", "slurp",
-			"thumbshots", "sogou", "claws", "wotbox", "Blogtrottr");
-		private $search_urls = array("www.google.", "www.bing.com", "duckduckgo.com");
-		private $referer_spam = array("viagra", "pharma", "cheap");
+			"thumbshots", "sogou", "claws", "wotbox", "blogtrottr", "feedbin");
+		private $search_urls = array("www.google.", "www.bing.com", "duckduckgo.com", "www.baidu.com");
+		private $referer_spam = array("viagra", "pharma", "cheap", "sex", "gay", "lesbian", "porn",
+			"latina", "asian", "girls", "women");
 		private $operating_systems = array("Windows", "Linux", "FreeBSD", "Android",
 			"iPhone" => "iOS", "iPad" => "iOS", "Mac OS X");
 		private $web_browsers = array("Firefox", "Chrome", "MSIE" => "Internet Explorer",
@@ -73,8 +75,11 @@
 			}
 
 			$search = null;
-			if (isset($get["q"])) {
-				$search = urldecode($get["q"]);
+			foreach (array("q", "wd") as $var) {
+				if (isset($get[$var])) {
+					$search = urldecode($get[$var]);
+					break;
+				}
 			}
 
 			if ($search == null) {
@@ -226,8 +231,12 @@
 				return;
 			}
 
-			if (isset($_SERVER["HTTP_USER_AGENT"]) == false) {
-				return;
+			/* Don't log request that miss certain headers
+			 */
+			foreach ($this->required_headers as $header) {
+				if (isset($_SERVER["HTTP_".$header]) == false) {
+					return;
+				}
 			}
 
 			/* Don't log hits from search bots
@@ -243,7 +252,7 @@
 			$skip_pages = array("cms");
 			if (in_array($this->page->page, $skip_pages)) {
 				return;
-			} else if (substr($this->page->page, 0, 6) == "cms/") {
+			} else if (substr($this->page->page, 0, 4) == "cms/") {
 				return;
 			}
 
@@ -254,24 +263,30 @@
 			if (isset($_SESSION["last_visit"]) == false) {
 				$this->log_visit();
 				$this->log_client($_SERVER["HTTP_USER_AGENT"]);
-			}
 
-			if (isset($_SERVER["HTTP_REFERER"])) {
-				/* Log search query
-				 */
-				$search_referer = false;
-				foreach ($this->search_urls as $url) {
-					if (strpos($_SERVER["HTTP_REFERER"], $url) !== false) {
-						$this->log_search_query($_SERVER["HTTP_REFERER"]);
-						$search_referer = true;
-						break;
-					}
+				if (isset($_SERVER["HTTP_ORIGIN"])) {
+					$referer = $_SERVER["HTTP_ORIGIN"];
+				} else if (isset($_SERVER["HTTP_REFERER"])) {
+					$referer = $_SERVER["HTTP_REFERER"];
 				}
 
-				/* Log referer
-				 */
-				if ($search_referer == false) {
-					$this->log_referer($_SERVER["HTTP_REFERER"]);
+				if ($referer !== null) {
+					/* Log search query
+					 */
+					$search_referer = false;
+					foreach ($this->search_urls as $url) {
+						if (strpos($referer, $url) !== false) {
+							$this->log_search_query($referer);
+							$search_referer = true;
+							break;
+						}
+					}
+
+					/* Log referer
+					 */
+					if ($search_referer == false) {
+						$this->log_referer($referer);
+					}
 				}
 			}
 

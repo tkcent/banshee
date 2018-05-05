@@ -6,11 +6,12 @@
 	 * Licensed under The MIT License
 	 */
 
-	define("BANSHEE_VERSION", "6.2");
+	define("BANSHEE_VERSION", "6.3");
 	define("ADMIN_ROLE_ID", 1);
 	define("USER_ROLE_ID", 2);
 	define("YES", 1);
 	define("NO", 0);
+	define("CONTROLLER_MAX_PARAM", 10);
 	define("USER_STATUS_DISABLED", 0);
 	define("USER_STATUS_CHANGEPWD", 1);
 	define("USER_STATUS_ACTIVE", 2);
@@ -390,7 +391,7 @@
 	/* Check PHP version and settings
 	 */
 	if (version_compare(PHP_VERSION, "7") < 0) {
-		exit("This system uses an unsupported PHP version. Use at least PHP 7.");
+		exit("This system uses an unsupported PHP version. Use at least PHP 7.0.");
 	}
 	ini_set("zlib.output_compression", "Off");
 	if (ini_get("allow_url_include") != 0) {

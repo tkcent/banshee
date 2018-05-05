@@ -9,7 +9,7 @@ fi
 
 version=$1
 
-echo "Downloading Datatables version ${version}."
+echo "Downloading Datatables v${version}."
 wget -qO datatables.zip http://datatables.net/releases/DataTables-${version}.zip
 
 if [ ! -s datatables.zip ]; then

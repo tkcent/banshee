@@ -606,9 +606,9 @@
 					 */
 					if (headers_sent() == false) {
 						header("X-Frame-Options: sameorigin");
-						header("X-Xss-Protection: 1; mode=block");
+						header("X-XSS-Protection: 1; mode=block");
 						header("X-Content-Type-Options: nosniff");
-						header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src *");
+						header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * data:");
 						header("Referrer-Policy: same-origin");
 						#header("Expect-CT: max-age=0; report-uri=\"".$_SERVER["HTTP_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/report_ct_error\"");
 

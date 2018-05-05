@@ -120,7 +120,7 @@
 //-->
 <xsl:template match="content">
 <img src="/images/icons/orders.png" class="title_icon" />
-<h1>Orders</h1>
+<h1>Webshop orders</h1>
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="edit" />
 <xsl:apply-templates select="result" />

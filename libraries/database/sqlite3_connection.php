@@ -21,7 +21,7 @@
 				$mode = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE;
 			}
 
-			$this->link = new SQLite3($filename, $mode, $encryption_key);
+			$this->link = new \SQLite3($filename, $mode, $encryption_key);
 		}
 
 		protected function db_close_wrapper() {

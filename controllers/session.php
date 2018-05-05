@@ -36,6 +36,8 @@
 		}
 
 		public function execute() {
+			$this->view->title = "Session manager";
+
 			if ($this->user->logged_in == false) {
 				$this->view->add_tag("result", "The session manager should not be accessible for non-authenticated visitors!");
 				return;

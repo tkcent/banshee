@@ -9,7 +9,7 @@ fi
 
 version=$1
 
-echo "Downloading jQuery UI version ${version}."
+echo "Downloading jQuery UI v${version}."
 wget -qO jquery-ui.zip http://jqueryui.com/resources/download/jquery-ui-${version}.zip
 
 if [ ! -s jquery-ui.zip ]; then

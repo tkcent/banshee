@@ -43,7 +43,7 @@
 <h2><xsl:value-of select="title" /></h2>
 <table class="table table-striped table-condensed">
 <thead>
-<tr><th>Topic</th><th>Author</th><th>Messages</th><th>Timestamp</th></tr>
+<tr><th>Topic</th><th>Author</th><th>Messages</th><th>Timestamp last post</th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="topics/topic">

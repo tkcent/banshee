@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	class cms_subscriptions_model extends Banshee\tablemanager_model {
+	class cms_newsletter_subscription_model extends Banshee\tablemanager_model {
 		protected $table = "subscriptions";
 		protected $order = "email";
 		protected $elements = array(

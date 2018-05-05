@@ -98,6 +98,8 @@
 		}
 
 		public function execute() {
+			$this->view->title = "Checkout";
+
 			if (count($_SESSION["webshop_cart"]) > 0) {
 				$this->model->default_value("name", $this->user->fullname);
 				$this->model->default_value("country", "The Netherlands");

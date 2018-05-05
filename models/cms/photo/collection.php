@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	class cms_photos_collection_model extends Banshee\model {
+	class cms_photo_collection_model extends Banshee\model {
 		public function get_collections() {
 			$query = "select * from collections order by name";
 

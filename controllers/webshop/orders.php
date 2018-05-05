@@ -8,6 +8,8 @@
 
 	class webshop_orders_controller extends Banshee\controller {
 		public function execute() {
+			$this->view->title = "Orders";
+
 			if (isset($_SESSION["webshop_orders_closed"]) == false) {
 				$_SESSION["webshop_orders_closed"] = NO;
 			}

@@ -32,7 +32,7 @@
 
 <div class="btn-group">
 <a href="/{/output/page}/new" class="btn btn-default">New collection</a>
-<a href="/cms" class="btn btn-default">Back</a>
+<a href="/cms/photo" class="btn btn-default">Back</a>
 </div>
 </xsl:template>
 
@@ -75,7 +75,7 @@
 //-->
 <xsl:template match="content">
 <img src="/images/icons/collection.png" class="title_icon" />
-<h1>Collection administration</h1>
+<h1>Photo collection administration</h1>
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="edit" />
 <xsl:apply-templates select="result" />

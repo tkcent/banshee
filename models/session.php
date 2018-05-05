@@ -49,7 +49,7 @@
 
 			$query .= " where id=%d and user_id=%d";
 
-			return $this->db->execute($query, $values, $session["id"], $this->user->id);
+			return $this->db->execute($query, $values, $session["id"], $this->user->id) !== false;
 		}
 
 		public function delete_session($id) {

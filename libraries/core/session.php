@@ -42,6 +42,8 @@
 			}
 
 			$this->start();
+
+			$_SESSION["request_counter"]++;
 		}
 
 		/* Destructor
@@ -165,6 +167,8 @@
 			$timeout = is_true($this->settings->session_persistent) ? time() + $this->settings->session_timeout : null;
 			setcookie(self::SESSION_NAME, $this->session_id, $timeout, "/", "", is_true(ENFORCE_HTTPS), true);
 			$_COOKIE[self::SESSION_NAME] = $this->session_id;
+
+			$_SESSION["request_counter"] = 0;
 
 			return true;
 		}

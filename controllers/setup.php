@@ -34,8 +34,6 @@
 					}
 					ob_clean();
 					break;
-				case "mysql_client":
-					break;
 				case "db_settings":
 					$this->model->remove_database_errors();
 					break;

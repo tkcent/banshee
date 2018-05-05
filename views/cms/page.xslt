@@ -20,13 +20,14 @@
 <h2>Public pages</h2>
 <table class="table table-striped table-hover table-condensed">
 <thead>
-<tr><th>URL</th><th>Title</th><th>Visible</th></tr>
+<tr><th>URL</th><th>Title</th><th>Language</th><th>Visible</th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="pages/page[private=0]">
 	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
+	<td><xsl:value-of select="language" /></td>
 	<td><xsl:value-of select="visible" /></td>
 	</tr>
 </xsl:for-each>
@@ -36,13 +37,14 @@
 <h2 class="spacer">Private pages</h2>
 <table class="table table-striped table-hover table-condensed">
 <thead>
-<tr><th>URL</th><th>Title</th><th>Visible</th></tr>
+<tr><th>URL</th><th>Title</th><th>Language</th><th>Visible</th></tr>
 </thead>
 <tbody>
 <xsl:for-each select="pages/page[private=1]">
 	<tr onClick="javascript:document.location='/{/output/page}/{@id}'">
 	<td><xsl:value-of select="url" /></td>
 	<td><xsl:value-of select="title" /></td>
+	<td><xsl:value-of select="language" /></td>
 	<td><xsl:value-of select="visible" /></td>
 	</tr>
 </xsl:for-each>

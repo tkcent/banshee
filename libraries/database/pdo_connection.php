@@ -23,7 +23,7 @@
 			$this->db_errno         = array($this, "db_errno_wrapper");
 
 			try {
-				$this->link = new PDO($this->type.":host=".$hostname.";dbname=".$database, $username, $password, $this->options);
+				$this->link = new \PDO($this->type.":host=".$hostname.";dbname=".$database, $username, $password, $this->options);
 			} catch (exception $e) {
 				$this->link = null;
 			}

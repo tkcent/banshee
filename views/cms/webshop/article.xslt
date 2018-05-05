@@ -52,6 +52,9 @@
 <a href="/{/output/page}/new" class="btn btn-default">New article</a>
 <a href="/cms" class="btn btn-default">Back</a>
 </div>
+<div class="left btn-group">
+<a href="/cms/webshop/category" class="btn btn-default">Categories</a>
+</div>
 </xsl:template>
 
 <!--
@@ -107,7 +110,7 @@
 //-->
 <xsl:template match="content">
 <img src="/images/icons/articles.png" class="title_icon" />
-<h1>Articles</h1>
+<h1>Article administration</h1>
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="edit" />
 <xsl:apply-templates select="result" />

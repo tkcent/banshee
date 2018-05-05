@@ -63,20 +63,21 @@
 			"tables"      => array("news"),
 			"settings"    => array("news\_%")),
 		"newsletter" => array(
-			"pages"       => array("newsletter", "cms/newsletter", "cms/subscriptions"),
+			"pages"       => array("newsletter", "cms/newsletter", "cms/newsletter/subscription"),
 			"libraries"   => array("newsletter"),
 			"tables"      => array("subscriptions"),
 			"settings"    => array("newsletter\_%"),
-			"files"       => array("extra/newsletter.txt")),
+			"files"       => array("extra/newsletter.txt"),
+			"directories" => array("cms/newsletter")),
 		"password" => array(
 			"pages"       => array("password"),
 			"files"       => array("extra/password.txt")),
 		"photo" => array(
-			"pages"       => array("photo", "collection", "cms/photos/photo", "cms/photos/album", "cms/photos/collection"),
+			"pages"       => array("photo", "collection", "cms/photo", "cms/photo/album", "cms/photo/collection"),
 			"libraries"   => array("image"),
 			"tables"      => array("collection_album", "collections", "photos", "photo_albums"),
 			"settings"    => array("photo\_%"),
-			"directories" => array("cms/photos", "public/photos")),
+			"directories" => array("cms/photo", "public/photos")),
 		"poll" => array(
 			"pages"       => array("poll", "cms/poll"),
 			"libraries"   => array("poll"),
@@ -151,7 +152,13 @@
 	foreach ($params as $param) {
 		if (isset($banshee_modules[$param])) {
 			array_push($modules, $banshee_modules[$param]);
+		} else {
+			printf("Module %s does not exist.\n", $param);
 		}
+	}
+
+	if (count($modules) == 0) {
+		return;
 	}
 
 	$locations = array(

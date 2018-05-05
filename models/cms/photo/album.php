@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	class cms_photos_album_model extends Banshee\tablemanager_model {
+	class cms_photo_album_model extends Banshee\tablemanager_model {
 		protected $table = "photo_albums";
 		protected $elements = array(
 			"name" => array(

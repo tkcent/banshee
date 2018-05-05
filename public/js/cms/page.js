@@ -20,5 +20,5 @@ function preview_loaded(url) {
 }
 
 function set_preview_width(width) {
-	$('div.preview-body').css("width", width);
+	$('div.preview-body').css("max-width", width);
 }

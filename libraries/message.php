@@ -90,11 +90,9 @@
 				if (isset($_SESSION["last_visit"]) == false) {
 					$this->log_spam("post without requesting form");
 					return true;
-				} else {
-					if (time() - $_SESSION["last_visit"] < $antispam["min_delay"]) {
-						$this->log_spam("post too quickly");
-						return true;
-					}
+				} else if (time() - $_SESSION["last_visit"] < $antispam["min_delay"]) {
+					$this->log_spam("post too quickly");
+					return true;
 				}
 			}
 

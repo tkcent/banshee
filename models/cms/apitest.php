@@ -63,6 +63,7 @@
 
 		public function request_result($data) {
 			if ($data["url"][0] != "/") {
+				$this->view->add_message("Invalid URL.");
 				return false;
 			}
 

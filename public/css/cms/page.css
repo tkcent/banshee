@@ -6,8 +6,8 @@ table.table th:first-child {
 	width:30%;
 }
 
-table.table th:nth-child(3) {
-	width:75px;
+table.table th:nth-child(n+3) {
+	width:90px;
 }
 
 form.clear {
@@ -73,8 +73,11 @@ div.preview iframe {
 }
 
 @media (max-width:767px) {
-	table.table th:nth-child(3),
-	table.table td:nth-child(3) {
+	table.table th:first-child {
+		width:50%;
+	}
+	table.table th:nth-child(n+3),
+	table.table td:nth-child(n+3) {
 		display:none;
 	}
 }

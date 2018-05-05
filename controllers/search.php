@@ -26,6 +26,8 @@
 		/* Search directly in database
 		 */
 		public function execute() {
+			$this->view->title = "Search";
+
 			if ($this->user->logged_in == false) {
 				unset($this->sections["mailbox"]);
 			}

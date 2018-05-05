@@ -40,6 +40,10 @@ div.topic div.panel-heading div div:nth-child(3) {
 	text-align:right;
 }
 
+div.topic div.panel-body img {
+	width:100%;
+}
+
 span.registered {
 	color:#0080ff;
 }

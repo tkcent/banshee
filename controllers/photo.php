@@ -7,15 +7,12 @@
 	 */
 
 	class photo_controller extends Banshee\controller {
-		private $title = "Photos";
 		private $extensions = array(
 			"gif" => "image/gif",
 			"jpg" => "image/jpeg",
 			"png" => "image/png");
 
 		private function show_albums() {
-			$this->title = "Photo albums";
-
 			if (($count = $this->model->count_albums()) === false) {
 				$this->view->add_tag("result", "Database error counting albums");
 				return;
@@ -69,7 +66,7 @@
 				return;
 			}
 
-			$this->title = $album["name"];
+			$this->view->title = sprintf("%s - %s", $album["name"], $this->view->title);
 
 			$this->view->open_tag("photos", array(
 				"timestamp" => date("j F Y", strtotime($album["timestamp"])),
@@ -112,6 +109,8 @@
 		}
 
 		public function execute() {
+			$this->view->title = "Photos";
+
 			if (valid_input($this->page->parameters[0], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				$this->show_album($this->page->parameters[0]);
 			} else if (valid_input($this->page->parameters[0], VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."_.", VALIDATE_NONEMPTY)) {
@@ -124,7 +123,6 @@
 			}
 
 			$this->view->add_tag("title", $this->title);
-			$this->view->title = $this->title;
 		}
 	}
 ?>

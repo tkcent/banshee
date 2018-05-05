@@ -7,7 +7,13 @@
 	 */
 
 	class profile_controller extends Banshee\controller {
-		private function show_profile_form($profile) {
+		private function show_profile_form($profile = null) {
+			if ($profile === null) {
+				$profile = array(
+					"fullname" => $this->user->fullname,
+					"email"    => $this->user->email);
+			}
+
 			if (($organisation = $this->model->get_organisation()) === false) {
 				$this->view->add_tag("result", "Database error.");
 				return false;
@@ -63,20 +69,27 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				/* Update profile
 				 */
-				if ($this->model->profile_oke($_POST) == false) {
-					$this->show_profile_form($_POST);
-				} else if ($this->model->update_profile($_POST) === false) {
-					$this->view->add_tag("result", "Error while updating profile.", array("url" => "profile"));
-				} else {
-					$this->view->add_tag("result", "Profile has been updated.", array("url" => $_SESSION["profile_next"]));
-					$this->user->log_action("profile updated");
-					unset($_SESSION["profile_next"]);
+				if ($_POST["submit_button"] == "Update profile") {
+					if ($this->model->profile_oke($_POST) == false) {
+						$this->show_profile_form($_POST);
+					} else if ($this->model->update_profile($_POST) === false) {
+						$this->view->add_tag("result", "Error while updating profile.", array("url" => "profile"));
+					} else {
+						$this->view->add_tag("result", "Profile has been updated.", array("url" => $_SESSION["profile_next"]));
+						$this->user->log_action("profile updated");
+						unset($_SESSION["profile_next"]);
+					}
+				} else if ($_POST["submit_button"] == "Delete profile") {
+					if ($this->model->delete_account() == false) {
+						$this->view->add_message("Something went wrong while deleting this account.");
+						$this->show_profile_form();
+					} else {
+						$this->view->add_tag("result", "Your account has been deleted. You will be logged out.", array("url" => ""));
+						$this->user->logout();
+					}
 				}
 			} else {
-				$user = array(
-					"fullname" => $this->user->fullname,
-					"email"    => $this->user->email);
-				$this->show_profile_form($user);
+				$this->show_profile_form();
 			}
 		}
 	}

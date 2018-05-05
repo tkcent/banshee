@@ -10,7 +10,7 @@
 		private $default_layout = "Default layout";
 
 		public function get_pages() {
-			$query = "select id, url, private, title, visible from pages order by url";
+			$query = "select id, url, language, private, title, visible from pages order by url";
 
 			return $this->db->execute($query);
 		}
@@ -120,12 +120,12 @@
 				$this->view->add_message("The URL belongs to a private module.");
 				$result = false;
 			} else {
-				$query = "select count(*) as count from pages where id!=%d and url=%s";
-				if (($page = $this->db->execute($query, $page["id"], $page["url"])) === false) {
+				$query = "select count(*) as count from pages where id!=%d and url=%s and language=%s";
+				if (($page = $this->db->execute($query, $page["id"], $page["url"], $page["language"])) === false) {
 					$this->view->add_system_warning("Error while verifying the URL.");
 					$result = false;
 				} else if ($page[0]["count"] > 0) {
-					$this->view->add_message("The URL belongs to another page.");
+					$this->view->add_message("The URL and language combination already exists.");
 					$result = false;
 				}
 			}

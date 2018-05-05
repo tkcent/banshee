@@ -44,7 +44,7 @@
 						$this->view->add_message("Login incorrect");
 					}
 				} else {
-					$this->view->add_message("Session expired. Login to continue your previous submit.");
+					#$this->view->add_message("Session expired. Login to continue your previous submit.");
 					$_POST["postdata"] = base64_encode(json_encode($_POST));
 				}
 

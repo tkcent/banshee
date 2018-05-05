@@ -41,6 +41,10 @@
 		}
 
 		private function show_message_form($message) {
+			if ($_SERVER["REQUEST_METHOD"] == "GET") {
+				$_SESSION["cms_forum_previous"] = $this->page->previous;
+			}
+
 			$this->view->open_tag("edit");
 			$this->view->record($message, "message");
 			$this->view->close_tag();
@@ -59,7 +63,12 @@
 					} else {
 						$topic_id = $this->model->get_topic_id($_POST["id"]);
 						$this->user->log_action("forum message %d (topic:%d) updated", $_POST["id"], $topic_id);
-						$this->show_message_overview();
+						if ($_SESSION["cms_forum_previous"] == $this->page->module) {
+							$this->show_message_overview();
+						} else {
+							header("Location: /".$_SESSION["cms_forum_previous"]."#".$_POST["id"]);
+						}
+						unset($_SESSION["cms_forum_previous"]);
 					}
 				} else if ($_POST["submit_button"] == "delete") {
 					/* Delete message

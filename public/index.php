@@ -102,13 +102,13 @@
 			if ((substr($_page->url, 0, 4) == "/cms") || ($_view->layout == LAYOUT_CMS)) {
 				/* CMS menu
 				 */
+				$_view->open_tag("menu");
+				$_view->record(array("link" => "/", "text" => "Homepage"), "item");
 				if (($_user->logged_in) && ($_page->page != "logout")) {
-					$_view->open_tag("menu");
-					$_view->record(array("link" => "/", "text" => "Website"), "item");
 					$_view->record(array("link" => "/cms", "text" => "CMS"), "item");
 					$_view->record(array("link" => "/logout", "text" => "Logout"), "item");
-					$_view->close_tag();
 				}
+				$_view->close_tag();
 			} else if ($_user->logged_in || is_false(HIDE_MENU_FOR_VISITORS)) {
 				/* Normal menu
 				 */
@@ -140,18 +140,7 @@
 			print "Controller class '".$controller_class."' does not extend Banshee's controller class.\n";
 		} else {
 			$_controller = new $controller_class($_database, $_settings, $_user, $_page, $_view, $_language);
-			$method = "execute";
-
-			if (is_true(URL_PARAMETERS)) {
-				$reflection = new reflectionobject($_controller);
-				$param_count = count($reflection->getmethod($method)->getParameters());
-				unset($reflection);
-
-				$params = array_pad($_page->parameters, $param_count, null);
-				call_user_func_array(array($_controller, $method), $params);
-			} else {
-				$_controller->$method();
-			}
+			$_controller->execute();
 			unset($_controller);
 
 			if ($_view->disabled) {

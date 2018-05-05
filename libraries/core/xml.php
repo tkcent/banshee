@@ -205,28 +205,35 @@
 
 		/* Add XML data to buffer
 		 *
-		 * INPUT:  XML data, string tag name
-		 * OUTPUT: -
-		 * ERROR:  -
+		 * INPUT:  string XML data, string tag name
+		 * OUTPUT: true
+		 * ERROR:  false
 		 */
-		public function add_xml($xml, $tag) {
-			if (($str = $xml->saveXML()) === false) {
-				return;
+		public function add_xml($str, $tag) {
+			if (strpos($str, "<!") !== false) {
+				return false;
+			}
+
+			$xml = new DomDocument();
+			if ($xml->loadXML($str) == false) {
+				return false;
 			}
 
 			if (($begin = strpos($str, "<".$tag.">")) === false) {
 				if (($begin = strpos($str, "<".$tag." ")) === false) {
-					return;
+					return false;
 				}
 			}
 			if (($end = strrpos($str, "</".$tag.">")) === false) {
-				return;
+				return false;
 			}
 			$end += strlen($tag) + 3;
 
 			$str = substr($str, $begin, $end - $begin)."\n";
 
 			$this->add_to_buffer($str);
+
+			return true;
 		}
 
 		/* Set XSLT parameter
@@ -313,6 +320,7 @@
 			}
 
 			$processor = new \xsltprocessor();
+			$processor->setsecurityprefs(XSL_SECPREF_DEFAULT | XSL_SECPREF_READ_FILE | XSL_SECPREF_READ_NETWORK);
 			$processor->importstylesheet($xslt);
 
 			foreach ($this->xslt_parameters as $key => $value) {

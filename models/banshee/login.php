@@ -19,16 +19,25 @@
 				$_session->bind_to_ip();
 			}
 
+			$post_protection = new \Banshee\POST_protection($_page, $_user, $_view);
 			if (isset($_POST["postdata"]) == false) {
+				$post_protection->register_post();
+
 				$_SERVER["REQUEST_METHOD"] = "GET";
 				$_POST = array();
-			} else {
+			} else if (is_true($_POST["repost"])) {
+				$token = $_POST[$post_protection->csrf_key];
 				$_POST = json_decode(base64_decode($_POST["postdata"]), true);
+				$_POST[$post_protection->csrf_key] = $token;
 			}
 
 			$login_successful = true;
-		} else {
-			$_user->log_action("login failed: %s", $_POST["username"]);
+		} else {	
+			if (valid_input($_POST["username"], VALIDATE_LETTERS, VALIDATE_NONEMPTY)) {
+				$_user->log_action("login failed for username %s", $_POST["username"]);
+			} else {
+				$_user->log_action("login failed, possibly the password was entered as the username");
+			}
 		}
 	} else if (isset($_GET["login"])) {
 		/* Login via one time key

@@ -22,6 +22,14 @@
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (https://www.banshee-php.org/)" />
+<meta property="og:title" content="{title/@page}" />
+<meta property="og:description" content="{description}" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{title/@page}" />
+<meta name="twitter:description" content="{description}" />
+<meta name="twitter:image" content="" />
 <link rel="apple-touch-icon" href="/images/favicon.png" />
 <link rel="icon" href="/images/favicon.png" />
 <link rel="shortcut icon" href="/images/favicon.png" />

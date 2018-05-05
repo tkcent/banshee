@@ -10,7 +10,7 @@
 	chdir(__DIR__);
 	require("libraries/core/banshee.php");
 
-	$written_for = "6.2";
+	$written_for = "6.3";
 
 	/* Auditor class
 	 */
@@ -198,12 +198,12 @@
 			"libraries/tablemanager_controller.php"        => array(218),
 			"libraries/tablemanager_model.php"             => array(287),
 			"models/cms/link.php"                          => array(44),
-			"models/cms/photos/photo.php"                  => array(214),
+			"models/cms/photo.php"                         => array(214),
 			"models/cms/settings.php"                      => array(61, 84),
 			"models/cms/user.php"                          => array(15),
 			"models/cms/webshop/article.php"               => array(46),
 			"models/search.php"                            => array(142),
-			"models/setup.php"                             => array(147),
+			"models/setup.php"                             => array(142, 181),
 			"models/webshop/cart.php"                      => array(21));
 
 		protected function scan_line($line) {
@@ -332,7 +332,7 @@
 			"views/banshee/main.xslt"              => array(20),
 			"views/banshee/page.xslt"              => array(21),
 			"views/cms/webshop/order.xslt"         => array(39, 88, 96),
-			"views/cms/webshop/article.xslt"       => array(41, 87),
+			"views/cms/webshop/article.xslt"       => array(41, 90),
 			"views/demos/googlemaps.xslt"          => array(14),
 			"views/demos/posting.xslt"             => array(19),
 			"views/dictionary.xslt"                => array(69),
@@ -357,23 +357,27 @@
 	class integrity_auditor {
 		private $files = array(
 			"libraries" => array(
-				"controller.php" => "72f57a6b65f2d0c263e166d0ef42957f4079f35d",
-				"model.php"      => "493fc2b0884b18e6211aad8071557ef5267d101b"),
+				"authenticator.php"   => "c2845eb82aa79b96c68b2b53fb76fe90d1789d0a",
+				"controller.php"      => "045dcf49330ae6c8f4323a4ac0b71b1167fb4e73",
+				"model.php"           => "493fc2b0884b18e6211aad8071557ef5267d101b",
+				"post_protection.php" => "4e6ba9c5db1b2ed25ea068d3d89dfe4f14814acf"),
 			"libraries/core" => array(
-				"banshee.php"    => "6fb5ba955eb5fdd9cff1a750cf657d47e49d5a1d",
-				"security.php"   => "3fd62eaa321bf20b550ddd1228fe0e2e00b4d5e0",
-				"session.php"    => "91017de92ab383a3d7d9a32ff4d00405b51004c0",
-				"settings.php"   => "c07c539e7015cc2d2b365f3af6b15f8e1c8720d5",
-				"page.php"       => "564cefb5fc6c941f1e85bfb95e4cd5713cb9bf36",
-				"user.php"       => "830e8f27d9a1d85f11d9181247788b882807d379",
-				"view.php"       => "cf41707db50e05af8658d5541407c28767c7a95b"),
+				"banshee.php"         => "cde782419110c5f78cae76f08d04abd21a7ef4a7",
+				"error.php"           => "8808c85f303e156b9bcad0f5031e4db40f2109e2",
+				"page.php"            => "564cefb5fc6c941f1e85bfb95e4cd5713cb9bf36",
+				"security.php"        => "3fd62eaa321bf20b550ddd1228fe0e2e00b4d5e0",
+				"session.php"         => "f8a388d268318879ff414e6cf741f98314674391",
+				"settings.php"        => "c07c539e7015cc2d2b365f3af6b15f8e1c8720d5",
+				"user.php"            => "830e8f27d9a1d85f11d9181247788b882807d379",
+				"view.php"            => "231a8f032d922535c438e8cfadb034d5e6f43b07",
+				"xml.php"             => "032b7631290f282ebc20d579f4d62e53e495c6ab"),
 			"libraries/database" => array(
 				"database_connection.php" => "51e18c9b5f934d6995ab7c7be3bef03a0ce34fd9",
 				"mysqli_connection.php"   => "487c90773f3d13c9d3e9b751e8974437d674c4a5"),
 			"libraries/protocols" => array(
-				"email.php"      => "f79e83f64ec9ab54cbfcfb29351ce97ca9e99b8c"),
+				"email.php"           => "33cbb47a9806b5bc4b3bd75fef702242d37429e6"),
 			"public" => array(
-				"index.php"      => "7be0f552f1bb689af0b2136fbff8f7d3c3e777c9"));
+				"index.php"           => "4bd4c681fc18cd10642beb0b60639f176f0c56bf"));
 
 		public function perform_audit() {
 			$total = 0;

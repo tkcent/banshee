@@ -32,13 +32,18 @@
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
 </input></p>
+<xsl:if test="postdata">
+<div class="alert alert-danger">
+<p>You tried to send data to this website while you are not logged in or your session was expired. If you want to resubmit that data, check the box below. If you reached this page via a web form on another website, don't login! An attacker possibly tries to change data in your account via this submit.</p>
+<p>Resend data from previous submit: <input type="checkbox" name="repost" /></p>
+</div>
+<input type="hidden" name="postdata" value="{postdata}" />
+</xsl:if>
+
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Login" class="btn btn-default" />
 <a href="/{previous}" class="btn btn-default">Cancel</a>
 </div>
-<xsl:if test="postdata">
-<input type="hidden" name="postdata" value="{postdata}" />
-</xsl:if>
 </form>
 
 <xsl:if test="@password='yes'"><p>If you have forgotten your password, click <a href="/password">here</a>.</p></xsl:if>

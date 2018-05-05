@@ -31,6 +31,8 @@
 		}
 
 		public function execute() {
+			$this->view->title = "Shopping cart";
+
 			if (isset($_SESSION["webshop_cart"]) == false) {
 				$_SESSION["webshop_cart"] = array();
 			}

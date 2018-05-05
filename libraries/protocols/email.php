@@ -211,7 +211,7 @@
 		/* Add inline image
 		 *
 		 * INPUT:  string filename
-		 * OUTPUT: string content ID
+		 * OUTPUT: string content for src property of image tag
 		 * ERROR:  false
 		 */
 		public function add_image($filename) {
@@ -232,7 +232,7 @@
 				"content_type" => $content_type,
 				"content_id"   => $content_id));
 
-			return $content_id;
+			return "cid:".$content_id;
 		}
 
 		/* Set field values for message

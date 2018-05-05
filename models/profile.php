@@ -112,5 +112,13 @@
 
 			return $this->db->update("users", $this->user->id, $profile, $keys) !== false;
 		}
+
+		public function delete_account() {
+			if ($this->user->is_admin) {
+				return false;
+			}
+
+			return $this->borrow("cms/user")->delete_user($this->user->id);
+		}
 	}
 ?>

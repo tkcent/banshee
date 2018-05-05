@@ -60,6 +60,8 @@
 		}
 
 		public function show_article($article) {
+			$this->view->title = sprintf("%s - %s", $article["title"], $this->view->title);
+
 			$this->view->add_javascript("banshee/notify.js");
 			$this->view->add_javascript("webshop.js");
 
@@ -68,6 +70,8 @@
 		}
 
 		public function execute() {
+			$this->view->title = "Webshop";
+
 			if (isset($_SESSION["webshop_cart"]) == false) {
 				$_SESSION["webshop_cart"] = array();
 			}

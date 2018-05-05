@@ -43,6 +43,8 @@
 			/* Set page options
 			 */
 			$modules = page_to_module(array_merge(config_file("public_modules"), config_file("private_modules")));
+			array_unshift($modules, ERROR_MODULE);
+			array_unshift($modules, LOGIN_MODULE);
 			sort($modules);
 			array_unshift($modules, "*");
 			$modules = array_combine($modules, $modules);

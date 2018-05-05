@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	class cms_photos_collection_controller extends Banshee\controller {
+	class cms_photo_collection_controller extends Banshee\controller {
 		private function show_collection_overview() {
 			if (($collections = $this->model->get_collections()) === false) {
 				$this->add_tag("result", "Database error.");
@@ -27,6 +27,11 @@
 		private function show_collection_form($collection) {
 			if (($albums = $this->model->get_albums()) === false) {
 				$this->view->add_tag("result", "Database error.");
+				return;
+			}
+
+			if (count($albums) == 0) {
+				$this->view->add_tag("result", "No albums available. Add some first.", array("url" => "cms/photo/album/new"));
 				return;
 			}
 

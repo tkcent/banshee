@@ -30,19 +30,6 @@
 
 <!--
 //
-//  MySQL client template
-//
-//-->
-<xsl:template match="mysql_client">
-<p>The MySQL command line client is missing. Install it and refresh this page.</p>
-
-<div class="btn-group">
-<a href="/{/output/page}" class="btn btn-default">Refresh</a>
-</div>
-</xsl:template>
-
-<!--
-//
 //  Database settings template
 //
 //-->
@@ -85,7 +72,7 @@
 <xsl:template match="import_sql">
 <xsl:call-template name="show_messages" />
 
-<p>The next step is to import the file database/mysql.sql into your database. Make sure the MySQL command-line client is installed on your system.</p>
+<p>The next step is to import the file database/mysql.sql into your database.</p>
 <form action="/{/output/page}" method="post">
 <input type="submit" name="submit_button" value="Import SQL" class="btn btn-default" />
 </form>

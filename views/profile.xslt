@@ -38,6 +38,11 @@
 <a href="/{cancel/@previous}" class="btn btn-default"><xsl:value-of select="cancel" /></a>
 </xsl:if>
 </div>
+<xsl:if test="/output/user/@admin='no'">
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Delete profile" class="btn btn-danger" onClick="javascript:return confirm('This account and all of its data will be deleted. Are you sure?');" />
+</div>
+</xsl:if>
 </form>
 
 <h2>Recent account activity</h2>

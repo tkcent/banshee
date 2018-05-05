@@ -6,7 +6,7 @@
 	 * Licensed under The MIT License
 	 */
 
-	class cms_photos_photo_controller extends Banshee\controller {
+	class cms_photo_controller extends Banshee\controller {
 		private $modes = array("Normal", "Top / Left", "Center", "Bottom / Right");
 
 		private function show_overview() {
@@ -18,7 +18,7 @@
 			}
 
 			$this->view->add_javascript("jquery/jquery-ui.js");
-			$this->view->add_javascript("cms/photos/photo.js");
+			$this->view->add_javascript("cms/photo.js");
 
 			$this->view->open_tag("overview");
 
@@ -108,7 +108,7 @@
 				$this->view->add_tag("result", "Error counting albums");
 				return;
 			} else if ($album_count == 0) {
-				$this->view->add_tag("result", "No albums available. Add some first.", array("url" => "cms/photos/album/new"));
+				$this->view->add_tag("result", "No albums available. Add some first.", array("url" => "cms/photo/album/new"));
 				return;
 			}
 

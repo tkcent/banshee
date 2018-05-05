@@ -31,10 +31,10 @@
 			$this->view = $view;
 			$this->language = $language;
 
-			/* Prevent Cross-Site Request Forgery
+			/* POST protection: CSRF and re-post
 			 */
-			$prevent_csrf = new prevent_CSRF($page, $user, $view);
-			$prevent_csrf->execute();
+			$post_protection = new POST_protection($page, $user, $view);
+			$post_protection->execute();
 
 			/* Load model
 			 */

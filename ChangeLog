@@ -1,3 +1,15 @@
+banshee (6.3) stable; urgency=low
+
+  * Re-post protection added.
+  * Improved CSRF protection.
+  * Improved multilingual support for pages module.
+  * Removed mysql cli dependency from setup module.
+  * URL_PARAMETERS functionality removed.
+  * jQuery updated to 3.3.1.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sat,  5 May 2018 19:49:54 +0200
+
 banshee (6.2) stable; urgency=low
 
   * Added Reroute CMS module.
@@ -5,7 +17,7 @@ banshee (6.2) stable; urgency=low
   * Easy screen width sizing in page preview.
   * Small bugfixes and improvements.
 
- -- Hugo Leisink <hugo@leisink.net>  Sun, 18 Feb 2018 14:20:17 +0200
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 18 Feb 2018 14:20:17 +0100
 
 banshee (6.1) stable; urgency=low
 
