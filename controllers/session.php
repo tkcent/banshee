@@ -15,7 +15,7 @@
 
 			$this->view->open_tag("sessions");
 			foreach ($sessions as $session) {
-				$owner = show_boolean($session["session_id"] == $_COOKIE[SESSION_NAME]);
+				$owner = show_boolean($session["session_id"] == $this->user->session->id);
 				$session["expire"] = date("d F Y, H:i:s", $session["expire"]);
 				$session["bind_to_ip"] = show_boolean($session["bind_to_ip"]);
 				$this->view->record($session, "session", array("owner" => $owner));
