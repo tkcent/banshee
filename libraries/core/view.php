@@ -143,7 +143,6 @@
 				$error_handler = new website_error_handler($this, $this->settings, $this->user);
 				$error_handler->execute($errors);
 			}
-			ob_clean();
 		}
 
 		/* Allow caching of output by Hiawatha
