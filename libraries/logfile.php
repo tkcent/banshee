@@ -116,7 +116,7 @@
 			ob_start();
 			var_dump($variable);
 			$variable = rtrim(ob_get_contents());
-			ob_clean();
+			ob_end_clean();
 
 			$variable = preg_replace('/=>$\s*/m', " => ", $variable);
 
