@@ -115,8 +115,7 @@
 		public function add_variable($variable, $prefix = null) {
 			ob_start();
 			var_dump($variable);
-			$variable = rtrim(ob_get_contents());
-			ob_end_clean();
+			$variable = rtrim(ob_get_clean());
 
 			$variable = preg_replace('/=>$\s*/m', " => ", $variable);
 
