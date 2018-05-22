@@ -111,14 +111,14 @@
 		 */
 		public function get_years() {
 			$query = "select distinct year(timestamp) as year from weblogs ".
-			         "where visible=%d order by timestamp desc";
+			         "where visible=%d order by year desc";
 
 			return $this->db->execute($query, YES);
 		}
 
 		public function get_periods() {
 			$query = "select distinct month(timestamp) as month, year(timestamp) as year from weblogs ".
-			         "where visible=%d order by timestamp desc";
+			         "where visible=%d order by year, month desc";
 
 			return $this->db->execute($query, YES);
 		}
