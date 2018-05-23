@@ -16,7 +16,7 @@
 		}
 
 		private function dirname_oke($file) {
-			return valid_input($file, VALIDATE_NUMBERS.VALIDATE_LETTERS."-_.", VALIDATE_NONEMTPY);
+			return valid_input($file, VALIDATE_NUMBERS.VALIDATE_LETTERS."-_.", VALIDATE_NONEMPTY);
 		}
 
 		public function directory_listing($directory) {
