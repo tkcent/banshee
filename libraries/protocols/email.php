@@ -365,7 +365,7 @@
 				return false;
 			}
 
-			if (count($this->message) === null) {
+			if (empty($this->message)) {
 				$this->message("");
 			}
 
